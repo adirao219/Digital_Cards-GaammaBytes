@@ -1,0 +1,1 @@
+class Gridbusinesscardseven2ItemModel { }
