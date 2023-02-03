@@ -1,1 +1,1 @@
-class HomePageModel { }
+class HomePageModel {}

@@ -1,1 +1,1 @@
-class GridbusinesscardsevenItemModel { }
+class GridbusinesscardsevenItemModel {}

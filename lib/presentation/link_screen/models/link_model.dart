@@ -1,1 +1,1 @@
-class LinkModel { }
+class LinkModel {}

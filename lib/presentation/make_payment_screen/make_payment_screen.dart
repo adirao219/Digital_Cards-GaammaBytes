@@ -1,4 +1,4 @@
-import 'controller/make_payment_controller.dart';
+
 import 'package:digitalcards_gaammabytes/core/app_export.dart';
 import 'package:digitalcards_gaammabytes/core/utils/validation_functions.dart';
 import 'package:digitalcards_gaammabytes/widgets/app_bar/appbar_image.dart';
@@ -7,7 +7,21 @@ import 'package:digitalcards_gaammabytes/widgets/custom_button.dart';
 import 'package:digitalcards_gaammabytes/widgets/custom_text_form_field.dart';
 import 'package:flutter/material.dart';
 
-class MakePaymentScreen extends GetWidget<MakePaymentController> {
+class MakePaymentScreen extends StatefulWidget {
+  const MakePaymentScreen({ super.key});
+
+                @override
+                // ignore: library_private_types_in_public_api
+                _MakePaymentScreen createState() => _MakePaymentScreen();
+            }
+
+class _MakePaymentScreen extends State<MakePaymentScreen> {
+  TextEditingController _name_Controller = new TextEditingController();
+  TextEditingController _email_id4_Controller = new TextEditingController();
+  TextEditingController _phone_number_Controller = new TextEditingController();
+  TextEditingController _gstin_Controller = new TextEditingController();
+  TextEditingController _credits_Controller = new TextEditingController();
+  TextEditingController _payment_amount_Controller = new TextEditingController();
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
@@ -132,7 +146,7 @@ class MakePaymentScreen extends GetWidget<MakePaymentController> {
                 CustomTextFormField(
                   width: 326,
                   focusNode: FocusNode(),
-                  controller: controller.languageController,
+                  controller: _name_Controller,
                   hintText: "lbl_name".tr,
                   margin: getMargin(
                     top: 48,
@@ -147,7 +161,7 @@ class MakePaymentScreen extends GetWidget<MakePaymentController> {
                 CustomTextFormField(
                   width: 326,
                   focusNode: FocusNode(),
-                  controller: controller.group33633Controller,
+                  controller: _email_id4_Controller,
                   hintText: "lbl_email_id4".tr,
                   margin: getMargin(
                     top: 23,
@@ -164,7 +178,7 @@ class MakePaymentScreen extends GetWidget<MakePaymentController> {
                 CustomTextFormField(
                   width: 326,
                   focusNode: FocusNode(),
-                  controller: controller.group33635Controller,
+                  controller: _phone_number_Controller,
                   hintText: "lbl_phone_number".tr,
                   margin: getMargin(
                     top: 23,
@@ -180,7 +194,7 @@ class MakePaymentScreen extends GetWidget<MakePaymentController> {
                 CustomTextFormField(
                   width: 326,
                   focusNode: FocusNode(),
-                  controller: controller.languageOneController,
+                  controller: _gstin_Controller,
                   hintText: "lbl_gstin".tr,
                   margin: getMargin(
                     top: 23,
@@ -189,7 +203,7 @@ class MakePaymentScreen extends GetWidget<MakePaymentController> {
                 CustomTextFormField(
                   width: 326,
                   focusNode: FocusNode(),
-                  controller: controller.group33638Controller,
+                  controller: _credits_Controller,
                   hintText: "lbl_credits".tr,
                   margin: getMargin(
                     top: 23,
@@ -198,7 +212,7 @@ class MakePaymentScreen extends GetWidget<MakePaymentController> {
                 CustomTextFormField(
                   width: 326,
                   focusNode: FocusNode(),
-                  controller: controller.languageTwoController,
+                  controller: _payment_amount_Controller,
                   hintText: "lbl_payment_amount".tr,
                   margin: getMargin(
                     top: 21,

@@ -1,17 +1,17 @@
 import 'package:google_sign_in/google_sign_in.dart';
-class GoogleAuthHelper {
 
+class GoogleAuthHelper {
   /// Handle Google Signin to authenticate user
   Future<GoogleSignInAccount?> googleSignInProcess() async {
     GoogleSignIn _googleSignIn = GoogleSignIn();
     GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
-    if(googleUser!=null){
+    if (googleUser != null) {
       return googleUser;
     }
   }
 
   /// To Check if the user is already signedin through google
-  alreadySignIn() async{
+  alreadySignIn() async {
     GoogleSignIn _googleSignIn = GoogleSignIn();
     bool alreadySignIn = await _googleSignIn.isSignedIn();
     return alreadySignIn;

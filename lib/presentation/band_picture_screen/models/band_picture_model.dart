@@ -1,1 +1,1 @@
-class BandPictureModel { }
+class BandPictureModel {}

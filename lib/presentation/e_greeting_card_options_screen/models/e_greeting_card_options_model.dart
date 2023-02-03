@@ -1,1 +1,1 @@
-class EGreetingCardOptionsModel { }
+class EGreetingCardOptionsModel {}

@@ -1,1 +1,1 @@
-class BasicGreetingEntryModel { }
+class BasicGreetingEntryModel {}

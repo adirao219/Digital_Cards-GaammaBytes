@@ -1,1 +1,1 @@
-class HomeOnboardingModel { }
+class HomeOnboardingModel {}

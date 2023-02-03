@@ -1,1 +1,1 @@
-class MenuPageModel { }
+class MenuPageModel {}

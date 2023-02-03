@@ -1,4 +1,4 @@
-import 'controller/my_profile_controller.dart';
+
 import 'package:digitalcards_gaammabytes/core/app_export.dart';
 import 'package:digitalcards_gaammabytes/core/utils/validation_functions.dart';
 import 'package:digitalcards_gaammabytes/widgets/app_bar/appbar_image.dart';
@@ -7,7 +7,22 @@ import 'package:digitalcards_gaammabytes/widgets/custom_button.dart';
 import 'package:digitalcards_gaammabytes/widgets/custom_text_form_field.dart';
 import 'package:flutter/material.dart';
 
-class MyProfileScreen extends GetWidget<MyProfileController> {
+class MyProfileScreen extends StatefulWidget {
+  const MyProfileScreen({ super.key});
+
+                @override
+                // ignore: library_private_types_in_public_api
+                _MyProfileScreen createState() => _MyProfileScreen();
+            }
+
+class _MyProfileScreen extends State<MyProfileScreen> {
+  TextEditingController _name_Controller = new TextEditingController();
+  TextEditingController _email_id4_Controller = new TextEditingController();
+  TextEditingController _country_Controller = new TextEditingController();
+  TextEditingController _country_code_Controller = new TextEditingController();
+  TextEditingController _phone_number_Controller = new TextEditingController();
+  TextEditingController _language_Controller = new TextEditingController();
+  TextEditingController _registered_on_Controller = new TextEditingController();
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
@@ -132,7 +147,7 @@ class MyProfileScreen extends GetWidget<MyProfileController> {
                 CustomTextFormField(
                   width: 326,
                   focusNode: FocusNode(),
-                  controller: controller.languageController,
+                  controller: _name_Controller,
                   hintText: "lbl_name".tr,
                   margin: getMargin(
                     top: 49,
@@ -147,7 +162,7 @@ class MyProfileScreen extends GetWidget<MyProfileController> {
                 CustomTextFormField(
                   width: 326,
                   focusNode: FocusNode(),
-                  controller: controller.group33633Controller,
+                  controller: _email_id4_Controller,
                   hintText: "lbl_email_id4".tr,
                   margin: getMargin(
                     top: 23,
@@ -164,7 +179,7 @@ class MyProfileScreen extends GetWidget<MyProfileController> {
                 CustomTextFormField(
                   width: 326,
                   focusNode: FocusNode(),
-                  controller: controller.group33635Controller,
+                  controller: _country_Controller,
                   hintText: "lbl_country".tr,
                   margin: getMargin(
                     top: 24,
@@ -173,7 +188,7 @@ class MyProfileScreen extends GetWidget<MyProfileController> {
                 CustomTextFormField(
                   width: 326,
                   focusNode: FocusNode(),
-                  controller: controller.languageOneController,
+                  controller: _country_code_Controller,
                   hintText: "lbl_country_code".tr,
                   margin: getMargin(
                     top: 24,
@@ -182,7 +197,7 @@ class MyProfileScreen extends GetWidget<MyProfileController> {
                 CustomTextFormField(
                   width: 326,
                   focusNode: FocusNode(),
-                  controller: controller.group33638Controller,
+                  controller: _phone_number_Controller,
                   hintText: "lbl_phone_number".tr,
                   margin: getMargin(
                     top: 23,
@@ -198,7 +213,7 @@ class MyProfileScreen extends GetWidget<MyProfileController> {
                 CustomTextFormField(
                   width: 326,
                   focusNode: FocusNode(),
-                  controller: controller.languageTwoController,
+                  controller: _language_Controller,
                   hintText: "lbl_language".tr,
                   margin: getMargin(
                     top: 21,
@@ -207,7 +222,7 @@ class MyProfileScreen extends GetWidget<MyProfileController> {
                 CustomTextFormField(
                   width: 326,
                   focusNode: FocusNode(),
-                  controller: controller.languageThreeController,
+                  controller: _registered_on_Controller,
                   hintText: "lbl_registered_on".tr,
                   margin: getMargin(
                     top: 24,

@@ -1,1 +1,1 @@
-class BandLinkModel { }
+class BandLinkModel {}

@@ -1,1 +1,1 @@
-class IconGroupModel { }
+class IconGroupModel {}

@@ -1,11 +1,19 @@
-import 'controller/change_password_controller.dart';
+
 import 'package:digitalcards_gaammabytes/core/app_export.dart';
 import 'package:digitalcards_gaammabytes/widgets/app_bar/appbar_image.dart';
 import 'package:digitalcards_gaammabytes/widgets/app_bar/custom_app_bar.dart';
 import 'package:digitalcards_gaammabytes/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
 
-class ChangePasswordScreen extends GetWidget<ChangePasswordController> {
+class ChangePasswordScreen extends StatefulWidget {
+  const ChangePasswordScreen({ super.key});
+
+                @override
+                // ignore: library_private_types_in_public_api
+                _ChangePasswordScreen createState() => _ChangePasswordScreen();
+            }
+
+class _ChangePasswordScreen extends State<ChangePasswordScreen> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(

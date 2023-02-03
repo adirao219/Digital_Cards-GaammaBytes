@@ -1,1 +1,1 @@
-class ListlanguageThreeItemModel { }
+class ListlanguageThreeItemModel {}

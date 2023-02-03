@@ -1,1 +1,1 @@
-class GridchristmasthumbnailItemModel { }
+class GridchristmasthumbnailItemModel {}

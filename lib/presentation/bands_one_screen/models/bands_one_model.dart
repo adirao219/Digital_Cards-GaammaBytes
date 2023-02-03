@@ -1,1 +1,1 @@
-class BandsOneModel { }
+class BandsOneModel {}

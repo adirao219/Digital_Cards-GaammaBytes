@@ -1,1 +1,1 @@
-class AdvancedModel { }
+class AdvancedModel {}

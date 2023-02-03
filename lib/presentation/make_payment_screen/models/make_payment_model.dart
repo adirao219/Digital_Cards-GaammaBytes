@@ -1,1 +1,1 @@
-class MakePaymentModel { }
+class MakePaymentModel {}

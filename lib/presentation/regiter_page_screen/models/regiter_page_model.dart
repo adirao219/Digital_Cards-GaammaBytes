@@ -1,1 +1,1 @@
-class RegiterPageModel { }
+class RegiterPageModel {}

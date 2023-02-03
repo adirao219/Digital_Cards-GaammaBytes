@@ -1,1 +1,1 @@
-class AppNavigationModel { }
+class AppNavigationModel {}

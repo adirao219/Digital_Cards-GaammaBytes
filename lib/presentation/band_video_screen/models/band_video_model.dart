@@ -1,1 +1,1 @@
-class BandVideoModel { }
+class BandVideoModel {}

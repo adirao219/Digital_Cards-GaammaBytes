@@ -1,4 +1,4 @@
-import '../controller/my_e_greeting_cards_controller.dart';
+
 import '../models/gridchristmasthumbnail_item_model.dart';
 import 'package:digitalcards_gaammabytes/core/app_export.dart';
 import 'package:flutter/material.dart';
@@ -9,7 +9,6 @@ class GridchristmasthumbnailItemWidget extends StatelessWidget {
 
   GridchristmasthumbnailItemModel gridchristmasthumbnailItemModelObj;
 
-  var controller = Get.find<MyEGreetingCardsController>();
 
   @override
   Widget build(BuildContext context) {

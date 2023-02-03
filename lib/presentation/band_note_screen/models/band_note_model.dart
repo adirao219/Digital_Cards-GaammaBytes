@@ -1,1 +1,1 @@
-class BandNoteModel { }
+class BandNoteModel {}

@@ -1,1 +1,1 @@
-class BandIcongroupModel { }
+class BandIcongroupModel {}

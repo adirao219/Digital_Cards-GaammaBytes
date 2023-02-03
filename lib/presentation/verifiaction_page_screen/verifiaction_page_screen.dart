@@ -1,4 +1,4 @@
-import 'controller/verifiaction_page_controller.dart';
+
 import 'package:digitalcards_gaammabytes/core/app_export.dart';
 import 'package:digitalcards_gaammabytes/widgets/app_bar/appbar_image.dart';
 import 'package:digitalcards_gaammabytes/widgets/app_bar/appbar_subtitle.dart';
@@ -8,7 +8,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
-class VerifiactionPageScreen extends GetWidget<VerifiactionPageController> {
+class VerifiactionPageScreen extends StatefulWidget {
+  const VerifiactionPageScreen({ super.key});
+
+                @override
+                // ignore: library_private_types_in_public_api
+                _VerifiactionPageScreen createState() => _VerifiactionPageScreen();
+            }
+
+class _VerifiactionPageScreen extends State<VerifiactionPageScreen> {
+  TextEditingController  _otpController= new TextEditingController();
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -63,7 +72,7 @@ class VerifiactionPageScreen extends GetWidget<VerifiactionPageController> {
                           padding: getPadding(left: 24, top: 31),
                           child: Obx(() => PinCodeTextField(
                               appContext: context,
-                              controller: controller.otpController.value,
+                              controller: _otpController,
                               length: 4,
                               obscureText: false,
                               obscuringCharacter: '*',

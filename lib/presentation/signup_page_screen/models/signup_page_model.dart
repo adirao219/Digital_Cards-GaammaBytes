@@ -1,1 +1,1 @@
-class SignupPageModel { }
+class SignupPageModel {}

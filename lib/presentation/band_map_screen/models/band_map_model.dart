@@ -1,1 +1,1 @@
-class BandMapModel { }
+class BandMapModel {}

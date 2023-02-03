@@ -1,4 +1,4 @@
-import '../controller/my_digital_cards_controller.dart';
+
 import '../models/gridbusinesscardseven_item_model.dart';
 import 'package:digitalcards_gaammabytes/core/app_export.dart';
 import 'package:flutter/material.dart';
@@ -9,7 +9,6 @@ class GridbusinesscardsevenItemWidget extends StatelessWidget {
 
   GridbusinesscardsevenItemModel gridbusinesscardsevenItemModelObj;
 
-  var controller = Get.find<MyDigitalCardsController>();
 
   @override
   Widget build(BuildContext context) {

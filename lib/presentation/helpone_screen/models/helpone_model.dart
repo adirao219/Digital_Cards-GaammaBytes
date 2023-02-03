@@ -1,1 +1,1 @@
-class HelponeModel { }
+class HelponeModel {}

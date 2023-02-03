@@ -1,1 +1,1 @@
-class CardPreviewoneModel { }
+class CardPreviewoneModel {}

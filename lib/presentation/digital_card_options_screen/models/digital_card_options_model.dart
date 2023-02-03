@@ -1,1 +1,1 @@
-class DigitalCardOptionsModel { }
+class DigitalCardOptionsModel {}

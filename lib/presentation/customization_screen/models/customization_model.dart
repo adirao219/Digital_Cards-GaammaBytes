@@ -1,1 +1,1 @@
-class CustomizationModel { }
+class CustomizationModel {}

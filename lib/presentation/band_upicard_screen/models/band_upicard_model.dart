@@ -1,1 +1,1 @@
-class BandUpicardModel { }
+class BandUpicardModel {}

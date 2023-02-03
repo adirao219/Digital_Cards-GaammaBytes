@@ -1,1 +1,1 @@
-class BandBankaCdetailsModel { }
+class BandBankaCdetailsModel {}

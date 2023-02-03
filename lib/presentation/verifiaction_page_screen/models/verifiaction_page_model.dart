@@ -1,1 +1,1 @@
-class VerifiactionPageModel { }
+class VerifiactionPageModel {}

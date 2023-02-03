@@ -1,83 +1,78 @@
 /// Checks if string consist only Alphabet. (No Whitespace)
-bool isText(String? inputString, {bool isRequired = false}) { 
-bool isInputStringValid = false;
+bool isText(String? inputString, {bool isRequired = false}) {
+  bool isInputStringValid = false;
 
-if ((inputString == null ? true : inputString.isEmpty) && !isRequired) {
+  if ((inputString == null ? true : inputString.isEmpty) && !isRequired) {
+    isInputStringValid = true;
+  }
 
-isInputStringValid = true;
+  if (inputString != null) {
+    const pattern = r'^[a-zA-Z]+$';
 
+    final regExp = RegExp(pattern);
+
+    isInputStringValid = regExp.hasMatch(inputString);
+  }
+
+  return isInputStringValid;
 }
 
-if (inputString != null) {
+/// Checks if string is phone number
+bool isValidPhone(String? inputString, {bool isRequired = false}) {
+  bool isInputStringValid = false;
 
-const pattern = r'^[a-zA-Z]+$';
+  if ((inputString == null ? true : inputString.isEmpty) && !isRequired) {
+    isInputStringValid = true;
+  }
 
-final regExp = RegExp(pattern);
+  if (inputString != null) {
+    if (inputString.length > 16 || inputString.length < 6) return false;
 
-isInputStringValid = regExp.hasMatch(inputString) ;
+    const pattern = r'^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$';
 
+    final regExp = RegExp(pattern);
+
+    isInputStringValid = regExp.hasMatch(inputString);
+  }
+
+  return isInputStringValid;
 }
 
-return isInputStringValid; } /// Checks if string is phone number
-bool isValidPhone(String? inputString, {bool isRequired = false}) { 
-bool isInputStringValid = false;
+/// Checks if string is email.
+bool isValidEmail(String? inputString, {bool isRequired = false}) {
+  bool isInputStringValid = false;
 
-if ((inputString == null ? true : inputString.isEmpty) && !isRequired) {
+  if ((inputString == null ? true : inputString.isEmpty) && !isRequired) {
+    isInputStringValid = true;
+  }
 
-isInputStringValid = true;
+  if (inputString != null) {
+    const pattern =
+        r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
 
+    final regExp = RegExp(pattern);
+
+    isInputStringValid = regExp.hasMatch(inputString);
+  }
+
+  return isInputStringValid;
 }
 
-if (inputString != null) {
+/// Checks if string consist only numeric.
+bool isNumeric(String? inputString, {bool isRequired = false}) {
+  bool isInputStringValid = false;
 
-if (inputString.length > 16 || inputString.length < 6) return false;
+  if ((inputString == null ? true : inputString.isEmpty) && !isRequired) {
+    isInputStringValid = true;
+  }
 
-const pattern = r'^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$';
+  if (inputString != null) {
+    const pattern = r'^\d+$';
 
-final regExp = RegExp(pattern);
+    final regExp = RegExp(pattern);
 
-isInputStringValid = regExp.hasMatch(inputString) ;
+    isInputStringValid = regExp.hasMatch(inputString);
+  }
 
+  return isInputStringValid;
 }
-
-return isInputStringValid; } /// Checks if string is email.
-bool isValidEmail(String? inputString, {bool isRequired = false}) { 
-bool isInputStringValid = false;
-
-if ((inputString == null ? true : inputString.isEmpty) && !isRequired) {
-
-isInputStringValid = true;
-
-}
-
-if (inputString != null) {
-
-const pattern = r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
-
-final regExp = RegExp(pattern);
-
-isInputStringValid = regExp.hasMatch(inputString) ;
-
-}
-
-return isInputStringValid; } /// Checks if string consist only numeric.
-bool isNumeric(String? inputString, {bool isRequired = false}) { 
-bool isInputStringValid = false;
-
-if ((inputString == null ? true : inputString.isEmpty) && !isRequired) {
-
-isInputStringValid = true;
-
-}
-
-if (inputString != null) {
-
-const pattern = r'^\d+$';
-
-final regExp = RegExp(pattern);
-
-isInputStringValid = regExp.hasMatch(inputString) ;
-
-}
-
-return isInputStringValid; } 

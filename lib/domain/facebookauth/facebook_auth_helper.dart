@@ -4,7 +4,6 @@ import 'package:get/get_connect.dart';
 import 'facebook_user.dart';
 
 class FacebookAuthHelper extends GetConnect {
-
   /// Handle Facebook SignIn to authenticate user
   Future<FacebookUser> facebookSignInProcess() async {
     final facebookLogin = FacebookLogin();

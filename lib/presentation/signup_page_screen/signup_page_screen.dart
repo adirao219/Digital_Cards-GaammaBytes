@@ -1,4 +1,4 @@
-import 'controller/signup_page_controller.dart';
+
 import 'package:digitalcards_gaammabytes/core/app_export.dart';
 import 'package:digitalcards_gaammabytes/widgets/app_bar/appbar_image.dart';
 import 'package:digitalcards_gaammabytes/widgets/app_bar/appbar_subtitle.dart';
@@ -8,15 +8,15 @@ import 'package:flutter/material.dart';
 import 'package:digitalcards_gaammabytes/domain/googleauth/google_auth_helper.dart';
 
 class SignupPageScreen extends StatefulWidget {
-  const SignupPageScreen({super.key});
+  const SignupPageScreen({ super.key});
 
-  @override
-  // ignore: library_private_types_in_public_api
-  _SignupPageScreen createState() => _SignupPageScreen();
-}
+                @override
+                // ignore: library_private_types_in_public_api
+                _SignupPageScreen createState() => _SignupPageScreen();
+            }
+
 
 class _SignupPageScreen extends State<SignupPageScreen> {
-  
   @override
   Widget build(BuildContext context) {
     return SafeArea(

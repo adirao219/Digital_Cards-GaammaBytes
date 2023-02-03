@@ -1,1 +1,1 @@
-class CardEntryoneModel { }
+class CardEntryoneModel {}

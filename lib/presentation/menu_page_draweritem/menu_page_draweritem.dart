@@ -1,12 +1,18 @@
-import 'controller/menu_page_controller.dart';
+
 import 'package:digitalcards_gaammabytes/core/app_export.dart';
 import 'package:flutter/material.dart';
 
 // ignore_for_file: must_be_immutable
-class MenuPageDraweritem extends StatelessWidget {
-  MenuPageDraweritem(this.controller);
+class MenuPageDraweritem extends StatefulWidget {
+  const MenuPageDraweritem({ super.key});
 
-  MenuPageController controller;
+                @override
+                // ignore: library_private_types_in_public_api
+                _MenuPageDraweritem createState() => _MenuPageDraweritem();
+            }
+
+class _MenuPageDraweritem extends State<MenuPageDraweritem> {
+ 
 
   @override
   Widget build(BuildContext context) {

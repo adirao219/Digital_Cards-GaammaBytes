@@ -1,4 +1,4 @@
-import '../controller/search_popupone_controller.dart';
+
 import '../models/gridbusinesscardseven1_item_model.dart';
 import 'package:digitalcards_gaammabytes/core/app_export.dart';
 import 'package:flutter/material.dart';
@@ -9,7 +9,6 @@ class Gridbusinesscardseven1ItemWidget extends StatelessWidget {
 
   Gridbusinesscardseven1ItemModel gridbusinesscardseven1ItemModelObj;
 
-  var controller = Get.find<SearchPopuponeController>();
 
   @override
   Widget build(BuildContext context) {

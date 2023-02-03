@@ -1,4 +1,4 @@
-import '../controller/search_popupone_controller.dart';
+
 import '../models/listlanguage_three_item_model.dart';
 import 'package:digitalcards_gaammabytes/core/app_export.dart';
 import 'package:flutter/material.dart';
@@ -9,7 +9,6 @@ class ListlanguageThreeItemWidget extends StatelessWidget {
 
   ListlanguageThreeItemModel listlanguageThreeItemModelObj;
 
-  var controller = Get.find<SearchPopuponeController>();
 
   @override
   Widget build(BuildContext context) {

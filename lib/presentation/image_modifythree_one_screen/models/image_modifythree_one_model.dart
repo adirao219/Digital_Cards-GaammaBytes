@@ -1,1 +1,1 @@
-class ImageModifythreeOneModel { }
+class ImageModifythreeOneModel {}
