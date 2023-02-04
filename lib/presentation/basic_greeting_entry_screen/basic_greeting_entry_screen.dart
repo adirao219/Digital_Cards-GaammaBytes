@@ -1,4 +1,3 @@
-
 import 'package:digitalcards_gaammabytes/core/app_export.dart';
 import 'package:digitalcards_gaammabytes/widgets/app_bar/appbar_image.dart';
 import 'package:digitalcards_gaammabytes/widgets/app_bar/appbar_title.dart';
@@ -9,12 +8,12 @@ import 'package:digitalcards_gaammabytes/widgets/custom_text_form_field.dart';
 import 'package:flutter/material.dart';
 
 class BasicGreetingEntryScreen extends StatefulWidget {
-  const BasicGreetingEntryScreen({ super.key});
+  const BasicGreetingEntryScreen({super.key});
 
-                @override
-                // ignore: library_private_types_in_public_api
-                _BasicGreetingEntryScreen createState() => _BasicGreetingEntryScreen();
-            }
+  @override
+  // ignore: library_private_types_in_public_api
+  _BasicGreetingEntryScreen createState() => _BasicGreetingEntryScreen();
+}
 
 class _BasicGreetingEntryScreen extends State<BasicGreetingEntryScreen> {
   TextEditingController _template_Controller = new TextEditingController();
@@ -27,6 +26,11 @@ class _BasicGreetingEntryScreen extends State<BasicGreetingEntryScreen> {
         top: false,
         bottom: false,
         child: Scaffold(
+            floatingActionButtonLocation:
+                FloatingActionButtonLocation.miniEndTop,
+            floatingActionButton: Padding(
+                padding: const EdgeInsets.only(bottom: 75.0),
+                child: MoreOptionMenu()),
             resizeToAvoidBottomInset: false,
             backgroundColor: ColorConstant.whiteA700,
             appBar: CustomAppBar(
@@ -61,6 +65,9 @@ class _BasicGreetingEntryScreen extends State<BasicGreetingEntryScreen> {
                                           width: getHorizontalSize(5.00),
                                           svgPath:
                                               ImageConstant.imgVectorstroke,
+                                          onTap: () {
+                                            Navigator.of(context).pop();
+                                          },
                                           margin: getMargin(
                                               left: 15,
                                               top: 13,
@@ -72,13 +79,13 @@ class _BasicGreetingEntryScreen extends State<BasicGreetingEntryScreen> {
                                 margin: getMargin(left: 54, top: 14))
                           ]))
                     ])),
-                actions: [
-                  AppbarImage(
-                      height: getVerticalSize(35.00),
-                      width: getHorizontalSize(43.00),
-                      svgPath: ImageConstant.imgOverflowmenu,
-                      margin: getMargin(left: 3, top: 47, right: 3, bottom: 26))
-                ],
+                // actions: [
+                //   AppbarImage(
+                //       height: getVerticalSize(35.00),
+                //       width: getHorizontalSize(43.00),
+                //       svgPath: ImageConstant.imgOverflowmenu,
+                //       margin: getMargin(left: 3, top: 47, right: 3, bottom: 26))
+                // ],
                 styleType: Style.bgStyle_22),
             body: SizedBox(
                 width: size.width,
@@ -140,8 +147,7 @@ class _BasicGreetingEntryScreen extends State<BasicGreetingEntryScreen> {
                               CustomTextFormField(
                                   width: 326,
                                   focusNode: FocusNode(),
-                                  controller:
-                                      _sender_Controller,
+                                  controller: _sender_Controller,
                                   hintText: "lbl_sender".tr,
                                   margin: getMargin(top: 19)),
                               Container(
@@ -364,7 +370,8 @@ class _BasicGreetingEntryScreen extends State<BasicGreetingEntryScreen> {
                                                           width: 326,
                                                           focusNode:
                                                               FocusNode(),
-                                                          controller: _card_color_Controller,
+                                                          controller:
+                                                              _card_color_Controller,
                                                           hintText:
                                                               "lbl_card_color"
                                                                   .tr,
@@ -444,65 +451,34 @@ class _BasicGreetingEntryScreen extends State<BasicGreetingEntryScreen> {
                                   text: "lbl_next".tr,
                                   margin: getMargin(top: 17),
                                   onTap: onTapNext),
-                              Container(
-                                  height: getVerticalSize(94.00),
-                                  width: getHorizontalSize(105.00),
-                                  margin: getMargin(top: 17),
-                                  child: Stack(
-                                      alignment: Alignment.topCenter,
-                                      children: [
-                                        Align(
-                                            alignment: Alignment.center,
-                                            child: GestureDetector(
-                                                onTap: () {
-                                                  onTapEllipseFour();
-                                                },
-                                                child: Container(
-                                                    height:
-                                                        getVerticalSize(94.00),
-                                                    width: getHorizontalSize(
-                                                        105.00),
-                                                    decoration: BoxDecoration(
-                                                        color: ColorConstant
-                                                            .pink900,
-                                                        borderRadius:
-                                                            BorderRadius.circular(
-                                                                getHorizontalSize(
-                                                                    52.00)))))),
-                                        CustomImageView(
-                                            svgPath:
-                                                ImageConstant.imgHomeWhiteA700,
-                                            height: getVerticalSize(25.00),
-                                            width: getHorizontalSize(27.00),
-                                            alignment: Alignment.topCenter,
-                                            margin: getMargin(top: 33))
-                                      ]))
                             ])))),
-            bottomNavigationBar:
-                CustomBottomBar(onChanged: (BottomBarEnum type) {})));
+            bottomNavigationBar: CustomBottomBar(
+                onNextClicked: onTapNext,
+                isPublishAvailable: false,
+                onChanged: (BottomBarEnum type) {})));
   }
 
   onTapSelecttemplateOne() {
-    Get.toNamed(AppRoutes.selectTemplatetwoScreen);
+    Navigator.of(context).pushNamed(AppRoutes.selectTemplateScreen);
   }
 
   onTapSelectimage() {
-    Get.toNamed(AppRoutes.imageModifytwoScreen);
+    Navigator.of(context).pushNamed(AppRoutes.imageModifyScreen);
   }
 
   onTapSelectimageOne() {
-    Get.toNamed(AppRoutes.imageModifytwoScreen);
+    Navigator.of(context).pushNamed(AppRoutes.imageModifyScreen);
   }
 
   onTapNext() {
-    Get.toNamed(AppRoutes.customizationScreen);
+    Navigator.of(context).pushNamed(AppRoutes.customizationScreen);
   }
 
   onTapEllipseFour() {
-    Get.toNamed(AppRoutes.homePageScreen);
+    Navigator.of(context).pushNamed(AppRoutes.homePageScreen);
   }
 
   onTapContrast9() {
-    Get.toNamed(AppRoutes.eGreetingCardOptionsScreen);
+    Navigator.of(context).pushNamed(AppRoutes.eGreetingCardOptionsScreen);
   }
 }

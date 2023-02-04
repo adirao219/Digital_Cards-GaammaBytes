@@ -106,6 +106,6 @@ class _ForgotPasswordoneScreen extends State<ForgotPasswordoneScreen> {
   }
 
   onTapNext() {
-    Get.toNamed(AppRoutes.forgotPasswordoneOneScreen);
+    Navigator.of(context).pushNamed(AppRoutes.forgotPasswordoneOneScreen);
   }
 }

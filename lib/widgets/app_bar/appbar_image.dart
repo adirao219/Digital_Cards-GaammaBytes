@@ -42,3 +42,51 @@ class AppbarImage extends StatelessWidget {
     );
   }
 }
+
+class MoreOptionMenu extends StatelessWidget {
+  MoreOptionMenu();
+
+  @override
+  Widget build(BuildContext context) {
+    return PopupMenuButton<int>(
+      icon: Icon(
+        Icons.more_vert,
+        size: 30,
+        color: ColorConstant.pink900,
+      ),
+      onSelected: (item) {
+        switch (item) {
+          case 1:
+            Navigator.of(context).pushNamed(AppRoutes.helponeScreen);
+            break;
+          case 2:
+            Navigator.of(context).pushNamed(AppRoutes.bandVideoScreen);
+            break;
+        }
+        ;
+      },
+      itemBuilder: (context) => [
+        PopupMenuItem<int>(
+            value: 1,
+            child: Row(children: [
+              Icon(
+                Icons.help,
+                color: ColorConstant.pink900,
+                size: 20,
+              ),
+              Text(' Help')
+            ])),
+        PopupMenuItem<int>(
+            value: 2,
+            child: Row(children: [
+              Icon(
+                Icons.videocam_rounded,
+                color: ColorConstant.pink900,
+                size: 20,
+              ),
+              Text(' Watch Video')
+            ])),
+      ],
+    );
+  }
+}

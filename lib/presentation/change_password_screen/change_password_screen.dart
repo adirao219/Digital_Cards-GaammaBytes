@@ -75,6 +75,9 @@ class _ChangePasswordScreen extends State<ChangePasswordScreen> {
                           5.00,
                         ),
                         svgPath: ImageConstant.imgVectorstroke,
+                                onTap: () {
+                                  Navigator.of(context).pop();
+                                },
                         margin: getMargin(
                           left: 15,
                           top: 13,

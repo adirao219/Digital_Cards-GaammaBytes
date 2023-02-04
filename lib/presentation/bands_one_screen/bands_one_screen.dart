@@ -49,6 +49,9 @@ class _BandsOneScreen extends State<BandsOneScreen> {
                                           svgPath: ImageConstant.imgContrast),
                                       AppbarImage(
                                           height: getVerticalSize(10.00),
+                                onTap: () {
+                                  Navigator.of(context).pop();
+                                },
                                           width: getHorizontalSize(5.00),
                                           svgPath:
                                               ImageConstant.imgVectorstroke,
@@ -434,6 +437,6 @@ class _BandsOneScreen extends State<BandsOneScreen> {
   }
 
   onTapComputer1() {
-    Get.toNamed(AppRoutes.bandsScreen);
+    Navigator.of(context).pushNamed(AppRoutes.bandsScreen);
   }
 }

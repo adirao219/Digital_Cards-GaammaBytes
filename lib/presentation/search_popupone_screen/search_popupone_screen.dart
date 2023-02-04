@@ -589,6 +589,6 @@ class _SearchPopuponeScreen extends State<SearchPopuponeScreen> {
   }
 
   onTapTxtGroup125() {
-    Get.toNamed(AppRoutes.myDigitalCardsScreen);
+    Navigator.of(context).pushNamed(AppRoutes.myDigitalCardsScreen);
   }
 }

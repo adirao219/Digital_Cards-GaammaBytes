@@ -1,4 +1,3 @@
-
 import 'package:digitalcards_gaammabytes/core/app_export.dart';
 import 'package:digitalcards_gaammabytes/widgets/app_bar/appbar_image.dart';
 import 'package:digitalcards_gaammabytes/widgets/app_bar/appbar_title.dart';
@@ -8,12 +7,12 @@ import 'package:digitalcards_gaammabytes/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
 
 class CustomizationoneScreen extends StatefulWidget {
-  const CustomizationoneScreen({ super.key});
+  const CustomizationoneScreen({super.key});
 
-                @override
-                // ignore: library_private_types_in_public_api
-                _CustomizationoneScreen createState() => _CustomizationoneScreen();
-            }
+  @override
+  // ignore: library_private_types_in_public_api
+  _CustomizationoneScreen createState() => _CustomizationoneScreen();
+}
 
 class _CustomizationoneScreen extends State<CustomizationoneScreen> {
   @override
@@ -22,6 +21,11 @@ class _CustomizationoneScreen extends State<CustomizationoneScreen> {
         top: false,
         bottom: false,
         child: Scaffold(
+            floatingActionButtonLocation:
+                FloatingActionButtonLocation.miniEndTop,
+            floatingActionButton: Padding(
+                padding: const EdgeInsets.only(bottom: 75.0),
+                child: MoreOptionMenu()),
             backgroundColor: ColorConstant.whiteA700,
             appBar: CustomAppBar(
                 height: getVerticalSize(108.00),
@@ -55,6 +59,9 @@ class _CustomizationoneScreen extends State<CustomizationoneScreen> {
                                           width: getHorizontalSize(5.00),
                                           svgPath:
                                               ImageConstant.imgVectorstroke,
+                                          onTap: () {
+                                            Navigator.of(context).pop();
+                                          },
                                           margin: getMargin(
                                               left: 15,
                                               top: 13,
@@ -63,16 +70,16 @@ class _CustomizationoneScreen extends State<CustomizationoneScreen> {
                                     ])),
                             AppbarTitle(
                                 text: "lbl_card_details".tr.toUpperCase(),
-                                margin: getMargin(left: 39, top: 14))
+                                margin: getMargin(left: 39, top: 5))
                           ]))
                     ])),
-                actions: [
-                  AppbarImage(
-                      height: getVerticalSize(35.00),
-                      width: getHorizontalSize(43.00),
-                      svgPath: ImageConstant.imgOverflowmenu,
-                      margin: getMargin(left: 3, top: 47, right: 3, bottom: 26))
-                ],
+                // actions: [
+                //   AppbarImage(
+                //       height: getVerticalSize(35.00),
+                //       width: getHorizontalSize(43.00),
+                //       svgPath: ImageConstant.imgOverflowmenu,
+                //       margin: getMargin(left: 3, top: 47, right: 3, bottom: 26))
+                // ],
                 styleType: Style.bgStyle_17),
             body: SizedBox(
                 width: size.width,
@@ -144,7 +151,7 @@ class _CustomizationoneScreen extends State<CustomizationoneScreen> {
                                                         width: getSize(80.00),
                                                         decoration: BoxDecoration(
                                                             color: ColorConstant
-                                                                .deepOrange10033,
+                                                                .deepOrange40033,
                                                             borderRadius:
                                                                 BorderRadius.circular(
                                                                     getHorizontalSize(
@@ -176,7 +183,7 @@ class _CustomizationoneScreen extends State<CustomizationoneScreen> {
                                                         width: getSize(80.00),
                                                         decoration: BoxDecoration(
                                                             color: ColorConstant
-                                                                .deepOrange20033,
+                                                                .deepOrange40033,
                                                             borderRadius:
                                                                 BorderRadius.circular(
                                                                     getHorizontalSize(
@@ -194,7 +201,7 @@ class _CustomizationoneScreen extends State<CustomizationoneScreen> {
                                                         margin:
                                                             EdgeInsets.all(0),
                                                         color: ColorConstant
-                                                            .deepOrange60033,
+                                                            .deepOrange40033,
                                                         shape: RoundedRectangleBorder(
                                                             borderRadius:
                                                                 BorderRadiusStyle
@@ -207,7 +214,7 @@ class _CustomizationoneScreen extends State<CustomizationoneScreen> {
                                                             padding: getPadding(
                                                                 all: 25),
                                                             decoration: AppDecoration
-                                                                .fillDeeporange60033
+                                                                .fillDeeporangeA100a3
                                                                 .copyWith(
                                                                     borderRadius:
                                                                         BorderRadiusStyle
@@ -378,72 +385,38 @@ class _CustomizationoneScreen extends State<CustomizationoneScreen> {
                                           .copyWith(
                                               letterSpacing:
                                                   getHorizontalSize(0.36)))),
-                              Align(
-                                  alignment: Alignment.center,
-                                  child: Container(
-                                      height: getVerticalSize(94.00),
-                                      width: getHorizontalSize(105.00),
-                                      margin: getMargin(top: 64),
-                                      child: Stack(
-                                          alignment: Alignment.topCenter,
-                                          children: [
-                                            Align(
-                                                alignment: Alignment.center,
-                                                child: GestureDetector(
-                                                    onTap: () {
-                                                      onTapEllipseFour();
-                                                    },
-                                                    child: Container(
-                                                        height: getVerticalSize(
-                                                            94.00),
-                                                        width:
-                                                            getHorizontalSize(
-                                                                105.00),
-                                                        decoration: BoxDecoration(
-                                                            color: ColorConstant
-                                                                .pink900,
-                                                            borderRadius:
-                                                                BorderRadius.circular(
-                                                                    getHorizontalSize(
-                                                                        52.00)))))),
-                                            CustomImageView(
-                                                svgPath: ImageConstant
-                                                    .imgHomeWhiteA700,
-                                                height: getVerticalSize(25.00),
-                                                width: getHorizontalSize(27.00),
-                                                alignment: Alignment.topCenter,
-                                                margin: getMargin(top: 33))
-                                          ])))
                             ])))),
-            bottomNavigationBar:
-                CustomBottomBar(onChanged: (BottomBarEnum type) {})));
+            bottomNavigationBar: CustomBottomBar(
+                onNextClicked: onTapCardpreview,
+                isPublishAvailable: false,
+                onChanged: (BottomBarEnum type) {})));
   }
 
   onTapCardpreview() {
-    Get.toNamed(AppRoutes.cardPreviewoneOneScreen);
+    Navigator.of(context).pushNamed(AppRoutes.cardPreviewScreen);
   }
 
   onTapRectangle4214() {
-    Get.toNamed(AppRoutes.footerScreen);
+    Navigator.of(context).pushNamed(AppRoutes.footerScreen);
   }
 
   onTapRectangle4215() {
-    Get.toNamed(AppRoutes.bandsScreen);
+    Navigator.of(context).pushNamed(AppRoutes.bandsScreen);
   }
 
   onTapRectangle4216() {
-    Get.toNamed(AppRoutes.iconGroupScreen);
+    Navigator.of(context).pushNamed(AppRoutes.iconGroupScreen);
   }
 
   onTapStacksearch() {
-    Get.toNamed(AppRoutes.advancedScreen);
+    Navigator.of(context).pushNamed(AppRoutes.advancedScreen);
   }
 
   onTapEllipseFour() {
-    Get.toNamed(AppRoutes.homePageScreen);
+    Navigator.of(context).pushNamed(AppRoutes.homePageScreen);
   }
 
   onTapContrast4() {
-    Get.toNamed(AppRoutes.cardEntrytwoScreen);
+    Navigator.of(context).pushNamed(AppRoutes.cardEntrytwoScreen);
   }
 }

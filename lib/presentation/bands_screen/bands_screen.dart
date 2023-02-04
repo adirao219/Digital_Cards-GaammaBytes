@@ -51,6 +51,9 @@ class _BandsScreen extends State<BandsScreen> {
                                       AppbarImage(
                                           height: getVerticalSize(10.00),
                                           width: getHorizontalSize(5.00),
+                                onTap: () {
+                                  Navigator.of(context).pop();
+                                },
                                           svgPath:
                                               ImageConstant.imgVectorstroke,
                                           margin: getMargin(
@@ -373,46 +376,46 @@ class _BandsScreen extends State<BandsScreen> {
   }
 
   onTapLink() {
-    Get.toNamed(AppRoutes.bandLinkScreen);
+    Navigator.of(context).pushNamed(AppRoutes.bandLinkScreen);
   }
 
   onTapNote() {
-    Get.toNamed(AppRoutes.bandNoteScreen);
+    Navigator.of(context).pushNamed(AppRoutes.bandNoteScreen);
   }
 
   onTapMap() {
-    Get.toNamed(AppRoutes.bandMapScreen);
+    Navigator.of(context).pushNamed(AppRoutes.bandMapScreen);
   }
 
   onTapVideo() {
-    Get.toNamed(AppRoutes.bandVideoScreen);
+    Navigator.of(context).pushNamed(AppRoutes.bandVideoScreen);
   }
 
   onTapTxtGroup118() {
-    Get.toNamed(AppRoutes.bandPictureScreen);
+    Navigator.of(context).pushNamed(AppRoutes.bandPictureScreen);
   }
 
   onTapTxtGroup117() {
-    Get.toNamed(AppRoutes.bandContactbandScreen);
+    Navigator.of(context).pushNamed(AppRoutes.bandContactbandScreen);
   }
 
   onTapRectangle4205() {
-    Get.toNamed(AppRoutes.bandIcongroupScreen);
+    Navigator.of(context).pushNamed(AppRoutes.bandIcongroupScreen);
   }
 
   onTapRectangle4206() {
-    Get.toNamed(AppRoutes.bandBankaCdetailsScreen);
+    Navigator.of(context).pushNamed(AppRoutes.bandBankaCdetailsScreen);
   }
 
   onTapRectangle4207() {
-    Get.toNamed(AppRoutes.bandUpicardScreen);
+    Navigator.of(context).pushNamed(AppRoutes.bandUpicardScreen);
   }
 
   onTapTxtBtnConfirm() {
-    Get.toNamed(AppRoutes.customizationoneScreen);
+    Navigator.of(context).pushNamed(AppRoutes.customizationoneScreen);
   }
 
   onTapComputer() {
-    Get.toNamed(AppRoutes.bandsOneScreen);
+    Navigator.of(context).pushNamed(AppRoutes.bandsOneScreen);
   }
 }

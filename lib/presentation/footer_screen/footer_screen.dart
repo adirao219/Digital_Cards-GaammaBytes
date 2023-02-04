@@ -54,6 +54,9 @@ class _FooterScreen extends State<FooterScreen> {
                                           width: getHorizontalSize(5.00),
                                           svgPath:
                                               ImageConstant.imgVectorstroke,
+                                onTap: () {
+                                  Navigator.of(context).pop();
+                                },
                                           margin: getMargin(
                                               left: 15,
                                               top: 13,
@@ -65,13 +68,13 @@ class _FooterScreen extends State<FooterScreen> {
                                 margin: getMargin(left: 71, top: 14))
                           ]))
                     ])),
-                actions: [
-                  AppbarImage(
-                      height: getVerticalSize(35.00),
-                      width: getHorizontalSize(43.00),
-                      svgPath: ImageConstant.imgOverflowmenu,
-                      margin: getMargin(left: 3, top: 47, right: 3, bottom: 26))
-                ],
+                 // actions: [
+                //   AppbarImage(
+                //       height: getVerticalSize(35.00),
+                //       width: getHorizontalSize(43.00),
+                //       svgPath: ImageConstant.imgOverflowmenu,
+                //       margin: getMargin(left: 3, top: 47, right: 3, bottom: 26))
+                // ],
                 styleType: Style.bgStyle_25),
             body: Container(
                 width: size.width,
@@ -173,6 +176,6 @@ class _FooterScreen extends State<FooterScreen> {
   }
 
   onTapTxtBtnConfirm() {
-    Get.toNamed(AppRoutes.customizationoneScreen);
+    Navigator.of(context).pushNamed(AppRoutes.customizationoneScreen);
   }
 }

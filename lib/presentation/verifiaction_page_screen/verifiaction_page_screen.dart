@@ -122,6 +122,6 @@ class _VerifiactionPageScreen extends State<VerifiactionPageScreen> {
   }
 
   onTapVerifysigninOne() {
-    Get.toNamed(AppRoutes.signupPageScreen);
+    Navigator.of(context).pushNamed(AppRoutes.signupPageScreen);
   }
 }

@@ -1,4 +1,3 @@
-
 import 'package:digitalcards_gaammabytes/core/app_export.dart';
 import 'package:digitalcards_gaammabytes/widgets/app_bar/appbar_image.dart';
 import 'package:digitalcards_gaammabytes/widgets/app_bar/appbar_subtitle.dart';
@@ -6,12 +5,12 @@ import 'package:digitalcards_gaammabytes/widgets/app_bar/custom_app_bar.dart';
 import 'package:flutter/material.dart';
 
 class HomePageScreen extends StatefulWidget {
-  const HomePageScreen({ super.key});
+  const HomePageScreen({super.key});
 
-                @override
-                // ignore: library_private_types_in_public_api
-                _HomePageScreen createState() => _HomePageScreen();
-            }
+  @override
+  // ignore: library_private_types_in_public_api
+  _HomePageScreen createState() => _HomePageScreen();
+}
 
 class _HomePageScreen extends State<HomePageScreen> {
   @override
@@ -20,6 +19,11 @@ class _HomePageScreen extends State<HomePageScreen> {
         top: false,
         bottom: false,
         child: Scaffold(
+            floatingActionButtonLocation:
+                FloatingActionButtonLocation.miniEndTop,
+            floatingActionButton: Padding(
+                padding: const EdgeInsets.only(bottom: 75.0),
+                child: MoreOptionMenu()),
             backgroundColor: ColorConstant.whiteA700,
             appBar: CustomAppBar(
                 height: getVerticalSize(108.00),
@@ -58,16 +62,16 @@ class _HomePageScreen extends State<HomePageScreen> {
                                     ])),
                             AppbarSubtitle(
                                 text: "lbl_let_s_design".tr,
-                                margin: getMargin(left: 44, top: 10))
+                                margin: getMargin(left: 35, top: 10))
                           ]))
                     ])),
-                actions: [
-                  AppbarImage(
-                      height: getVerticalSize(35.00),
-                      width: getHorizontalSize(43.00),
-                      svgPath: ImageConstant.imgOverflowmenu,
-                      margin: getMargin(left: 3, top: 47, right: 3, bottom: 26))
-                ],
+                // actions: [
+                //   AppbarImage(
+                //       height: getVerticalSize(35.00),
+                //       width: getHorizontalSize(43.00),
+                //       svgPath: ImageConstant.imgOverflowmenu,
+                //       margin: getMargin(left: 3, top: 47, right: 3, bottom: 26))
+                // ],
                 styleType: Style.bgStyle_4),
             body: Container(
                 width: size.width,
@@ -80,18 +84,19 @@ class _HomePageScreen extends State<HomePageScreen> {
                           textAlign: TextAlign.left,
                           style: AppStyle.txtInterLight18),
                       Container(
-                          height: getVerticalSize(190.00),
+                          height: getVerticalSize(200.00),
                           width: getHorizontalSize(326.00),
                           margin: getMargin(top: 45),
                           child: Stack(alignment: Alignment.center, children: [
                             Align(
                                 alignment: Alignment.bottomCenter,
                                 child: Container(
-                                    width: getHorizontalSize(95.00),
+                                    padding: getPadding(bottom: 10),
+                                    width: getHorizontalSize(150.00),
                                     child: Text("lbl_digital_cards".tr,
                                         maxLines: null,
                                         textAlign: TextAlign.center,
-                                        style: AppStyle.txtPonnala16))),
+                                        style: AppStyle.txtNunitoSansBold14))),
                             Align(
                                 alignment: Alignment.center,
                                 child: GestureDetector(
@@ -101,14 +106,20 @@ class _HomePageScreen extends State<HomePageScreen> {
                                     child: Container(
                                         padding: getPadding(
                                             left: 9,
-                                            top: 8,
+                                            top: 5,
                                             right: 9,
                                             bottom: 8),
-                                        decoration: AppDecoration
-                                            .outlineBlack9003f3
-                                            .copyWith(
-                                                borderRadius: BorderRadiusStyle
-                                                    .roundedBorder15),
+                                        decoration: BoxDecoration(
+                                          color: Color(0x71EEA792),
+                                          border: Border.all(
+                                            color: Color(0x71EEA792),
+                                            width: getHorizontalSize(
+                                              1.00,
+                                            ),
+                                          ),
+                                        ).copyWith(
+                                            borderRadius: BorderRadiusStyle
+                                                .roundedBorder15),
                                         child: Column(
                                             mainAxisSize: MainAxisSize.min,
                                             mainAxisAlignment:
@@ -118,7 +129,7 @@ class _HomePageScreen extends State<HomePageScreen> {
                                                   imagePath:
                                                       ImageConstant.imgOthers2,
                                                   height:
-                                                      getVerticalSize(154.00),
+                                                      getVerticalSize(155.00),
                                                   width:
                                                       getHorizontalSize(308.00),
                                                   radius: BorderRadius.only(
@@ -134,11 +145,11 @@ class _HomePageScreen extends State<HomePageScreen> {
                                                                   5.00)),
                                                       bottomRight: Radius.circular(
                                                           getHorizontalSize(5.00))),
-                                                  margin: getMargin(bottom: 19))
+                                                  margin: getMargin(bottom: 25))
                                             ]))))
                           ])),
                       Container(
-                          height: getVerticalSize(190.00),
+                          height: getVerticalSize(200.00),
                           width: getHorizontalSize(326.00),
                           margin: getMargin(top: 49, bottom: 5),
                           child: Stack(
@@ -153,15 +164,20 @@ class _HomePageScreen extends State<HomePageScreen> {
                                         child: Container(
                                             padding: getPadding(
                                                 left: 4,
-                                                top: 7,
+                                                top: 3,
                                                 right: 4,
                                                 bottom: 7),
-                                            decoration: AppDecoration
-                                                .outlineBlack9003f3
-                                                .copyWith(
-                                                    borderRadius:
-                                                        BorderRadiusStyle
-                                                            .roundedBorder15),
+                                            decoration: BoxDecoration(
+                                              color: Color(0x71EEA792),
+                                              border: Border.all(
+                                                color: Color(0x71EEA792),
+                                                width: getHorizontalSize(
+                                                  1.00,
+                                                ),
+                                              ),
+                                            ).copyWith(
+                                                borderRadius: BorderRadiusStyle
+                                                    .roundedBorder15),
                                             child: Column(
                                                 mainAxisSize: MainAxisSize.min,
                                                 mainAxisAlignment:
@@ -188,16 +204,18 @@ class _HomePageScreen extends State<HomePageScreen> {
                                                           bottomRight:
                                                               Radius.circular(
                                                                   getHorizontalSize(5.00))),
-                                                      margin: getMargin(bottom: 21))
+                                                      margin: getMargin(bottom: 25))
                                                 ])))),
                                 Align(
                                     alignment: Alignment.bottomCenter,
                                     child: Container(
-                                        width: getHorizontalSize(96.00),
+                                        width: getHorizontalSize(150.00),
+                                         padding: getPadding(bottom: 10),
                                         child: Text("lbl_e_greetings".tr,
                                             maxLines: null,
                                             textAlign: TextAlign.center,
-                                            style: AppStyle.txtPonnala16)))
+                                            style:
+                                                AppStyle.txtNunitoSansBold14)))
                               ]))
                     ]))));
   }

@@ -25,6 +25,10 @@ class _EGreetingCardOptionsScreen
         top: false,
         bottom: false,
         child: Scaffold(
+            floatingActionButtonLocation: FloatingActionButtonLocation.miniEndTop,
+          floatingActionButton: Padding(
+            padding: const EdgeInsets.only(bottom: 75.0),
+            child:MoreOptionMenu()),
             backgroundColor: ColorConstant.whiteA700,
             appBar: CustomAppBar(
                 height: getVerticalSize(108.00),
@@ -53,17 +57,20 @@ class _EGreetingCardOptionsScreen
                                 height: getVerticalSize(10.00),
                                 width: getHorizontalSize(5.00),
                                 svgPath: ImageConstant.imgVectorstroke,
+                                onTap: () {
+                                  Navigator.of(context).pop();
+                                },
                                 margin: getMargin(
                                     left: 15, top: 13, right: 18, bottom: 13))
                           ]))
                     ])),
-                actions: [
-                  AppbarImage(
-                      height: getVerticalSize(35.00),
-                      width: getHorizontalSize(43.00),
-                      svgPath: ImageConstant.imgOverflowmenu,
-                      margin: getMargin(left: 3, top: 47, right: 3, bottom: 26))
-                ],
+                 // actions: [
+                //   AppbarImage(
+                //       height: getVerticalSize(35.00),
+                //       width: getHorizontalSize(43.00),
+                //       svgPath: ImageConstant.imgOverflowmenu,
+                //       margin: getMargin(left: 3, top: 47, right: 3, bottom: 26))
+                // ],
                 styleType: Style.bgStyle_18),
             body: Container(
                 width: size.width,
@@ -352,26 +359,26 @@ class _EGreetingCardOptionsScreen
   }
 
   onTapColumnleadersday() {
-    Get.toNamed(AppRoutes.basicGreetingEntryScreen);
+    Navigator.of(context).pushNamed(AppRoutes.basicGreetingEntryScreen);
   }
 
   onTapColumnspecialday() {
-    Get.toNamed(AppRoutes.basicGreetingEntryScreen);
+    Navigator.of(context).pushNamed(AppRoutes.basicGreetingEntryScreen);
   }
 
   onTapRowfestival() {
-    Get.toNamed(AppRoutes.basicGreetingEntryScreen);
+    Navigator.of(context).pushNamed(AppRoutes.basicGreetingEntryScreen);
   }
 
   onTapColumnresponse() {
-    Get.toNamed(AppRoutes.basicGreetingEntryScreen);
+    Navigator.of(context).pushNamed(AppRoutes.basicGreetingEntryScreen);
   }
 
   onTapColumnimportantday() {
-    Get.toNamed(AppRoutes.basicGreetingEntryScreen);
+    Navigator.of(context).pushNamed(AppRoutes.basicGreetingEntryScreen);
   }
 
   onTapContrast5() {
-    Get.toNamed(AppRoutes.myEGreetingCardsScreen);
+    Navigator.of(context).pushNamed(AppRoutes.myEGreetingCardsScreen);
   }
 }

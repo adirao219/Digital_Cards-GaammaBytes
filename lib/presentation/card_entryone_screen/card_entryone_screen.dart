@@ -1,4 +1,3 @@
-
 import 'package:digitalcards_gaammabytes/core/app_export.dart';
 import 'package:digitalcards_gaammabytes/widgets/app_bar/appbar_image.dart';
 import 'package:digitalcards_gaammabytes/widgets/app_bar/appbar_title.dart';
@@ -9,12 +8,12 @@ import 'package:digitalcards_gaammabytes/widgets/custom_text_form_field.dart';
 import 'package:flutter/material.dart';
 
 class CardEntryoneScreen extends StatefulWidget {
-  const CardEntryoneScreen({ super.key});
+  const CardEntryoneScreen({super.key});
 
-                @override
-                // ignore: library_private_types_in_public_api
-                _CardEntryoneScreen createState() => _CardEntryoneScreen();
-            }
+  @override
+  // ignore: library_private_types_in_public_api
+  _CardEntryoneScreen createState() => _CardEntryoneScreen();
+}
 
 class _CardEntryoneScreen extends State<CardEntryoneScreen> {
   TextEditingController _field1_Controller = new TextEditingController();
@@ -38,6 +37,11 @@ class _CardEntryoneScreen extends State<CardEntryoneScreen> {
         top: false,
         bottom: false,
         child: Scaffold(
+            floatingActionButtonLocation:
+                FloatingActionButtonLocation.miniEndTop,
+            floatingActionButton: Padding(
+                padding: const EdgeInsets.only(bottom: 75.0),
+                child: MoreOptionMenu()),
             resizeToAvoidBottomInset: false,
             backgroundColor: ColorConstant.whiteA700,
             appBar: CustomAppBar(
@@ -72,6 +76,9 @@ class _CardEntryoneScreen extends State<CardEntryoneScreen> {
                                           width: getHorizontalSize(5.00),
                                           svgPath:
                                               ImageConstant.imgVectorstroke,
+                                onTap: () {
+                                  Navigator.of(context).pop();
+                                },
                                           margin: getMargin(
                                               left: 15,
                                               top: 13,
@@ -83,13 +90,13 @@ class _CardEntryoneScreen extends State<CardEntryoneScreen> {
                                 margin: getMargin(left: 54, top: 14))
                           ]))
                     ])),
-                actions: [
-                  AppbarImage(
-                      height: getVerticalSize(35.00),
-                      width: getHorizontalSize(43.00),
-                      svgPath: ImageConstant.imgOverflowmenu,
-                      margin: getMargin(left: 3, top: 47, right: 3, bottom: 26))
-                ],
+                // actions: [
+                //   AppbarImage(
+                //       height: getVerticalSize(35.00),
+                //       width: getHorizontalSize(43.00),
+                //       svgPath: ImageConstant.imgOverflowmenu,
+                //       margin: getMargin(left: 3, top: 47, right: 3, bottom: 26))
+                // ],
                 styleType: Style.bgStyle_15),
             body: SizedBox(
                 width: size.width,
@@ -155,78 +162,67 @@ class _CardEntryoneScreen extends State<CardEntryoneScreen> {
                               CustomTextFormField(
                                   width: 326,
                                   focusNode: FocusNode(),
-                                  controller:
-                                      _field5_Controller,
+                                  controller: _field5_Controller,
                                   hintText: "lbl_field5".tr,
                                   margin: getMargin(top: 16)),
                               CustomTextFormField(
                                   width: 326,
                                   focusNode: FocusNode(),
-                                  controller:
-                                      _field6_Controller,
+                                  controller: _field6_Controller,
                                   hintText: "lbl_field6".tr,
                                   margin: getMargin(top: 23)),
                               CustomTextFormField(
                                   width: 326,
                                   focusNode: FocusNode(),
-                                  controller:
-                                      _field7_Controller,
+                                  controller: _field7_Controller,
                                   hintText: "lbl_field7".tr,
                                   margin: getMargin(top: 23)),
                               CustomTextFormField(
                                   width: 326,
                                   focusNode: FocusNode(),
-                                  controller:
-                                      _field8_Controller,
+                                  controller: _field8_Controller,
                                   hintText: "lbl_field8".tr,
                                   margin: getMargin(top: 23)),
                               CustomTextFormField(
                                   width: 326,
                                   focusNode: FocusNode(),
-                                  controller:
-                                      _field9_Controller,
+                                  controller: _field9_Controller,
                                   hintText: "lbl_field9".tr,
                                   margin: getMargin(top: 23)),
                               CustomTextFormField(
                                   width: 326,
                                   focusNode: FocusNode(),
-                                  controller:
-                                      _field10_Controller,
+                                  controller: _field10_Controller,
                                   hintText: "lbl_field10".tr,
                                   margin: getMargin(top: 23)),
                               CustomTextFormField(
                                   width: 326,
                                   focusNode: FocusNode(),
-                                  controller:
-                                      _field11_Controller,
+                                  controller: _field11_Controller,
                                   hintText: "lbl_field11".tr,
                                   margin: getMargin(top: 23)),
                               CustomTextFormField(
                                   width: 326,
                                   focusNode: FocusNode(),
-                                  controller:
-                                      _field12_Controller,
+                                  controller: _field12_Controller,
                                   hintText: "lbl_field12".tr,
                                   margin: getMargin(top: 23)),
                               CustomTextFormField(
                                   width: 326,
                                   focusNode: FocusNode(),
-                                  controller:
-                                      _field13_Controller,
+                                  controller: _field13_Controller,
                                   hintText: "lbl_field13".tr,
                                   margin: getMargin(top: 25)),
                               CustomTextFormField(
                                   width: 326,
                                   focusNode: FocusNode(),
-                                  controller:
-                                      _field14_Controller,
+                                  controller: _field14_Controller,
                                   hintText: "lbl_field14".tr,
                                   margin: getMargin(top: 23)),
                               CustomTextFormField(
                                   width: 326,
                                   focusNode: FocusNode(),
-                                  controller:
-                                      _field15_Controller,
+                                  controller: _field15_Controller,
                                   hintText: "lbl_field15".tr,
                                   margin: getMargin(top: 23),
                                   textInputAction: TextInputAction.done),
@@ -236,53 +232,22 @@ class _CardEntryoneScreen extends State<CardEntryoneScreen> {
                                   text: "lbl_next".tr,
                                   margin: getMargin(top: 24),
                                   onTap: onTapNext),
-                              Container(
-                                  height: getVerticalSize(94.00),
-                                  width: getHorizontalSize(105.00),
-                                  margin: getMargin(top: 85),
-                                  child: Stack(
-                                      alignment: Alignment.topCenter,
-                                      children: [
-                                        Align(
-                                            alignment: Alignment.center,
-                                            child: GestureDetector(
-                                                onTap: () {
-                                                  onTapEllipseFour();
-                                                },
-                                                child: Container(
-                                                    height:
-                                                        getVerticalSize(94.00),
-                                                    width: getHorizontalSize(
-                                                        105.00),
-                                                    decoration: BoxDecoration(
-                                                        color: ColorConstant
-                                                            .pink900,
-                                                        borderRadius:
-                                                            BorderRadius.circular(
-                                                                getHorizontalSize(
-                                                                    52.00)))))),
-                                        CustomImageView(
-                                            svgPath:
-                                                ImageConstant.imgHomeWhiteA700,
-                                            height: getVerticalSize(25.00),
-                                            width: getHorizontalSize(27.00),
-                                            alignment: Alignment.topCenter,
-                                            margin: getMargin(top: 33))
-                                      ]))
                             ])))),
-            bottomNavigationBar:
-                CustomBottomBar(onChanged: (BottomBarEnum type) {})));
+            bottomNavigationBar: CustomBottomBar(
+                onNextClicked: onTapNext,
+                isPublishAvailable: false,
+                onChanged: (BottomBarEnum type) {})));
   }
 
   onTapNext() {
-    Get.toNamed(AppRoutes.cardEntrytwoScreen);
+    Navigator.of(context).pushNamed(AppRoutes.cardEntrytwoScreen);
   }
 
   onTapEllipseFour() {
-    Get.toNamed(AppRoutes.homePageScreen);
+    Navigator.of(context).pushNamed(AppRoutes.homePageScreen);
   }
 
   onTapContrast2() {
-    Get.toNamed(AppRoutes.basicCardEntryScreen);
+    Navigator.of(context).pushNamed(AppRoutes.basicCardEntryScreen);
   }
 }

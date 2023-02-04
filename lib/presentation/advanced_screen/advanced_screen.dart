@@ -20,6 +20,11 @@ class _AdvancedScreen extends State<AdvancedScreen> {
         top: false,
         bottom: false,
         child: Scaffold(
+          floatingActionButtonLocation: FloatingActionButtonLocation.miniEndTop,
+          floatingActionButton: Padding(
+            padding: const EdgeInsets.only(bottom: 75.0),
+            child:MoreOptionMenu()),
+          
             backgroundColor: ColorConstant.whiteA700,
             appBar: CustomAppBar(
                 height: getVerticalSize(108.00),
@@ -50,6 +55,10 @@ class _AdvancedScreen extends State<AdvancedScreen> {
                                       AppbarImage(
                                           height: getVerticalSize(10.00),
                                           width: getHorizontalSize(5.00),
+                                          
+                                onTap: () {
+                                  Navigator.of(context).pop();
+                                },
                                           svgPath:
                                               ImageConstant.imgVectorstroke,
                                           margin: getMargin(
@@ -63,13 +72,13 @@ class _AdvancedScreen extends State<AdvancedScreen> {
                                 margin: getMargin(left: 56, top: 15))
                           ]))
                     ])),
-                actions: [
-                  AppbarImage(
-                      height: getVerticalSize(35.00),
-                      width: getHorizontalSize(43.00),
-                      svgPath: ImageConstant.imgOverflowmenu,
-                      margin: getMargin(left: 3, top: 47, right: 3, bottom: 26))
-                ],
+                // actions: [
+                //   AppbarImage(
+                //       height: getVerticalSize(35.00),
+                //       width: getHorizontalSize(43.00),
+                //       svgPath: ImageConstant.imgOverflowmenu,
+                //       margin: getMargin(left: 3, top: 47, right: 3, bottom: 26))
+                // ],
                 styleType: Style.bgStyle_28),
             body: Container(
                 width: size.width,
@@ -141,6 +150,6 @@ class _AdvancedScreen extends State<AdvancedScreen> {
   }
 
   onTapTxtBtnConfirm() {
-    Get.toNamed(AppRoutes.customizationoneScreen);
+    Navigator.of(context).pushNamed(AppRoutes.customizationoneScreen);
   }
 }

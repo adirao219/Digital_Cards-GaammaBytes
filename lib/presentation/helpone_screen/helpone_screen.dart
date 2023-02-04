@@ -58,6 +58,9 @@ class _HelponeScreen extends State<HelponeScreen> {
                                                 width: getHorizontalSize(5.00),
                                                 svgPath: ImageConstant
                                                     .imgVectorstroke,
+                                onTap: () {
+                                  Navigator.of(context).pop();
+                                },
                                                 margin: getMargin(
                                                     left: 15,
                                                     top: 13,
@@ -90,6 +93,6 @@ class _HelponeScreen extends State<HelponeScreen> {
   }
 
   onTapOk() {
-    Get.toNamed(AppRoutes.myDigitalCardsScreen);
+    Navigator.of(context).pushNamed(AppRoutes.myDigitalCardsScreen);
   }
 }

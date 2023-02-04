@@ -150,6 +150,6 @@ class _ForgotPasswordtwoScreen extends State<ForgotPasswordtwoScreen> {
   }
 
   onTapSave() {
-    Get.toNamed(AppRoutes.signupPageScreen);
+    Navigator.of(context).pushNamed(AppRoutes.signupPageScreen);
   }
 }

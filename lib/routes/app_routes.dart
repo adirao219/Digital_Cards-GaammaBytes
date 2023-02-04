@@ -2,12 +2,11 @@ import 'package:digitalcards_gaammabytes/presentation/home_onboarding_screen/hom
 import 'package:digitalcards_gaammabytes/presentation/forgot_passwordone_screen/forgot_passwordone_screen.dart';
 import 'package:digitalcards_gaammabytes/presentation/forgot_passwordone_one_screen/forgot_passwordone_one_screen.dart';
 import 'package:digitalcards_gaammabytes/presentation/forgot_passwordtwo_screen/forgot_passwordtwo_screen.dart';
-import 'package:digitalcards_gaammabytes/presentation/select_templateone_screen/select_templateone_screen.dart';
 import 'package:digitalcards_gaammabytes/presentation/regiter_page_screen/regiter_page_screen.dart';
 import 'package:digitalcards_gaammabytes/presentation/verifiaction_page_screen/verifiaction_page_screen.dart';
 import 'package:digitalcards_gaammabytes/presentation/signup_page_screen/signup_page_screen.dart';
 import 'package:digitalcards_gaammabytes/presentation/home_page_screen/home_page_screen.dart';
-import 'package:digitalcards_gaammabytes/presentation/select_templatetwo_screen/select_templatetwo_screen.dart';
+import 'package:digitalcards_gaammabytes/presentation/select_template_screen/select_template_screen.dart';
 import 'package:digitalcards_gaammabytes/presentation/my_profile_screen/my_profile_screen.dart';
 import 'package:digitalcards_gaammabytes/presentation/my_digital_cards_screen/my_digital_cards_screen.dart';
 import 'package:digitalcards_gaammabytes/presentation/my_e_greeting_cards_screen/my_e_greeting_cards_screen.dart';
@@ -15,9 +14,7 @@ import 'package:digitalcards_gaammabytes/presentation/make_payment_screen/make_p
 import 'package:digitalcards_gaammabytes/presentation/change_password_screen/change_password_screen.dart';
 import 'package:digitalcards_gaammabytes/presentation/search_popupone_screen/search_popupone_screen.dart';
 import 'package:digitalcards_gaammabytes/presentation/search_popuptwo_screen/search_popuptwo_screen.dart';
-import 'package:digitalcards_gaammabytes/presentation/image_modifyone_screen/image_modifyone_screen.dart';
-import 'package:digitalcards_gaammabytes/presentation/card_previewone_one_screen/card_previewone_one_screen.dart';
-import 'package:digitalcards_gaammabytes/presentation/image_modifytwo_screen/image_modifytwo_screen.dart';
+import 'package:digitalcards_gaammabytes/presentation/image_modify_screen/image_modify_screen.dart';
 import 'package:digitalcards_gaammabytes/presentation/basic_card_entry_one_screen/basic_card_entry_one_screen.dart';
 import 'package:digitalcards_gaammabytes/presentation/card_entryone_screen/card_entryone_screen.dart';
 import 'package:digitalcards_gaammabytes/presentation/card_entrytwo_screen/card_entrytwo_screen.dart';
@@ -27,7 +24,7 @@ import 'package:digitalcards_gaammabytes/presentation/customization_screen/custo
 import 'package:digitalcards_gaammabytes/presentation/digital_card_options_screen/digital_card_options_screen.dart';
 import 'package:digitalcards_gaammabytes/presentation/basic_card_entry_screen/basic_card_entry_screen.dart';
 import 'package:digitalcards_gaammabytes/presentation/basic_greeting_entry_screen/basic_greeting_entry_screen.dart';
-import 'package:digitalcards_gaammabytes/presentation/card_previewone_screen/card_previewone_screen.dart';
+import 'package:digitalcards_gaammabytes/presentation/card_preview_screen/card_preview_screen.dart';
 import 'package:digitalcards_gaammabytes/presentation/helpone_screen/helpone_screen.dart';
 import 'package:digitalcards_gaammabytes/presentation/footer_screen/footer_screen.dart';
 import 'package:digitalcards_gaammabytes/presentation/icon_group_screen/icon_group_screen.dart';
@@ -45,10 +42,12 @@ import 'package:digitalcards_gaammabytes/presentation/band_contactband_screen/ba
 import 'package:digitalcards_gaammabytes/presentation/band_icongroup_screen/band_icongroup_screen.dart';
 import 'package:digitalcards_gaammabytes/presentation/band_banka_cdetails_screen/band_banka_cdetails_screen.dart';
 import 'package:digitalcards_gaammabytes/presentation/band_upicard_screen/band_upicard_screen.dart';
-import 'package:digitalcards_gaammabytes/presentation/image_modifythree_screen/image_modifythree_screen.dart';
-import 'package:digitalcards_gaammabytes/presentation/image_modifythree_one_screen/image_modifythree_one_screen.dart';
+
+
 import 'package:digitalcards_gaammabytes/presentation/app_navigation_screen/app_navigation_screen.dart';
 import 'package:get/get.dart';
+
+import '../presentation/location_selection/location_selection.dart';
 
 class AppRoutes {
   static const String homeOnboardingScreen = '/home_onboarding_screen';
@@ -60,7 +59,7 @@ class AppRoutes {
 
   static const String forgotPasswordtwoScreen = '/forgot_passwordtwo_screen';
 
-  static const String selectTemplateoneScreen = '/select_templateone_screen';
+  static const String selectTemplateScreen = '/select_template_screen';
 
   static const String regiterPageScreen = '/regiter_page_screen';
 
@@ -70,7 +69,7 @@ class AppRoutes {
 
   static const String homePageScreen = '/home_page_screen';
 
-  static const String selectTemplatetwoScreen = '/select_templatetwo_screen';
+  static const String locationselection = '/location_selection';
 
   static const String myProfileScreen = '/my_profile_screen';
 
@@ -86,11 +85,7 @@ class AppRoutes {
 
   static const String searchPopuptwoScreen = '/search_popuptwo_screen';
 
-  static const String imageModifyoneScreen = '/image_modifyone_screen';
-
-  static const String cardPreviewoneOneScreen = '/card_previewone_one_screen';
-
-  static const String imageModifytwoScreen = '/image_modifytwo_screen';
+  static const String imageModifyScreen = '/image_modify_screen';
 
   static const String basicCardEntryOneScreen = '/basic_card_entry_one_screen';
 
@@ -111,7 +106,7 @@ class AppRoutes {
 
   static const String basicGreetingEntryScreen = '/basic_greeting_entry_screen';
 
-  static const String cardPreviewoneScreen = '/card_previewone_screen';
+  static const String cardPreviewScreen = '/card_preview_screen';
 
   static const String helponeScreen = '/helpone_screen';
 
@@ -147,10 +142,6 @@ class AppRoutes {
 
   static const String bandUpicardScreen = '/band_upicard_screen';
 
-  static const String imageModifythreeScreen = '/image_modifythree_screen';
-
-  static const String imageModifythreeOneScreen =
-      '/image_modifythree_one_screen';
 
   static const String appNavigationScreen = '/app_navigation_screen';
 
@@ -174,10 +165,6 @@ class AppRoutes {
       page: () => ForgotPasswordtwoScreen(),
     ),
     GetPage(
-      name: selectTemplateoneScreen,
-      page: () => SelectTemplateoneScreen(),
-    ),
-    GetPage(
       name: regiterPageScreen,
       page: () => RegiterPageScreen(),
     ),
@@ -192,10 +179,6 @@ class AppRoutes {
     GetPage(
       name: homePageScreen,
       page: () => HomePageScreen(),
-    ),
-    GetPage(
-      name: selectTemplatetwoScreen,
-      page: () => SelectTemplatetwoScreen(),
     ),
     GetPage(
       name: myProfileScreen,
@@ -226,16 +209,8 @@ class AppRoutes {
       page: () => SearchPopuptwoScreen(),
     ),
     GetPage(
-      name: imageModifyoneScreen,
-      page: () => ImageModifyoneScreen(),
-    ),
-    GetPage(
-      name: cardPreviewoneOneScreen,
-      page: () => CardPreviewoneOneScreen(),
-    ),
-    GetPage(
-      name: imageModifytwoScreen,
-      page: () => ImageModifytwoScreen(),
+      name: imageModifyScreen,
+      page: () => ImageModifyScreen(),
     ),
     GetPage(
       name: basicCardEntryOneScreen,
@@ -274,8 +249,12 @@ class AppRoutes {
       page: () => BasicGreetingEntryScreen(),
     ),
     GetPage(
-      name: cardPreviewoneScreen,
-      page: () => CardPreviewoneScreen(),
+      name: cardPreviewScreen,
+      page: () => CardPreviewScreen(),
+    ),
+    GetPage(
+      name: selectTemplateScreen,
+      page: () => SelectTemplateScreen(),
     ),
     GetPage(
       name: helponeScreen,
@@ -300,6 +279,10 @@ class AppRoutes {
     GetPage(
       name: shareScreen,
       page: () => ShareScreen(),
+    ),
+    GetPage(
+      name: locationselection,
+      page: () => LocationSelectionScreen(),
     ),
     GetPage(
       name: bandsScreen,
@@ -344,14 +327,6 @@ class AppRoutes {
     GetPage(
       name: bandUpicardScreen,
       page: () => BandUpicardScreen(),
-    ),
-    GetPage(
-      name: imageModifythreeScreen,
-      page: () => ImageModifythreeScreen(),
-    ),
-    GetPage(
-      name: imageModifythreeOneScreen,
-      page: () => ImageModifythreeOneScreen(),
     ),
     GetPage(
       name: appNavigationScreen,

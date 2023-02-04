@@ -61,6 +61,9 @@ class _IconGroupScreen extends State<IconGroupScreen> {
                                           width: getHorizontalSize(5.00),
                                           svgPath:
                                               ImageConstant.imgVectorstroke,
+                                onTap: () {
+                                  Navigator.of(context).pop();
+                                },
                                           margin: getMargin(
                                               left: 15,
                                               top: 13,
@@ -456,10 +459,10 @@ class _IconGroupScreen extends State<IconGroupScreen> {
   }
 
   onTapOtherlinks() {
-    Get.toNamed(AppRoutes.linkScreen);
+    Navigator.of(context).pushNamed(AppRoutes.linkScreen);
   }
 
   onTapTxtBtnConfirm() {
-    Get.toNamed(AppRoutes.customizationoneScreen);
+    Navigator.of(context).pushNamed(AppRoutes.customizationoneScreen);
   }
 }

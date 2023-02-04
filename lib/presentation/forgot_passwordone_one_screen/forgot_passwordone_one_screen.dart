@@ -155,6 +155,6 @@ class _ForgotPasswordoneOneScreen
   }
 
   onTapNext() {
-    Get.toNamed(AppRoutes.forgotPasswordtwoScreen);
+    Navigator.of(context).pushNamed(AppRoutes.forgotPasswordtwoScreen);
   }
 }

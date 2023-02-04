@@ -39,11 +39,11 @@ class _SignupPageScreen extends State<SignupPageScreen> {
                       AppbarSubtitle(
                           text: "msg_sign_in_to_gaamma_cards".tr,
                           margin: getMargin(
-                              left: 54, top: 50, right: 39, bottom: 22)),
+                              left: 0, top: 50, right: 39, bottom: 0)),
                       Align(
                           alignment: Alignment.center,
                           child: Padding(
-                              padding: getPadding(left: 57, top: 83, right: 57),
+                              padding: getPadding(left: 0, top: 83, right: 0),
                               child: Text("msg_use_your_credentials".tr,
                                   overflow: TextOverflow.ellipsis,
                                   textAlign: TextAlign.left,
@@ -266,14 +266,14 @@ class _SignupPageScreen extends State<SignupPageScreen> {
   }
 
   onTapTxtForgotpassword2() {
-    Get.toNamed(AppRoutes.forgotPasswordoneScreen);
+    Navigator.of(context).pushNamed(AppRoutes.forgotPasswordoneScreen);
   }
 
   onTapSignin() {
-    Get.toNamed(AppRoutes.homePageScreen);
+    Navigator.of(context).pushNamed(AppRoutes.homePageScreen);
   }
 
   onTapTxtDonthaveanaccount() {
-    Get.toNamed(AppRoutes.regiterPageScreen);
+    Navigator.of(context).pushNamed(AppRoutes.regiterPageScreen);
   }
 }

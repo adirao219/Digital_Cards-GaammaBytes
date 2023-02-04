@@ -1,4 +1,3 @@
-
 import 'package:digitalcards_gaammabytes/core/app_export.dart';
 import 'package:digitalcards_gaammabytes/core/utils/validation_functions.dart';
 import 'package:digitalcards_gaammabytes/widgets/app_bar/appbar_image.dart';
@@ -11,12 +10,12 @@ import 'package:flutter/material.dart';
 
 // ignore_for_file: must_be_immutable
 class BasicCardEntryOneScreen extends StatefulWidget {
-  const BasicCardEntryOneScreen({ super.key});
+  const BasicCardEntryOneScreen({super.key});
 
-                @override
-                // ignore: library_private_types_in_public_api
-                _BasicCardEntryOneScreen createState() => _BasicCardEntryOneScreen();
-            }
+  @override
+  // ignore: library_private_types_in_public_api
+  _BasicCardEntryOneScreen createState() => _BasicCardEntryOneScreen();
+}
 
 class _BasicCardEntryOneScreen extends State<BasicCardEntryOneScreen> {
   TextEditingController _card_name_Controller = new TextEditingController();
@@ -34,6 +33,11 @@ class _BasicCardEntryOneScreen extends State<BasicCardEntryOneScreen> {
         top: false,
         bottom: false,
         child: Scaffold(
+            floatingActionButtonLocation:
+                FloatingActionButtonLocation.miniEndTop,
+            floatingActionButton: Padding(
+                padding: const EdgeInsets.only(bottom: 75.0),
+                child: MoreOptionMenu()),
             resizeToAvoidBottomInset: false,
             backgroundColor: ColorConstant.whiteA700,
             appBar: CustomAppBar(
@@ -47,7 +51,8 @@ class _BasicCardEntryOneScreen extends State<BasicCardEntryOneScreen> {
                           height: getVerticalSize(94.00),
                           width: getHorizontalSize(375.00),
                           imagePath: ImageConstant.imgVectorDeepOrangeA100),
-                      Padding(
+                   
+                     Padding(
                           padding: getPadding(
                               left: 38, top: 44, right: 99, bottom: 7),
                           child: Row(children: [
@@ -68,6 +73,10 @@ class _BasicCardEntryOneScreen extends State<BasicCardEntryOneScreen> {
                                           width: getHorizontalSize(5.00),
                                           svgPath:
                                               ImageConstant.imgVectorstroke,
+                                              
+                                onTap: () {
+                                  Navigator.of(context).pop();
+                                },
                                           margin: getMargin(
                                               left: 15,
                                               top: 13,
@@ -76,16 +85,17 @@ class _BasicCardEntryOneScreen extends State<BasicCardEntryOneScreen> {
                                     ])),
                             AppbarTitle(
                                 text: "lbl_card_details".tr.toUpperCase(),
-                                margin: getMargin(left: 54, top: 14))
+                                margin: getMargin(left: 54, top: 10))
                           ]))
                     ])),
                 actions: [
-                  AppbarImage(
-                      height: getVerticalSize(35.00),
-                      width: getHorizontalSize(43.00),
-                      svgPath: ImageConstant.imgOverflowmenu,
-                      margin: getMargin(left: 3, top: 47, right: 3, bottom: 26),
-                      onTap: onTapOverflowmenu)
+                  // MoreOptionMenu()
+                  // AppbarImage(
+                  //     height: getVerticalSize(35.00),
+                  //     width: getHorizontalSize(43.00),
+                  //     svgPath: ImageConstant.imgOverflowmenu,
+                  //     margin: getMargin(left: 3, top: 47, right: 3, bottom: 26),
+                  //     onTap: onTapOverflowmenu)
                 ],
                 styleType: Style.bgStyle_14),
             body: Form(
@@ -141,15 +151,13 @@ class _BasicCardEntryOneScreen extends State<BasicCardEntryOneScreen> {
                               CustomTextFormField(
                                   width: 326,
                                   focusNode: FocusNode(),
-                                  controller:
-                                      _website_Controller,
+                                  controller: _website_Controller,
                                   hintText: "lbl_website".tr,
                                   margin: getMargin(top: 23)),
                               CustomTextFormField(
                                   width: 326,
                                   focusNode: FocusNode(),
-                                  controller:
-                                      _email_id4_Controller,
+                                  controller: _email_id4_Controller,
                                   hintText: "lbl_email_id4".tr,
                                   margin: getMargin(top: 23),
                                   textInputType: TextInputType.emailAddress,
@@ -177,8 +185,7 @@ class _BasicCardEntryOneScreen extends State<BasicCardEntryOneScreen> {
                               CustomTextFormField(
                                   width: 326,
                                   focusNode: FocusNode(),
-                                  controller:
-                                      _whatsapp_Controller,
+                                  controller: _whatsapp_Controller,
                                   hintText: "lbl_whatsapp".tr,
                                   margin: getMargin(top: 24),
                                   textInputAction: TextInputAction.done),
@@ -188,64 +195,30 @@ class _BasicCardEntryOneScreen extends State<BasicCardEntryOneScreen> {
                                   text: "lbl_next".tr,
                                   margin: getMargin(top: 19),
                                   onTap: onTapNext),
-                              Align(
-                                  alignment: Alignment.centerRight,
-                                  child: Container(
-                                      height: getVerticalSize(94.00),
-                                      width: getHorizontalSize(105.00),
-                                      margin: getMargin(top: 60, right: 103),
-                                      child: Stack(
-                                          alignment: Alignment.topCenter,
-                                          children: [
-                                            Align(
-                                                alignment: Alignment.center,
-                                                child: GestureDetector(
-                                                    onTap: () {
-                                                      onTapEllipseFour();
-                                                    },
-                                                    child: Container(
-                                                        height: getVerticalSize(
-                                                            94.00),
-                                                        width:
-                                                            getHorizontalSize(
-                                                                105.00),
-                                                        decoration: BoxDecoration(
-                                                            color: ColorConstant
-                                                                .pink900,
-                                                            borderRadius:
-                                                                BorderRadius.circular(
-                                                                    getHorizontalSize(
-                                                                        52.00)))))),
-                                            CustomImageView(
-                                                svgPath: ImageConstant
-                                                    .imgHomeWhiteA700,
-                                                height: getVerticalSize(25.00),
-                                                width: getHorizontalSize(27.00),
-                                                alignment: Alignment.topCenter,
-                                                margin: getMargin(top: 33))
-                                          ])))
                             ])))),
-            bottomNavigationBar:
-                CustomBottomBar(onChanged: (BottomBarEnum type) {})));
+            bottomNavigationBar: CustomBottomBar(
+                onNextClicked: onTapNext,
+                isPublishAvailable: false,
+                onChanged: (BottomBarEnum type) {})));
   }
 
   onTapSelecttemplateOne() {
-    Get.toNamed(AppRoutes.selectTemplateoneScreen);
+    Navigator.of(context).pushNamed(AppRoutes.selectTemplateScreen);
   }
 
   onTapNext() {
-    Get.toNamed(AppRoutes.cardEntryoneScreen);
+    Navigator.of(context).pushNamed(AppRoutes.cardEntryoneScreen);
   }
 
   onTapEllipseFour() {
-    Get.toNamed(AppRoutes.homePageScreen);
+    Navigator.of(context).pop();
   }
 
   onTapContrast1() {
-    Get.toNamed(AppRoutes.digitalCardOptionsScreen);
+    Navigator.of(context).pushNamed(AppRoutes.digitalCardOptionsScreen);
   }
 
   onTapOverflowmenu() {
-    Get.toNamed(AppRoutes.basicCardEntryScreen);
+    Navigator.of(context).pushNamed(AppRoutes.basicCardEntryScreen);
   }
 }

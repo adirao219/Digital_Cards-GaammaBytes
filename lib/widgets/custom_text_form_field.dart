@@ -20,10 +20,13 @@ class CustomTextFormField extends StatelessWidget {
       this.prefixConstraints,
       this.suffix,
       this.suffixConstraints,
+      this.onChanged,
       this.validator});
 
   TextFormFieldPadding? padding;
 
+
+Function(String)? onChanged;
   TextFormFieldVariant? variant;
 
   TextFormFieldFontStyle? fontStyle;
@@ -79,6 +82,7 @@ class CustomTextFormField extends StatelessWidget {
         obscureText: isObscureText!,
         textInputAction: textInputAction,
         keyboardType: textInputType,
+        onChanged: onChanged,
         maxLines: maxLines ?? 1,
         decoration: _buildDecoration(),
         validator: validator,

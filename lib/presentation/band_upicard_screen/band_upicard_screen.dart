@@ -21,6 +21,10 @@ class _BandUpicardScreen extends State<BandUpicardScreen> {
         top: false,
         bottom: false,
         child: Scaffold(
+            floatingActionButtonLocation: FloatingActionButtonLocation.miniEndTop,
+          floatingActionButton: Padding(
+            padding: const EdgeInsets.only(bottom: 75.0),
+            child:MoreOptionMenu()),
             backgroundColor: ColorConstant.whiteA700,
             appBar: CustomAppBar(
                 height: getVerticalSize(108.00),
@@ -50,6 +54,9 @@ class _BandUpicardScreen extends State<BandUpicardScreen> {
                                           svgPath: ImageConstant.imgContrast),
                                       AppbarImage(
                                           height: getVerticalSize(10.00),
+                                onTap: () {
+                                  Navigator.of(context).pop();
+                                },
                                           width: getHorizontalSize(5.00),
                                           svgPath:
                                               ImageConstant.imgVectorstroke,
@@ -64,13 +71,13 @@ class _BandUpicardScreen extends State<BandUpicardScreen> {
                                 margin: getMargin(left: 76, top: 16))
                           ]))
                     ])),
-                actions: [
-                  AppbarImage(
-                      height: getVerticalSize(35.00),
-                      width: getHorizontalSize(43.00),
-                      svgPath: ImageConstant.imgOverflowmenu,
-                      margin: getMargin(left: 3, top: 47, right: 3, bottom: 26))
-                ],
+                 // actions: [
+                //   AppbarImage(
+                //       height: getVerticalSize(35.00),
+                //       width: getHorizontalSize(43.00),
+                //       svgPath: ImageConstant.imgOverflowmenu,
+                //       margin: getMargin(left: 3, top: 47, right: 3, bottom: 26))
+                // ],
                 styleType: Style.bgStyle_40),
             body: Container(
                 width: size.width,
@@ -317,10 +324,10 @@ class _BandUpicardScreen extends State<BandUpicardScreen> {
   }
 
   onTapRowmap() {
-    Get.toNamed(AppRoutes.imageModifythreeOneScreen);
+    Navigator.of(context).pushNamed(AppRoutes.imageModifyScreen);
   }
 
   onTapSave() {
-    Get.toNamed(AppRoutes.bandsScreen);
+    Navigator.of(context).pushNamed(AppRoutes.bandsScreen);
   }
 }

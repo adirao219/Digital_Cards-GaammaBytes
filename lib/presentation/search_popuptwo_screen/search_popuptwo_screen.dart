@@ -561,6 +561,6 @@ class _SearchPopuptwoScreen extends State<SearchPopuptwoScreen> {
   }
 
   onTapTxtGroupNinetySix() {
-    Get.toNamed(AppRoutes.myDigitalCardsScreen);
+    Navigator.of(context).pushNamed(AppRoutes.myDigitalCardsScreen);
   }
 }

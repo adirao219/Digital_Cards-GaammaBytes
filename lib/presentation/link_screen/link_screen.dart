@@ -573,6 +573,6 @@ class _LinkScreen extends State<LinkScreen> {
   }
 
   onTapTxtBtnConfirm() {
-    Get.toNamed(AppRoutes.iconGroupScreen);
+    Navigator.of(context).pushNamed(AppRoutes.iconGroupScreen);
   }
 }

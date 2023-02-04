@@ -1,4 +1,3 @@
-
 import 'package:digitalcards_gaammabytes/core/app_export.dart';
 import 'package:digitalcards_gaammabytes/core/utils/validation_functions.dart';
 import 'package:digitalcards_gaammabytes/widgets/app_bar/appbar_image.dart';
@@ -11,12 +10,12 @@ import 'package:flutter/material.dart';
 
 // ignore_for_file: must_be_immutable
 class BasicCardEntryScreen extends StatefulWidget {
-  const BasicCardEntryScreen({ super.key});
+  const BasicCardEntryScreen({super.key});
 
-                @override
-                // ignore: library_private_types_in_public_api
-                _BasicCardEntryScreen createState() => _BasicCardEntryScreen();
-            }
+  @override
+  // ignore: library_private_types_in_public_api
+  _BasicCardEntryScreen createState() => _BasicCardEntryScreen();
+}
 
 class _BasicCardEntryScreen extends State<BasicCardEntryScreen> {
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
@@ -27,7 +26,7 @@ class _BasicCardEntryScreen extends State<BasicCardEntryScreen> {
   TextEditingController _url_Controller = new TextEditingController();
   TextEditingController _website_Controller = new TextEditingController();
   TextEditingController _template_Controller = new TextEditingController();
-  
+
   TextEditingController _whatsapp_Controller = new TextEditingController();
   @override
   Widget build(BuildContext context) {
@@ -76,6 +75,10 @@ class _BasicCardEntryScreen extends State<BasicCardEntryScreen> {
                                                           .imgContrast,
                                                       onTap: onTapContrast8),
                                                   AppbarImage(
+                                                      onTap: () {
+                                                        Navigator.of(context)
+                                                            .pop();
+                                                      },
                                                       height: getVerticalSize(
                                                           10.00),
                                                       width: getHorizontalSize(
@@ -259,7 +262,8 @@ class _BasicCardEntryScreen extends State<BasicCardEntryScreen> {
                                             CustomTextFormField(
                                                 width: 326,
                                                 focusNode: FocusNode(),
-                                                controller: _card_name_Controller,
+                                                controller:
+                                                    _card_name_Controller,
                                                 hintText: "lbl_card_name".tr,
                                                 margin: getMargin(top: 30),
                                                 validator: (value) {
@@ -285,11 +289,15 @@ class _BasicCardEntryScreen extends State<BasicCardEntryScreen> {
                                                     ButtonShape.RoundedBorder15,
                                                 fontStyle: ButtonFontStyle
                                                     .NunitoSansBold14,
-                                                onTap: onTapSelecttemplateOne),
+                                                onTap: (){
+
+                                                  print('s');
+                                                }),
                                             CustomTextFormField(
                                                 width: 326,
                                                 focusNode: FocusNode(),
-                                                controller: _template_Controller,
+                                                controller:
+                                                    _template_Controller,
                                                 hintText: "lbl_template".tr,
                                                 margin: getMargin(top: 23)),
                                             CustomTextFormField(
@@ -317,7 +325,8 @@ class _BasicCardEntryScreen extends State<BasicCardEntryScreen> {
                                             CustomTextFormField(
                                                 width: 326,
                                                 focusNode: FocusNode(),
-                                                controller:_phonenumber_Controller,
+                                                controller:
+                                                    _phonenumber_Controller,
                                                 hintText: "lbl_phone_number".tr,
                                                 margin: getMargin(top: 23),
                                                 textInputType:
@@ -331,7 +340,8 @@ class _BasicCardEntryScreen extends State<BasicCardEntryScreen> {
                                             CustomTextFormField(
                                                 width: 326,
                                                 focusNode: FocusNode(),
-                                                controller: _whatsapp_Controller,
+                                                controller:
+                                                    _whatsapp_Controller,
                                                 hintText: "lbl_whatsapp".tr,
                                                 margin: getMargin(top: 24),
                                                 textInputAction:
@@ -342,76 +352,31 @@ class _BasicCardEntryScreen extends State<BasicCardEntryScreen> {
                                                 text: "lbl_next".tr,
                                                 margin: getMargin(top: 19),
                                                 onTap: onTapNext),
-                                            Align(
-                                                alignment:
-                                                    Alignment.centerRight,
-                                                child: Container(
-                                                    height:
-                                                        getVerticalSize(94.00),
-                                                    width: getHorizontalSize(
-                                                        105.00),
-                                                    margin: getMargin(
-                                                        top: 60, right: 103),
-                                                    child: Stack(
-                                                        alignment:
-                                                            Alignment.topCenter,
-                                                        children: [
-                                                          Align(
-                                                              alignment:
-                                                                  Alignment
-                                                                      .center,
-                                                              child:
-                                                                  GestureDetector(
-                                                                      onTap:
-                                                                          () {
-                                                                        onTapEllipseFour();
-                                                                      },
-                                                                      child: Container(
-                                                                          height: getVerticalSize(
-                                                                              94.00),
-                                                                          width: getHorizontalSize(
-                                                                              105.00),
-                                                                          decoration: BoxDecoration(
-                                                                              color: ColorConstant.pink900,
-                                                                              borderRadius: BorderRadius.circular(getHorizontalSize(52.00)))))),
-                                                          CustomImageView(
-                                                              svgPath: ImageConstant
-                                                                  .imgHomeWhiteA700,
-                                                              height:
-                                                                  getVerticalSize(
-                                                                      25.00),
-                                                              width:
-                                                                  getHorizontalSize(
-                                                                      27.00),
-                                                              alignment:
-                                                                  Alignment
-                                                                      .topCenter,
-                                                              margin: getMargin(
-                                                                  top: 33))
-                                                        ])))
                                           ]))))
                         ]))),
-            bottomNavigationBar:
-                CustomBottomBar(onChanged: (BottomBarEnum type) {})));
+            bottomNavigationBar: CustomBottomBar(
+                onNextClicked: onTapNext,
+                isPublishAvailable: false,
+                onChanged: (BottomBarEnum type) {})));
   }
 
   onTapContrast8() {
-    Get.toNamed(AppRoutes.basicCardEntryOneScreen);
+    Navigator.of(context).pushNamed(AppRoutes.basicCardEntryOneScreen);
   }
 
   onTapImgQuestion() {
-    Get.toNamed(AppRoutes.helponeScreen);
+    Navigator.of(context).pushNamed(AppRoutes.helponeScreen);
   }
 
-  onTapSelecttemplateOne() {
-    Get.toNamed(AppRoutes.selectTemplateoneScreen);
+  onTapSelctTemplate() {
+    Navigator.of(context).pushNamed(AppRoutes.selectTemplateScreen);
   }
 
   onTapNext() {
-    Get.toNamed(AppRoutes.cardEntryoneScreen);
+    Navigator.of(context).pushNamed(AppRoutes.cardEntryoneScreen);
   }
 
   onTapEllipseFour() {
-    Get.toNamed(AppRoutes.homePageScreen);
+    Navigator.of(context).pushNamed(AppRoutes.homePageScreen);
   }
 }

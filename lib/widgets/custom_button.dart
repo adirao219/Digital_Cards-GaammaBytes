@@ -13,6 +13,7 @@ class CustomButton extends StatelessWidget {
       this.width,
       this.height,
       this.text,
+      this.customColor,
       this.prefixWidget,
       this.suffixWidget});
 
@@ -40,6 +41,7 @@ class CustomButton extends StatelessWidget {
 
   Widget? suffixWidget;
 
+  Color? customColor;
   @override
   Widget build(BuildContext context) {
     return alignment != null
@@ -111,6 +113,10 @@ class CustomButton extends StatelessWidget {
         return getPadding(
           all: 18,
         );
+        case ButtonPadding.PaddingBottom9:
+        return getPadding(
+          bottom: 2,
+        );
       default:
         return getPadding(
           all: 9,
@@ -119,6 +125,7 @@ class CustomButton extends StatelessWidget {
   }
 
   _setColor() {
+    if (customColor == null) {
     switch (variant) {
       case ButtonVariant.OutlineBlack9003f:
         return ColorConstant.pink900;
@@ -126,6 +133,9 @@ class CustomButton extends StatelessWidget {
         return ColorConstant.deepOrangeA10033;
       default:
         return ColorConstant.pink900;
+    }
+    } else {
+      return customColor;
     }
   }
 
@@ -251,6 +261,7 @@ enum ButtonPadding {
   PaddingAll9,
   PaddingT9,
   PaddingAll18,
+  PaddingBottom9,
 }
 enum ButtonVariant {
   FillPink900,

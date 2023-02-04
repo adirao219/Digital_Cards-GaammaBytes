@@ -2,6 +2,7 @@
 
 import 'package:digitalcards_gaammabytes/presentation/my_digital_cards_screen/widgets/gridbusinesscardseven_item_widget.dart';
 
+import '../../widgets/app_bar/appbar_subtitle.dart';
 import 'models/gridbusinesscardseven_item_model.dart';
 import 'package:digitalcards_gaammabytes/core/app_export.dart';
 import 'package:digitalcards_gaammabytes/widgets/app_bar/appbar_image.dart';
@@ -53,7 +54,9 @@ class _MyDigitalCardsScreen extends State<MyDigitalCardsScreen> {
                                         width: getHorizontalSize(38.00),
                                         margin: getMargin(
                                             left: 38, top: 44, bottom: 14),
-                                        child: Stack(
+                                        child: 
+                                        Row(children: [
+                                        Stack(
                                             alignment: Alignment.centerLeft,
                                             children: [
                                               AppbarImage(
@@ -64,6 +67,9 @@ class _MyDigitalCardsScreen extends State<MyDigitalCardsScreen> {
                                                   svgPath: ImageConstant
                                                       .imgContrast),
                                               AppbarImage(
+                                                onTap: (){
+                                                  Navigator.of(context).pop();
+                                                },
                                                   height:
                                                       getVerticalSize(10.00),
                                                   width:
@@ -75,6 +81,12 @@ class _MyDigitalCardsScreen extends State<MyDigitalCardsScreen> {
                                                       top: 13,
                                                       right: 18,
                                                       bottom: 13))
+                                            ]),
+                                            
+                                             AppbarSubtitle(
+                                text: "lbl_my_digitalcards".tr,
+                                margin:
+                                    getMargin(left: 40, top: 10)),
                                             ])),
                                     actions: [
                                       Card(
@@ -141,7 +153,7 @@ class _MyDigitalCardsScreen extends State<MyDigitalCardsScreen> {
                           child: SingleChildScrollView(
                               child: Padding(
                                   padding:
-                                      getPadding(left: 37, top: 42, right: 36),
+                                      getPadding(left: 37, top:20, right: 36),
                                   child: Column(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.end,
@@ -161,7 +173,7 @@ class _MyDigitalCardsScreen extends State<MyDigitalCardsScreen> {
                                                 ButtonFontStyle.NovaCut16,
                                             onTap: onTapCreatedigitalcard),
                                         Padding(
-                                            padding: getPadding(top: 31),
+                                            padding: getPadding(top: 0),
                                             child: Obx(() => GridView.builder(
                                                 shrinkWrap: true,
                                                 gridDelegate:

@@ -44,7 +44,7 @@ class _HomeOnboardingScreen extends State<HomeOnboardingScreen> {
                           width: getHorizontalSize(341.00),
                           margin: getMargin(left: 17, right: 17),
                           padding: getPadding(
-                              left: 37, top: 34, right: 37, bottom: 34),
+                              left: 37, top: 10, right: 37, bottom: 34),
                           decoration: AppDecoration.fillWhiteA700.copyWith(
                               borderRadius: BorderRadiusStyle.roundedBorder40),
                           child: Column(
@@ -132,6 +132,6 @@ class _HomeOnboardingScreen extends State<HomeOnboardingScreen> {
   }
 
   onTapButtonhalfFill() {
-    Get.toNamed(AppRoutes.signupPageScreen);
+    Navigator.of(context).pushNamed(AppRoutes.signupPageScreen);
   }
 }

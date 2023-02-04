@@ -47,17 +47,20 @@ class _DigitalCardOptionsScreen extends State<DigitalCardOptionsScreen> {
                                 height: getVerticalSize(10.00),
                                 width: getHorizontalSize(5.00),
                                 svgPath: ImageConstant.imgVectorstroke,
+                                onTap: () {
+                                  Navigator.of(context).pop();
+                                },
                                 margin: getMargin(
                                     left: 15, top: 13, right: 18, bottom: 13))
                           ]))
                     ])),
-                actions: [
-                  AppbarImage(
-                      height: getVerticalSize(35.00),
-                      width: getHorizontalSize(43.00),
-                      svgPath: ImageConstant.imgOverflowmenu,
-                      margin: getMargin(left: 3, top: 47, right: 3, bottom: 26))
-                ],
+                 // actions: [
+                //   AppbarImage(
+                //       height: getVerticalSize(35.00),
+                //       width: getHorizontalSize(43.00),
+                //       svgPath: ImageConstant.imgOverflowmenu,
+                //       margin: getMargin(left: 3, top: 47, right: 3, bottom: 26))
+                // ],
                 styleType: Style.bgStyle_20),
             body: Container(
                 width: size.width,
@@ -310,26 +313,26 @@ class _DigitalCardOptionsScreen extends State<DigitalCardOptionsScreen> {
   }
 
   onTapColumnbusinesscard() {
-    Get.toNamed(AppRoutes.basicCardEntryOneScreen);
+ Navigator.of(context).pushNamed(AppRoutes.basicCardEntryOneScreen);
   }
 
   onTapColumnvisitingcard() {
-    Get.toNamed(AppRoutes.basicCardEntryOneScreen);
+ Navigator.of(context).pushNamed(AppRoutes.basicCardEntryOneScreen);
   }
 
   onTapColumnlocationcard() {
-    Get.toNamed(AppRoutes.basicCardEntryOneScreen);
+ Navigator.of(context).pushNamed(AppRoutes.basicCardEntryOneScreen);
   }
 
   onTapColumnprofilecard() {
-    Get.toNamed(AppRoutes.basicCardEntryOneScreen);
+ Navigator.of(context).pushNamed(AppRoutes.basicCardEntryOneScreen);
   }
 
   onTapColumneventcard() {
-    Get.toNamed(AppRoutes.basicCardEntryOneScreen);
+ Navigator.of(context).pushNamed(AppRoutes.basicCardEntryOneScreen);
   }
 
   onTapContrast7() {
-    Get.toNamed(AppRoutes.myDigitalCardsScreen);
+    Navigator.of(context).pushNamed(AppRoutes.myDigitalCardsScreen);
   }
 }

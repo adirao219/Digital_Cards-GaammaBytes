@@ -577,10 +577,10 @@ class _RegiterPageScreen extends State<RegiterPageScreen> {
   }
 
   onTapRegister() {
-    Get.toNamed(AppRoutes.verifiactionPageScreen);
+    Navigator.of(context).pushNamed(AppRoutes.verifiactionPageScreen);
   }
 
   onTapTxtAlreadyhavean() {
-    Get.toNamed(AppRoutes.signupPageScreen);
+    Navigator.of(context).pushNamed(AppRoutes.signupPageScreen);
   }
 }

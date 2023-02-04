@@ -80,6 +80,9 @@ class _ShareScreen extends State<ShareScreen> {
                               width: getHorizontalSize(
                                 5.00,
                               ),
+                                onTap: () {
+                                  Navigator.of(context).pop();
+                                },
                               svgPath: ImageConstant.imgVectorstroke,
                               margin: getMargin(
                                 left: 15,
