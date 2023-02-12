@@ -51,8 +51,7 @@ class _BasicCardEntryOneScreen extends State<BasicCardEntryOneScreen> {
                           height: getVerticalSize(94.00),
                           width: getHorizontalSize(375.00),
                           imagePath: ImageConstant.imgVectorDeepOrangeA100),
-                   
-                     Padding(
+                      Padding(
                           padding: getPadding(
                               left: 38, top: 44, right: 99, bottom: 7),
                           child: Row(children: [
@@ -73,10 +72,9 @@ class _BasicCardEntryOneScreen extends State<BasicCardEntryOneScreen> {
                                           width: getHorizontalSize(5.00),
                                           svgPath:
                                               ImageConstant.imgVectorstroke,
-                                              
-                                onTap: () {
-                                  Navigator.of(context).pop();
-                                },
+                                          onTap: () {
+                                            Navigator.of(context).pop();
+                                          },
                                           margin: getMargin(
                                               left: 15,
                                               top: 13,

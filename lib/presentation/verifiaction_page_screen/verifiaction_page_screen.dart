@@ -1,4 +1,3 @@
-
 import 'package:digitalcards_gaammabytes/core/app_export.dart';
 import 'package:digitalcards_gaammabytes/widgets/app_bar/appbar_image.dart';
 import 'package:digitalcards_gaammabytes/widgets/app_bar/appbar_subtitle.dart';
@@ -9,15 +8,15 @@ import 'package:flutter/services.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
 class VerifiactionPageScreen extends StatefulWidget {
-  const VerifiactionPageScreen({ super.key});
+  const VerifiactionPageScreen({super.key});
 
-                @override
-                // ignore: library_private_types_in_public_api
-                _VerifiactionPageScreen createState() => _VerifiactionPageScreen();
-            }
+  @override
+  // ignore: library_private_types_in_public_api
+  _VerifiactionPageScreen createState() => _VerifiactionPageScreen();
+}
 
 class _VerifiactionPageScreen extends State<VerifiactionPageScreen> {
-  TextEditingController  _otpController= new TextEditingController();
+  TextEditingController _otpController = new TextEditingController();
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -69,8 +68,8 @@ class _VerifiactionPageScreen extends State<VerifiactionPageScreen> {
                           ]),
                           textAlign: TextAlign.left),
                       Padding(
-                          padding: getPadding(left: 24, top: 31),
-                          child: Obx(() => PinCodeTextField(
+                          padding: getPadding(top: 50),
+                          child: PinCodeTextField(
                               appContext: context,
                               controller: _otpController,
                               length: 4,
@@ -89,22 +88,21 @@ class _VerifiactionPageScreen extends State<VerifiactionPageScreen> {
                                   fontFamily: 'Nunito Sans',
                                   fontWeight: FontWeight.w400),
                               pinTheme: PinTheme(
-                                  fieldWidth: getHorizontalSize(25.00),
-                                  shape: PinCodeFieldShape.underline,
-                                  selectedFillColor: ColorConstant.gray800,
-                                  activeFillColor: ColorConstant.gray800,
-                                  inactiveFillColor: ColorConstant.gray800,
-                                  inactiveColor:
-                                      ColorConstant.fromHex("#1212121D"),
-                                  selectedColor:
-                                      ColorConstant.fromHex("#1212121D"),
-                                  activeColor:
-                                      ColorConstant.fromHex("#1212121D"))))),
+                                fieldWidth: getHorizontalSize(40.00),
+                                shape: PinCodeFieldShape.underline,
+                                selectedFillColor: ColorConstant.gray200,
+                                activeFillColor: ColorConstant.gray200,
+                                inactiveFillColor: ColorConstant.gray200,
+                                inactiveColor: ColorConstant.gray50,
+                                selectedColor: ColorConstant.gray50,
+                                activeColor: ColorConstant.gray50,
+                              ))),
                       CustomButton(
+                          alignment: Alignment.center,
                           height: 40,
                           width: 250,
                           text: "msg_verify_sign_in".tr,
-                          margin: getMargin(left: 1, top: 41),
+                          margin: getMargin(top: 30),
                           fontStyle: ButtonFontStyle.InterSemiBold14,
                           onTap: onTapVerifysigninOne),
                       Align(
