@@ -37,10 +37,12 @@ class _SignupPageScreen extends State<SignupPageScreen> {
                           width: getHorizontalSize(375.00),
                           imagePath: ImageConstant.imgVectorDeepOrangeA100,
                           margin: getMargin(bottom: 4)),
-                      AppbarSubtitle(
-                          text: "msg_sign_in_to_gaamma_cards".tr,
-                          margin: getMargin(
-                              left: 0, top: 50, right: 39, bottom: 0)),
+                      Container(
+                        alignment: Alignment.center,
+                        child: AppbarSubtitle(
+                            text: "msg_sign_in_to_gaamma_cards".tr,
+                            margin: getMargin(left: 0, top: 50, bottom: 5)),
+                      ),
                       Align(
                           alignment: Alignment.center,
                           child: Padding(
