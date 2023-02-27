@@ -4,7 +4,7 @@
 <div>
   <h1 align="center">Getting Started with Flutter 🚀 </h1>
   <strong>
-    Generated with ❤️ from DhiWise
+    Built uding Flutter
   </strong>
   <p>
     This is the documentation of Flutter Applications.
@@ -31,10 +31,8 @@
 Dart SDK Version 2.18.0 or greater.
 Flutter SDK Version 3.3.0 or greater.
 
-### Figma design guidelines for better accuracy
 
-Read our guidelines to increase the accuracy of design conversion to code by optimizing Figma designs.
-https://docs.dhiwise.com/docs/Designguidelines/intro
+
 
 ### App Navigations
 
@@ -108,5 +106,3 @@ Resolve the errors and warnings that are shown in the application.
   https://pub.dev/packages/cached_network_image
     
 ### Support
-
-If you have problems or questions go to our Discord channel, we will then try to help you as quickly as possible: https://discord.com/invite/rFMnCG5MZ7
