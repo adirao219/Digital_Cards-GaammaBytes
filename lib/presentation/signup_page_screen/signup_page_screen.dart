@@ -1,10 +1,16 @@
 import 'package:digitalcards_gaammabytes/core/app_export.dart';
+import 'package:digitalcards_gaammabytes/data/apiClient/api_client.dart';
+import 'package:digitalcards_gaammabytes/data/models/filterGreetingTemplate/get_filter_greeting_template_resp.dart';
 import 'package:digitalcards_gaammabytes/widgets/app_bar/appbar_image.dart';
 import 'package:digitalcards_gaammabytes/widgets/app_bar/appbar_subtitle.dart';
 import 'package:digitalcards_gaammabytes/widgets/app_bar/custom_app_bar.dart';
 import 'package:digitalcards_gaammabytes/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
 import 'package:digitalcards_gaammabytes/domain/googleauth/google_auth_helper.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../data/globals/globalvariables.dart';
+import '../../data/models/login/post_login_resp.dart';
 
 class SignupPageScreen extends StatefulWidget {
   const SignupPageScreen({super.key});
@@ -123,8 +129,7 @@ class _SignupPageScreen extends State<SignupPageScreen> {
 
                                 controller: _phoneController,
                                 decoration: InputDecoration(
-                                  labelText:
-                                      "msg_jameswilliams123_gmail_com".tr,
+                                  labelText: "lbl_phone_email_id".tr,
                                   labelStyle: AppStyle.txtNunitoSansRegular12
                                       .copyWith(
                                           height: getVerticalSize(1.10),
@@ -281,8 +286,31 @@ class _SignupPageScreen extends State<SignupPageScreen> {
     Navigator.of(context).pushNamed(AppRoutes.forgotPasswordoneScreen);
   }
 
-  onTapSignin() {
-    Navigator.of(context).pushNamed(AppRoutes.homePageScreen);
+  onTapSignin() async {
+    ApiClient api = new ApiClient();
+    bool isEmail = false;
+    try {
+      isEmail = RegExp(
+              r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+          .hasMatch(_phoneController.text);
+    } catch (e) {}
+
+    var req = {
+      "TypeOfLogin": isEmail ? 2 : 1,
+      "Email": _phoneController.text,
+      "Password": _passwordController.text,
+      "RememberMe": false
+    };
+    PostLoginResp resp = await api.createLogin(requestData: req);
+    if (resp.isSuccess ?? false) {
+      var res = resp.result;
+      var userID = res['UserId'];
+      GlobalVariables.setUserID(userID);
+      GlobalVariables.setLogin(true);
+      Navigator.of(context).pushNamed(AppRoutes.homePageScreen);
+    } else {
+      Get.snackbar('Error', resp.errorMessage.toString());
+    }
   }
 
   onTapTxtDonthaveanaccount() {

@@ -359,23 +359,23 @@ class _EGreetingCardOptionsScreen
   }
 
   onTapColumnleadersday() {
-    Navigator.of(context).pushNamed(AppRoutes.basicGreetingEntryScreen);
+    Navigator.of(context).pushNamed(AppRoutes.basicGreetingEntryScreen,arguments: { "Type": 1});
   }
 
   onTapColumnspecialday() {
-    Navigator.of(context).pushNamed(AppRoutes.basicGreetingEntryScreen);
+    Navigator.of(context).pushNamed(AppRoutes.basicGreetingEntryScreen,arguments: { "Type": 1});
   }
 
   onTapRowfestival() {
-    Navigator.of(context).pushNamed(AppRoutes.basicGreetingEntryScreen);
+    Navigator.of(context).pushNamed(AppRoutes.basicGreetingEntryScreen,arguments: { "Type": 1});
   }
 
   onTapColumnresponse() {
-    Navigator.of(context).pushNamed(AppRoutes.basicGreetingEntryScreen);
+    Navigator.of(context).pushNamed(AppRoutes.basicGreetingEntryScreen,arguments: { "Type": 1});
   }
 
   onTapColumnimportantday() {
-    Navigator.of(context).pushNamed(AppRoutes.basicGreetingEntryScreen);
+    Navigator.of(context).pushNamed(AppRoutes.basicGreetingEntryScreen,arguments: { "Type": 1});
   }
 
   onTapContrast5() {
