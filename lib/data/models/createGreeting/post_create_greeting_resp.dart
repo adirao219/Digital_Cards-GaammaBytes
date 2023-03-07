@@ -1,6 +1,6 @@
 class PostCreateGreetingResp {
   bool? isSuccess;
-  bool? result;
+  int? result;
   dynamic errorMessage;
 
   PostCreateGreetingResp({this.isSuccess, this.result, this.errorMessage});

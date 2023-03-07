@@ -275,10 +275,22 @@ class _SignupPageScreen extends State<SignupPageScreen> {
       if (googleUser != null) {
         //TODO Actions to be performed after signin
       } else {
-        Get.snackbar('Error', 'user data is empty');
+        Get.snackbar('Error', 'user data is empty',
+              backgroundColor: Color.fromARGB(255, 255, 230, 230),
+              colorText: Colors.red[900],
+              icon: Icon(
+                Icons.error,
+                color: Colors.red[900],
+              ));
       }
     }).catchError((onError) {
-      Get.snackbar('Error', onError.toString());
+      Get.snackbar('Error', onError.toString(),
+              backgroundColor: Color.fromARGB(255, 255, 230, 230),
+              colorText: Colors.red[900],
+              icon: Icon(
+                Icons.error,
+                color: Colors.red[900],
+              ));
     });
   }
 
@@ -309,7 +321,13 @@ class _SignupPageScreen extends State<SignupPageScreen> {
       GlobalVariables.setLogin(true);
       Navigator.of(context).pushNamed(AppRoutes.homePageScreen);
     } else {
-      Get.snackbar('Error', resp.errorMessage.toString());
+      Get.snackbar('Error', resp.errorMessage.toString(),
+              backgroundColor: Color.fromARGB(255, 255, 230, 230),
+              colorText: Colors.red[900],
+              icon: Icon(
+                Icons.error,
+                color: Colors.red[900],
+              ));
     }
   }
 

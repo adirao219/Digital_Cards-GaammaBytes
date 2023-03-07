@@ -108,7 +108,7 @@ class _LocationSelectionScreen extends State<LocationSelectionScreen> {
                 styleType: Style.bgStyle_21),
             body:currentLatLong!=null? OpenStreetMap(
                 center: LatLong(currentLatLong!.latitude,currentLatLong!.longitude),
-                buttonColor: Colors.deepOrange,
+                buttonColor: Color.fromARGB(255, 97, 8, 8),
                 buttonText: '',
                 onPicked: (pickedData) {
                   finalLatLong = LatLong(pickedData.latLong.latitude,

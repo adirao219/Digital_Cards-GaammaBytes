@@ -222,6 +222,8 @@ class _HomePageScreen extends State<HomePageScreen> {
 
   onTapColumnotherstwo() {
     Get.toNamed(AppRoutes.myDigitalCardsScreen);
+    // Get.toNamed(AppRoutes.myProfileScreen);
+
   }
 
   onTapColumnothersone() {

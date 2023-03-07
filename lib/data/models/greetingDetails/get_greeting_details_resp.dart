@@ -1,13 +1,13 @@
 class GetGreetingDetailsResp {
   bool? isSuccess;
-  Result? result;
+  GreetingDetailResult? result;
   dynamic errorMessage;
 
   GetGreetingDetailsResp({this.isSuccess, this.result, this.errorMessage});
 
   GetGreetingDetailsResp.fromJson(Map<String, dynamic> json) {
     isSuccess = json['IsSuccess'];
-    result = json['Result'] != null ? Result.fromJson(json['Result']) : null;
+    result = json['Result'] != null ? GreetingDetailResult.fromJson(json['Result']) : null;
     errorMessage = json['ErrorMessage'];
   }
 
@@ -26,16 +26,17 @@ class GetGreetingDetailsResp {
   }
 }
 
-class Result {
+class GreetingDetailResult {
   GreetingDetailsData? greetingDetailsData;
-  List? greetingDetailsList;
+  
+  List<GreetingListDetail>? greetingDetailsList;
   int? totalCount;
   List<HiddenFilter>? hiddenFilter;
   List<StringFilter>? stringFilter;
   List<NumericDateFilter>? numericDateFilter;
   dynamic addMasterList;
 
-  Result(
+  GreetingDetailResult(
       {this.greetingDetailsData,
       this.greetingDetailsList,
       this.totalCount,
@@ -44,14 +45,16 @@ class Result {
       this.numericDateFilter,
       this.addMasterList});
 
-  Result.fromJson(Map<String, dynamic> json) {
+  GreetingDetailResult.fromJson(Map<String, dynamic> json) {
     greetingDetailsData = json['GreetingDetailsData'] != null
         ? GreetingDetailsData.fromJson(json['GreetingDetailsData'])
         : null;
+    
+
     if (json['GreetingDetailsList'] != null) {
-      greetingDetailsList = [];
+      greetingDetailsList = <GreetingListDetail>[];
       json['GreetingDetailsList'].forEach((v) {
-        greetingDetailsList?.add(v);
+        greetingDetailsList!.add(new GreetingListDetail.fromJson(v));
       });
     }
     totalCount = json['TotalCount'];
@@ -83,7 +86,7 @@ class Result {
     }
     if (this.greetingDetailsList != null) {
       data['GreetingDetailsList'] =
-          this.greetingDetailsList?.map((v) => v).toList();
+          this.greetingDetailsList!.map((v) => v.toJson()).toList();
     }
     if (this.totalCount != null) {
       data['TotalCount'] = this.totalCount;
@@ -510,6 +513,174 @@ class NumericDateFilter {
     if (this.value != null) {
       data['Value'] = this.value;
     }
+    return data;
+  }
+}
+class GreetingListDetail {
+  int? iD;
+  int? userId;
+  String? userIdString;
+  String? displayName;
+  String? userEmail;
+  String? companyName;
+  int? typeID;
+  String? typeIDName;
+  String? typeIDList;
+  int? languageID;
+  String? languageName;
+  String? languageList;
+  int? templateID;
+  String? templateName;
+  String? templateList;
+  String? name;
+  String? creditExpiryDate;
+  String? createdDate;
+  String? publishedDate;
+  int? greetingStatus;
+  String? greetingStatusName;
+  String? caption;
+  String? message;
+  String? sender;
+  bool? userPicture;
+  String? picture;
+  String? pictureRef;
+  String? logo;
+  String? logoRef;
+  int? logoPosition;
+  String? logoPositionName;
+  String? logoPositionList;
+  int? contentPosition;
+  String? contentPositionName;
+  String? contentPositionList;
+  String? lastEditDate;
+  int? previewOption;
+  String? publishFolder;
+  String? thumbnailImage;
+
+  GreetingListDetail(
+      {this.iD,
+      this.userId,
+      this.userIdString,
+      this.displayName,
+      this.userEmail,
+      this.companyName,
+      this.typeID,
+      this.typeIDName,
+      this.typeIDList,
+      this.languageID,
+      this.languageName,
+      this.languageList,
+      this.templateID,
+      this.templateName,
+      this.templateList,
+      this.name,
+      this.creditExpiryDate,
+      this.createdDate,
+      this.publishedDate,
+      this.greetingStatus,
+      this.greetingStatusName,
+      this.caption,
+      this.message,
+      this.sender,
+      this.userPicture,
+      this.picture,
+      this.pictureRef,
+      this.logo,
+      this.logoRef,
+      this.logoPosition,
+      this.logoPositionName,
+      this.logoPositionList,
+      this.contentPosition,
+      this.contentPositionName,
+      this.contentPositionList,
+      this.lastEditDate,
+      this.previewOption,
+      this.publishFolder,
+      this.thumbnailImage});
+
+  GreetingListDetail.fromJson(Map<String, dynamic> json) {
+    iD = json['ID'];
+    userId = json['UserId'];
+    userIdString = json['UserIdString'];
+    displayName = json['DisplayName'];
+    userEmail = json['UserEmail'];
+    companyName = json['CompanyName'];
+    typeID = json['TypeID'];
+    typeIDName = json['TypeIDName'];
+    typeIDList = json['TypeIDList'];
+    languageID = json['LanguageID'];
+    languageName = json['LanguageName'];
+    languageList = json['LanguageList'];
+    templateID = json['TemplateID'];
+    templateName = json['TemplateName'];
+    templateList = json['TemplateList'];
+    name = json['Name'];
+    creditExpiryDate = json['CreditExpiryDate'];
+    createdDate = json['CreatedDate'];
+    publishedDate = json['PublishedDate'];
+    greetingStatus = json['GreetingStatus'];
+    greetingStatusName = json['GreetingStatusName'];
+    caption = json['Caption'];
+    message = json['Message'];
+    sender = json['Sender'];
+    userPicture = json['UserPicture'];
+    picture = json['Picture'];
+    pictureRef = json['PictureRef'];
+    logo = json['Logo'];
+    logoRef = json['LogoRef'];
+    logoPosition = json['LogoPosition'];
+    logoPositionName = json['LogoPositionName'];
+    logoPositionList = json['LogoPositionList'];
+    contentPosition = json['ContentPosition'];
+    contentPositionName = json['ContentPositionName'];
+    contentPositionList = json['ContentPositionList'];
+    lastEditDate = json['LastEditDate'];
+    previewOption = json['PreviewOption'];
+    publishFolder = json['PublishFolder'];
+    thumbnailImage = json['ThumbnailImage'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['ID'] = this.iD;
+    data['UserId'] = this.userId;
+    data['UserIdString'] = this.userIdString;
+    data['DisplayName'] = this.displayName;
+    data['UserEmail'] = this.userEmail;
+    data['CompanyName'] = this.companyName;
+    data['TypeID'] = this.typeID;
+    data['TypeIDName'] = this.typeIDName;
+    data['TypeIDList'] = this.typeIDList;
+    data['LanguageID'] = this.languageID;
+    data['LanguageName'] = this.languageName;
+    data['LanguageList'] = this.languageList;
+    data['TemplateID'] = this.templateID;
+    data['TemplateName'] = this.templateName;
+    data['TemplateList'] = this.templateList;
+    data['Name'] = this.name;
+    data['CreditExpiryDate'] = this.creditExpiryDate;
+    data['CreatedDate'] = this.createdDate;
+    data['PublishedDate'] = this.publishedDate;
+    data['GreetingStatus'] = this.greetingStatus;
+    data['GreetingStatusName'] = this.greetingStatusName;
+    data['Caption'] = this.caption;
+    data['Message'] = this.message;
+    data['Sender'] = this.sender;
+    data['UserPicture'] = this.userPicture;
+    data['Picture'] = this.picture;
+    data['PictureRef'] = this.pictureRef;
+    data['Logo'] = this.logo;
+    data['LogoRef'] = this.logoRef;
+    data['LogoPosition'] = this.logoPosition;
+    data['LogoPositionName'] = this.logoPositionName;
+    data['LogoPositionList'] = this.logoPositionList;
+    data['ContentPosition'] = this.contentPosition;
+    data['ContentPositionName'] = this.contentPositionName;
+    data['ContentPositionList'] = this.contentPositionList;
+    data['LastEditDate'] = this.lastEditDate;
+    data['PreviewOption'] = this.previewOption;
+    data['PublishFolder'] = this.publishFolder;
+    data['ThumbnailImage'] = this.thumbnailImage;
     return data;
   }
 }

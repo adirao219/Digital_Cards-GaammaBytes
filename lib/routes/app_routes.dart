@@ -43,11 +43,11 @@ import 'package:digitalcards_gaammabytes/presentation/band_icongroup_screen/band
 import 'package:digitalcards_gaammabytes/presentation/band_banka_cdetails_screen/band_banka_cdetails_screen.dart';
 import 'package:digitalcards_gaammabytes/presentation/band_upicard_screen/band_upicard_screen.dart';
 
-
 import 'package:digitalcards_gaammabytes/presentation/app_navigation_screen/app_navigation_screen.dart';
 import 'package:get/get.dart';
 
 import '../presentation/location_selection/location_selection.dart';
+import '../presentation/html_editing_screen/html_editing_screen.dart';
 
 class AppRoutes {
   static const String homeOnboardingScreen = '/home_onboarding_screen';
@@ -98,6 +98,7 @@ class AppRoutes {
   static const String eGreetingCardOptionsScreen =
       '/e_greeting_card_options_screen';
 
+  static const String htmlEditor = '/html_editing_screen';
   static const String customizationScreen = '/customization_screen';
 
   static const String digitalCardOptionsScreen = '/digital_card_options_screen';
@@ -142,13 +143,12 @@ class AppRoutes {
 
   static const String bandUpicardScreen = '/band_upicard_screen';
 
-
   static const String appNavigationScreen = '/app_navigation_screen';
 
   static String initialRoute = '/initialRoute';
 
   static List<GetPage> pages = [
-   GetPage(
+    GetPage(
       name: homeOnboardingScreen,
       page: () => HomeOnboardingScreen(),
     ),
@@ -232,6 +232,9 @@ class AppRoutes {
       name: eGreetingCardOptionsScreen,
       page: () => EGreetingCardOptionsScreen(),
     ),
+    GetPage(
+        name: htmlEditor,
+        page: () => HtmlEditorScreen()),
     GetPage(
       name: customizationScreen,
       page: () => CustomizationScreen(),

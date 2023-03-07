@@ -1,13 +1,13 @@
 class GetMyProfileResp {
   bool? isSuccess;
-  Result? result;
+  ProfileResult? result;
   dynamic errorMessage;
 
   GetMyProfileResp({this.isSuccess, this.result, this.errorMessage});
 
   GetMyProfileResp.fromJson(Map<String, dynamic> json) {
     isSuccess = json['IsSuccess'];
-    result = json['Result'] != null ? Result.fromJson(json['Result']) : null;
+    result = json['Result'] != null ? ProfileResult.fromJson(json['Result']) : null;
     errorMessage = json['ErrorMessage'];
   }
 
@@ -26,7 +26,7 @@ class GetMyProfileResp {
   }
 }
 
-class Result {
+class ProfileResult {
   String? userId;
   int? id;
   String? displayName;
@@ -42,7 +42,7 @@ class Result {
   dynamic languageIdName;
   List<LanguageIdList>? languageIdList;
 
-  Result(
+  ProfileResult(
       {this.userId,
       this.id,
       this.displayName,
@@ -58,7 +58,7 @@ class Result {
       this.languageIdName,
       this.languageIdList});
 
-  Result.fromJson(Map<String, dynamic> json) {
+  ProfileResult.fromJson(Map<String, dynamic> json) {
     userId = json['UserId'];
     id = json['Id'];
     displayName = json['DisplayName'];

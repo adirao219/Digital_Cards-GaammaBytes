@@ -12,6 +12,9 @@ import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 
 import '../../data/apiClient/api_client.dart';
+import '../../data/globals/globalvariables.dart';
+import '../../data/models/createGreeting/post_create_greeting_resp.dart';
+import '../../data/models/getCreateGreeting/get_get_create_greeting_resp.dart';
 
 class BasicGreetingEntryScreen extends StatefulWidget {
   const BasicGreetingEntryScreen({super.key});
@@ -24,6 +27,7 @@ class BasicGreetingEntryScreen extends StatefulWidget {
 class _BasicGreetingEntryScreen extends State<BasicGreetingEntryScreen> {
   TextEditingController _template_Controller = new TextEditingController();
   TextEditingController _caption_Controller = new TextEditingController();
+  TextEditingController _message_Controller = new TextEditingController();
   TextEditingController _sender_Controller = new TextEditingController();
   TextEditingController _card_color_Controller = new TextEditingController();
 
@@ -42,8 +46,18 @@ class _BasicGreetingEntryScreen extends State<BasicGreetingEntryScreen> {
   }
 
   ApiClient api = new ApiClient();
-  var greetingType = Get.arguments["Type"] as int;
+  var greetingType = Get.arguments["Type"] as int?;
+  var selectedCardID = Get.arguments["SelectedCardID"] as int?;
+  var greetingCardTypeName =Get.arguments["TypeName"] as String?;
   String templateName = "";
+  String templateID = "";
+  @override
+  void initState() {
+    if (selectedCardID != 0) {
+      getCardDetails();
+    }
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -124,7 +138,7 @@ class _BasicGreetingEntryScreen extends State<BasicGreetingEntryScreen> {
                                   alignment: Alignment.centerLeft,
                                   child: Padding(
                                       padding: getPadding(left: 15),
-                                      child: Text("msg_card_type_ex_new3".tr,
+                                      child: Text(("msg_card_type_ex_new3".tr)+(greetingCardTypeName??''),
                                           overflow: TextOverflow.ellipsis,
                                           textAlign: TextAlign.left,
                                           style: AppStyle.txtNunitoBold18))),
@@ -133,50 +147,51 @@ class _BasicGreetingEntryScreen extends State<BasicGreetingEntryScreen> {
                                   width: 250,
                                   text: templateName.isEmpty
                                       ? "lbl_select_template".tr
-                                      :"Template: "+ templateName,
+                                      : "Template: " + templateName,
                                   margin: getMargin(top: 22),
                                   variant: ButtonVariant.OutlineBlack9003f_1,
                                   shape: ButtonShape.RoundedBorder15,
                                   fontStyle: ButtonFontStyle.NunitoSansBold14,
                                   onTap: onTapSelecttemplateOne),
-                              CustomTextFormField(
-                                  width: 326,
-                                  focusNode: FocusNode(),
-                                  controller: _template_Controller,
-                                  hintText: "lbl_template".tr,
-                                  margin: getMargin(top: 30)),
+                              // CustomTextFormField(
+                              //     width: 326,
+                              //     focusNode: FocusNode(),
+                              //     controller: _template_Controller,
+                              //     hintText: "lbl_template".tr,
+                              //     margin: getMargin(top: 30)),
                               CustomTextFormField(
                                   width: 326,
                                   focusNode: FocusNode(),
                                   controller: _caption_Controller,
                                   hintText: "lbl_caption".tr,
+                                 textInputType: TextInputType.text, 
+                                 textCapitalization: TextCapitalization.words,
                                   margin: getMargin(top: 19)),
-                              Align(
-                                  alignment: Alignment.centerLeft,
-                                  child: Padding(
-                                      padding: getPadding(left: 17, top: 18),
-                                      child: Text("lbl_message".tr,
-                                          overflow: TextOverflow.ellipsis,
-                                          textAlign: TextAlign.left,
-                                          style: AppStyle.txtNunitoSansRegular14
-                                              .copyWith(
-                                                  letterSpacing:
-                                                      getHorizontalSize(
-                                                          0.36))))),
-                              Container(
-                                  height: getVerticalSize(1.00),
-                                  width: getHorizontalSize(326.00),
-                                  margin: getMargin(top: 38),
-                                  decoration: BoxDecoration(
-                                      color: ColorConstant.gray300Cc,
-                                      borderRadius: BorderRadius.circular(
-                                          getHorizontalSize(1.00)))),
+                              Row(
+                                children: [
+                                  CustomTextFormField(
+                                      width: 285,
+                                      maxLines: 4,
+                                      focusNode: FocusNode(),
+                                      controller: _message_Controller,
+                                      hintText: "lbl_message".tr,
+                                      margin: getMargin(top: 19)),
+                                  IconButton(
+                                      onPressed: goToHTMLEditor,
+                                      icon: Icon(
+                                        Icons.edit,
+                                        color: Color.fromARGB(255, 97, 8, 8),
+                                      ))
+                                ],
+                              ),
+
                               CustomTextFormField(
                                   width: 326,
                                   focusNode: FocusNode(),
                                   controller: _sender_Controller,
                                   hintText: "lbl_sender".tr,
-                                  margin: getMargin(top: 19)),
+                                 textCapitalization: TextCapitalization.words,
+                                  margin: getMargin(top: 19, bottom: 10)),
                               Padding(
                                   padding: getPadding(left: 0),
                                   child: Row(
@@ -327,80 +342,80 @@ class _BasicGreetingEntryScreen extends State<BasicGreetingEntryScreen> {
                                       color: ColorConstant.gray300Cc,
                                       borderRadius: BorderRadius.circular(
                                           getHorizontalSize(1.00)))),
-                              Container(
-                                  // height: getVerticalSize(52.00),
-                                  width: getHorizontalSize(326.00),
-                                  margin: getMargin(left: 2, top: 0),
-                                  child: Row(children: [
-                                    Text("lbl_card_color".tr,
-                                        overflow: TextOverflow.ellipsis,
-                                        textAlign: TextAlign.left,
-                                        style: AppStyle.txtNunitoSansRegular14
-                                            .copyWith(
-                                                letterSpacing:
-                                                    getHorizontalSize(0.36),
-                                                height: getVerticalSize(1.26))),
-                                    SizedBox(
-                                      width: 40,
-                                    ),
-                                    CustomButton(
-                                        customColor: currentColor,
-                                        onTap: () {
-                                          showDialog(
-                                              context: context,
-                                              builder: (ctx) => AlertDialog(
-                                                      title: const Text(
-                                                          'Pick a color!'),
-                                                      content:
-                                                          SingleChildScrollView(
-                                                        child: ColorPicker(
-                                                          pickerColor:
-                                                              pickerColor,
-                                                          onColorChanged:
-                                                              changeColor,
-                                                        ),
-                                                      ),
-                                                      actions: <Widget>[
-                                                        ElevatedButton(
-                                                          child: const Text(
-                                                              'Select'),
-                                                          onPressed: () {
-                                                            setState(() =>
-                                                                currentColor =
-                                                                    pickerColor);
-                                                            Navigator.of(
-                                                                    context)
-                                                                .pop();
-                                                          },
-                                                        ),
-                                                      ]));
-                                        },
-                                        height: 20,
-                                        width: 80,
-                                        text: "",
-                                        suffixWidget: Icon(
-                                          Icons.color_lens_rounded,
-                                          color: Colors.white,
-                                        ),
-                                        margin: getMargin(top: 0),
-                                        // prefixWidget: Icon(Icons.color_lens_rounded,color: Colors.white,),
-                                        variant:
-                                            ButtonVariant.OutlineBlack9003f,
-                                        shape: ButtonShape.RoundedBorder5,
-                                        padding: ButtonPadding.PaddingBottom9,
-                                        fontStyle:
-                                            ButtonFontStyle.InterSemiBold14,
-                                        alignment: Alignment.topRight)
-                                  ])),
+                              // Container(
+                              //     // height: getVerticalSize(52.00),
+                              //     width: getHorizontalSize(326.00),
+                              //     margin: getMargin(left: 2, top: 0),
+                              //     child: Row(children: [
+                              //       Text("lbl_card_color".tr,
+                              //           overflow: TextOverflow.ellipsis,
+                              //           textAlign: TextAlign.left,
+                              //           style: AppStyle.txtNunitoSansRegular14
+                              //               .copyWith(
+                              //                   letterSpacing:
+                              //                       getHorizontalSize(0.36),
+                              //                   height: getVerticalSize(1.26))),
+                              //       SizedBox(
+                              //         width: 40,
+                              //       ),
+                              //       CustomButton(
+                              //           customColor: currentColor,
+                              //           onTap: () {
+                              //             showDialog(
+                              //                 context: context,
+                              //                 builder: (ctx) => AlertDialog(
+                              //                         title: const Text(
+                              //                             'Pick a color!'),
+                              //                         content:
+                              //                             SingleChildScrollView(
+                              //                           child: ColorPicker(
+                              //                             pickerColor:
+                              //                                 pickerColor,
+                              //                             onColorChanged:
+                              //                                 changeColor,
+                              //                           ),
+                              //                         ),
+                              //                         actions: <Widget>[
+                              //                           ElevatedButton(
+                              //                             child: const Text(
+                              //                                 'Select'),
+                              //                             onPressed: () {
+                              //                               setState(() =>
+                              //                                   currentColor =
+                              //                                       pickerColor);
+                              //                               Navigator.of(
+                              //                                       context)
+                              //                                   .pop();
+                              //                             },
+                              //                           ),
+                              //                         ]));
+                              //           },
+                              //           height: 20,
+                              //           width: 80,
+                              //           text: "",
+                              //           suffixWidget: Icon(
+                              //             Icons.color_lens_rounded,
+                              //             color: Colors.white,
+                              //           ),
+                              //           margin: getMargin(top: 0),
+                              //           // prefixWidget: Icon(Icons.color_lens_rounded,color: Colors.white,),
+                              //           variant:
+                              //               ButtonVariant.OutlineBlack9003f,
+                              //           shape: ButtonShape.RoundedBorder5,
+                              //           padding: ButtonPadding.PaddingBottom9,
+                              //           fontStyle:
+                              //               ButtonFontStyle.InterSemiBold14,
+                              //           alignment: Alignment.topRight)
+                              //     ])),
                               CustomButton(
                                   height: 40,
                                   width: 250,
                                   text: "lbl_next".tr,
                                   margin: getMargin(left: 40, top: 45),
-                                  onTap: onTapNext),
+                                  onTap: createGreeting),
                             ])))),
             bottomNavigationBar: CustomBottomBar(
-                onNextClicked: onTapNext,
+                onNextClicked: createGreeting,
                 isPublishAvailable: false,
                 onChanged: (BottomBarEnum type) {})));
   }
@@ -408,7 +423,7 @@ class _BasicGreetingEntryScreen extends State<BasicGreetingEntryScreen> {
   onTapSelecttemplateOne() {
     Get.toNamed(AppRoutes.selectTemplateScreen,
         arguments: {"isGreeting": true, "type": greetingType})?.then((value) {
-      var templateID = value['selectedTemplateID'];
+      templateID = value['selectedTemplateID'];
       setState(() {
         templateName = value['selectedTemplateName'];
       });
@@ -501,15 +516,82 @@ class _BasicGreetingEntryScreen extends State<BasicGreetingEntryScreen> {
     Navigator.of(context).pushNamed(AppRoutes.imageModifyScreen);
   }
 
-  onTapNext() {
-    Navigator.of(context).pushNamed(AppRoutes.customizationScreen);
-  }
-
   onTapEllipseFour() {
     Navigator.of(context).pushNamed(AppRoutes.homePageScreen);
   }
 
   onTapContrast9() {
     Navigator.of(context).pushNamed(AppRoutes.eGreetingCardOptionsScreen);
+  }
+
+  goToHTMLEditor() {
+    Get.toNamed(AppRoutes.htmlEditor,
+        arguments: {"currentContent": _message_Controller.text})?.then((value) {
+      var htmlContent = value['htmlContent'];
+      setState(() {
+        _message_Controller.text = htmlContent;
+      });
+    });
+    Navigator.of(context).pushNamed(AppRoutes.htmlEditor).then((value) => null);
+  }
+
+  createGreeting() async {
+    try {
+      var req = {
+        "UserIdString": GlobalVariables.userID,
+        "Id": selectedCardID,
+        "TypeID": 9,
+        "LanguageID": GlobalVariables.currentLanguage,
+        "TemplateID": templateID,
+        "GreetingStatus": selectedCardID == 0 ? 1 : 1,
+        "Caption": _caption_Controller.text,
+        "Message": _message_Controller.text,
+        "Sender": _sender_Controller.text
+      };
+      PostCreateGreetingResp resp =
+          await api.createCreateGreeting(requestData: req);
+      if (resp.isSuccess ?? false) {
+        selectedCardID = resp.result;
+        Get.snackbar('Success', "Greeting Created Successfully!",
+              backgroundColor: Color.fromARGB(255, 208, 245, 216),
+              colorText: Colors.green[900],
+              icon: Icon(
+                Icons.done,
+                color: Colors.green[900],
+              ));
+
+        Navigator.of(context).pushNamed(AppRoutes.customizationScreen,arguments: {"CardID":selectedCardID, "TypeName":greetingCardTypeName,"templateName":templateName});
+      } else {
+        Get.snackbar('Error', resp.errorMessage.toString());
+      }
+    } catch (e) {}
+  }
+
+  getCardDetails() async {
+    try {
+      var req = {
+        "UserId": GlobalVariables.userID,
+        "GreetingID": selectedCardID.toString(),
+        "GreetingType": greetingType.toString(),
+      };
+      GetGetCreateGreetingResp resp =
+          await api.fetchGetCreateGreeting(queryParams: req);
+      if (resp.isSuccess ?? false) {
+        setState(() {
+          
+        _caption_Controller.text = resp.result?.greetingDetailsData?.caption;
+
+        _message_Controller.text = resp.result?.greetingDetailsData?.message;
+
+        _sender_Controller.text = resp.result?.greetingDetailsData?.sender;
+        templateName = resp.result?.greetingDetailsData?.templateName;
+        templateID =
+            resp.result?.greetingDetailsData?.templateID.toString() ?? '';
+            greetingCardTypeName =  resp.result?.greetingDetailsData?.typeIDName.toString() ?? '';
+        });
+      } else {
+        Get.snackbar('Error', resp.errorMessage.toString());
+      }
+    } catch (e) {}
   }
 }

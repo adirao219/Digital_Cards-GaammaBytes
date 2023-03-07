@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:digitalcards_gaammabytes/core/app_export.dart';
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 // ignore: must_be_immutable
 class AppbarImage extends StatelessWidget {
@@ -60,7 +63,7 @@ class MoreOptionMenu extends StatelessWidget {
             Navigator.of(context).pushNamed(AppRoutes.helponeScreen);
             break;
           case 2:
-            Navigator.of(context).pushNamed(AppRoutes.bandVideoScreen);
+            launchYoutubeVideo();
             break;
         }
         ;
@@ -88,5 +91,27 @@ class MoreOptionMenu extends StatelessWidget {
             ])),
       ],
     );
+  }
+
+  launchYoutubeVideo() async {
+    String youtubeURL = "youtube://www.youtube.com/watch?v=AhcIpebJIqc";
+    String httpURL = "https://www.youtube.com/watch?v=AhcIpebJIqc";
+    if (Platform.isIOS) {
+      if (await canLaunch(youtubeURL)) {
+        await launch(youtubeURL, forceSafariVC: false);
+      } else {
+        if (await canLaunch(httpURL)) {
+          await launch(httpURL);
+        } else {
+          throw 'Could not launch ' + httpURL;
+        }
+      }
+    } else {
+      if (await canLaunch(httpURL)) {
+        await launch(httpURL);
+      } else {
+        throw 'Could not launch ' + httpURL;
+      }
+    }
   }
 }

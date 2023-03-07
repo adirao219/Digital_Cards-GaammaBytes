@@ -1,13 +1,13 @@
 class PostRegistrationResp {
   bool? isSuccess;
-  Result? result;
+  RegistrationResult? result;
   dynamic errorMessage;
 
   PostRegistrationResp({this.isSuccess, this.result, this.errorMessage});
 
   PostRegistrationResp.fromJson(Map<String, dynamic> json) {
     isSuccess = json['IsSuccess'];
-    result = json['Result'] != null ? Result.fromJson(json['Result']) : null;
+    result = json['Result'] != null ? RegistrationResult.fromJson(json['Result']) : null;
     errorMessage = json['ErrorMessage'];
   }
 
@@ -26,7 +26,7 @@ class PostRegistrationResp {
   }
 }
 
-class Result {
+class RegistrationResult {
   String? userId;
   dynamic userName;
   dynamic email;
@@ -61,7 +61,7 @@ class Result {
   bool? isDashboardUser;
   int? languageId;
 
-  Result(
+  RegistrationResult(
       {this.userId,
       this.userName,
       this.email,
@@ -96,7 +96,7 @@ class Result {
       this.isDashboardUser,
       this.languageId});
 
-  Result.fromJson(Map<String, dynamic> json) {
+  RegistrationResult.fromJson(Map<String, dynamic> json) {
     userId = json['UserId'];
     userName = json['UserName'];
     email = json['Email'];

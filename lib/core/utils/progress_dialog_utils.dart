@@ -9,24 +9,41 @@ class ProgressDialogUtils {
 
   ///common method for showing progress dialog
   static void showProgressDialog({isCancellable = false}) {
-    try{
-    if (!isProgressVisible) {
-      Get.dialog(
-        Center(
-          child: Lottie.asset(
-            lottiePath,
-            height: 250,
-            width: 250,
+    try {
+      if (!isProgressVisible) {
+        Get.dialog(
+          Center(
+            child: Lottie.asset(
+              lottiePath,
+              height: 250,
+              width: 250,
+            ),
           ),
-        ),
-      );
-    }
-    isProgressVisible = true;
-    }
-    catch(ex)
-    {
-      
-    }
+        );
+      }
+      isProgressVisible = true;
+    } catch (ex) {}
+  }
+
+  static void showSmallProgressDialog( BuildContext mainContext) {
+    try {
+      if (!isProgressVisible) {
+        Get.dialog(
+          Center(
+            child: Lottie.asset(
+              lottiePath,
+              height: 250,
+              width: 250,
+            ),
+          ),
+        );
+      }
+      isProgressVisible = true;
+      Future.delayed(const Duration(milliseconds: 1000), () {
+        if (isProgressVisible) Navigator.of(mainContext).pop();
+        isProgressVisible = false;
+      });
+    } catch (ex) {}
   }
 
   ///common method for hiding progress dialog

@@ -14,6 +14,7 @@ class CustomTextFormField extends StatelessWidget {
       this.isObscureText = false,
       this.textInputAction = TextInputAction.next,
       this.textInputType = TextInputType.text,
+      this.textCapitalization,
       this.maxLines,
       this.hintText,
       this.prefix,
@@ -46,7 +47,7 @@ Function(String)? onChanged;
   TextInputAction? textInputAction;
 
   TextInputType? textInputType;
-
+TextCapitalization? textCapitalization;
   int? maxLines;
 
   String? hintText;
@@ -84,6 +85,7 @@ Function(String)? onChanged;
         keyboardType: textInputType,
         onChanged: onChanged,
         maxLines: maxLines ?? 1,
+        textCapitalization: textCapitalization ?? TextCapitalization.none,
         decoration: _buildDecoration(),
         validator: validator,
       ),

@@ -1,4 +1,7 @@
 import 'package:digitalcards_gaammabytes/core/app_export.dart';
+import 'package:digitalcards_gaammabytes/data/apiClient/api_client.dart';
+import 'package:digitalcards_gaammabytes/data/globals/globalvariables.dart';
+import 'package:digitalcards_gaammabytes/data/models/registration/post_registration_resp.dart';
 import 'package:digitalcards_gaammabytes/widgets/app_bar/appbar_image.dart';
 import 'package:digitalcards_gaammabytes/widgets/app_bar/appbar_subtitle.dart';
 import 'package:digitalcards_gaammabytes/widgets/app_bar/custom_app_bar.dart';
@@ -6,6 +9,8 @@ import 'package:digitalcards_gaammabytes/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
+
+import '../../data/models/confirmUser/post_confirm_user_resp.dart';
 
 class VerifiactionPageScreen extends StatefulWidget {
   const VerifiactionPageScreen({super.key});
@@ -17,6 +22,13 @@ class VerifiactionPageScreen extends StatefulWidget {
 
 class _VerifiactionPageScreen extends State<VerifiactionPageScreen> {
   TextEditingController _otpController = new TextEditingController();
+  String otpValue = "";
+  var type = Get.arguments["type"] as String?;
+  var name = Get.arguments["name"] as String?;
+  var email = Get.arguments["email"] as String?;
+  var phonenumber = Get.arguments["phonenumber"] as String?;
+  var userID = Get.arguments["userID"] as String?;
+  ApiClient api = new ApiClient();
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -39,7 +51,7 @@ class _VerifiactionPageScreen extends State<VerifiactionPageScreen> {
                       AppbarSubtitle(
                           text: "lbl_verification".tr,
                           margin: getMargin(
-                              left: 118, top: 54, right: 118, bottom: 14))
+                              left: 100, top: 54, right: 118, bottom: 14))
                     ])),
                 styleType: Style.bgStyle_2),
             body: Container(
@@ -68,7 +80,7 @@ class _VerifiactionPageScreen extends State<VerifiactionPageScreen> {
                           ]),
                           textAlign: TextAlign.left),
                       Padding(
-                          padding: getPadding(top: 50),
+                          padding: getPadding(top: 25),
                           child: PinCodeTextField(
                               appContext: context,
                               controller: _otpController,
@@ -81,30 +93,41 @@ class _VerifiactionPageScreen extends State<VerifiactionPageScreen> {
                               inputFormatters: [
                                 FilteringTextInputFormatter.digitsOnly
                               ],
-                              onChanged: (value) {},
+                              onChanged: (value) {
+                                setState(() {
+                                  otpValue = value;
+                                });
+                              },
                               textStyle: TextStyle(
                                   color: ColorConstant.gray90003,
                                   fontSize: getFontSize(16),
                                   fontFamily: 'Nunito Sans',
                                   fontWeight: FontWeight.w400),
                               pinTheme: PinTheme(
-                                fieldWidth: getHorizontalSize(40.00),
-                                shape: PinCodeFieldShape.underline,
-                                selectedFillColor: ColorConstant.gray200,
-                                activeFillColor: ColorConstant.gray200,
-                                inactiveFillColor: ColorConstant.gray200,
-                                inactiveColor: ColorConstant.gray50,
-                                selectedColor: ColorConstant.gray50,
-                                activeColor: ColorConstant.gray50,
-                              ))),
+                                  fieldWidth: getHorizontalSize(40.00),
+                                  shape: PinCodeFieldShape.box,
+                                  selectedFillColor:
+                                      Color.fromARGB(255, 253, 233, 213),
+                                  activeFillColor:
+                                      Color.fromARGB(255, 255, 246, 237),
+                                  inactiveFillColor:
+                                      Color.fromARGB(255, 255, 246, 237),
+                                  inactiveColor:
+                                      Color.fromARGB(255, 172, 71, 13),
+                                  selectedColor:
+                                      Color.fromARGB(255, 172, 71, 13),
+                                  activeColor: Color.fromARGB(255, 172, 71, 13),
+                                  errorBorderColor: Colors.red,
+                                  borderRadius: BorderRadius.circular(50),
+                                  borderWidth: 1))),
                       CustomButton(
                           alignment: Alignment.center,
                           height: 40,
                           width: 250,
                           text: "msg_verify_sign_in".tr,
-                          margin: getMargin(top: 30),
+                          margin: getMargin(top: 25),
                           fontStyle: ButtonFontStyle.InterSemiBold14,
-                          onTap: onTapVerifysigninOne),
+                          onTap: verifyUser),
                       Align(
                           alignment: Alignment.center,
                           child: Padding(
@@ -119,7 +142,49 @@ class _VerifiactionPageScreen extends State<VerifiactionPageScreen> {
                     ]))));
   }
 
-  onTapVerifysigninOne() {
-    Navigator.of(context).pushNamed(AppRoutes.signupPageScreen);
+  verifyUser() async {
+    if (otpValue.length == 4) {
+      try {
+        var req = {
+          "TypeOfLogin": type,
+          "DisplayName": name,
+          "Email": email,
+          "PhoneNumber": phonenumber,
+          "VerificationCode": otpValue
+        };
+        PostConfirmUserResp resp =
+            await api.createConfirmUser(requestData: req);
+        if ((resp.isSuccess ?? false) == false) {
+          GlobalVariables.setLogin(true);
+          GlobalVariables.setUserID(userID ?? '');
+
+          Navigator.of(context).pushNamed(AppRoutes.homePageScreen);
+          
+          Get.snackbar('Success',"Welcome to Digital Cards",
+              backgroundColor: Color.fromARGB(255, 208, 245, 216),
+              colorText: Colors.green[900],
+              icon: Icon(
+                Icons.done,
+                color: Colors.green[900],
+              ));
+        } else {
+          Get.snackbar('Error', resp.errorMessage.toString(),
+              backgroundColor: Color.fromARGB(255, 255, 230, 230),
+              colorText: Colors.red[900],
+              icon: Icon(
+                Icons.error,
+                color: Colors.red[900],
+              ));
+        }
+      } catch (ex) {}
+    } else {
+      Get.snackbar('Error', "Please enter valid OTP",
+              backgroundColor: Color.fromARGB(255, 255, 230, 230),
+              colorText: Colors.red[900],
+              icon: Icon(
+                Icons.error,
+                color: Colors.red[900],
+              ));
+    }
   }
 }

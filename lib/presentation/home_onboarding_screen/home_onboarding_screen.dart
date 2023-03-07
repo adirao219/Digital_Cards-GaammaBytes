@@ -17,9 +17,11 @@ class _HomeOnboardingScreen extends State<HomeOnboardingScreen> {
   void initState() {
     //GlobalVariables.init();
     SharedPreferences.getInstance().then((value) {
+      
       if (value.getBool("isLoggedIn") == true) {
         setState(() {
-          isAlreadyLoggedIn = value.getBool("isLoggedIn") ?? false;
+          isAlreadyLoggedIn = GlobalVariables.isLoggedIn= value.getBool("isLoggedIn") ?? false;
+         GlobalVariables.userID=value.getString("userID")??'';
         });
         Future.delayed(const Duration(milliseconds: 1500), () {
           if (isAlreadyLoggedIn) {
@@ -27,6 +29,7 @@ class _HomeOnboardingScreen extends State<HomeOnboardingScreen> {
           }
         });
       }
+      
     });
 
     super.initState();

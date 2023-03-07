@@ -1,7 +1,9 @@
-import 'package:get/get.dart';
-import 'gridchristmasthumbnail_item_model.dart';
+
+import '../../../data/models/greetingDetails/get_greeting_details_resp.dart';
+
 
 class MyEGreetingCardsModel {
-  RxList<GridchristmasthumbnailItemModel> gridchristmasthumbnailItemList =
-      RxList.filled(6, GridchristmasthumbnailItemModel());
+
+
+  List<GreetingListDetail> gridchristmasthumbnailItemList = [];
 }

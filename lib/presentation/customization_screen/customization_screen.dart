@@ -15,6 +15,10 @@ class CustomizationScreen extends StatefulWidget {
             }
 
 class _CustomizationScreen extends State<CustomizationScreen> {
+  
+  var cardID = Get.arguments["CardID"] as int?;
+  String? greetingTypeName = Get.arguments["TypeName"] as String?;
+  String? templateName = Get.arguments["templateName"] as String?;
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -95,14 +99,14 @@ class _CustomizationScreen extends State<CustomizationScreen> {
                                   child: RichText(
                                       text: TextSpan(children: [
                                         TextSpan(
-                                            text: "msg_card_type_ex_new2".tr,
+                                            text: ("msg_card_type_ex_new2".tr)+(greetingTypeName??'')+"\n\n",
                                             style: TextStyle(
                                                 color: ColorConstant.pink900,
                                                 fontSize: getFontSize(18),
                                                 fontFamily: 'Nunito',
                                                 fontWeight: FontWeight.w700)),
                                         TextSpan(
-                                            text: "msg_template_type2".tr,
+                                            text: ("msg_template_type2".tr)+(templateName??''),
                                             style: TextStyle(
                                                 color: ColorConstant.pink900,
                                                 fontSize: getFontSize(18),
@@ -144,7 +148,7 @@ class _CustomizationScreen extends State<CustomizationScreen> {
   }
 
   onTapTxtGroupThirtyFour() {
-    Navigator.of(context).pushNamed(AppRoutes.cardPreviewScreen);
+    Navigator.of(context).pushNamed(AppRoutes.cardPreviewScreen,arguments: {"CardID":cardID});
   }
 
   onTapEllipseFour() {

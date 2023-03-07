@@ -32,38 +32,29 @@ class GetGetGreetingTypeResp {
 }
 
 class Result {
-  bool? disabled;
-  dynamic group;
-  bool? selected;
-  String? text;
-  String? value;
+  int? typeID;
+  String? typeName;
+  String? thumbnailURL;
 
-  Result({this.disabled, this.group, this.selected, this.text, this.value});
+  Result({ this.typeID, this.typeName,this.thumbnailURL});
 
   Result.fromJson(Map<String, dynamic> json) {
-    disabled = json['Disabled'];
-    group = json['Group'];
-    selected = json['Selected'];
-    text = json['Text'];
-    value = json['Value'];
+    thumbnailURL = json['ThumbnailImage'];
+    typeName = json['TypeName'];
+    typeID= json['TypeID'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = {};
-    if (this.disabled != null) {
-      data['Disabled'] = this.disabled;
+   
+    if (this.thumbnailURL != null) {
+      data['ThumbnailImage'] = this.thumbnailURL;
     }
-    if (this.group != null) {
-      data['Group'] = this.group;
+    if (this.typeID != null) {
+      data['TypeID'] = this.typeID;
     }
-    if (this.selected != null) {
-      data['Selected'] = this.selected;
-    }
-    if (this.text != null) {
-      data['Text'] = this.text;
-    }
-    if (this.value != null) {
-      data['Value'] = this.value;
+    if (this.typeName != null) {
+      data['TypeName'] = this.typeName;
     }
     return data;
   }
