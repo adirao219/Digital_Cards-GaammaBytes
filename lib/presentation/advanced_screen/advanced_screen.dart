@@ -1,4 +1,3 @@
-
 import 'package:digitalcards_gaammabytes/core/app_export.dart';
 import 'package:digitalcards_gaammabytes/widgets/app_bar/appbar_image.dart';
 import 'package:digitalcards_gaammabytes/widgets/app_bar/appbar_title.dart';
@@ -6,12 +5,12 @@ import 'package:digitalcards_gaammabytes/widgets/app_bar/custom_app_bar.dart';
 import 'package:flutter/material.dart';
 
 class AdvancedScreen extends StatefulWidget {
-  const AdvancedScreen({ super.key});
+  const AdvancedScreen({super.key});
 
-                @override
-                // ignore: library_private_types_in_public_api
-                _AdvancedScreen createState() => _AdvancedScreen();
-            }
+  @override
+  // ignore: library_private_types_in_public_api
+  _AdvancedScreen createState() => _AdvancedScreen();
+}
 
 class _AdvancedScreen extends State<AdvancedScreen> {
   @override
@@ -20,11 +19,11 @@ class _AdvancedScreen extends State<AdvancedScreen> {
         top: false,
         bottom: false,
         child: Scaffold(
-          floatingActionButtonLocation: FloatingActionButtonLocation.miniEndTop,
-          floatingActionButton: Padding(
-            padding: const EdgeInsets.only(bottom: 75.0),
-            child:MoreOptionMenu()),
-          
+            floatingActionButtonLocation:
+                FloatingActionButtonLocation.miniEndTop,
+            floatingActionButton: Padding(
+                padding: const EdgeInsets.only(bottom: 75.0),
+                child: MoreOptionMenu()),
             backgroundColor: ColorConstant.whiteA700,
             appBar: CustomAppBar(
                 height: getVerticalSize(108.00),
@@ -55,10 +54,9 @@ class _AdvancedScreen extends State<AdvancedScreen> {
                                       AppbarImage(
                                           height: getVerticalSize(10.00),
                                           width: getHorizontalSize(5.00),
-                                          
-                                onTap: () {
-                                  Navigator.of(context).pop();
-                                },
+                                          onTap: () {
+                                            Navigator.of(context).pop();
+                                          },
                                           svgPath:
                                               ImageConstant.imgVectorstroke,
                                           margin: getMargin(

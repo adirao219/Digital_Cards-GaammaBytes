@@ -48,6 +48,15 @@ android {
         versionName flutterVersionName
     }
 
+    signingConfigs{
+        debug{
+            keyAlias 'upload'
+            keyPassword 'GaammaCards'
+            storeFile file('androidkeytool.jks')
+            storePassword 'GaammaCards'
+        }
+    }
+    
     buildTypes {
         release {
             // TODO: Add your own signing config for the release build.
