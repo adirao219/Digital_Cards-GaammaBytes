@@ -1,16 +1,37 @@
-
 import 'package:digitalcards_gaammabytes/core/app_export.dart';
+import 'package:digitalcards_gaammabytes/data/globals/globalvariables.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomeOnboardingScreen extends StatefulWidget {
-  const HomeOnboardingScreen({ super.key});
+  const HomeOnboardingScreen({super.key});
 
-                @override
-                // ignore: library_private_types_in_public_api
-                _HomeOnboardingScreen createState() => _HomeOnboardingScreen();
-            }
+  @override
+  // ignore: library_private_types_in_public_api
+  _HomeOnboardingScreen createState() => _HomeOnboardingScreen();
+}
 
 class _HomeOnboardingScreen extends State<HomeOnboardingScreen> {
+  var isAlreadyLoggedIn = false;
+  @override
+  void initState() {
+    //GlobalVariables.init();
+    SharedPreferences.getInstance().then((value) {
+      if (value.getBool("isLoggedIn") == true) {
+        setState(() {
+          isAlreadyLoggedIn = value.getBool("isLoggedIn") ?? false;
+        });
+        Future.delayed(const Duration(milliseconds: 1500), () {
+          if (isAlreadyLoggedIn) {
+            Navigator.of(context).pushNamed(AppRoutes.homePageScreen);
+          }
+        });
+      }
+    });
+
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -86,46 +107,50 @@ class _HomeOnboardingScreen extends State<HomeOnboardingScreen> {
                                         mainAxisAlignment:
                                             MainAxisAlignment.start,
                                         children: [
-                                          GestureDetector(
-                                              onTap: () {
-                                                onTapButtonhalfFill();
-                                              },
-                                              child: Container(
-                                                  width:
-                                                      getHorizontalSize(203.00),
-                                                  padding: getPadding(
-                                                      left: 55,
-                                                      top: 19,
-                                                      right: 55,
-                                                      bottom: 19),
-                                                  decoration: AppDecoration
-                                                      .fillPink900
-                                                      .copyWith(
-                                                          borderRadius:
-                                                              BorderRadiusStyle
-                                                                  .circleBorder31),
-                                                  child: Column(
-                                                      mainAxisSize:
-                                                          MainAxisSize.min,
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .center,
-                                                      children: [
-                                                        Padding(
-                                                            padding: getPadding(
-                                                                bottom: 1),
-                                                            child: Text(
-                                                                "lbl_get_started"
-                                                                    .tr,
-                                                                overflow:
-                                                                    TextOverflow
-                                                                        .ellipsis,
-                                                                textAlign:
-                                                                    TextAlign
-                                                                        .left,
-                                                                style: AppStyle
-                                                                    .txtNunitoSansBlack16))
-                                                      ])))
+                                          (!isAlreadyLoggedIn)
+                                              ? GestureDetector(
+                                                  onTap: () {
+                                                    onTapButtonhalfFill();
+                                                  },
+                                                  child: Container(
+                                                      width: getHorizontalSize(
+                                                          203.00),
+                                                      padding: getPadding(
+                                                          left: 55,
+                                                          top: 19,
+                                                          right: 55,
+                                                          bottom: 19),
+                                                      decoration: AppDecoration
+                                                          .fillPink900
+                                                          .copyWith(
+                                                              borderRadius:
+                                                                  BorderRadiusStyle
+                                                                      .circleBorder31),
+                                                      child: Column(
+                                                          mainAxisSize:
+                                                              MainAxisSize.min,
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .center,
+                                                          children: [
+                                                            Padding(
+                                                                padding:
+                                                                    getPadding(
+                                                                        bottom:
+                                                                            1),
+                                                                child: Text(
+                                                                    "lbl_get_started"
+                                                                        .tr,
+                                                                    overflow:
+                                                                        TextOverflow
+                                                                            .ellipsis,
+                                                                    textAlign:
+                                                                        TextAlign
+                                                                            .left,
+                                                                    style: AppStyle
+                                                                        .txtNunitoSansBlack16))
+                                                          ])))
+                                              : Container()
                                         ]))
                               ]))
                     ]))));
@@ -133,5 +158,9 @@ class _HomeOnboardingScreen extends State<HomeOnboardingScreen> {
 
   onTapButtonhalfFill() {
     Navigator.of(context).pushNamed(AppRoutes.signupPageScreen);
+  }
+
+  onTapTxtDonthaveanaccount() {
+    Navigator.of(context).pushNamed(AppRoutes.regiterPageScreen);
   }
 }

@@ -9,6 +9,7 @@ class ProgressDialogUtils {
 
   ///common method for showing progress dialog
   static void showProgressDialog({isCancellable = false}) {
+    try{
     if (!isProgressVisible) {
       Get.dialog(
         Center(
@@ -21,6 +22,11 @@ class ProgressDialogUtils {
       );
     }
     isProgressVisible = true;
+    }
+    catch(ex)
+    {
+      
+    }
   }
 
   ///common method for hiding progress dialog

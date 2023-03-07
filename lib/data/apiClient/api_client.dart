@@ -267,7 +267,7 @@ class ApiClient extends GetConnect {
     }
   }
 
-  Future<PostPreviewGreetingTemplateResp> createPreviewGreetingTemplate(
+  Future<PostPreviewGreetingTemplateResp> previewGreetingTemplate(
       {Map<String, dynamic> queryParams = const {},
       Map requestData = const {}}) async {
     ProgressDialogUtils.showProgressDialog();

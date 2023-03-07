@@ -10,9 +10,15 @@ class GridchristmasthumbnailItemWidget extends StatelessWidget {
   GridchristmasthumbnailItemModel gridchristmasthumbnailItemModelObj;
 
 
+  Offset _tapPosition = Offset.zero;
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return
+    GestureDetector(
+       onTapDown: (details) => _getTapPosition(details, context),
+        onLongPress: () => _showContextMenu(context),
+      child:
+     Container(
       padding: getPadding(
         left: 6,
         top: 3,
@@ -62,6 +68,55 @@ class GridchristmasthumbnailItemWidget extends StatelessWidget {
           ),
         ],
       ),
-    );
+    ));
+  }
+  
+  void _getTapPosition(TapDownDetails details, BuildContext mainContext) {
+    final RenderBox referenceBox = mainContext.findRenderObject() as RenderBox;
+
+    _tapPosition = referenceBox.globalToLocal(details.globalPosition);
+  }
+
+  void _showContextMenu(BuildContext context) async {
+    final RenderObject? overlay =
+        Overlay.of(context)?.context.findRenderObject();
+
+    final result = await showMenu(
+        context: context,
+
+        // Show the context menu at the tap location
+        position: RelativeRect.fromRect(
+            Rect.fromLTWH(_tapPosition.dx, _tapPosition.dy, 30, 30),
+            Rect.fromLTWH(0, 0, overlay!.paintBounds.size.width,
+                overlay.paintBounds.size.height)),
+
+        // set a list of choices for the context menu
+        items: [
+          const PopupMenuItem(
+            value: 'favorites',
+            child: Text('Add To Favorites'),
+          ),
+          const PopupMenuItem(
+            value: 'comment',
+            child: Text('Write Comment'),
+          ),
+          const PopupMenuItem(
+            value: 'hide',
+            child: Text('Hide'),
+          ),
+        ]);
+
+    // Implement the logic for each choice here
+    switch (result) {
+      case 'favorites':
+        debugPrint('Add To Favorites');
+        break;
+      case 'comment':
+        debugPrint('Write Comment');
+        break;
+      case 'hide':
+        debugPrint('Hide');
+        break;
+    }
   }
 }

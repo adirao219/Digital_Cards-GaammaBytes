@@ -1,6 +1,6 @@
 class PostPreviewGreetingTemplateResp {
   bool? isSuccess;
-  Result? result;
+  PreviewResult? result;
   dynamic errorMessage;
 
   PostPreviewGreetingTemplateResp(
@@ -8,7 +8,7 @@ class PostPreviewGreetingTemplateResp {
 
   PostPreviewGreetingTemplateResp.fromJson(Map<String, dynamic> json) {
     isSuccess = json['IsSuccess'];
-    result = json['Result'] != null ? Result.fromJson(json['Result']) : null;
+    result = json['Result'] != null ? PreviewResult.fromJson(json['Result']) : null;
     errorMessage = json['ErrorMessage'];
   }
 
@@ -27,7 +27,7 @@ class PostPreviewGreetingTemplateResp {
   }
 }
 
-class Result {
+class PreviewResult {
   int? id;
   int? typeID;
   String? typeName;
@@ -52,7 +52,7 @@ class Result {
   String? htmldata;
   dynamic thumbnailImage;
 
-  Result(
+  PreviewResult(
       {this.id,
       this.typeID,
       this.typeName,
@@ -77,7 +77,7 @@ class Result {
       this.htmldata,
       this.thumbnailImage});
 
-  Result.fromJson(Map<String, dynamic> json) {
+  PreviewResult.fromJson(Map<String, dynamic> json) {
     id = json['ID'];
     typeID = json['TypeID'];
     typeName = json['TypeName'];

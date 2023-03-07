@@ -84,6 +84,7 @@ flutter:
   assets: 
     - assets/
     - assets/images/
+    - assets/lottieFiles/
   fonts: 
     - family: Nunito Sans
       fonts: 

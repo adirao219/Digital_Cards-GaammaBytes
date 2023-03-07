@@ -1,4 +1,5 @@
 import 'package:digitalcards_gaammabytes/core/app_export.dart';
+import 'package:digitalcards_gaammabytes/data/globals/globalvariables.dart';
 import 'package:digitalcards_gaammabytes/widgets/app_bar/appbar_iconbutton.dart';
 import 'package:digitalcards_gaammabytes/widgets/app_bar/appbar_image.dart';
 import 'package:digitalcards_gaammabytes/widgets/app_bar/appbar_subtitle.dart';
@@ -9,6 +10,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 
 import '../../core/utils/progress_dialog_utils.dart';
+import '../../data/apiClient/api_client.dart';
+import '../../data/models/filterGreetingTemplate/get_filter_greeting_template_resp.dart';
+import '../../data/models/previewGreetingTemplate/post_preview_greeting_template_resp.dart';
 
 class SelectTemplateScreen extends StatefulWidget {
   const SelectTemplateScreen({super.key});
@@ -19,7 +23,10 @@ class SelectTemplateScreen extends StatefulWidget {
 }
 
 class _SelectTemplateScreen extends State<SelectTemplateScreen> {
-  var htmlContent = '''
+  PreviewResult? previewResult;
+  List<Result>? templates;
+  var htmlContent =
+      '''
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -43,6 +50,55 @@ class _SelectTemplateScreen extends State<SelectTemplateScreen> {
 </html> 
 
   ''';
+
+  ApiClient api = new ApiClient();
+  var greetingType = Get.arguments["type"] as int;
+  var isGreeting = Get.arguments["isGreeting"] as bool;
+  var selectedTemplate;
+  @override
+  void initState() {
+    if (isGreeting) getGreetingTemplates();
+    super.initState();
+  }
+
+  void getTemplate(String templateID) async {
+    try {
+      var req = {
+        "TemplateID": templateID.toString(),
+      };
+      PostPreviewGreetingTemplateResp resp =
+          await api.previewGreetingTemplate(queryParams: req);
+      if ((resp.isSuccess ?? false) == false) {
+        setState(() {
+          previewResult = resp.result;
+          setState(() {
+            htmlContent = previewResult?.htmldata ?? '';
+          });
+        });
+      } else {
+        Get.snackbar('Error', resp.errorMessage.toString());
+      }
+    } catch (e) {}
+  }
+
+  void getGreetingTemplates() async {
+    try {
+      var req = {
+        "GreetingType": greetingType.toString(),
+        "LanguageId": GlobalVariables.currentLanguage,
+      };
+      GetFilterGreetingTemplateResp resp =
+          await api.fetchFilterGreetingTemplate(queryParams: req);
+      if (resp.isSuccess ?? false) {
+        setState(() {
+          templates = resp.result;
+        });
+      } else {
+        Get.snackbar('Error', resp.errorMessage.toString());
+      }
+    } catch (e) {}
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -105,95 +161,48 @@ class _SelectTemplateScreen extends State<SelectTemplateScreen> {
                             crossAxisAlignment: CrossAxisAlignment.end,
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              CustomDropDown(
-                                  width: 257,
-                                  focusNode: FocusNode(),
-                                  icon: Container(
-                                      margin: getMargin(left: 30, right: 9),
-                                      child: CustomImageView(
-                                          svgPath: ImageConstant
-                                              .imgArrowdownPink900)),
-                                  hintText: "lbl_select".tr,
-                                  margin: getMargin(right: 30),
-                                  variant: DropDownVariant.OutlineBlack900,
-                                  fontStyle: DropDownFontStyle.NunitoSansBold16,
-                                  items: [],
-                                  onChanged: (value) {}),
-                              Container(
-                                  width: getHorizontalSize(257.00),
-                                  margin: getMargin(top: 1, right: 30),
-                                  padding: getPadding(top: 4, bottom: 4),
-                                  decoration: AppDecoration.outlineBlack9003f1
-                                      .copyWith(
-                                          borderRadius: BorderRadiusStyle
-                                              .customBorderBL15),
-                                  child: Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Container(
-                                            width: getHorizontalSize(257.00),
-                                            padding:
-                                                getPadding(left: 10, right: 10),
-                                            decoration: AppDecoration
-                                                .fillDeeporange100
-                                                .copyWith(
-                                                    borderRadius:
-                                                        BorderRadiusStyle
-                                                            .roundedBorder5),
-                                            child: Column(
-                                                mainAxisSize: MainAxisSize.min,
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                children: [
-                                                  Padding(
-                                                      padding:
-                                                          getPadding(top: 2),
-                                                      child: Text(
-                                                          "msg_sample_template"
-                                                              .tr,
-                                                          overflow: TextOverflow
-                                                              .ellipsis,
-                                                          textAlign:
-                                                              TextAlign.left,
-                                                          style: AppStyle
-                                                              .txtNunitoSansBold16Pink900
-                                                              .copyWith(
-                                                                  letterSpacing:
-                                                                      getHorizontalSize(
-                                                                          0.36))))
-                                                ])),
-                                        Padding(
-                                            padding: getPadding(left: 10),
-                                            child: Text(
-                                                "msg_sample_template2".tr,
-                                                overflow: TextOverflow.ellipsis,
-                                                textAlign: TextAlign.left,
-                                                style: AppStyle
-                                                    .txtNunitoSansBold16Pink900
-                                                    .copyWith(
-                                                        letterSpacing:
-                                                            getHorizontalSize(
-                                                                0.36)))),
-                                        Padding(
-                                            padding: getPadding(
-                                                left: 10, top: 1, bottom: 1),
-                                            child: Text(
-                                                "msg_sample_template3".tr,
-                                                overflow: TextOverflow.ellipsis,
-                                                textAlign: TextAlign.left,
-                                                style: AppStyle
-                                                    .txtNunitoSansBold16Pink900
-                                                    .copyWith(
-                                                        letterSpacing:
-                                                            getHorizontalSize(
-                                                                0.36))))
-                                      ])),
+                              DropdownButton<String>(
+                                // Initial Value
+                                value: selectedTemplate,
+
+                                // Down Arrow Icon
+                                icon: const Icon(Icons.keyboard_arrow_down),
+
+                                // Array list of items
+                                items: templates?.map((items) {
+                                  return DropdownMenuItem(
+                                    value: items.value,
+                                    child: Text(
+                                      items.text ?? '',
+                                      style: TextStyle(color: Colors.black),
+                                    ),
+                                  );
+                                }).toList(),
+                                // After selecting the desired option,it will
+                                // change button value to selected value
+                                onChanged: (String? newValue) {
+                                   setState(() {
+                                    selectedTemplate = newValue!;
+                                  });
+                                  getTemplate(newValue ?? "");
+                                 
+                                },
+                              ),
+                              // DropDown(
+                              //     width: 257,
+                              //     focusNode: FocusNode(),
+                              //     icon: Container(
+                              //         margin: getMargin(left: 30, right: 9),
+                              //         child: CustomImageView(
+                              //             svgPath: ImageConstant
+                              //                 .imgArrowdownPink900)),
+                              //     hintText: "lbl_select".tr,
+                              //     margin: getMargin(right: 30),
+                              //     variant: DropDownVariant.OutlineBlack900,
+                              //     fontStyle: DropDownFontStyle.NunitoSansBold16,
+                              //     items: templates?.map((e) => new SelectionPopupModel(title: e.text??'',id: int.parse(e.value??'0'),value: e.value)).toList(),
+                              //     onChanged: (value) {}),
+
                               Container(
                                   height: getVerticalSize(529.00),
                                   width: getHorizontalSize(335.00),
@@ -227,7 +236,11 @@ class _SelectTemplateScreen extends State<SelectTemplateScreen> {
                                         Align(
                                             alignment: Alignment.center,
                                             child: Container(
-                                              padding: getPadding(top: 5,left: 5,bottom: 5,right: 5),
+                                                padding: getPadding(
+                                                    top: 5,
+                                                    left: 5,
+                                                    bottom: 5,
+                                                    right: 5),
                                                 child: HtmlWidget(
                                                   htmlContent,
                                                   customStylesBuilder:
@@ -275,7 +288,7 @@ class _SelectTemplateScreen extends State<SelectTemplateScreen> {
                                                 width:
                                                     getHorizontalSize(273.00),
                                                 decoration: BoxDecoration(
-                                                //  color: Colors.white,
+                                                    //  color: Colors.white,
                                                     border: Border.all(
                                                         color: ColorConstant
                                                             .whiteA700,
@@ -293,9 +306,7 @@ class _SelectTemplateScreen extends State<SelectTemplateScreen> {
                                                               getHorizontalSize(
                                                                   2.00),
                                                           offset: Offset(0, 4))
-                                                    ])
-                                                    
-                                                    ))
+                                                    ])))
                                       ])),
                               CustomButton(
                                   height: 40,
@@ -309,8 +320,7 @@ class _SelectTemplateScreen extends State<SelectTemplateScreen> {
   }
 
   onTapSelect() {
-    
-    Navigator.of(context).pushNamed(AppRoutes.basicCardEntryOneScreen);
+    Get.back(result: {"selectedTemplateID":selectedTemplate, "selectedTemplateName":templates!.firstWhere((element) => element.value==selectedTemplate).text});
   }
 
   onTapArrowleft() {
