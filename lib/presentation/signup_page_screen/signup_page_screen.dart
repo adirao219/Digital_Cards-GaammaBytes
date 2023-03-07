@@ -5,6 +5,7 @@ import 'package:digitalcards_gaammabytes/widgets/app_bar/custom_app_bar.dart';
 import 'package:digitalcards_gaammabytes/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
 import 'package:digitalcards_gaammabytes/domain/googleauth/google_auth_helper.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class SignupPageScreen extends StatefulWidget {
   const SignupPageScreen({super.key});
@@ -60,9 +61,7 @@ class _SignupPageScreen extends State<SignupPageScreen> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       GestureDetector(
-                          onTap: () {
-                            onTapRowgooglelogoone();
-                          },
+                          onTap: onTapRowgooglelogoone,
                           child: Container(
                               alignment: Alignment.center,
                               padding: getPadding(
@@ -265,7 +264,7 @@ class _SignupPageScreen extends State<SignupPageScreen> {
                     ]))));
   }
 
-  onTapRowgooglelogoone() async {
+  onTapRowgooglelogoone1() async {
     await GoogleAuthHelper().googleSignInProcess().then((googleUser) {
       if (googleUser != null) {
         //TODO Actions to be performed after signin
@@ -275,6 +274,10 @@ class _SignupPageScreen extends State<SignupPageScreen> {
     }).catchError((onError) {
       Get.snackbar('Error', onError.toString());
     });
+  }
+
+  Future onTapRowgooglelogoone() async {
+    final user = await GoogleSignInApi.login();
   }
 
   onTapTxtForgotpassword2() {

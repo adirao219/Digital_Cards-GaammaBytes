@@ -26,9 +26,9 @@ class AppbarImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {
-        onTap!();
-      },
+      // onTap: () {
+      // _scaffoldKey.currentState?.openDrawer();
+      // },
       child: Padding(
         padding: margin ?? EdgeInsets.zero,
         child: CustomImageView(
