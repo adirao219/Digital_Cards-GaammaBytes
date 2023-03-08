@@ -1,13 +1,13 @@
 
 
-import 'package:digitalcards_gaammabytes/presentation/my_digital_cards_screen/widgets/gridbusinesscardseven_item_widget.dart';
+import 'package:digitalcardsgaammabytes/presentation/my_digital_cards_screen/widgets/gridbusinesscardseven_item_widget.dart';
 
 import '../../widgets/app_bar/appbar_subtitle.dart';
 import 'models/gridbusinesscardseven_item_model.dart';
-import 'package:digitalcards_gaammabytes/core/app_export.dart';
-import 'package:digitalcards_gaammabytes/widgets/app_bar/appbar_image.dart';
-import 'package:digitalcards_gaammabytes/widgets/app_bar/custom_app_bar.dart';
-import 'package:digitalcards_gaammabytes/widgets/custom_button.dart';
+import 'package:digitalcardsgaammabytes/core/app_export.dart';
+import 'package:digitalcardsgaammabytes/widgets/app_bar/appbar_image.dart';
+import 'package:digitalcardsgaammabytes/widgets/app_bar/custom_app_bar.dart';
+import 'package:digitalcardsgaammabytes/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
 
 import 'models/my_digital_cards_model.dart';

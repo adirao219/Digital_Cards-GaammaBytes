@@ -1,12 +1,12 @@
 
-import 'package:digitalcards_gaammabytes/core/app_export.dart';
-import 'package:digitalcards_gaammabytes/widgets/app_bar/appbar_image.dart';
-import 'package:digitalcards_gaammabytes/widgets/app_bar/appbar_title.dart';
-import 'package:digitalcards_gaammabytes/widgets/app_bar/custom_app_bar.dart';
-import 'package:digitalcards_gaammabytes/widgets/custom_text_form_field.dart';
+import 'package:digitalcardsgaammabytes/core/app_export.dart';
+import 'package:digitalcardsgaammabytes/widgets/app_bar/appbar_image.dart';
+import 'package:digitalcardsgaammabytes/widgets/app_bar/appbar_title.dart';
+import 'package:digitalcardsgaammabytes/widgets/app_bar/custom_app_bar.dart';
+import 'package:digitalcardsgaammabytes/widgets/custom_text_form_field.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
-import 'package:digitalcards_gaammabytes/domain/facebookauth/facebook_auth_helper.dart';
+import 'package:digitalcardsgaammabytes/domain/facebookauth/facebook_auth_helper.dart';
 
 class LinkScreen extends StatefulWidget {
   const LinkScreen({ super.key});

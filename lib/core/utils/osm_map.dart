@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:http/http.dart' as http;
-import 'package:digitalcards_gaammabytes/core/utils/wide_button.dart';
+import 'package:digitalcardsgaammabytes/core/utils/wide_button.dart';
 
 class OpenStreetMap extends StatefulWidget {
   final LatLong center;

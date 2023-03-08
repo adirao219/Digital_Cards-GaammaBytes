@@ -1,13 +1,20 @@
-import 'package:digitalcards_gaammabytes/core/app_export.dart';
-import 'package:digitalcards_gaammabytes/data/apiClient/api_client.dart';
-import 'package:digitalcards_gaammabytes/data/models/filterGreetingTemplate/get_filter_greeting_template_resp.dart';
-import 'package:digitalcards_gaammabytes/widgets/app_bar/appbar_image.dart';
-import 'package:digitalcards_gaammabytes/widgets/app_bar/appbar_subtitle.dart';
-import 'package:digitalcards_gaammabytes/widgets/app_bar/custom_app_bar.dart';
-import 'package:digitalcards_gaammabytes/widgets/custom_button.dart';
-import 'package:flutter/material.dart';
-import 'package:digitalcards_gaammabytes/domain/googleauth/google_auth_helper.dart';
+import 'package:digitalcardsgaammabytes/core/app_export.dart';
+import 'package:digitalcardsgaammabytes/data/apiClient/api_client.dart';
+import 'package:digitalcardsgaammabytes/data/models/filterGreetingTemplate/get_filter_greeting_template_resp.dart';
+import 'package:digitalcardsgaammabytes/widgets/app_bar/appbar_image.dart';
+import 'package:digitalcardsgaammabytes/widgets/app_bar/appbar_subtitle.dart';
+import 'package:digitalcardsgaammabytes/widgets/app_bar/custom_app_bar.dart';
+import 'package:digitalcardsgaammabytes/widgets/custom_button.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
+import 'package:firebase_core/firebase_core.dart';
+
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:flutter/material.dart';
+import 'package:digitalcardsgaammabytes/domain/googleauth/google_auth_helper.dart';
+
+import '../../core/service/authenticationservice.dart';
 import '../../data/globals/globalvariables.dart';
 import '../../data/models/login/post_login_resp.dart';
 
@@ -23,6 +30,28 @@ TextEditingController _phoneController = TextEditingController();
 TextEditingController _passwordController = TextEditingController();
 
 class _SignupPageScreen extends State<SignupPageScreen> {
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final GoogleSignIn _googleSignIn = GoogleSignIn(
+      // clientId: "278783358961-uvc5m9nm9sdusq045fsr4ft8oif1u1sk.apps.googleusercontent.com",
+
+      // scopes: <String>[
+      //   'email',
+      //   'https://www.googleapis.com/auth/contacts.readonly',
+      // ],
+      );
+
+  String googleUseremail = "";
+  String googleUserName = "";
+  String googleUserToken = "";
+  String googleUserPhoneNumber = "";
+  String googleUserPhotoURL = "";
+
+  @override
+  void initState() {
+    AuthService.instance.initAuth();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -65,7 +94,7 @@ class _SignupPageScreen extends State<SignupPageScreen> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       GestureDetector(
-                          onTap: onTapRowgooglelogoone,
+                          onTap: googleAuthSignin,
                           child: Container(
                               alignment: Alignment.center,
                               padding: getPadding(
@@ -267,32 +296,166 @@ class _SignupPageScreen extends State<SignupPageScreen> {
                     ]))));
   }
 
+  googleAuthSignin() async {
+    try {
+      final authResult = await AuthService.instance.login();
+      if (authResult.isAuthSuccess) {
+       signInWithGoogleTokens(authResult.accessToken??'',authResult.idToken??'');
+      } else {
+        // widget.setUnauthenticatedState();
+      }
+    } catch (er) {
+      Get.snackbar('Error', er.toString(),
+          backgroundColor: Color.fromARGB(255, 255, 230, 230),
+          colorText: Colors.red[900],
+          icon: Icon(
+            Icons.error,
+            color: Colors.red[900],
+          ));
+    }
+  }
+
+ signInWithGoogleTokens(String accessToken, String idToken) async {
+    try {
+      User? _user;
+      // model.state =ViewState.Busy;
+     
+      AuthCredential credential = GoogleAuthProvider.credential(
+        accessToken: accessToken,
+        idToken: idToken,
+      );
+      UserCredential authResult = await _auth.signInWithCredential(credential);
+      _user = authResult.user;
+      assert(!_user!.isAnonymous);
+      assert(await _user!.getIdToken() != null);
+      User? currentUser = _auth.currentUser;
+      assert(_user!.uid == currentUser!.uid);
+      // model.state =ViewState.Idle;
+      setState(() {
+        googleUserName = _user!.displayName ?? '';
+        googleUseremail = _user.email ?? '';
+        googleUserToken = _user.uid;
+        googleUserName = _user.email ?? '';
+        googleUserPhoneNumber = _user.phoneNumber ?? '';
+        googleUserPhotoURL = _user.photoURL ?? '';
+
+        GlobalVariables.setUserID(googleUserToken);
+        GlobalVariables.setLogin(true);
+        GlobalVariables.setGoogleLoggedIn(true);
+        GlobalVariables.setDisplayname(googleUserName);
+        GlobalVariables.setUserName(googleUseremail);
+
+        GlobalVariables.setUserPhotoUrl(googleUserPhotoURL);
+        
+      Navigator.of(context).pushNamed(AppRoutes.homePageScreen);
+      });
+    } catch (ex) {
+      Get.snackbar('Error', ex.toString(),
+          backgroundColor: Color.fromARGB(255, 255, 230, 230),
+          colorText: Colors.red[900],
+          icon: Icon(
+            Icons.error,
+            color: Colors.red[900],
+          ));
+    }
+  }
+  signInWithGoogle() async {
+    try {
+      User? _user;
+      // model.state =ViewState.Busy;
+      GoogleSignInAccount? googleSignInAccount = await _googleSignIn.signIn();
+      GoogleSignInAuthentication googleSignInAuthentication =
+          await googleSignInAccount!.authentication;
+      AuthCredential credential = GoogleAuthProvider.credential(
+        accessToken: googleSignInAuthentication.accessToken,
+        idToken: googleSignInAuthentication.idToken,
+      );
+      UserCredential authResult = await _auth.signInWithCredential(credential);
+      _user = authResult.user;
+      assert(!_user!.isAnonymous);
+      assert(await _user!.getIdToken() != null);
+      User? currentUser = _auth.currentUser;
+      assert(_user!.uid == currentUser!.uid);
+      // model.state =ViewState.Idle;
+      setState(() {
+        googleUseremail = _user!.displayName ?? '';
+        googleUserName = _user.email ?? '';
+        googleUserToken = _user.uid;
+        googleUserName = _user.email ?? '';
+        googleUserPhoneNumber = _user.phoneNumber ?? '';
+        googleUserPhotoURL = _user.photoURL ?? '';
+
+        GlobalVariables.setUserID(googleUserToken);
+        GlobalVariables.setLogin(true);
+        GlobalVariables.setGoogleLoggedIn(true);
+        GlobalVariables.setDisplayname(googleUserName);
+        GlobalVariables.setUserName(googleUseremail);
+
+        GlobalVariables.setUserPhotoUrl(googleUserPhotoURL);
+      });
+      print("User Name: ${_user!.displayName}");
+      print("User Email ${_user.email}");
+    } catch (ex) {
+      Get.snackbar('Error', ex.toString(),
+          backgroundColor: Color.fromARGB(255, 255, 230, 230),
+          colorText: Colors.red[900],
+          icon: Icon(
+            Icons.error,
+            color: Colors.red[900],
+          ));
+    }
+  }
+
   onTapRowgooglelogoone1() async {
     await GoogleAuthHelper().googleSignInProcess().then((googleUser) {
       if (googleUser != null) {
+        print(googleUser.toString());
+        print("s");
         //TODO Actions to be performed after signin
       } else {
         Get.snackbar('Error', 'user data is empty',
-              backgroundColor: Color.fromARGB(255, 255, 230, 230),
-              colorText: Colors.red[900],
-              icon: Icon(
-                Icons.error,
-                color: Colors.red[900],
-              ));
+            backgroundColor: Color.fromARGB(255, 255, 230, 230),
+            colorText: Colors.red[900],
+            icon: Icon(
+              Icons.error,
+              color: Colors.red[900],
+            ));
       }
-    }).catchError((onError) {
-      Get.snackbar('Error', onError.toString(),
-              backgroundColor: Color.fromARGB(255, 255, 230, 230),
-              colorText: Colors.red[900],
-              icon: Icon(
-                Icons.error,
-                color: Colors.red[900],
-              ));
+    }).catchError((er) {
+      Get.snackbar('Error', er.toString(),
+          backgroundColor: Color.fromARGB(255, 255, 230, 230),
+          colorText: Colors.red[900],
+          icon: Icon(
+            Icons.error,
+            color: Colors.red[900],
+          ));
     });
   }
 
   Future onTapRowgooglelogoone() async {
-    final user = await GoogleSignInApi.login();
+    await GoogleSignInApi.login().then((googleUser) {
+      if (googleUser != null) {
+        print(googleUser.toString());
+        print("s");
+        //TODO Actions to be performed after signin
+      } else {
+        Get.snackbar('Error', 'user data is empty',
+            backgroundColor: Color.fromARGB(255, 255, 230, 230),
+            colorText: Colors.red[900],
+            icon: Icon(
+              Icons.error,
+              color: Colors.red[900],
+            ));
+      }
+    }).catchError((onError) {
+      Get.snackbar('Error', onError.toString(),
+          backgroundColor: Color.fromARGB(255, 255, 230, 230),
+          colorText: Colors.red[900],
+          icon: Icon(
+            Icons.error,
+            color: Colors.red[900],
+          ));
+    });
   }
 
   onTapTxtForgotpassword2() {
@@ -318,17 +481,25 @@ class _SignupPageScreen extends State<SignupPageScreen> {
     if (resp.isSuccess ?? false) {
       var res = resp.result;
       var userID = res['UserId'];
+      var displayName = res['DisplayName'] ?? "";
+      var userPhoto = res['UserPhoto'] ?? '';
       GlobalVariables.setUserID(userID);
       GlobalVariables.setLogin(true);
+
+      GlobalVariables.setGoogleLoggedIn(false);
+      GlobalVariables.setDisplayname(displayName);
+      GlobalVariables.setUserName(_phoneController.text);
+      GlobalVariables.setUserPhotoUrl(userPhoto);
+
       Navigator.of(context).pushNamed(AppRoutes.homePageScreen);
     } else {
       Get.snackbar('Error', resp.errorMessage.toString(),
-              backgroundColor: Color.fromARGB(255, 255, 230, 230),
-              colorText: Colors.red[900],
-              icon: Icon(
-                Icons.error,
-                color: Colors.red[900],
-              ));
+          backgroundColor: Color.fromARGB(255, 255, 230, 230),
+          colorText: Colors.red[900],
+          icon: Icon(
+            Icons.error,
+            color: Colors.red[900],
+          ));
     }
   }
 

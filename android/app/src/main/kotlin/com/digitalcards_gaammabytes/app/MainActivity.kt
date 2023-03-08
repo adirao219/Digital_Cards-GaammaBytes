@@ -1,4 +1,4 @@
-package com.digitalcards_gaammabytes.app
+package com.digitalcardsgaammabytes.app
 
 import io.flutter.embedding.android.FlutterActivity
 

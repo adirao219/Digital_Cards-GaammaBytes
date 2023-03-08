@@ -1,11 +1,11 @@
-import 'package:digitalcards_gaammabytes/core/app_export.dart';
-import 'package:digitalcards_gaammabytes/data/globals/globalvariables.dart';
-import 'package:digitalcards_gaammabytes/widgets/app_bar/appbar_iconbutton.dart';
-import 'package:digitalcards_gaammabytes/widgets/app_bar/appbar_image.dart';
-import 'package:digitalcards_gaammabytes/widgets/app_bar/appbar_subtitle.dart';
-import 'package:digitalcards_gaammabytes/widgets/app_bar/custom_app_bar.dart';
-import 'package:digitalcards_gaammabytes/widgets/custom_button.dart';
-import 'package:digitalcards_gaammabytes/widgets/custom_drop_down.dart';
+import 'package:digitalcardsgaammabytes/core/app_export.dart';
+import 'package:digitalcardsgaammabytes/data/globals/globalvariables.dart';
+import 'package:digitalcardsgaammabytes/widgets/app_bar/appbar_iconbutton.dart';
+import 'package:digitalcardsgaammabytes/widgets/app_bar/appbar_image.dart';
+import 'package:digitalcardsgaammabytes/widgets/app_bar/appbar_subtitle.dart';
+import 'package:digitalcardsgaammabytes/widgets/app_bar/custom_app_bar.dart';
+import 'package:digitalcardsgaammabytes/widgets/custom_button.dart';
+import 'package:digitalcardsgaammabytes/widgets/custom_drop_down.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 

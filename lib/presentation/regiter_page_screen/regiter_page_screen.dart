@@ -1,9 +1,9 @@
-import 'package:digitalcards_gaammabytes/core/app_export.dart';
-import 'package:digitalcards_gaammabytes/widgets/app_bar/appbar_image.dart';
-import 'package:digitalcards_gaammabytes/widgets/app_bar/appbar_subtitle.dart';
-import 'package:digitalcards_gaammabytes/widgets/app_bar/custom_app_bar.dart';
-import 'package:digitalcards_gaammabytes/widgets/custom_button.dart';
-import 'package:digitalcards_gaammabytes/widgets/custom_checkbox.dart';
+import 'package:digitalcardsgaammabytes/core/app_export.dart';
+import 'package:digitalcardsgaammabytes/widgets/app_bar/appbar_image.dart';
+import 'package:digitalcardsgaammabytes/widgets/app_bar/appbar_subtitle.dart';
+import 'package:digitalcardsgaammabytes/widgets/app_bar/custom_app_bar.dart';
+import 'package:digitalcardsgaammabytes/widgets/custom_button.dart';
+import 'package:digitalcardsgaammabytes/widgets/custom_checkbox.dart';
 import 'package:flutter/material.dart';
 import 'package:toggle_switch/toggle_switch.dart';
 
@@ -625,7 +625,7 @@ class _RegiterPageScreen extends State<RegiterPageScreen> {
         };
         GetValidateCouponCodeResp resp =
             await api.fetchValidateCouponCode(queryParams: req);
-        if ((resp.isSuccess ?? false) == false) {
+        if ((resp.isSuccess ?? false)) {
           if (resp.result ?? false) {
             registerUser();
           } else {

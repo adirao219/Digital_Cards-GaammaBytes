@@ -1,5 +1,5 @@
-import 'package:digitalcards_gaammabytes/core/app_export.dart';
-import 'package:digitalcards_gaammabytes/data/globals/globalvariables.dart';
+import 'package:digitalcardsgaammabytes/core/app_export.dart';
+import 'package:digitalcardsgaammabytes/data/globals/globalvariables.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -17,11 +17,17 @@ class _HomeOnboardingScreen extends State<HomeOnboardingScreen> {
   void initState() {
     //GlobalVariables.init();
     SharedPreferences.getInstance().then((value) {
-      
       if (value.getBool("isLoggedIn") == true) {
         setState(() {
-          isAlreadyLoggedIn = GlobalVariables.isLoggedIn= value.getBool("isLoggedIn") ?? false;
-         GlobalVariables.userID=value.getString("userID")??'';
+          isAlreadyLoggedIn =
+              GlobalVariables.isLoggedIn = value.getBool("isLoggedIn") ?? false;
+
+          GlobalVariables.isGoogleLoggedIn =
+              value.getBool("isGoogleLoggedIn") ?? false;
+          GlobalVariables.userID = value.getString("userID") ?? '';
+          GlobalVariables.displayName = value.getString("displayName") ?? '';
+          GlobalVariables.userName = value.getString("userName") ?? '';
+          GlobalVariables.userPhotoUrl = value.getString("userPhotoUrl") ?? '';
         });
         Future.delayed(const Duration(milliseconds: 1500), () {
           if (isAlreadyLoggedIn) {
@@ -29,7 +35,6 @@ class _HomeOnboardingScreen extends State<HomeOnboardingScreen> {
           }
         });
       }
-      
     });
 
     super.initState();

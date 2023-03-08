@@ -1,6 +1,7 @@
 plugins{
     id 'com.android.application'
     id 'kotlin-android'
+    id 'com.google.gms.google-services'
 }
 def localProperties = new Properties()
 def localPropertiesFile = rootProject.file('local.properties')
@@ -40,12 +41,15 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId "com.digitalcards_gaammabytes.app"
+        applicationId "com.digitalcardsgaammabytes.app"
         minSdkVersion 21
         targetSdkVersion 33
         multiDexEnabled true
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
+         manifestPlaceholders += [
+            'appAuthRedirectScheme': 'com.googleusercontent.apps.278783358961-hqur6kiemlnd2nnnmdabr5riljfhc3pp'
+        ]
     }
 
     signingConfigs{
@@ -72,5 +76,6 @@ flutter {
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation platform('com.google.firebase:firebase-bom:31.2.3')
     implementation "androidx.multidex:multidex:2.0.1"
 }

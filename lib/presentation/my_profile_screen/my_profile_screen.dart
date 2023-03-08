@@ -1,10 +1,10 @@
-import 'package:digitalcards_gaammabytes/core/app_export.dart';
-import 'package:digitalcards_gaammabytes/core/utils/validation_functions.dart';
-import 'package:digitalcards_gaammabytes/data/apiClient/api_client.dart';
-import 'package:digitalcards_gaammabytes/widgets/app_bar/appbar_image.dart';
-import 'package:digitalcards_gaammabytes/widgets/app_bar/custom_app_bar.dart';
-import 'package:digitalcards_gaammabytes/widgets/custom_button.dart';
-import 'package:digitalcards_gaammabytes/widgets/custom_text_form_field.dart';
+import 'package:digitalcardsgaammabytes/core/app_export.dart';
+import 'package:digitalcardsgaammabytes/core/utils/validation_functions.dart';
+import 'package:digitalcardsgaammabytes/data/apiClient/api_client.dart';
+import 'package:digitalcardsgaammabytes/widgets/app_bar/appbar_image.dart';
+import 'package:digitalcardsgaammabytes/widgets/app_bar/custom_app_bar.dart';
+import 'package:digitalcardsgaammabytes/widgets/custom_button.dart';
+import 'package:digitalcardsgaammabytes/widgets/custom_text_form_field.dart';
 import 'package:flutter/material.dart';
 
 import '../../data/globals/globalvariables.dart';
@@ -101,7 +101,7 @@ class _MyProfileScreen extends State<MyProfileScreen> {
                 color: Colors.green[900],
               ));
              
-          // Navigator.of(context).pop();
+           Navigator.of(context).pop();
         });
       } else {
         Get.snackbar('Error', resp.errorMessage.toString(),

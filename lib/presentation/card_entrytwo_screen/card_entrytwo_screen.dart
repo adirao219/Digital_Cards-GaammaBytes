@@ -1,20 +1,20 @@
-import 'package:digitalcards_gaammabytes/presentation/card_entrytwo_screen/widgets/card_entrytwo_item_widget.dart';
+import 'package:digitalcardsgaammabytes/presentation/card_entrytwo_screen/widgets/card_entrytwo_item_widget.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
 
 import '../../core/utils/osm_map.dart';
 import 'models/card_entrytwo_item_model.dart';
-import 'package:digitalcards_gaammabytes/core/app_export.dart';
-import 'package:digitalcards_gaammabytes/widgets/app_bar/appbar_image.dart';
-import 'package:digitalcards_gaammabytes/widgets/app_bar/appbar_title.dart';
-import 'package:digitalcards_gaammabytes/widgets/app_bar/custom_app_bar.dart';
-import 'package:digitalcards_gaammabytes/widgets/custom_bottom_bar.dart';
-import 'package:digitalcards_gaammabytes/widgets/custom_button.dart';
-import 'package:digitalcards_gaammabytes/widgets/custom_text_form_field.dart';
+import 'package:digitalcardsgaammabytes/core/app_export.dart';
+import 'package:digitalcardsgaammabytes/widgets/app_bar/appbar_image.dart';
+import 'package:digitalcardsgaammabytes/widgets/app_bar/appbar_title.dart';
+import 'package:digitalcardsgaammabytes/widgets/app_bar/custom_app_bar.dart';
+import 'package:digitalcardsgaammabytes/widgets/custom_bottom_bar.dart';
+import 'package:digitalcardsgaammabytes/widgets/custom_button.dart';
+import 'package:digitalcardsgaammabytes/widgets/custom_text_form_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
-
+import 'dart:convert';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import 'models/card_entrytwo_model.dart';
@@ -46,6 +46,8 @@ class _CardEntrytwoScreen extends State<CardEntrytwoScreen> {
   XFile? imageSecond;
   File? firstCroppedImage;
   File? secondCroppedImage;
+  String? firstImageBase64;
+  String? secondImageBase64;
   void changeColor(Color color) {
     setState(() => pickerColor = color);
   }
@@ -534,11 +536,15 @@ class _CardEntrytwoScreen extends State<CardEntrytwoScreen> {
       bool? isSquare = value['isSquare'];
       File? imageFile = value["imageFile"] as File?;
       int? pictureType = value["pictureType"] as int?;
+      
+      var base64val1 =  base64Encode(imageFile!.readAsBytesSync());
       if (pictureType == 1) {
+firstImageBase64 = base64val1;
         firstCroppedImage = imageFile;
         isFirstImageSelected = true;
       }
       if (pictureType == 2) {
+        secondImageBase64 = base64val1;
         secondCroppedImage = imageFile;
         isSecondImageSelected = true;
       }

@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:digitalcards_gaammabytes/core/app_export.dart';
+import 'package:digitalcardsgaammabytes/core/app_export.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 

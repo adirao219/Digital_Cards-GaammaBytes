@@ -1,6 +1,6 @@
 
 import '../models/listlanguage_three1_item_model.dart';
-import 'package:digitalcards_gaammabytes/core/app_export.dart';
+import 'package:digitalcardsgaammabytes/core/app_export.dart';
 import 'package:flutter/material.dart';
 
 // ignore: must_be_immutable

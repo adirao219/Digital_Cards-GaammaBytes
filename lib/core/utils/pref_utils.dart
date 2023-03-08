@@ -1,6 +1,6 @@
 //ignore: unused_import
 import 'dart:convert';
-import 'package:digitalcards_gaammabytes/data/globals/globalvariables.dart';
+import 'package:digitalcardsgaammabytes/data/globals/globalvariables.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class PrefUtils {

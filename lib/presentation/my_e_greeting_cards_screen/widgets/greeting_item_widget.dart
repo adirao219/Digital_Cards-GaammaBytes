@@ -1,18 +1,19 @@
-import 'package:digitalcards_gaammabytes/data/apiClient/api_client.dart';
+import 'package:digitalcardsgaammabytes/data/apiClient/api_client.dart';
 
 import '../../../data/globals/globalvariables.dart';
 import '../../../data/models/deleteGreeting/post_delete_greeting_resp.dart';
 import '../../../data/models/greetingDetails/get_greeting_details_resp.dart';
-import 'package:digitalcards_gaammabytes/core/app_export.dart';
+import 'package:digitalcardsgaammabytes/core/app_export.dart';
 import 'package:flutter/material.dart';
 
 import '../../../data/models/hideGreeting/post_hide_greeting_resp.dart';
 
 // ignore: must_be_immutable
 class GreetingItemWidget extends StatelessWidget {
-  GreetingItemWidget(this.modelobj);
+  GreetingItemWidget(this.modelobj, this.isHidden);
 
   GreetingListDetail modelobj;
+  bool isHidden;
   ApiClient api = new ApiClient();
   Offset _tapPosition = Offset.zero;
   @override
@@ -37,8 +38,7 @@ class GreetingItemWidget extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               CustomImageView(
-                url: "https://digitalcard.gaamma.cards/" +
-                    (modelobj.thumbnailImage ?? ''),
+                url: (modelobj.thumbnailImage ?? ''),
                 // imagePath: ImageConstant.imgChristmasthumbnail,
                 height: getVerticalSize(
                   110.00,
@@ -96,7 +96,7 @@ class GreetingItemWidget extends StatelessWidget {
     AlertDialog alert = AlertDialog(
       title: Text("Confirmation"),
       content: Text("Are you sure you want to " +
-          (isHide ? "hide" : "delete") +
+          (isHide ? (isHidden ? "un-hide" : "hide") : "delete") +
           " the card?"),
       actions: [
         cancelButton,
@@ -146,9 +146,9 @@ class GreetingItemWidget extends StatelessWidget {
             value: 'delete',
             child: Text('Delete'),
           ),
-          const PopupMenuItem(
+          PopupMenuItem(
             value: 'hide',
-            child: Text('Hide'),
+            child: Text((isHidden ? "Un-Hide" : "Hide")),
           ),
         ]);
 
@@ -168,28 +168,29 @@ class GreetingItemWidget extends StatelessWidget {
       var req = {
         "UserId": GlobalVariables.userID.toString(),
         "GreetingID": modelobj.iD.toString(),
-        "IsHidden": true.toString(),
+        "IsHidden": (isHidden ? false : true).toString(),
       };
       PostHideGreetingResp resp =
           await api.createHideGreeting(queryParams: req);
       if ((resp.isSuccess ?? false)) {
-        Get.snackbar('Success', "Greeting hidden successfully!",
-              backgroundColor: Color.fromARGB(255, 208, 245, 216),
-              colorText: Colors.green[900],
-              icon: Icon(
-                Icons.done,
-                color: Colors.green[900],
-              ));
+        Get.snackbar('Success',
+            "Greeting " + (isHidden ? "un-" : "") + "hidden successfully!",
+            backgroundColor: Color.fromARGB(255, 208, 245, 216),
+            colorText: Colors.green[900],
+            icon: Icon(
+              Icons.done,
+              color: Colors.green[900],
+            ));
 
         Navigator.of(mainContext).pushNamed(AppRoutes.myEGreetingCardsScreen);
       } else {
         Get.snackbar('Error', resp.errorMessage.toString(),
-              backgroundColor: Color.fromARGB(255, 255, 230, 230),
-              colorText: Colors.red[900],
-              icon: Icon(
-                Icons.error,
-                color: Colors.red[900],
-              ));
+            backgroundColor: Color.fromARGB(255, 255, 230, 230),
+            colorText: Colors.red[900],
+            icon: Icon(
+              Icons.error,
+              color: Colors.red[900],
+            ));
       }
     } catch (e) {}
   }
@@ -204,22 +205,22 @@ class GreetingItemWidget extends StatelessWidget {
           await api.createDeleteGreeting(queryParams: req);
       if ((resp.isSuccess ?? false)) {
         Get.snackbar('Success', "Greeting deleted successfully!",
-              backgroundColor: Color.fromARGB(255, 208, 245, 216),
-              colorText: Colors.green[900],
-              icon: Icon(
-                Icons.done,
-                color: Colors.green[900],
-              ));
+            backgroundColor: Color.fromARGB(255, 208, 245, 216),
+            colorText: Colors.green[900],
+            icon: Icon(
+              Icons.done,
+              color: Colors.green[900],
+            ));
 
         Navigator.of(mainContext).pushNamed(AppRoutes.myEGreetingCardsScreen);
       } else {
         Get.snackbar('Error', resp.errorMessage.toString(),
-              backgroundColor: Color.fromARGB(255, 255, 230, 230),
-              colorText: Colors.red[900],
-              icon: Icon(
-                Icons.error,
-                color: Colors.red[900],
-              ));
+            backgroundColor: Color.fromARGB(255, 255, 230, 230),
+            colorText: Colors.red[900],
+            icon: Icon(
+              Icons.error,
+              color: Colors.red[900],
+            ));
       }
     } catch (e) {}
   }

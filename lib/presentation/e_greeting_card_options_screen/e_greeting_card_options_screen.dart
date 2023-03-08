@@ -1,7 +1,7 @@
-import 'package:digitalcards_gaammabytes/core/app_export.dart';
-import 'package:digitalcards_gaammabytes/data/apiClient/api_client.dart';
-import 'package:digitalcards_gaammabytes/widgets/app_bar/appbar_image.dart';
-import 'package:digitalcards_gaammabytes/widgets/app_bar/custom_app_bar.dart';
+import 'package:digitalcardsgaammabytes/core/app_export.dart';
+import 'package:digitalcardsgaammabytes/data/apiClient/api_client.dart';
+import 'package:digitalcardsgaammabytes/widgets/app_bar/appbar_image.dart';
+import 'package:digitalcardsgaammabytes/widgets/app_bar/custom_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'dart:math';
 import '../../data/models/getGreetingType/get_get_greeting_type_resp.dart';
@@ -93,7 +93,7 @@ class _EGreetingCardOptionsScreen extends State<EGreetingCardOptionsScreen> {
               styleType: Style.bgStyle_18),
           body: Container(
             width: size.width,
-            padding: getPadding(left: 15, top: 39, right: 15, bottom: 39),
+            padding: getPadding(left: 15, top: 10, right: 15, bottom: 39),
             child: SingleChildScrollView(
                 child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,

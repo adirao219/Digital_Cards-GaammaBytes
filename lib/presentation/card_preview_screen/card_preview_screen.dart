@@ -1,10 +1,10 @@
-import 'package:digitalcards_gaammabytes/core/app_export.dart';
-import 'package:digitalcards_gaammabytes/core/utils/progress_dialog_utils.dart';
-import 'package:digitalcards_gaammabytes/widgets/app_bar/appbar_iconbutton.dart';
-import 'package:digitalcards_gaammabytes/widgets/app_bar/appbar_image.dart';
-import 'package:digitalcards_gaammabytes/widgets/app_bar/appbar_subtitle.dart';
-import 'package:digitalcards_gaammabytes/widgets/app_bar/custom_app_bar.dart';
-import 'package:digitalcards_gaammabytes/widgets/custom_button.dart';
+import 'package:digitalcardsgaammabytes/core/app_export.dart';
+import 'package:digitalcardsgaammabytes/core/utils/progress_dialog_utils.dart';
+import 'package:digitalcardsgaammabytes/widgets/app_bar/appbar_iconbutton.dart';
+import 'package:digitalcardsgaammabytes/widgets/app_bar/appbar_image.dart';
+import 'package:digitalcardsgaammabytes/widgets/app_bar/appbar_subtitle.dart';
+import 'package:digitalcardsgaammabytes/widgets/app_bar/custom_app_bar.dart';
+import 'package:digitalcardsgaammabytes/widgets/custom_button.dart';
 import 'package:flutter/foundation.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:flutter/material.dart';
@@ -68,9 +68,8 @@ class _CardPreviewScreen extends State<CardPreviewScreen> {
           await api.createPreviewGreetingCard(queryParams: req);
       if ((resp.isSuccess ?? false)) {
         setState(() {
-          setState(() {
             htmlContent = resp.result ?? '';
-          });
+      
         });
       } else {
         Get.snackbar('Error', resp.errorMessage.toString());
@@ -270,6 +269,7 @@ class _CardPreviewScreen extends State<CardPreviewScreen> {
   }
 
   onTapDownload() async {
+    var s= cardID;
     var bytes = await WebcontentConverter.contentToImage(content: htmlContent);
     if (bytes.length > 0) {
       _saveFile(bytes);

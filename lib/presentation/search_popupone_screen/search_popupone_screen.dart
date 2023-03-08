@@ -1,15 +1,15 @@
 
-import 'package:digitalcards_gaammabytes/presentation/search_popupone_screen/widgets/gridbusinesscardseven1_item_widget.dart';
+import 'package:digitalcardsgaammabytes/presentation/search_popupone_screen/widgets/gridbusinesscardseven1_item_widget.dart';
 
 import '../search_popupone_screen/widgets/listlanguage_three_item_widget.dart';
 
 import 'models/gridbusinesscardseven1_item_model.dart';
 import 'models/listlanguage_three_item_model.dart';
-import 'package:digitalcards_gaammabytes/core/app_export.dart';
-import 'package:digitalcards_gaammabytes/widgets/app_bar/appbar_image.dart';
-import 'package:digitalcards_gaammabytes/widgets/app_bar/appbar_subtitle_1.dart';
-import 'package:digitalcards_gaammabytes/widgets/app_bar/appbar_subtitle_2.dart';
-import 'package:digitalcards_gaammabytes/widgets/app_bar/custom_app_bar.dart';
+import 'package:digitalcardsgaammabytes/core/app_export.dart';
+import 'package:digitalcardsgaammabytes/widgets/app_bar/appbar_image.dart';
+import 'package:digitalcardsgaammabytes/widgets/app_bar/appbar_subtitle_1.dart';
+import 'package:digitalcardsgaammabytes/widgets/app_bar/appbar_subtitle_2.dart';
+import 'package:digitalcardsgaammabytes/widgets/app_bar/custom_app_bar.dart';
 import 'package:flutter/material.dart';
 
 import 'models/search_popupone_model.dart';

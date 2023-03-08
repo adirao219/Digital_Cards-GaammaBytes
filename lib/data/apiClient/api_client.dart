@@ -1,25 +1,25 @@
-import 'package:digitalcards_gaammabytes/core/app_export.dart';
-import 'package:digitalcards_gaammabytes/core/utils/progress_dialog_utils.dart';
-import 'package:digitalcards_gaammabytes/data/models/comments/get_comments_resp.dart';
+import 'package:digitalcardsgaammabytes/core/app_export.dart';
+import 'package:digitalcardsgaammabytes/core/utils/progress_dialog_utils.dart';
+import 'package:digitalcardsgaammabytes/data/models/comments/get_comments_resp.dart';
 
-import 'package:digitalcards_gaammabytes/data/models/checkDuplicateEmail/get_check_duplicate_email_resp.dart';
-import 'package:digitalcards_gaammabytes/data/models/checkDuplicatePhoneNo/get_check_duplicate_phone_no_resp.dart';
-import 'package:digitalcards_gaammabytes/data/models/confirmUser/post_confirm_user_resp.dart';
-import 'package:digitalcards_gaammabytes/data/models/createGreeting/post_create_greeting_resp.dart';
-import 'package:digitalcards_gaammabytes/data/models/deleteGreeting/post_delete_greeting_resp.dart';
-import 'package:digitalcards_gaammabytes/data/models/filterGreetingTemplate/get_filter_greeting_template_resp.dart';
-import 'package:digitalcards_gaammabytes/data/models/getCreateGreeting/get_get_create_greeting_resp.dart';
-import 'package:digitalcards_gaammabytes/data/models/getGreetingType/get_get_greeting_type_resp.dart';
-import 'package:digitalcards_gaammabytes/data/models/greetingDetails/get_greeting_details_resp.dart';
-import 'package:digitalcards_gaammabytes/data/models/hideGreeting/post_hide_greeting_resp.dart';
-import 'package:digitalcards_gaammabytes/data/models/login/post_login_resp.dart';
-import 'package:digitalcards_gaammabytes/data/models/myProfile/get_my_profile_resp.dart';
-import 'package:digitalcards_gaammabytes/data/models/myProfile/post_my_profile_resp.dart';
-import 'package:digitalcards_gaammabytes/data/models/previewGreetingCard/post_preview_greeting_card_resp.dart';
-import 'package:digitalcards_gaammabytes/data/models/previewGreetingTemplate/post_preview_greeting_template_resp.dart';
-import 'package:digitalcards_gaammabytes/data/models/publishGreeting/post_publish_greeting_resp.dart';
-import 'package:digitalcards_gaammabytes/data/models/registration/post_registration_resp.dart';
-import 'package:digitalcards_gaammabytes/data/models/validateCouponCode/get_validate_coupon_code_resp.dart';
+import 'package:digitalcardsgaammabytes/data/models/checkDuplicateEmail/get_check_duplicate_email_resp.dart';
+import 'package:digitalcardsgaammabytes/data/models/checkDuplicatePhoneNo/get_check_duplicate_phone_no_resp.dart';
+import 'package:digitalcardsgaammabytes/data/models/confirmUser/post_confirm_user_resp.dart';
+import 'package:digitalcardsgaammabytes/data/models/createGreeting/post_create_greeting_resp.dart';
+import 'package:digitalcardsgaammabytes/data/models/deleteGreeting/post_delete_greeting_resp.dart';
+import 'package:digitalcardsgaammabytes/data/models/filterGreetingTemplate/get_filter_greeting_template_resp.dart';
+import 'package:digitalcardsgaammabytes/data/models/getCreateGreeting/get_get_create_greeting_resp.dart';
+import 'package:digitalcardsgaammabytes/data/models/getGreetingType/get_get_greeting_type_resp.dart';
+import 'package:digitalcardsgaammabytes/data/models/greetingDetails/get_greeting_details_resp.dart';
+import 'package:digitalcardsgaammabytes/data/models/hideGreeting/post_hide_greeting_resp.dart';
+import 'package:digitalcardsgaammabytes/data/models/login/post_login_resp.dart';
+import 'package:digitalcardsgaammabytes/data/models/myProfile/get_my_profile_resp.dart';
+import 'package:digitalcardsgaammabytes/data/models/myProfile/post_my_profile_resp.dart';
+import 'package:digitalcardsgaammabytes/data/models/previewGreetingCard/post_preview_greeting_card_resp.dart';
+import 'package:digitalcardsgaammabytes/data/models/previewGreetingTemplate/post_preview_greeting_template_resp.dart';
+import 'package:digitalcardsgaammabytes/data/models/publishGreeting/post_publish_greeting_resp.dart';
+import 'package:digitalcardsgaammabytes/data/models/registration/post_registration_resp.dart';
+import 'package:digitalcardsgaammabytes/data/models/validateCouponCode/get_validate_coupon_code_resp.dart';
 import '../../core/environment/env_config.dart';
 
 class ApiClient extends GetConnect {

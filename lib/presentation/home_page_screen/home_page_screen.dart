@@ -1,8 +1,12 @@
-import 'package:digitalcards_gaammabytes/core/app_export.dart';
-import 'package:digitalcards_gaammabytes/widgets/app_bar/appbar_image.dart';
-import 'package:digitalcards_gaammabytes/widgets/app_bar/appbar_subtitle.dart';
-import 'package:digitalcards_gaammabytes/widgets/app_bar/custom_app_bar.dart';
+import 'package:digitalcardsgaammabytes/core/app_export.dart';
+import 'package:digitalcardsgaammabytes/data/globals/globalvariables.dart';
+import 'package:digitalcardsgaammabytes/widgets/app_bar/appbar_image.dart';
+import 'package:digitalcardsgaammabytes/widgets/app_bar/appbar_subtitle.dart';
+import 'package:digitalcardsgaammabytes/widgets/app_bar/custom_app_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+
+import '../../core/service/authenticationservice.dart';
 
 class HomePageScreen extends StatefulWidget {
   const HomePageScreen({super.key});
@@ -15,402 +19,23 @@ class HomePageScreen extends StatefulWidget {
 class _HomePageScreen extends State<HomePageScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
+  final GoogleSignIn _googleSignIn = GoogleSignIn();
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-        key: _scaffoldKey,
+        // key: _scaffoldKey,
         top: false,
         bottom: false,
         child: Scaffold(
+            key: _scaffoldKey,
             floatingActionButtonLocation:
                 FloatingActionButtonLocation.miniEndTop,
             floatingActionButton: Padding(
                 padding: const EdgeInsets.only(bottom: 75.0),
                 child: MoreOptionMenu()),
             backgroundColor: ColorConstant.whiteA700,
-            drawer: new Drawer(
-              child: Container(
-                decoration: AppDecoration.fillWhiteA700,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Container(
-                      width: getHorizontalSize(
-                        270.00,
-                      ),
-                      padding: getPadding(
-                        left: 29,
-                        top: 14,
-                        right: 29,
-                        bottom: 14,
-                      ),
-                      decoration: AppDecoration.fillDeeporangeA100.copyWith(
-                        borderRadius: BorderRadiusStyle.customBorderBL151,
-                      ),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          Container(
-                            height: getSize(
-                              94.00,
-                            ),
-                            width: getSize(
-                              94.00,
-                            ),
-                            margin: getMargin(
-                              top: 80,
-                            ),
-                            child: Stack(
-                              alignment: Alignment.bottomRight,
-                              children: [
-                                CustomImageView(
-                                  imagePath: ImageConstant.imgInneroval,
-                                  height: getSize(
-                                    94.00,
-                                  ),
-                                  width: getSize(
-                                    94.00,
-                                  ),
-                                  radius: BorderRadius.circular(
-                                    getHorizontalSize(
-                                      47.00,
-                                    ),
-                                  ),
-                                  alignment: Alignment.center,
-                                ),
-                                CustomImageView(
-                                  svgPath: ImageConstant.imgEdit,
-                                  height: getSize(
-                                    18.00,
-                                  ),
-                                  width: getSize(
-                                    18.00,
-                                  ),
-                                  alignment: Alignment.bottomRight,
-                                  margin: getMargin(
-                                    right: 6,
-                                    bottom: 1,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Text(
-                            "lbl_steve_smith".tr,
-                            overflow: TextOverflow.ellipsis,
-                            textAlign: TextAlign.left,
-                            style: AppStyle.txtBalooBhaijaanRegular19,
-                          ),
-                        ],
-                      ),
-                    ),
-                    Padding(
-                      padding: getPadding(
-                        top: 50,
-                        bottom: 132,
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Container(
-                            height: getVerticalSize(
-                              394.00,
-                            ),
-                            width: getHorizontalSize(
-                              22.00,
-                            ),
-                            margin: getMargin(
-                              bottom: 2,
-                            ),
-                            child: Stack(
-                              alignment: Alignment.centerLeft,
-                              children: [
-                                Align(
-                                  alignment: Alignment.centerRight,
-                                  child: Container(
-                                    width: getHorizontalSize(
-                                      21.00,
-                                    ),
-                                    child: Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      children: [
-                                        CustomImageView(
-                                          svgPath: ImageConstant.imgHome,
-                                          height: getSize(
-                                            21.00,
-                                          ),
-                                          width: getSize(
-                                            21.00,
-                                          ),
-                                        ),
-                                        CustomImageView(
-                                          svgPath: ImageConstant.imgGrid,
-                                          height: getSize(
-                                            19.00,
-                                          ),
-                                          width: getSize(
-                                            19.00,
-                                          ),
-                                          margin: getMargin(
-                                            top: 38,
-                                          ),
-                                        ),
-                                        CustomImageView(
-                                          svgPath: ImageConstant.imgMenuPink900,
-                                          height: getSize(
-                                            21.00,
-                                          ),
-                                          width: getSize(
-                                            21.00,
-                                          ),
-                                          margin: getMargin(
-                                            top: 46,
-                                          ),
-                                        ),
-                                        CustomImageView(
-                                          svgPath:
-                                              ImageConstant.imgMenuPink90021x21,
-                                          height: getSize(
-                                            21.00,
-                                          ),
-                                          width: getSize(
-                                            21.00,
-                                          ),
-                                          margin: getMargin(
-                                            top: 104,
-                                          ),
-                                        ),
-                                        CustomImageView(
-                                          svgPath: ImageConstant.imgLock,
-                                          height: getSize(
-                                            21.00,
-                                          ),
-                                          width: getSize(
-                                            21.00,
-                                          ),
-                                          margin: getMargin(
-                                            top: 40,
-                                          ),
-                                        ),
-                                        CustomImageView(
-                                          svgPath: ImageConstant.imgRefresh,
-                                          height: getSize(
-                                            21.00,
-                                          ),
-                                          width: getSize(
-                                            21.00,
-                                          ),
-                                          margin: getMargin(
-                                            top: 42,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                CustomImageView(
-                                  svgPath: ImageConstant.imgUser,
-                                  height: getSize(
-                                    21.00,
-                                  ),
-                                  width: getSize(
-                                    21.00,
-                                  ),
-                                  alignment: Alignment.centerLeft,
-                                ),
-                              ],
-                            ),
-                          ),
-                          Padding(
-                            padding: getPadding(
-                              left: 13,
-                            ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Text(
-                                  "lbl_gaamma_cards".tr,
-                                  overflow: TextOverflow.ellipsis,
-                                  textAlign: TextAlign.left,
-                                  style: AppStyle.txtNunitoSansSemiBold16,
-                                ),
-                                Padding(
-                                  padding: getPadding(
-                                    top: 39,
-                                  ),
-                                  child: Row(
-                                    children: [
-                                      Text(
-                                        "lbl_digital_cards".tr,
-                                        overflow: TextOverflow.ellipsis,
-                                        textAlign: TextAlign.left,
-                                        style: AppStyle.txtNunitoSansSemiBold16,
-                                      ),
-                                      CustomImageView(
-                                        svgPath:
-                                            ImageConstant.imgArrowdownPink900,
-                                        height: getVerticalSize(
-                                          15.00,
-                                        ),
-                                        width: getHorizontalSize(
-                                          10.00,
-                                        ),
-                                        margin: getMargin(
-                                          left: 80,
-                                          top: 3,
-                                          bottom: 3,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                Padding(
-                                  padding: getPadding(
-                                    top: 42,
-                                  ),
-                                  child: Row(
-                                    children: [
-                                      Text(
-                                        "lbl_e_greetings".tr,
-                                        overflow: TextOverflow.ellipsis,
-                                        textAlign: TextAlign.left,
-                                        style: AppStyle.txtNunitoSansSemiBold16,
-                                      ),
-                                      CustomImageView(
-                                        svgPath:
-                                            ImageConstant.imgArrowdownPink900,
-                                        height: getVerticalSize(
-                                          15.00,
-                                        ),
-                                        width: getHorizontalSize(
-                                          10.00,
-                                        ),
-                                        margin: getMargin(
-                                          left: 80,
-                                          top: 5,
-                                          bottom: 1,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                Padding(
-                                  padding: getPadding(
-                                    left: 3,
-                                    top: 38,
-                                  ),
-                                  child: Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        "lbl_my_profile".tr,
-                                        overflow: TextOverflow.ellipsis,
-                                        textAlign: TextAlign.left,
-                                        style: AppStyle.txtNunitoSansSemiBold16,
-                                      ),
-                                      CustomImageView(
-                                        svgPath:
-                                            ImageConstant.imgArrowdownPink900,
-                                        height: getVerticalSize(
-                                          15.00,
-                                        ),
-                                        width: getHorizontalSize(
-                                          10.00,
-                                        ),
-                                        margin: getMargin(
-                                          left: 98,
-                                          top: 7,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                Padding(
-                                  padding: getPadding(
-                                    top: 39,
-                                  ),
-                                  child: Row(
-                                    children: [
-                                      Text(
-                                        "lbl_make_payment".tr,
-                                        overflow: TextOverflow.ellipsis,
-                                        textAlign: TextAlign.left,
-                                        style: AppStyle.txtNunitoSansSemiBold16,
-                                      ),
-                                      CustomImageView(
-                                        svgPath:
-                                            ImageConstant.imgArrowdownPink900,
-                                        height: getVerticalSize(
-                                          15.00,
-                                        ),
-                                        width: getHorizontalSize(
-                                          10.00,
-                                        ),
-                                        margin: getMargin(
-                                          left: 67,
-                                          top: 6,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                Padding(
-                                  padding: getPadding(
-                                    top: 39,
-                                  ),
-                                  child: Row(
-                                    children: [
-                                      Text(
-                                        "lbl_change_password".tr,
-                                        overflow: TextOverflow.ellipsis,
-                                        textAlign: TextAlign.left,
-                                        style: AppStyle.txtNunitoSansSemiBold16,
-                                      ),
-                                      CustomImageView(
-                                        svgPath:
-                                            ImageConstant.imgArrowdownPink900,
-                                        height: getVerticalSize(
-                                          15.00,
-                                        ),
-                                        width: getHorizontalSize(
-                                          10.00,
-                                        ),
-                                        margin: getMargin(
-                                          left: 44,
-                                          top: 5,
-                                          bottom: 1,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                Padding(
-                                  padding: getPadding(
-                                    top: 44,
-                                  ),
-                                  child: Text(
-                                    "lbl_logout".tr,
-                                    overflow: TextOverflow.ellipsis,
-                                    textAlign: TextAlign.left,
-                                    style: AppStyle.txtNunitoSansSemiBold16,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
+            drawer: appDrawer(),
             appBar: CustomAppBar(
                 height: getVerticalSize(108.00),
                 centerTitle: true,
@@ -429,8 +54,9 @@ class _HomePageScreen extends State<HomePageScreen> {
                             IconButton(
                               icon: Icon(Icons.menu),
                               color: Colors.black,
-                              onPressed: () =>
-                                  _scaffoldKey.currentState?.openDrawer(),
+                              onPressed: () {
+                                _scaffoldKey.currentState!.openDrawer();
+                              },
                             ),
                             AppbarSubtitle(
                                 text: "lbl_let_s_design".tr,
@@ -498,6 +124,10 @@ class _HomePageScreen extends State<HomePageScreen> {
                                                 MainAxisAlignment.start,
                                             children: [
                                               CustomImageView(
+                                                  // url:"https://mldigitalservices.com/wp-content/uploads/2021/05/D7-edited-e1620746055355.png"
+                                                  // url:
+                                                  //     "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSRjBUFIqTONNxHpoMv0wfaeDU-1Z_1lvuhUQ&usqp=CAU",
+                                                  // url: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSY1rqfS-yLLn0GsLxuqFtUzRP_j8QHZnSCWg&usqp=CAU",
                                                   imagePath:
                                                       ImageConstant.imgOthers2,
                                                   height:
@@ -556,6 +186,9 @@ class _HomePageScreen extends State<HomePageScreen> {
                                                     MainAxisAlignment.start,
                                                 children: [
                                                   CustomImageView(
+                                                      // url:
+                                                      //     "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ_WjlBo3M1i4xcqEuVWhBF1FfeT9jtPFTkxg&usqp=CAU",
+                                                      // url: "https://www.befunky.com/images/prismic/3f297bed-29c1-4db2-93ab-9896c6292fcf_hero-card-maker.jpg?auto=avif,webp&format=jpg&width=950",
                                                       imagePath: ImageConstant
                                                           .imgOthers1,
                                                       height: getVerticalSize(
@@ -592,13 +225,348 @@ class _HomePageScreen extends State<HomePageScreen> {
                     ]))));
   }
 
-  onTapColumnotherstwo() {
-    Get.toNamed(AppRoutes.myDigitalCardsScreen);
-    // Get.toNamed(AppRoutes.myProfileScreen);
+  Widget appDrawer() {
+    return Drawer(
+      child: Container(
+        decoration: AppDecoration.fillWhiteA700,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Container(
+                width: getHorizontalSize(
+                  250.00,
+                ),
+                padding: getPadding(
+                  left: 29,
+                  top: 14,
+                  right: 29,
+                  bottom: 14,
+                ),
+                decoration: AppDecoration.fillDeeporangeA100.copyWith(
+                  borderRadius: BorderRadiusStyle.customBorderBL151,
+                ),
+                child: GestureDetector(
+                  onTap: onTapProfile,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Container(
+                        height: getSize(
+                          94.00,
+                        ),
+                        width: getSize(
+                          94.00,
+                        ),
+                        margin: getMargin(
+                          top: 50,
+                        ),
+                        child: Stack(
+                          alignment: Alignment.bottomRight,
+                          children: [
+                            CustomImageView(
+                              imagePath: ImageConstant.imgProfiletransparent,
+                              height: getSize(
+                                94.00,
+                              ),
+                              width: getSize(
+                                94.00,
+                              ),
+                              radius: BorderRadius.circular(
+                                getHorizontalSize(
+                                  47.00,
+                                ),
+                              ),
+                              alignment: Alignment.center,
+                            ),
+                            CustomImageView(
+                              svgPath: ImageConstant.imgEdit,
+                              height: getSize(
+                                18.00,
+                              ),
+                              width: getSize(
+                                18.00,
+                              ),
+                              alignment: Alignment.bottomRight,
+                              margin: getMargin(
+                                right: 6,
+                                bottom: 1,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Container(
+                          margin: getMargin(top: 10, left: 5),
+                          child: Text(
+                            GlobalVariables.displayName.isEmpty
+                                ? GlobalVariables.userName
+                                : GlobalVariables.displayName,
+                            overflow: TextOverflow.ellipsis,
+                            textAlign: TextAlign.left,
+                            style: AppStyle.txtNunitoSansBold14Pink900,
+                          )),
+                    ],
+                  ),
+                )),
+            Padding(
+              padding: getPadding(
+                top: 25,
+                left: 20,
+                bottom: 10,
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: getPadding(
+                      top: 10,
+                      left: 13,
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Row(children: [
+                          CustomImageView(
+                            svgPath: ImageConstant.imgHome,
+                            height: getSize(
+                              21.00,
+                            ),
+                            width: getSize(
+                              21.00,
+                            ),
+                          ),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          Text(
+                            "lbl_gaamma_cards".tr,
+                            overflow: TextOverflow.ellipsis,
+                            textAlign: TextAlign.left,
+                            style: AppStyle.txtNunitoSansSemiBold16,
+                          ),
+                        ]),
+                        Padding(
+                          padding: getPadding(
+                            top: 35,
+                          ),
+                          child: Row(children: [
+                            CustomImageView(
+                              svgPath: ImageConstant.imgGrid,
+                              height: getSize(
+                                21.00,
+                              ),
+                              width: getSize(
+                                21.00,
+                              ),
+                            ),
+                            SizedBox(
+                              width: 10,
+                            ),
+                            GestureDetector(
+                              child: Text(
+                                "lbl_digital_cards".tr,
+                                overflow: TextOverflow.ellipsis,
+                                textAlign: TextAlign.left,
+                                style: AppStyle.txtNunitoSansSemiBold16,
+                              ),
+                              onTap: onTapColumnotherstwo,
+                            )
+                          ]),
+                        ),
+                        Padding(
+                          padding: getPadding(
+                            top: 35,
+                          ),
+                          child: Row(children: [
+                            CustomImageView(
+                              svgPath: ImageConstant.imgMenuPink900,
+                              height: getSize(
+                                21.00,
+                              ),
+                              width: getSize(
+                                21.00,
+                              ),
+                            ),
+                            SizedBox(
+                              width: 10,
+                            ),
+                            GestureDetector(
+                              child: Text(
+                                "lbl_e_greetings".tr,
+                                overflow: TextOverflow.ellipsis,
+                                textAlign: TextAlign.left,
+                                style: AppStyle.txtNunitoSansSemiBold16,
+                              ),
+                              onTap: onTapColumnothersone,
+                            )
+                          ]),
+                        ),
+                        Padding(
+                          padding: getPadding(
+                            left: 3,
+                            top: 35,
+                          ),
+                          child: Row(children: [
+                            CustomImageView(
+                              svgPath: ImageConstant.imgUser,
+                              height: getSize(
+                                21.00,
+                              ),
+                              width: getSize(
+                                21.00,
+                              ),
+                            ),
+                            SizedBox(
+                              width: 10,
+                            ),
+                            GestureDetector(
+                              child: Text(
+                                "lbl_my_profile".tr,
+                                overflow: TextOverflow.ellipsis,
+                                textAlign: TextAlign.left,
+                                style: AppStyle.txtNunitoSansSemiBold16,
+                              ),
+                              onTap: onTapProfile,
+                            )
+                          ]),
+                        ),
+                        Padding(
+                          padding: getPadding(
+                            top: 35,
+                          ),
+                          child: Row(children: [
+                            CustomImageView(
+                              svgPath: ImageConstant.imgMenuPink90021x21,
+                              height: getSize(
+                                21.00,
+                              ),
+                              width: getSize(
+                                21.00,
+                              ),
+                            ),
+                            SizedBox(
+                              width: 10,
+                            ),
+                            GestureDetector(
+                              child: Text(
+                                "lbl_make_payment".tr,
+                                overflow: TextOverflow.ellipsis,
+                                textAlign: TextAlign.left,
+                                style: AppStyle.txtNunitoSansSemiBold16,
+                              ),
+                              onTap: onTapPayment,
+                            )
+                          ]),
+                        ),
+                        Padding(
+                          padding: getPadding(
+                            top: 35,
+                          ),
+                          child: Row(children: [
+                            CustomImageView(
+                              svgPath: ImageConstant.imgLock,
+                              height: getSize(
+                                21.00,
+                              ),
+                              width: getSize(
+                                21.00,
+                              ),
+                            ),
+                            SizedBox(
+                              width: 10,
+                            ),
+                            GestureDetector(
+                              child: Text(
+                                "lbl_change_password".tr,
+                                overflow: TextOverflow.ellipsis,
+                                textAlign: TextAlign.left,
+                                style: AppStyle.txtNunitoSansSemiBold16,
+                              ),
+                              onTap: onTapChangePassword,
+                            )
+                          ]),
+                        ),
+                        Padding(
+                            padding: getPadding(
+                              top: 35,
+                            ),
+                            child: Row(children: [
+                              CustomImageView(
+                                svgPath: ImageConstant.imgRefresh,
+                                height: getSize(
+                                  21.00,
+                                ),
+                                width: getSize(
+                                  21.00,
+                                ),
+                              ),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              GestureDetector(
+                                child: Text(
+                                  "lbl_logout".tr,
+                                  overflow: TextOverflow.ellipsis,
+                                  textAlign: TextAlign.left,
+                                  style: AppStyle.txtNunitoSansSemiBold16,
+                                ),
+                                onTap: onTapLogout,
+                              )
+                            ])),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 
+  onTapColumnotherstwo() {
+    Navigator.of(context).pushNamed(AppRoutes.myDigitalCardsScreen);
+    // Get.toNamed(AppRoutes.myProfileScreen);
+  }
+
+  onTapLogout() async {
+    GlobalVariables.setLogin(false);
+    if (GlobalVariables.isGoogleLoggedIn) {
+      final bool isUnauthenticated = await AuthService.instance.logout();
+      signoutGoogle();
+    }
+    GlobalVariables.setUserID("");
+    GlobalVariables.setDisplayname("");
+    GlobalVariables.setUserName("");
+
+    Navigator.of(context).pushNamed(AppRoutes.signupPageScreen);
+  }
+
+  signoutGoogle() {
+    try {
+      _googleSignIn.signOut();
+    } catch (e) {
+      print(e);
+    }
   }
 
   onTapColumnothersone() {
-    Get.toNamed(AppRoutes.myEGreetingCardsScreen);
+    Navigator.of(context).pushNamed(AppRoutes.myEGreetingCardsScreen);
+  }
+
+  onTapProfile() {
+    Navigator.of(context).pushNamed(AppRoutes.myProfileScreen);
+  }
+
+  onTapChangePassword() {
+    Navigator.of(context).pushNamed(AppRoutes.changePasswordScreen);
+  }
+
+  onTapPayment() {
+    Navigator.of(context).pushNamed(AppRoutes.makePaymentScreen);
   }
 }

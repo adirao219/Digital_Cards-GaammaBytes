@@ -1,10 +1,12 @@
-import 'package:digitalcards_gaammabytes/core/app_export.dart';
-import 'package:digitalcards_gaammabytes/widgets/app_bar/appbar_image.dart';
-import 'package:digitalcards_gaammabytes/widgets/app_bar/appbar_title.dart';
-import 'package:digitalcards_gaammabytes/widgets/app_bar/custom_app_bar.dart';
-import 'package:digitalcards_gaammabytes/widgets/custom_bottom_bar.dart';
-import 'package:digitalcards_gaammabytes/widgets/custom_button.dart';
-import 'package:digitalcards_gaammabytes/widgets/custom_text_form_field.dart';
+import 'dart:convert';
+
+import 'package:digitalcardsgaammabytes/core/app_export.dart';
+import 'package:digitalcardsgaammabytes/widgets/app_bar/appbar_image.dart';
+import 'package:digitalcardsgaammabytes/widgets/app_bar/appbar_title.dart';
+import 'package:digitalcardsgaammabytes/widgets/app_bar/custom_app_bar.dart';
+import 'package:digitalcardsgaammabytes/widgets/custom_bottom_bar.dart';
+import 'package:digitalcardsgaammabytes/widgets/custom_button.dart';
+import 'package:digitalcardsgaammabytes/widgets/custom_text_form_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
@@ -41,6 +43,8 @@ class _BasicGreetingEntryScreen extends State<BasicGreetingEntryScreen> {
   XFile? imageSecond;
   File? firstCroppedImage;
   File? secondCroppedImage;
+  String? firstImageBase64;
+  String? secondImageBase64;
   void changeColor(Color color) {
     setState(() => pickerColor = color);
   }
@@ -48,7 +52,7 @@ class _BasicGreetingEntryScreen extends State<BasicGreetingEntryScreen> {
   ApiClient api = new ApiClient();
   var greetingType = Get.arguments["Type"] as int?;
   var selectedCardID = Get.arguments["SelectedCardID"] as int?;
-  var greetingCardTypeName =Get.arguments["TypeName"] as String?;
+  var greetingCardTypeName = Get.arguments["TypeName"] as String?;
   String templateName = "";
   String templateID = "";
   @override
@@ -138,7 +142,9 @@ class _BasicGreetingEntryScreen extends State<BasicGreetingEntryScreen> {
                                   alignment: Alignment.centerLeft,
                                   child: Padding(
                                       padding: getPadding(left: 15),
-                                      child: Text(("msg_card_type_ex_new3".tr)+(greetingCardTypeName??''),
+                                      child: Text(
+                                          ("msg_card_type_ex_new3".tr) +
+                                              (greetingCardTypeName ?? ''),
                                           overflow: TextOverflow.ellipsis,
                                           textAlign: TextAlign.left,
                                           style: AppStyle.txtNunitoBold18))),
@@ -164,8 +170,8 @@ class _BasicGreetingEntryScreen extends State<BasicGreetingEntryScreen> {
                                   focusNode: FocusNode(),
                                   controller: _caption_Controller,
                                   hintText: "lbl_caption".tr,
-                                 textInputType: TextInputType.text, 
-                                 textCapitalization: TextCapitalization.words,
+                                  textInputType: TextInputType.text,
+                                  textCapitalization: TextCapitalization.words,
                                   margin: getMargin(top: 19)),
                               Row(
                                 children: [
@@ -190,7 +196,7 @@ class _BasicGreetingEntryScreen extends State<BasicGreetingEntryScreen> {
                                   focusNode: FocusNode(),
                                   controller: _sender_Controller,
                                   hintText: "lbl_sender".tr,
-                                 textCapitalization: TextCapitalization.words,
+                                  textCapitalization: TextCapitalization.words,
                                   margin: getMargin(top: 19, bottom: 10)),
                               Padding(
                                   padding: getPadding(left: 0),
@@ -484,13 +490,19 @@ class _BasicGreetingEntryScreen extends State<BasicGreetingEntryScreen> {
       double? width = value['width'];
       double? height = value['height'];
       bool? isSquare = value['isSquare'];
-      File? imageFile = value["imageFile"] as File?;
+      String? imageFilePath = value["refinedImagePath"] as String?;
       int? pictureType = value["pictureType"] as int?;
+
+imageFile = File(imageFilePath??'');
+      var base64val1 = "data:image/png;base64,"+base64Encode(imageFile.readAsBytesSync());
+      // print('base64:'+base64val1);
       if (pictureType == 1) {
+        firstImageBase64 = base64val1;
         firstCroppedImage = imageFile;
         isFirstImageSelected = true;
       }
       if (pictureType == 2) {
+        secondImageBase64 = base64val1;
         secondCroppedImage = imageFile;
         isSecondImageSelected = true;
       }
@@ -546,21 +558,30 @@ class _BasicGreetingEntryScreen extends State<BasicGreetingEntryScreen> {
         "GreetingStatus": selectedCardID == 0 ? 1 : 1,
         "Caption": _caption_Controller.text,
         "Message": _message_Controller.text,
-        "Sender": _sender_Controller.text
+        "Sender": _sender_Controller.text,
+        "files":{
+           "Logo":firstImageBase64,
+           "Picture":secondImageBase64
+        }
       };
       PostCreateGreetingResp resp =
           await api.createCreateGreeting(requestData: req);
       if (resp.isSuccess ?? false) {
         selectedCardID = resp.result;
         Get.snackbar('Success', "Greeting Created Successfully!",
-              backgroundColor: Color.fromARGB(255, 208, 245, 216),
-              colorText: Colors.green[900],
-              icon: Icon(
-                Icons.done,
-                color: Colors.green[900],
-              ));
+            backgroundColor: Color.fromARGB(255, 208, 245, 216),
+            colorText: Colors.green[900],
+            icon: Icon(
+              Icons.done,
+              color: Colors.green[900],
+            ));
 
-        Navigator.of(context).pushNamed(AppRoutes.customizationScreen,arguments: {"CardID":selectedCardID, "TypeName":greetingCardTypeName,"templateName":templateName});
+        Navigator.of(context)
+            .pushNamed(AppRoutes.customizationScreen, arguments: {
+          "CardID": selectedCardID,
+          "TypeName": greetingCardTypeName,
+          "templateName": templateName
+        });
       } else {
         Get.snackbar('Error', resp.errorMessage.toString());
       }
@@ -578,16 +599,16 @@ class _BasicGreetingEntryScreen extends State<BasicGreetingEntryScreen> {
           await api.fetchGetCreateGreeting(queryParams: req);
       if (resp.isSuccess ?? false) {
         setState(() {
-          
-        _caption_Controller.text = resp.result?.greetingDetailsData?.caption;
+          _caption_Controller.text = resp.result?.greetingDetailsData?.caption;
 
-        _message_Controller.text = resp.result?.greetingDetailsData?.message;
+          _message_Controller.text = resp.result?.greetingDetailsData?.message;
 
-        _sender_Controller.text = resp.result?.greetingDetailsData?.sender;
-        templateName = resp.result?.greetingDetailsData?.templateName;
-        templateID =
-            resp.result?.greetingDetailsData?.templateID.toString() ?? '';
-            greetingCardTypeName =  resp.result?.greetingDetailsData?.typeIDName.toString() ?? '';
+          _sender_Controller.text = resp.result?.greetingDetailsData?.sender;
+          templateName = resp.result?.greetingDetailsData?.templateName;
+          templateID =
+              resp.result?.greetingDetailsData?.templateID.toString() ?? '';
+          greetingCardTypeName =
+              resp.result?.greetingDetailsData?.typeIDName.toString() ?? '';
         });
       } else {
         Get.snackbar('Error', resp.errorMessage.toString());

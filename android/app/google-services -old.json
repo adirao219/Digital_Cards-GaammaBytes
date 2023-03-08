@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "278783358961",
+    "project_id": "gammacards-379917",
+    "storage_bucket": "gammacards-379917.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:278783358961:android:7f8e59fde0940bf1223650",
+        "android_client_info": {
+          "package_name": "com.digitalcards_gaammabytes.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "278783358961-uvc5m9nm9sdusq045fsr4ft8oif1u1sk.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.digitalcards_gaammabytes.app",
+            "certificate_hash": "9ea75b7ab865c87e5811290cd54d29db820763de"
+          }
+        },
+        {
+          "client_id": "278783358961-fjkrd1m60i34nu18ngtc6tiqn48k9pjr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCQsyomAjap1Wac-5oS18RnDrplxtyCCpI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "278783358961-fjkrd1m60i34nu18ngtc6tiqn48k9pjr.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

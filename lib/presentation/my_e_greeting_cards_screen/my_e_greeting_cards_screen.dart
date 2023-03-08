@@ -1,15 +1,15 @@
-import 'package:digitalcards_gaammabytes/data/apiClient/api_client.dart';
-import 'package:digitalcards_gaammabytes/data/globals/globalvariables.dart';
-import 'package:digitalcards_gaammabytes/presentation/my_e_greeting_cards_screen/widgets/greeting_item_widget.dart';
+import 'package:digitalcardsgaammabytes/data/apiClient/api_client.dart';
+import 'package:digitalcardsgaammabytes/data/globals/globalvariables.dart';
+import 'package:digitalcardsgaammabytes/presentation/my_e_greeting_cards_screen/widgets/greeting_item_widget.dart';
 
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import '../../data/models/getGreetingType/get_get_greeting_type_resp.dart';
 import '../../data/models/greetingDetails/get_greeting_details_resp.dart';
 import '../../widgets/app_bar/appbar_subtitle.dart';
-import 'package:digitalcards_gaammabytes/core/app_export.dart';
-import 'package:digitalcards_gaammabytes/widgets/app_bar/appbar_image.dart';
-import 'package:digitalcards_gaammabytes/widgets/app_bar/custom_app_bar.dart';
-import 'package:digitalcards_gaammabytes/widgets/custom_button.dart';
+import 'package:digitalcardsgaammabytes/core/app_export.dart';
+import 'package:digitalcardsgaammabytes/widgets/app_bar/appbar_image.dart';
+import 'package:digitalcardsgaammabytes/widgets/app_bar/custom_app_bar.dart';
+import 'package:digitalcardsgaammabytes/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
 
 import 'models/my_e_greeting_cards_model.dart';
@@ -45,8 +45,12 @@ class _MyEGreetingCardsScreen extends State<MyEGreetingCardsScreen> {
     try {
       var req = {
         "UserId": GlobalVariables.userID.toString(),
-        "GreetingType": (selectedGreetingTypeID==null?"":selectedGreetingTypeID.toString()),
-        "Hidden": (showHidden ==null?"":(((showHidden ?? false) == false) ? "No" : "Yes")),
+        "GreetingType": (selectedGreetingTypeID == null
+            ? ""
+            : selectedGreetingTypeID.toString()),
+        "Hidden": (showHidden == null
+            ? ""
+            : (((showHidden ?? false) == false) ? "No" : "Yes")),
         "Anywhere": _anywhere_Controller.text,
         "SortBy": "",
         "OrderBy": "",
@@ -61,12 +65,12 @@ class _MyEGreetingCardsScreen extends State<MyEGreetingCardsScreen> {
         });
       } else {
         Get.snackbar('Error', resp.errorMessage.toString(),
-              backgroundColor: Color.fromARGB(255, 255, 230, 230),
-              colorText: Colors.red[900],
-              icon: Icon(
-                Icons.error,
-                color: Colors.red[900],
-              ));
+            backgroundColor: Color.fromARGB(255, 255, 230, 230),
+            colorText: Colors.red[900],
+            icon: Icon(
+              Icons.error,
+              color: Colors.red[900],
+            ));
       }
     } catch (e) {}
   }
@@ -80,12 +84,12 @@ class _MyEGreetingCardsScreen extends State<MyEGreetingCardsScreen> {
         });
       } else {
         Get.snackbar('Error', resp.errorMessage.toString(),
-              backgroundColor: Color.fromARGB(255, 255, 230, 230),
-              colorText: Colors.red[900],
-              icon: Icon(
-                Icons.error,
-                color: Colors.red[900],
-              ));
+            backgroundColor: Color.fromARGB(255, 255, 230, 230),
+            colorText: Colors.red[900],
+            icon: Icon(
+              Icons.error,
+              color: Colors.red[900],
+            ));
       }
     } catch (e) {}
   }
@@ -139,10 +143,7 @@ class _MyEGreetingCardsScreen extends State<MyEGreetingCardsScreen> {
                                                           5.00),
                                                       svgPath: ImageConstant
                                                           .imgVectorstroke,
-                                                      onTap: () {
-                                                        Navigator.of(context)
-                                                            .pop();
-                                                      },
+                                                      onTap: onTapBack,
                                                       margin: getMargin(
                                                           left: 15,
                                                           top: 13,
@@ -292,7 +293,8 @@ class _MyEGreetingCardsScreen extends State<MyEGreetingCardsScreen> {
                                                               .gridchristmasthumbnailItemList[
                                                           index];
                                                   return GreetingItemWidget(
-                                                      model);
+                                                      model,
+                                                      (showHidden ?? false));
                                                 }))),
                                       ]))))
                     ]))));
@@ -421,7 +423,7 @@ class _MyEGreetingCardsScreen extends State<MyEGreetingCardsScreen> {
                   "lbl_hidden_check".tr,
                   style: AppStyle.txtNunitoSansRegular14Pink900,
                 )), //    <-- label
-            value: showHidden??false,
+            value: showHidden ?? false,
             onChanged: (newValue) {
               setModalState(() {
                 showHidden = newValue ?? false;
@@ -524,6 +526,10 @@ class _MyEGreetingCardsScreen extends State<MyEGreetingCardsScreen> {
   onTapCreateegreetingcard() {
     Navigator.of(context).pushNamed(AppRoutes.eGreetingCardOptionsScreen);
     getGreetingList();
+  }
+
+  onTapBack() {
+    Navigator.of(context).pop();
   }
 
   onTapOk() {

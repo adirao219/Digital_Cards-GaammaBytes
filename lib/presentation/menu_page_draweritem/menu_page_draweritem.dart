@@ -1,5 +1,5 @@
 
-import 'package:digitalcards_gaammabytes/core/app_export.dart';
+import 'package:digitalcardsgaammabytes/core/app_export.dart';
 import 'package:flutter/material.dart';
 
 // ignore_for_file: must_be_immutable

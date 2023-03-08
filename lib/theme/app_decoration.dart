@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:digitalcards_gaammabytes/core/app_export.dart';
+import 'package:digitalcardsgaammabytes/core/app_export.dart';
 
 class AppDecoration {
   static BoxDecoration get fillPink900 => BoxDecoration(
