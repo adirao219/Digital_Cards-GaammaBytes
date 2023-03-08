@@ -655,7 +655,7 @@ class _RegiterPageScreen extends State<RegiterPageScreen> {
   registerUser() async {
     try {
       var req = {
-        "TypeOfLogin": isPhoneNumber ? "1" : "2",
+        "TypeOfLogin": isPhoneNumber ? "2" : "1",
         "Email": _emailController.text,
         "PhoneNumber": _phoneController.text,
         "DisplayName": _nameController.text,
@@ -672,7 +672,7 @@ class _RegiterPageScreen extends State<RegiterPageScreen> {
         // GlobalVariables.setLogin(true);
         Navigator.of(context)
             .pushNamed(AppRoutes.verifiactionPageScreen, arguments: {
-          "type": (isPhoneNumber ? "1" : "2"),
+          "type": (isPhoneNumber ? "2" : "1"),
           "name": _nameController.text,
           "email": _emailController.text,
           "phonenumber": _phoneController.text,

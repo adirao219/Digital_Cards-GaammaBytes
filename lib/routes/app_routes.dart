@@ -1,3 +1,4 @@
+import 'package:digitalcardsgaammabytes/presentation/google_signin_regiter_page_screen/google_signin_regiter_page_screen.dart';
 import 'package:digitalcardsgaammabytes/presentation/home_onboarding_screen/home_onboarding_screen.dart';
 import 'package:digitalcardsgaammabytes/presentation/forgot_passwordone_screen/forgot_passwordone_screen.dart';
 import 'package:digitalcardsgaammabytes/presentation/forgot_passwordone_one_screen/forgot_passwordone_one_screen.dart';
@@ -57,6 +58,8 @@ class AppRoutes {
   static const String forgotPasswordoneOneScreen =
       '/forgot_passwordone_one_screen';
 
+  static const String googlesigninOneScreen =
+      '/google_signin_regiter_page_screen';
   static const String forgotPasswordtwoScreen = '/forgot_passwordtwo_screen';
 
   static const String selectTemplateScreen = '/select_template_screen';
@@ -335,9 +338,15 @@ class AppRoutes {
       name: appNavigationScreen,
       page: () => AppNavigationScreen(),
     ),
+     GetPage(
+      name: googlesigninOneScreen,
+      page: () => GoogleSigninRegiterPageScreen(),
+    ),
     GetPage(
       name: initialRoute,
       page: () => HomeOnboardingScreen(),
-    )
+    ),
+    
+   
   ];
 }

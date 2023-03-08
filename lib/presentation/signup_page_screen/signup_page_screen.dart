@@ -41,6 +41,7 @@ class _SignupPageScreen extends State<SignupPageScreen> {
       );
 
   String googleUseremail = "";
+  String googleDiaplayName = "";
   String googleUserName = "";
   String googleUserToken = "";
   String googleUserPhoneNumber = "";
@@ -300,7 +301,8 @@ class _SignupPageScreen extends State<SignupPageScreen> {
     try {
       final authResult = await AuthService.instance.login();
       if (authResult.isAuthSuccess) {
-       signInWithGoogleTokens(authResult.accessToken??'',authResult.idToken??'');
+        signInWithGoogleTokens(
+            authResult.accessToken ?? '', authResult.idToken ?? '');
       } else {
         // widget.setUnauthenticatedState();
       }
@@ -315,11 +317,11 @@ class _SignupPageScreen extends State<SignupPageScreen> {
     }
   }
 
- signInWithGoogleTokens(String accessToken, String idToken) async {
+  signInWithGoogleTokens(String accessToken, String idToken) async {
     try {
       User? _user;
       // model.state =ViewState.Busy;
-     
+
       AuthCredential credential = GoogleAuthProvider.credential(
         accessToken: accessToken,
         idToken: idToken,
@@ -331,24 +333,7 @@ class _SignupPageScreen extends State<SignupPageScreen> {
       User? currentUser = _auth.currentUser;
       assert(_user!.uid == currentUser!.uid);
       // model.state =ViewState.Idle;
-      setState(() {
-        googleUserName = _user!.displayName ?? '';
-        googleUseremail = _user.email ?? '';
-        googleUserToken = _user.uid;
-        googleUserName = _user.email ?? '';
-        googleUserPhoneNumber = _user.phoneNumber ?? '';
-        googleUserPhotoURL = _user.photoURL ?? '';
-
-        GlobalVariables.setUserID(googleUserToken);
-        GlobalVariables.setLogin(true);
-        GlobalVariables.setGoogleLoggedIn(true);
-        GlobalVariables.setDisplayname(googleUserName);
-        GlobalVariables.setUserName(googleUseremail);
-
-        GlobalVariables.setUserPhotoUrl(googleUserPhotoURL);
-        
-      Navigator.of(context).pushNamed(AppRoutes.homePageScreen);
-      });
+      checkGoogleSigninRegistered(_user);
     } catch (ex) {
       Get.snackbar('Error', ex.toString(),
           backgroundColor: Color.fromARGB(255, 255, 230, 230),
@@ -359,6 +344,7 @@ class _SignupPageScreen extends State<SignupPageScreen> {
           ));
     }
   }
+
   signInWithGoogle() async {
     try {
       User? _user;
@@ -378,8 +364,8 @@ class _SignupPageScreen extends State<SignupPageScreen> {
       assert(_user!.uid == currentUser!.uid);
       // model.state =ViewState.Idle;
       setState(() {
-        googleUseremail = _user!.displayName ?? '';
-        googleUserName = _user.email ?? '';
+        googleDiaplayName = _user!.displayName ?? '';
+        googleUseremail = _user.email ?? '';
         googleUserToken = _user.uid;
         googleUserName = _user.email ?? '';
         googleUserPhoneNumber = _user.phoneNumber ?? '';
@@ -388,7 +374,7 @@ class _SignupPageScreen extends State<SignupPageScreen> {
         GlobalVariables.setUserID(googleUserToken);
         GlobalVariables.setLogin(true);
         GlobalVariables.setGoogleLoggedIn(true);
-        GlobalVariables.setDisplayname(googleUserName);
+        GlobalVariables.setDisplayname(googleDiaplayName);
         GlobalVariables.setUserName(googleUseremail);
 
         GlobalVariables.setUserPhotoUrl(googleUserPhotoURL);
@@ -501,6 +487,33 @@ class _SignupPageScreen extends State<SignupPageScreen> {
             color: Colors.red[900],
           ));
     }
+  }
+
+  checkGoogleSigninRegistered(User? _user) async {
+    String userID = "";
+
+    try {
+//Call api and Check Already Registerd, if already registed, then excute below
+
+      setState(() {
+        // googleUserName = _user!.displayName ?? '';
+        // googleUseremail = _user.email ?? '';
+        // googleUserToken = _user.uid;
+        // googleUserName = _user.email ?? '';
+        // googleUserPhoneNumber = _user.phoneNumber ?? '';
+        // googleUserPhotoURL = _user.photoURL ?? '';
+
+        // GlobalVariables.setUserID(userID);
+        // GlobalVariables.setLogin(true);
+        // GlobalVariables.setGoogleLoggedIn(true);
+        // GlobalVariables.setDisplayname(googleUserName);
+        // GlobalVariables.setUserName(googleUseremail);
+
+        // GlobalVariables.setUserPhotoUrl(googleUserPhotoURL);
+
+        Navigator.of(context).pushNamed(AppRoutes.googlesigninOneScreen,arguments: {"userInfo":_user});
+      });
+    } catch (e) {}
   }
 
   onTapTxtDonthaveanaccount() {

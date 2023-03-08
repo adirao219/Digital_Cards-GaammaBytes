@@ -17,6 +17,9 @@ class _ChangePasswordScreen extends State<ChangePasswordScreen> {
   TextEditingController _confirmpasswordController =
       new TextEditingController();
 
+  String passwordtext = '';
+  String confirmpasswordtext = '';
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -122,7 +125,6 @@ class _ChangePasswordScreen extends State<ChangePasswordScreen> {
               bottom: 24,
             ),
             child: Column(
-              
               children: [
                 Padding(
                   padding: getPadding(
@@ -161,7 +163,12 @@ class _ChangePasswordScreen extends State<ChangePasswordScreen> {
                           // },
                           // onChanged: (text) =>
                           //     setState(() => _name = text),
-
+                          onChanged: (text) {
+                            setState(() {
+                              passwordtext = text;
+                            });
+                          },
+                          obscureText: true,
                           controller: _passwordController,
                           decoration: InputDecoration(
                             labelText: "lbl_password3".tr,
@@ -205,7 +212,13 @@ class _ChangePasswordScreen extends State<ChangePasswordScreen> {
                           // },
                           // onChanged: (text) =>
                           //     setState(() => _name = text),
-
+                          onChanged: (text) {
+                            setState(() {
+                              confirmpasswordtext = text;
+                            });
+                          },
+                          
+                          obscureText: true,
                           controller: _confirmpasswordController,
                           decoration: InputDecoration(
                             labelText: "msg_confirm_password".tr,
@@ -216,14 +229,24 @@ class _ChangePasswordScreen extends State<ChangePasswordScreen> {
 
                             enabledBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(15.0),
-                              borderSide: const BorderSide(
-                                color: Color.fromARGB(255, 183, 183, 183),
+                              borderSide: BorderSide(
+                                color: (passwordtext.isNotEmpty &&
+                                        confirmpasswordtext.isNotEmpty)
+                                    ? ((passwordtext == confirmpasswordtext)
+                                        ? Color.fromARGB(255, 0, 172, 77)
+                                        : Color.fromARGB(255, 255, 3, 3))
+                                    : Color.fromARGB(255, 183, 183, 183),
                               ),
                             ),
                             focusedBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(15.0),
-                                borderSide: const BorderSide(
-                                  color: Color.fromARGB(255, 183, 183, 183),
+                                borderSide: BorderSide(
+                                  color: (passwordtext.isNotEmpty &&
+                                          confirmpasswordtext.isNotEmpty)
+                                      ? ((passwordtext == confirmpasswordtext)
+                                          ? Color.fromARGB(255, 0, 172, 77)
+                                          : Color.fromARGB(255, 255, 3, 3))
+                                      : Color.fromARGB(255, 183, 183, 183),
                                 )),
                             // filled: true,
                             contentPadding: EdgeInsets.all(15.0),
@@ -245,8 +268,9 @@ class _ChangePasswordScreen extends State<ChangePasswordScreen> {
       ),
     );
   }
-  onTapSave()
-  {
+
+  onTapSave() {
+    
     Navigator.of(context).pop();
   }
 }

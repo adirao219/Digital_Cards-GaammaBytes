@@ -54,6 +54,8 @@ class _BasicGreetingEntryScreen extends State<BasicGreetingEntryScreen> {
   var selectedCardID = Get.arguments["SelectedCardID"] as int?;
   var greetingCardTypeName = Get.arguments["TypeName"] as String?;
   String templateName = "";
+
+  bool? isUserDefinedBackground;
   String templateID = "";
   @override
   void initState() {
@@ -271,75 +273,80 @@ class _BasicGreetingEntryScreen extends State<BasicGreetingEntryScreen> {
                                       ])),
                               Padding(
                                   padding: getPadding(left: 0),
-                                  child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      children: [
-                                        Padding(
-                                            padding: getPadding(bottom: 0),
-                                            child: Text("lbl_background".tr,
-                                                overflow: TextOverflow.ellipsis,
-                                                textAlign: TextAlign.left,
-                                                style: AppStyle
-                                                    .txtNunitoSansRegular14
-                                                    .copyWith(
-                                                        letterSpacing:
-                                                            getHorizontalSize(
-                                                                0.36),
-                                                        height: getVerticalSize(
-                                                            1.26)))),
-                                        SizedBox(
-                                          width: 30,
-                                        ),
-                                        GestureDetector(
-                                          onTap: () {
-                                            onTapSelectimage(2);
-                                          },
-                                          child: CustomButton(
-                                            width: 140,
-                                            text: (isSecondImageSelected
-                                                ? "lbl_image_selected".tr
-                                                : "lbl_select_image".tr),
-                                            variant:
-                                                ButtonVariant.OutlineBlack9003f,
-                                            shape: ButtonShape.RoundedBorder5,
-                                            padding: ButtonPadding.PaddingT9,
-                                            fontStyle: ButtonFontStyle
-                                                .NunitoSansBlack12,
-                                            alignment: Alignment.topCenter,
-                                            prefixWidget: Container(
-                                                margin: getMargin(right: 10),
-                                                child: Icon(
-                                                  (isSecondImageSelected
-                                                      ? Icons.done
-                                                      : Icons.photo),
-                                                  color: Colors.white,
-                                                  size: 15,
-                                                )),
+                                  child: Visibility(
+                                    child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          Padding(
+                                              padding: getPadding(bottom: 0),
+                                              child: Text("lbl_background".tr,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  textAlign: TextAlign.left,
+                                                  style: AppStyle
+                                                      .txtNunitoSansRegular14
+                                                      .copyWith(
+                                                          letterSpacing:
+                                                              getHorizontalSize(
+                                                                  0.36),
+                                                          height:
+                                                              getVerticalSize(
+                                                                  1.26)))),
+                                          SizedBox(
+                                            width: 30,
                                           ),
-                                        ),
-                                        SizedBox(
-                                          width: 20,
-                                        ),
-                                        CustomButton(
+                                          GestureDetector(
                                             onTap: () {
-                                              removeSelectedImage(2);
+                                              onTapSelectimage(2);
                                             },
-                                            height: 23,
+                                            child: CustomButton(
+                                              width: 140,
+                                              text: (isSecondImageSelected
+                                                  ? "lbl_image_selected".tr
+                                                  : "lbl_select_image".tr),
+                                              variant: ButtonVariant
+                                                  .OutlineBlack9003f,
+                                              shape: ButtonShape.RoundedBorder5,
+                                              padding: ButtonPadding.PaddingT9,
+                                              fontStyle: ButtonFontStyle
+                                                  .NunitoSansBlack12,
+                                              alignment: Alignment.topCenter,
+                                              prefixWidget: Container(
+                                                  margin: getMargin(right: 10),
+                                                  child: Icon(
+                                                    (isSecondImageSelected
+                                                        ? Icons.done
+                                                        : Icons.photo),
+                                                    color: Colors.white,
+                                                    size: 15,
+                                                  )),
+                                            ),
+                                          ),
+                                          SizedBox(
                                             width: 20,
-                                            // text: "lbl_remove".tr,
-                                            variant:
-                                                ButtonVariant.OutlineBlack9003f,
-                                            shape: ButtonShape.RoundedBorder5,
-                                            padding: ButtonPadding.PaddingT9,
-                                            fontStyle: ButtonFontStyle
-                                                .NunitoSansBlack12,
-                                            prefixWidget: Container(
-                                                margin: getMargin(right: 0),
-                                                child: CustomImageView(
-                                                    svgPath: ImageConstant
-                                                        .imgDelete)))
-                                      ])),
+                                          ),
+                                          CustomButton(
+                                              onTap: () {
+                                                removeSelectedImage(2);
+                                              },
+                                              height: 23,
+                                              width: 20,
+                                              // text: "lbl_remove".tr,
+                                              variant: ButtonVariant
+                                                  .OutlineBlack9003f,
+                                              shape: ButtonShape.RoundedBorder5,
+                                              padding: ButtonPadding.PaddingT9,
+                                              fontStyle: ButtonFontStyle
+                                                  .NunitoSansBlack12,
+                                              prefixWidget: Container(
+                                                  margin: getMargin(right: 0),
+                                                  child: CustomImageView(
+                                                      svgPath: ImageConstant
+                                                          .imgDelete)))
+                                        ]),
+                                    visible: isUserDefinedBackground ?? false,
+                                  )),
                               Container(
                                   height: getVerticalSize(1.00),
                                   width: getHorizontalSize(326.00),
@@ -432,6 +439,8 @@ class _BasicGreetingEntryScreen extends State<BasicGreetingEntryScreen> {
       templateID = value['selectedTemplateID'];
       setState(() {
         templateName = value['selectedTemplateName'];
+
+        isUserDefinedBackground = value['selectedTemplateName'] as bool?;
       });
     });
   }
@@ -493,8 +502,9 @@ class _BasicGreetingEntryScreen extends State<BasicGreetingEntryScreen> {
       String? imageFilePath = value["refinedImagePath"] as String?;
       int? pictureType = value["pictureType"] as int?;
 
-imageFile = File(imageFilePath??'');
-      var base64val1 = "data:image/png;base64,"+base64Encode(imageFile.readAsBytesSync());
+      imageFile = File(imageFilePath ?? '');
+      var base64val1 =
+          "data:image/png;base64," + base64Encode(imageFile.readAsBytesSync());
       // print('base64:'+base64val1);
       if (pictureType == 1) {
         firstImageBase64 = base64val1;
@@ -559,10 +569,7 @@ imageFile = File(imageFilePath??'');
         "Caption": _caption_Controller.text,
         "Message": _message_Controller.text,
         "Sender": _sender_Controller.text,
-        "files":{
-           "Logo":firstImageBase64,
-           "Picture":secondImageBase64
-        }
+        "files": {"Logo": firstImageBase64, "Picture": secondImageBase64}
       };
       PostCreateGreetingResp resp =
           await api.createCreateGreeting(requestData: req);

@@ -25,6 +25,7 @@ class SelectTemplateScreen extends StatefulWidget {
 class _SelectTemplateScreen extends State<SelectTemplateScreen> {
   PreviewResult? previewResult;
   List<Result>? templates;
+  bool isUserDefinedBackground= false;
   var htmlContent = '''
 <html>
 <head>
@@ -76,6 +77,7 @@ class _SelectTemplateScreen extends State<SelectTemplateScreen> {
           previewResult = resp.result;
           setState(() {
             htmlContent = previewResult?.htmldata ?? '';
+isUserDefinedBackground=previewResult?.userPicture??false;
           });
         });
       } else {
@@ -344,7 +346,9 @@ class _SelectTemplateScreen extends State<SelectTemplateScreen> {
       "selectedTemplateID": selectedTemplate,
       "selectedTemplateName": templates!
           .firstWhere((element) => element.value == selectedTemplate)
-          .text
+          .text,
+          
+      "isUserBackground": isUserDefinedBackground
     });
   }
 
