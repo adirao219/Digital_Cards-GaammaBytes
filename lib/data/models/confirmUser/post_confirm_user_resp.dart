@@ -1,11 +1,11 @@
-class PostConfirmUserResp {
+class CommonGenericResp {
   bool? isSuccess;
   dynamic result;
   String? errorMessage;
 
-  PostConfirmUserResp({this.isSuccess, this.result, this.errorMessage});
+  CommonGenericResp({this.isSuccess, this.result, this.errorMessage});
 
-  PostConfirmUserResp.fromJson(Map<String, dynamic> json) {
+  CommonGenericResp.fromJson(Map<String, dynamic> json) {
     isSuccess = json['IsSuccess'];
     result = json['Result'];
     errorMessage = json['ErrorMessage'];

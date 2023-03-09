@@ -113,7 +113,7 @@ class ApiClient extends GetConnect {
     }
   }
 
-  Future<PostConfirmUserResp> createConfirmUser(
+  Future<CommonGenericResp> createConfirmUser(
       {Map requestData = const {}}) async {
     ProgressDialogUtils.showProgressDialog();
     try {
@@ -122,10 +122,10 @@ class ApiClient extends GetConnect {
           await httpClient.post('$url/API/ConfirmUser', body: requestData);
       ProgressDialogUtils.hideProgressDialog();
       if (_isSuccessCall(response)) {
-        return PostConfirmUserResp.fromJson(response.body);
+        return CommonGenericResp.fromJson(response.body);
       } else {
         throw response.body != null
-            ? PostConfirmUserResp.fromJson(response.body)
+            ? CommonGenericResp.fromJson(response.body)
             : 'Something Went Wrong!';
       }
     } catch (error, stackTrace) {
@@ -135,6 +135,72 @@ class ApiClient extends GetConnect {
     }
   }
 
+
+  Future<CommonGenericResp> changePassword(
+      {Map requestData = const {}}) async {
+    ProgressDialogUtils.showProgressDialog();
+    try {
+      await isNetworkConnected();
+      Response response =
+          await httpClient.post('$url/API/ChangePassword', body: requestData);
+      ProgressDialogUtils.hideProgressDialog();
+      if (_isSuccessCall(response)) {
+        return CommonGenericResp.fromJson(response.body);
+      } else {
+        throw response.body != null
+            ? CommonGenericResp.fromJson(response.body)
+            : 'Something Went Wrong!';
+      }
+    } catch (error, stackTrace) {
+      ProgressDialogUtils.hideProgressDialog();
+      Logger.log(error, stackTrace: stackTrace);
+      rethrow;
+    }
+  }
+  
+  Future<CommonGenericResp> forgotPassword(
+      {Map requestData = const {}}) async {
+    ProgressDialogUtils.showProgressDialog();
+    try {
+      await isNetworkConnected();
+      Response response =
+          await httpClient.post('$url/API/ForgotPassword', body: requestData);
+      ProgressDialogUtils.hideProgressDialog();
+      if (_isSuccessCall(response)) {
+        return CommonGenericResp.fromJson(response.body);
+      } else {
+        throw response.body != null
+            ? CommonGenericResp.fromJson(response.body)
+            : 'Something Went Wrong!';
+      }
+    } catch (error, stackTrace) {
+      ProgressDialogUtils.hideProgressDialog();
+      Logger.log(error, stackTrace: stackTrace);
+      rethrow;
+    }
+  }
+  
+  Future<CommonGenericResp> resetPassword(
+      {Map requestData = const {}}) async {
+    ProgressDialogUtils.showProgressDialog();
+    try {
+      await isNetworkConnected();
+      Response response =
+          await httpClient.post('$url/API/ResetPassword', body: requestData);
+      ProgressDialogUtils.hideProgressDialog();
+      if (_isSuccessCall(response)) {
+        return CommonGenericResp.fromJson(response.body);
+      } else {
+        throw response.body != null
+            ? CommonGenericResp.fromJson(response.body)
+            : 'Something Went Wrong!';
+      }
+    } catch (error, stackTrace) {
+      ProgressDialogUtils.hideProgressDialog();
+      Logger.log(error, stackTrace: stackTrace);
+      rethrow;
+    }
+  }
   Future<PostRegistrationResp> createRegistration(
       {Map requestData = const {}}) async {
     ProgressDialogUtils.showProgressDialog();

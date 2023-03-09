@@ -366,10 +366,6 @@ class _GoogleSigninRegiterPageScreen
                     ]))));
   }
 
-  onTapRegister() {
-    Navigator.of(context).pushNamed(AppRoutes.verifiactionPageScreen);
-  }
-
   validateCouponCode() async {
     if (_couponCodeController.text.trim().isNotEmpty) {
       try {

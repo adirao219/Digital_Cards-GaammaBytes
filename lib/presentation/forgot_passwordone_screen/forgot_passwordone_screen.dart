@@ -1,19 +1,23 @@
-
 import 'package:digitalcardsgaammabytes/core/app_export.dart';
 import 'package:digitalcardsgaammabytes/widgets/app_bar/appbar_image.dart';
 import 'package:digitalcardsgaammabytes/widgets/app_bar/custom_app_bar.dart';
 import 'package:digitalcardsgaammabytes/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
 
-class ForgotPasswordoneScreen extends StatefulWidget {
-  const ForgotPasswordoneScreen({ super.key});
+import '../../data/apiClient/api_client.dart';
+import '../../data/globals/globalvariables.dart';
+import '../../data/models/confirmUser/post_confirm_user_resp.dart';
 
-                @override
-                // ignore: library_private_types_in_public_api
-                _ForgotPasswordoneScreen createState() => _ForgotPasswordoneScreen();
-            }
+class ForgotPasswordoneScreen extends StatefulWidget {
+  const ForgotPasswordoneScreen({super.key});
+
+  @override
+  // ignore: library_private_types_in_public_api
+  _ForgotPasswordoneScreen createState() => _ForgotPasswordoneScreen();
+}
 
 class _ForgotPasswordoneScreen extends State<ForgotPasswordoneScreen> {
+  TextEditingController _usernameController = new TextEditingController();
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -42,7 +46,6 @@ class _ForgotPasswordoneScreen extends State<ForgotPasswordoneScreen> {
                 width: size.width,
                 padding: getPadding(left: 31, top: 29, right: 31, bottom: 29),
                 child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Padding(
@@ -53,47 +56,54 @@ class _ForgotPasswordoneScreen extends State<ForgotPasswordoneScreen> {
                               style: AppStyle.txtInterSemiBold20)),
                       Container(
                           height: getVerticalSize(66.00),
-                          width: getHorizontalSize(295.00),
+                          width: getHorizontalSize(335.00),
                           margin: getMargin(top: 26),
                           child: Stack(alignment: Alignment.topLeft, children: [
-                            Align(
-                                alignment: Alignment.bottomCenter,
-                                child: Container(
-                                    padding: getPadding(
-                                        left: 20,
-                                        top: 18,
-                                        right: 20,
-                                        bottom: 18),
-                                    decoration: AppDecoration.outlineGray200
-                                        .copyWith(
-                                            borderRadius: BorderRadiusStyle
-                                                .roundedBorder15),
-                                    child: Column(
-                                        mainAxisSize: MainAxisSize.min,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Padding(
-                                              padding: getPadding(bottom: 1),
-                                              child: Text(
-                                                  "lbl_91_9964077688".tr,
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                  textAlign: TextAlign.left,
-                                                  style: AppStyle
-                                                      .txtNunitoSansBold14))
-                                        ]))),
-                            Align(
-                                alignment: Alignment.topLeft,
-                                child: Padding(
-                                    padding: getPadding(left: 28),
-                                    child: Text("lbl_phone_email_id".tr,
-                                        overflow: TextOverflow.ellipsis,
-                                        textAlign: TextAlign.left,
-                                        style:
-                                            AppStyle.txtNunitoSansRegular12)))
+                            TextFormField(
+                                autovalidateMode:
+                                    AutovalidateMode.onUserInteraction,
+                                // validator: (text) {
+                                //   if (_emailController.text == null ||
+                                //       _emailController.text.trim().isEmpty) {
+                                //     return 'Please enter your email address';
+                                //   }
+                                //   // Check if the entered email has the right format
+                                //   if (!RegExp(r'\S+@\S+\.\S+')
+                                //       .hasMatch(_emailController.text)) {
+                                //     return 'Please enter a valid email address';
+                                //   }
+                                //   if (_emailController.text.trim().length >
+                                //       35) {
+                                //     return 'Email should not be more than 35 characters in length';
+                                //   }
+                                //   return null;
+                                // },
+                                // onChanged: (text) =>
+                                //     setState(() => _name = text),
+
+                                controller: _usernameController,
+                                decoration: InputDecoration(
+                                  labelText: "lbl_phone_email_id".tr,
+                                  labelStyle: AppStyle.txtNunitoSansRegular12
+                                      .copyWith(
+                                          height: getVerticalSize(1.10),
+                                          fontSize: 13),
+
+                                  enabledBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(15.0),
+                                    borderSide: const BorderSide(
+                                      color: Color.fromARGB(255, 183, 183, 183),
+                                    ),
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(15.0),
+                                      borderSide: const BorderSide(
+                                        color:
+                                            Color.fromARGB(255, 183, 183, 183),
+                                      )),
+                                  // filled: true,
+                                  contentPadding: EdgeInsets.all(15.0),
+                                )),
                           ])),
                       CustomButton(
                           height: 40,
@@ -105,7 +115,58 @@ class _ForgotPasswordoneScreen extends State<ForgotPasswordoneScreen> {
                     ]))));
   }
 
-  onTapNext() {
-    Navigator.of(context).pushNamed(AppRoutes.forgotPasswordoneOneScreen);
+  onTapNext() async {
+    ApiClient api = new ApiClient();
+    bool isEmail = false;
+    try {
+      isEmail = RegExp(
+              r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+          .hasMatch(_usernameController.text);
+    } catch (e) {}
+    try {
+      var req = {
+        "TypeOfLogin": (isEmail ? "1" : "2"),
+        "Email": (isEmail ? _usernameController.text : ""),
+        "PhoneNumber": (isEmail ? "" : _usernameController.text)
+      };
+      CommonGenericResp resp = await api.forgotPassword(requestData: req);
+      if (resp.isSuccess ?? false) {
+        // selectedCardID = resp.result;
+        Get.snackbar('Success', "Username validated successfully!",
+            backgroundColor: Color.fromARGB(255, 208, 245, 216),
+            colorText: Colors.green[900],
+            icon: Icon(
+              Icons.done,
+              color: Colors.green[900],
+            ));
+
+GlobalVariables.setUserID( resp.result.toString());
+        Navigator.of(context)
+            .pushNamed(AppRoutes.verifiactionPageScreen, arguments: {
+          "type": (isEmail ? "1" : "2"),
+          "name": "",
+          "email": isEmail ? _usernameController.text : "",
+          "phonenumber": isEmail ? "" : _usernameController.text,
+          "userID": resp.result.toString(),
+          "isResetPassword": true
+        });
+      } else {
+        Get.snackbar('Error', resp.errorMessage.toString(),
+            backgroundColor: Color.fromARGB(255, 255, 230, 230),
+            colorText: Colors.red[900],
+            icon: Icon(
+              Icons.error,
+              color: Colors.red[900],
+            ));
+      }
+    } catch (e) {
+      Get.snackbar('Error', e.toString(),
+          backgroundColor: Color.fromARGB(255, 255, 230, 230),
+          colorText: Colors.red[900],
+          icon: Icon(
+            Icons.error,
+            color: Colors.red[900],
+          ));
+    }
   }
 }

@@ -440,7 +440,7 @@ class _BasicGreetingEntryScreen extends State<BasicGreetingEntryScreen> {
       setState(() {
         templateName = value['selectedTemplateName'];
 
-        isUserDefinedBackground = value['selectedTemplateName'] as bool?;
+        isUserDefinedBackground = value['isUserBackground'] as bool?;
       });
     });
   }

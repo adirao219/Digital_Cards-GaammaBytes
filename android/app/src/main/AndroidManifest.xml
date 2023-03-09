@@ -9,7 +9,7 @@
     
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
-    <application android:icon="@mipmap/ic_launcher" android:label="Digital Cards">
+    <application android:icon="@mipmap/ic_launcher" android:label="Gaamma Cards">
         <activity
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
             android:exported="true" 

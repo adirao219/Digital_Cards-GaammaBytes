@@ -458,7 +458,7 @@ class _SignupPageScreen extends State<SignupPageScreen> {
     } catch (e) {}
 
     var req = {
-      "TypeOfLogin": isEmail ? 2 : 1,
+      "TypeOfLogin": isEmail ? 1 : 2,
       "Email": _phoneController.text,
       "Password": _passwordController.text,
       "RememberMe": false

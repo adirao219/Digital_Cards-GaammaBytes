@@ -4,6 +4,7 @@ import 'package:digitalcardsgaammabytes/presentation/forgot_passwordone_screen/f
 import 'package:digitalcardsgaammabytes/presentation/forgot_passwordone_one_screen/forgot_passwordone_one_screen.dart';
 import 'package:digitalcardsgaammabytes/presentation/forgot_passwordtwo_screen/forgot_passwordtwo_screen.dart';
 import 'package:digitalcardsgaammabytes/presentation/regiter_page_screen/regiter_page_screen.dart';
+import 'package:digitalcardsgaammabytes/presentation/reset_password_screen/reset_password_screen.dart';
 import 'package:digitalcardsgaammabytes/presentation/verifiaction_page_screen/verifiaction_page_screen.dart';
 import 'package:digitalcardsgaammabytes/presentation/signup_page_screen/signup_page_screen.dart';
 import 'package:digitalcardsgaammabytes/presentation/home_page_screen/home_page_screen.dart';
@@ -83,6 +84,8 @@ class AppRoutes {
   static const String makePaymentScreen = '/make_payment_screen';
 
   static const String changePasswordScreen = '/change_password_screen';
+
+  static const String resetPasswordScreen = '/reset_password_screen';
 
   static const String searchPopuponeScreen = '/search_popupone_screen';
 
@@ -202,6 +205,10 @@ class AppRoutes {
     GetPage(
       name: changePasswordScreen,
       page: () => ChangePasswordScreen(),
+    ),
+    GetPage(
+      name: resetPasswordScreen,
+      page: () => ResetPasswordScreen(),
     ),
     GetPage(
       name: searchPopuponeScreen,

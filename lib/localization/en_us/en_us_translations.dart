@@ -21,6 +21,7 @@ final Map<String, String> enUs = {
   "lbl_app_navigation": "App Navigation",
   "lbl_password2": "Password ",
   "lbl_password3": "Password",
+  "lbl_passwordold": "Old Password",
   "msg_continue_with_google": "Continue with Google",
   "lbl_latest_first": "Latest First",
   "msg_check_your_app_s":
@@ -115,6 +116,7 @@ final Map<String, String> enUs = {
   "lbl_type3": "Type3",
   "lbl_type4": "Type4",
   "lbl_change_password": "Change Password",
+  "lbl_rest_password": "Reset Password",
   "lbl_select_template": "Select Template",
   "lbl_important_day": "Important Day",
   "lbl_a_c_type": "A/c Type:",

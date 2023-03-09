@@ -28,6 +28,9 @@ class _VerifiactionPageScreen extends State<VerifiactionPageScreen> {
   var email = Get.arguments["email"] as String?;
   var phonenumber = Get.arguments["phonenumber"] as String?;
   var userID = Get.arguments["userID"] as String?;
+
+  var isResetPassword = Get.arguments["isResetPassword"] as bool?;
+
   ApiClient api = new ApiClient();
   @override
   Widget build(BuildContext context) {
@@ -152,21 +155,33 @@ class _VerifiactionPageScreen extends State<VerifiactionPageScreen> {
           "PhoneNumber": phonenumber,
           "VerificationCode": otpValue
         };
-        PostConfirmUserResp resp =
-            await api.createConfirmUser(requestData: req);
-        if ((resp.isSuccess ?? false) == false) {
-          GlobalVariables.setLogin(true);
-          GlobalVariables.setUserID(userID ?? '');
+        CommonGenericResp resp = await api.createConfirmUser(requestData: req);
+        if ((resp.isSuccess ?? false)) {
+          if (isResetPassword ?? false) {
+            // GlobalVariables.setUserID("");
+            Navigator.of(context).pushNamed(AppRoutes.resetPasswordScreen);
 
-          Navigator.of(context).pushNamed(AppRoutes.homePageScreen);
-          
-          Get.snackbar('Success',"Welcome to Digital Cards",
-              backgroundColor: Color.fromARGB(255, 208, 245, 216),
-              colorText: Colors.green[900],
-              icon: Icon(
-                Icons.done,
-                color: Colors.green[900],
-              ));
+            Get.snackbar('Success', "OTP verified successfully",
+                backgroundColor: Color.fromARGB(255, 208, 245, 216),
+                colorText: Colors.green[900],
+                icon: Icon(
+                  Icons.done,
+                  color: Colors.green[900],
+                ));
+          } else {
+            GlobalVariables.setLogin(true);
+            GlobalVariables.setUserID(userID ?? '');
+
+            Navigator.of(context).pushNamed(AppRoutes.homePageScreen);
+
+            Get.snackbar('Success', "Welcome to Gaamma Cards",
+                backgroundColor: Color.fromARGB(255, 208, 245, 216),
+                colorText: Colors.green[900],
+                icon: Icon(
+                  Icons.done,
+                  color: Colors.green[900],
+                ));
+          }
         } else {
           Get.snackbar('Error', resp.errorMessage.toString(),
               backgroundColor: Color.fromARGB(255, 255, 230, 230),
@@ -179,12 +194,12 @@ class _VerifiactionPageScreen extends State<VerifiactionPageScreen> {
       } catch (ex) {}
     } else {
       Get.snackbar('Error', "Please enter valid OTP",
-              backgroundColor: Color.fromARGB(255, 255, 230, 230),
-              colorText: Colors.red[900],
-              icon: Icon(
-                Icons.error,
-                color: Colors.red[900],
-              ));
+          backgroundColor: Color.fromARGB(255, 255, 230, 230),
+          colorText: Colors.red[900],
+          icon: Icon(
+            Icons.error,
+            color: Colors.red[900],
+          ));
     }
   }
 }

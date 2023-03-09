@@ -52,8 +52,14 @@ class _MyEGreetingCardsScreen extends State<MyEGreetingCardsScreen> {
             ? ""
             : (((showHidden ?? false) == false) ? "No" : "Yes")),
         "Anywhere": _anywhere_Controller.text,
-        "SortBy": "",
-        "OrderBy": "",
+        "SortBy":
+            (sortbyOption == "latestcreated" || sortbyOption == "oldestcreated")
+                ? "C"
+                : "S",
+        "OrderBy": (sortbyOption == "latestpublished" ||
+                sortbyOption == "latestcreated")
+            ? "D"
+            : "A",
         "OnlyGreetingList": true.toString()
       };
       GetGreetingDetailsResp resp =

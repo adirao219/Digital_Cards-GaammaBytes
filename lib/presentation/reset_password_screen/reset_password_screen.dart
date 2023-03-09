@@ -8,16 +8,15 @@ import 'package:flutter/material.dart';
 
 import '../../data/models/confirmUser/post_confirm_user_resp.dart';
 
-class ChangePasswordScreen extends StatefulWidget {
-  const ChangePasswordScreen({super.key});
+class ResetPasswordScreen extends StatefulWidget {
+  const ResetPasswordScreen({super.key});
 
   @override
   // ignore: library_private_types_in_public_api
-  _ChangePasswordScreen createState() => _ChangePasswordScreen();
+  _ResetPasswordScreen createState() => _ResetPasswordScreen();
 }
 
-class _ChangePasswordScreen extends State<ChangePasswordScreen> {
-  TextEditingController _oldpasswordController = new TextEditingController();
+class _ResetPasswordScreen extends State<ResetPasswordScreen> {
   TextEditingController _passwordController = new TextEditingController();
   TextEditingController _confirmpasswordController =
       new TextEditingController();
@@ -136,7 +135,7 @@ class _ChangePasswordScreen extends State<ChangePasswordScreen> {
                     left: 0,
                   ),
                   child: Text(
-                    "lbl_change_password".tr,
+                    "lbl_rest_password".tr,
                     overflow: TextOverflow.ellipsis,
                     textAlign: TextAlign.left,
                     style: AppStyle.txtInterSemiBold20,
@@ -148,55 +147,7 @@ class _ChangePasswordScreen extends State<ChangePasswordScreen> {
                       horizontal: 18,
                     ),
                     child: Column(children: [
-                      TextFormField(
-                          autovalidateMode: AutovalidateMode.onUserInteraction,
-                          // validator: (text) {
-                          //   if (_emailController.text == null ||
-                          //       _emailController.text.trim().isEmpty) {
-                          //     return 'Please enter your email address';
-                          //   }
-                          //   // Check if the entered email has the right format
-                          //   if (!RegExp(r'\S+@\S+\.\S+')
-                          //       .hasMatch(_emailController.text)) {
-                          //     return 'Please enter a valid email address';
-                          //   }
-                          //   if (_emailController.text.trim().length >
-                          //       35) {
-                          //     return 'Email should not be more than 35 characters in length';
-                          //   }
-                          //   return null;
-                          // },
-                          // onChanged: (text) =>
-                          //     setState(() => _name = text),
-                          onChanged: (text) {
-                            setState(() {
-                              passwordtext = text;
-                            });
-                          },
-                          obscureText: true,
-                          controller: _oldpasswordController,
-                          decoration: InputDecoration(
-                            labelText: "lbl_passwordold".tr,
-                            labelStyle: AppStyle.txtNunitoSansRegular12
-                                .copyWith(
-                                    height: getVerticalSize(1.10),
-                                    fontSize: 13),
-
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(15.0),
-                              borderSide: const BorderSide(
-                                color: Color.fromARGB(255, 183, 183, 183),
-                              ),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(15.0),
-                                borderSide: const BorderSide(
-                                  color: Color.fromARGB(255, 183, 183, 183),
-                                )),
-                            // filled: true,
-                            contentPadding: EdgeInsets.all(15.0),
-                          )),
-                      const SizedBox(height: 35),
+                      
                       TextFormField(
                           autovalidateMode: AutovalidateMode.onUserInteraction,
                           // validator: (text) {
@@ -326,22 +277,22 @@ class _ChangePasswordScreen extends State<ChangePasswordScreen> {
     try {
       var req = {
         "UserId": GlobalVariables.userID,
-        "OldPassword": _oldpasswordController.text,
-        "NewPassword": _passwordController.text,
+        "Password": _passwordController.text,
         "ConfirmPassword": _confirmpasswordController.text
       };
-      CommonGenericResp resp = await api.changePassword(requestData: req);
+      CommonGenericResp resp = await api.resetPassword(requestData: req);
       if (resp.isSuccess ?? false) {
         // selectedCardID = resp.result;
-        Get.snackbar('Success', "Password Changed Successfully!",
+        Get.snackbar('Success', "Password Reset Successful! Please login again with new password",
             backgroundColor: Color.fromARGB(255, 208, 245, 216),
             colorText: Colors.green[900],
             icon: Icon(
               Icons.done,
               color: Colors.green[900],
             ));
-
-        Navigator.of(context).pop();
+            GlobalVariables.setUserID("");
+   Navigator.of(context)
+            .pushNamed(AppRoutes.signupPageScreen); 
       } else {
         Get.snackbar('Error', resp.errorMessage.toString(),
             backgroundColor: Color.fromARGB(255, 255, 230, 230),

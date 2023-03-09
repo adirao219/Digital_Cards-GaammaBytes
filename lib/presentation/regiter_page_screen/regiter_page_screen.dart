@@ -676,7 +676,8 @@ class _RegiterPageScreen extends State<RegiterPageScreen> {
           "name": _nameController.text,
           "email": _emailController.text,
           "phonenumber": _phoneController.text,
-          "userID": userID
+          "userID": userID,
+          "isResetPassword":false
         });
       } else {
         Get.snackbar('Error', resp.errorMessage.toString(),
