@@ -5,7 +5,8 @@ import 'package:pandabar/main.view.dart';
 import 'package:pandabar/pandabar.dart';
 
 class CustomBottomBar extends StatelessWidget {
-  CustomBottomBar({this.onChanged,this.isPublishAvailable=false,this.onNextClicked});
+  CustomBottomBar(
+      {this.onChanged, this.isPublishAvailable = false, this.onNextClicked});
   RxInt selectedIndex = 0.obs;
 
   bool isPublishAvailable;
@@ -16,56 +17,53 @@ class CustomBottomBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return 
-    Container(
-      margin: getMargin(top:10),
-      child:
-    
-    CustomBottomWidget(
-      backgroundColor: ColorConstant.deepOrangeA10033,
-      buttonColor: ColorConstant.pink900,
-      buttonSelectedColor: ColorConstant.pink900,
-      fabIcon: const Icon(
-        Icons.home,
-        color: Colors.white,
-      ),
-      fabColors: [ColorConstant.pink900, ColorConstant.pink900],
-      buttonData: [
-        BottomButtonData(
-            id: 'publish',
-            isVisible: isPublishAvailable,
-            icon: Icons.cloud_upload_rounded,
-            title: "lbl_publish".tr),
-        BottomButtonData(
-            id: 'back',
-            isVisible: true,
-            icon: Icons.arrow_circle_left_rounded,
-            title: "lbl_go_back".tr),
-        BottomButtonData(
-            id: 'next',
-            isVisible: true,
-            icon: Icons.arrow_circle_right_rounded,
-            title: "lbl_go_next".tr),
-        BottomButtonData(
-            id: 'share',
-            isVisible: isPublishAvailable,
-            icon: Icons.share,
-            title: "lbl_share".tr),
-      ],
-      onChange: (id) {
-        switch (id) {
-          case "back":
-            Navigator.of(context).pop();
-            break;
-          case "next":
-            onNextClicked!();
-            break;
-        }
-      },
-      onFabButtonPressed: () {
-        Navigator.of(context).pushNamed(AppRoutes.homePageScreen);
-      },
-    ));
+    return Container(
+        margin: getMargin(top: 10),
+        child: CustomBottomWidget(
+          backgroundColor: ColorConstant.deepOrangeA10033,
+          buttonColor: ColorConstant.pink900,
+          buttonSelectedColor: ColorConstant.pink900,
+          fabIcon: const Icon(
+            Icons.home,
+            color: Colors.white,
+          ),
+          fabColors: [ColorConstant.pink900, ColorConstant.pink900],
+          buttonData: [
+            BottomButtonData(
+                id: 'publish',
+                isVisible: isPublishAvailable,
+                icon: Icons.cloud_upload_rounded,
+                title: "lbl_publish".tr),
+            BottomButtonData(
+                id: 'back',
+                isVisible: true,
+                icon: Icons.arrow_circle_left_rounded,
+                title: "lbl_go_back".tr),
+            BottomButtonData(
+                id: 'next',
+                isVisible: true,
+                icon: Icons.arrow_circle_right_rounded,
+                title: "lbl_go_next".tr),
+            BottomButtonData(
+                id: 'share',
+                isVisible: isPublishAvailable,
+                icon: Icons.share,
+                title: "lbl_share".tr),
+          ],
+          onChange: (id) {
+            switch (id) {
+              case "back":
+                Navigator.of(context).pop();
+                break;
+              case "next":
+                onNextClicked!();
+                break;
+            }
+          },
+          onFabButtonPressed: () {
+            Navigator.of(context).pushNamed(AppRoutes.homePageScreen);
+          },
+        ));
   }
 }
 

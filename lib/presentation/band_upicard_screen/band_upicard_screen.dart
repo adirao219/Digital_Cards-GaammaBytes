@@ -1,4 +1,3 @@
-
 import 'package:digitalcardsgaammabytes/core/app_export.dart';
 import 'package:digitalcardsgaammabytes/widgets/app_bar/appbar_image.dart';
 import 'package:digitalcardsgaammabytes/widgets/app_bar/appbar_title.dart';
@@ -7,12 +6,12 @@ import 'package:digitalcardsgaammabytes/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
 
 class BandUpicardScreen extends StatefulWidget {
-  const BandUpicardScreen({ super.key});
+  const BandUpicardScreen({super.key});
 
-                @override
-                // ignore: library_private_types_in_public_api
-                _BandUpicardScreen createState() => _BandUpicardScreen();
-            }
+  @override
+  // ignore: library_private_types_in_public_api
+  _BandUpicardScreen createState() => _BandUpicardScreen();
+}
 
 class _BandUpicardScreen extends State<BandUpicardScreen> {
   @override
@@ -21,10 +20,11 @@ class _BandUpicardScreen extends State<BandUpicardScreen> {
         top: false,
         bottom: false,
         child: Scaffold(
-            floatingActionButtonLocation: FloatingActionButtonLocation.miniEndTop,
-          floatingActionButton: Padding(
-            padding: const EdgeInsets.only(bottom: 75.0),
-            child:MoreOptionMenu()),
+            floatingActionButtonLocation:
+                FloatingActionButtonLocation.miniEndTop,
+            floatingActionButton: Padding(
+                padding: const EdgeInsets.only(bottom: 75.0),
+                child: MoreOptionMenu()),
             backgroundColor: ColorConstant.whiteA700,
             appBar: CustomAppBar(
                 height: getVerticalSize(108.00),
@@ -54,9 +54,9 @@ class _BandUpicardScreen extends State<BandUpicardScreen> {
                                           svgPath: ImageConstant.imgContrast),
                                       AppbarImage(
                                           height: getVerticalSize(10.00),
-                                onTap: () {
-                                  Navigator.of(context).pop();
-                                },
+                                          onTap: () {
+                                            Navigator.of(context).pop();
+                                          },
                                           width: getHorizontalSize(5.00),
                                           svgPath:
                                               ImageConstant.imgVectorstroke,
@@ -71,7 +71,7 @@ class _BandUpicardScreen extends State<BandUpicardScreen> {
                                 margin: getMargin(left: 76, top: 16))
                           ]))
                     ])),
-                 // actions: [
+                // actions: [
                 //   AppbarImage(
                 //       height: getVerticalSize(35.00),
                 //       width: getHorizontalSize(43.00),

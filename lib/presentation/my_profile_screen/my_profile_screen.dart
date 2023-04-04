@@ -67,12 +67,12 @@ class _MyProfileScreen extends State<MyProfileScreen> {
         });
       } else {
         Get.snackbar('Error', resp.errorMessage.toString(),
-              backgroundColor: Color.fromARGB(255, 255, 230, 230),
-              colorText: Colors.red[900],
-              icon: Icon(
-                Icons.error,
-                color: Colors.red[900],
-              ));
+            backgroundColor: Color.fromARGB(255, 255, 230, 230),
+            colorText: Colors.red[900],
+            icon: Icon(
+              Icons.error,
+              color: Colors.red[900],
+            ));
       }
     } catch (e) {}
   }
@@ -100,17 +100,17 @@ class _MyProfileScreen extends State<MyProfileScreen> {
                 Icons.done,
                 color: Colors.green[900],
               ));
-             
-           Navigator.of(context).pop();
+
+          Navigator.of(context).pop();
         });
       } else {
         Get.snackbar('Error', resp.errorMessage.toString(),
-              backgroundColor: Color.fromARGB(255, 255, 230, 230),
-              colorText: Colors.red[900],
-              icon: Icon(
-                Icons.error,
-                color: Colors.red[900],
-              ));
+            backgroundColor: Color.fromARGB(255, 255, 230, 230),
+            colorText: Colors.red[900],
+            icon: Icon(
+              Icons.error,
+              color: Colors.red[900],
+            ));
       }
     } catch (e) {}
   }
@@ -137,38 +137,38 @@ class _MyProfileScreen extends State<MyProfileScreen> {
                   Padding(
                       padding:
                           getPadding(left: 38, top: 44, right: 99, bottom: 7),
-                      child: Row(children: [
-                        Container(
-                            height: getVerticalSize(36.00),
-                            width: getHorizontalSize(38.00),
-                            margin: getMargin(bottom: 6),
-                            child: Stack(
-                                alignment: Alignment.centerLeft,
-                                children: [
-                                  AppbarImage(
-                                      height: getVerticalSize(36.00),
-                                      width: getHorizontalSize(38.00),
-                                      svgPath: ImageConstant.imgContrast,
-                                      onTap: () {
-                                        Navigator.of(context).pop();
-                                      }),
-                                  AppbarImage(
-                                      height: getVerticalSize(10.00),
-                                      width: getHorizontalSize(5.00),
-                                      svgPath: ImageConstant.imgVectorstroke,
-                                      onTap: () {
-                                        Navigator.of(context).pop();
-                                      },
-                                      margin: getMargin(
-                                          left: 15,
-                                          top: 13,
-                                          right: 18,
-                                          bottom: 13))
-                                ])),
-                        AppbarTitle(
-                            text: "lbl_my_profile".tr.toUpperCase(),
-                            margin: getMargin(left: 54, top: 14))
-                      ]))
+                      child: GestureDetector(
+                          onTap: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: Row(children: [
+                            Container(
+                                height: getVerticalSize(36.00),
+                                width: getHorizontalSize(38.00),
+                                margin: getMargin(bottom: 6),
+                                child: Stack(
+                                    alignment: Alignment.centerLeft,
+                                    children: [
+                                      AppbarImage(
+                                        height: getVerticalSize(36.00),
+                                        width: getHorizontalSize(38.00),
+                                        svgPath: ImageConstant.imgContrast,
+                                      ),
+                                      AppbarImage(
+                                          height: getVerticalSize(10.00),
+                                          width: getHorizontalSize(5.00),
+                                          svgPath:
+                                              ImageConstant.imgVectorstroke,
+                                          margin: getMargin(
+                                              left: 15,
+                                              top: 13,
+                                              right: 18,
+                                              bottom: 13))
+                                    ])),
+                            AppbarTitle(
+                                text: "lbl_my_profile".tr.toUpperCase(),
+                                margin: getMargin(left: 54, top: 14))
+                          ])))
                 ])),
             styleType: Style.bgStyle_22),
         body: Form(

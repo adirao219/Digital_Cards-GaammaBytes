@@ -1,4 +1,3 @@
-
 import 'package:digitalcardsgaammabytes/core/app_export.dart';
 import 'package:digitalcardsgaammabytes/core/utils/validation_functions.dart';
 import 'package:digitalcardsgaammabytes/widgets/app_bar/appbar_image.dart';
@@ -10,15 +9,16 @@ import 'package:flutter/material.dart';
 
 // ignore_for_file: must_be_immutable
 class BandBankaCdetailsScreen extends StatefulWidget {
-  const BandBankaCdetailsScreen({ super.key});
+  const BandBankaCdetailsScreen({super.key});
 
-                @override
-                // ignore: library_private_types_in_public_api
-                _BandBankaCdetailsScreen createState() => _BandBankaCdetailsScreen();
-            }
+  @override
+  // ignore: library_private_types_in_public_api
+  _BandBankaCdetailsScreen createState() => _BandBankaCdetailsScreen();
+}
 
 class _BandBankaCdetailsScreen extends State<BandBankaCdetailsScreen> {
-  TextEditingController _a_c_holder_name_Controller = new TextEditingController();
+  TextEditingController _a_c_holder_name_Controller =
+      new TextEditingController();
   TextEditingController _bank_name_Controller = new TextEditingController();
   TextEditingController _branch_name_Controller = new TextEditingController();
   TextEditingController _a_c_type_Controller = new TextEditingController();
@@ -33,10 +33,12 @@ class _BandBankaCdetailsScreen extends State<BandBankaCdetailsScreen> {
     return SafeArea(
         top: false,
         bottom: false,
-        child: Scaffold( floatingActionButtonLocation: FloatingActionButtonLocation.miniEndTop,
-          floatingActionButton: Padding(
-            padding: const EdgeInsets.only(bottom: 75.0),
-            child:MoreOptionMenu()),
+        child: Scaffold(
+            floatingActionButtonLocation:
+                FloatingActionButtonLocation.miniEndTop,
+            floatingActionButton: Padding(
+                padding: const EdgeInsets.only(bottom: 75.0),
+                child: MoreOptionMenu()),
             resizeToAvoidBottomInset: false,
             backgroundColor: ColorConstant.whiteA700,
             appBar: CustomAppBar(
@@ -53,37 +55,38 @@ class _BandBankaCdetailsScreen extends State<BandBankaCdetailsScreen> {
                       Padding(
                           padding: getPadding(
                               left: 38, top: 44, right: 151, bottom: 5),
-                          child: Row(children: [
-                            Container(
-                                height: getVerticalSize(36.00),
-                                width: getHorizontalSize(38.00),
-                                margin: getMargin(bottom: 8),
-                                child: Stack(
-                                    alignment: Alignment.centerLeft,
-                                    children: [
-                                      AppbarImage(
-                                          height: getVerticalSize(36.00),
-                                          width: getHorizontalSize(38.00),
-                                          svgPath: ImageConstant.imgContrast),
-                                      AppbarImage(
-                                          height: getVerticalSize(10.00),
-                                          width: getHorizontalSize(5.00),
-                                          
-                                onTap: () {
-                                  Navigator.of(context).pop();
-                                },
-                                          svgPath:
-                                              ImageConstant.imgVectorstroke,
-                                          margin: getMargin(
-                                              left: 15,
-                                              top: 13,
-                                              right: 18,
-                                              bottom: 13))
-                                    ])),
-                            AppbarTitle(
-                                text: "lbl_bands2".tr.toUpperCase(),
-                                margin: getMargin(left: 76, top: 16))
-                          ]))
+                          child: GestureDetector(
+                              onTap: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: Row(children: [
+                                Container(
+                                    height: getVerticalSize(36.00),
+                                    width: getHorizontalSize(38.00),
+                                    margin: getMargin(bottom: 8),
+                                    child: Stack(
+                                        alignment: Alignment.centerLeft,
+                                        children: [
+                                          AppbarImage(
+                                              height: getVerticalSize(36.00),
+                                              width: getHorizontalSize(38.00),
+                                              svgPath:
+                                                  ImageConstant.imgContrast),
+                                          AppbarImage(
+                                              height: getVerticalSize(10.00),
+                                              width: getHorizontalSize(5.00),
+                                              svgPath:
+                                                  ImageConstant.imgVectorstroke,
+                                              margin: getMargin(
+                                                  left: 15,
+                                                  top: 13,
+                                                  right: 18,
+                                                  bottom: 13))
+                                        ])),
+                                AppbarTitle(
+                                    text: "lbl_bands2".tr.toUpperCase(),
+                                    margin: getMargin(left: 76, top: 16))
+                              ])))
                     ])),
                 // actions: [
                 //   AppbarImage(

@@ -1,5 +1,3 @@
-
-
 import 'package:digitalcardsgaammabytes/presentation/my_digital_cards_screen/widgets/gridbusinesscardseven_item_widget.dart';
 
 import '../../widgets/app_bar/appbar_subtitle.dart';
@@ -13,17 +11,20 @@ import 'package:flutter/material.dart';
 import 'models/my_digital_cards_model.dart';
 
 class MyDigitalCardsScreen extends StatefulWidget {
-  const MyDigitalCardsScreen({ super.key});
+  const MyDigitalCardsScreen({super.key});
 
-                @override
-                // ignore: library_private_types_in_public_api
-                _MyDigitalCardsScreen createState() => _MyDigitalCardsScreen();
-            }
+  @override
+  // ignore: library_private_types_in_public_api
+  _MyDigitalCardsScreen createState() => _MyDigitalCardsScreen();
+}
 
 class _MyDigitalCardsScreen extends State<MyDigitalCardsScreen> {
+  Rx<MyDigitalCardsModel> myDigitalCardsModelObj = MyDigitalCardsModel().obs;
 
-    Rx<MyDigitalCardsModel> myDigitalCardsModelObj =
-      MyDigitalCardsModel().obs;
+  onTapCreatedigitalcard() {
+    Get.toNamed(AppRoutes.digitalCardOptionsScreen);
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -42,7 +43,7 @@ class _MyDigitalCardsScreen extends State<MyDigitalCardsScreen> {
                               image: DecorationImage(
                                   image: AssetImage(
                                       ImageConstant.imgVectorDeepOrangeA100),
-                                  fit: BoxFit.cover)),
+                                  fit: BoxFit.fill)),
                           child: Column(
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [
@@ -50,44 +51,44 @@ class _MyDigitalCardsScreen extends State<MyDigitalCardsScreen> {
                                     height: getVerticalSize(94.00),
                                     leadingWidth: 76,
                                     leading: Container(
-                                        height: getVerticalSize(36.00),
-                                        width: getHorizontalSize(38.00),
-                                        margin: getMargin(
-                                            left: 38, top: 44, bottom: 14),
-                                        child: 
-                                        Row(children: [
-                                        Stack(
-                                            alignment: Alignment.centerLeft,
-                                            children: [
-                                              AppbarImage(
-                                                  height:
-                                                      getVerticalSize(36.00),
-                                                  width:
-                                                      getHorizontalSize(38.00),
-                                                  svgPath: ImageConstant
-                                                      .imgContrast),
-                                              AppbarImage(
-                                                onTap: (){
-                                                  Navigator.of(context).pop();
-                                                },
-                                                  height:
-                                                      getVerticalSize(10.00),
-                                                  width:
-                                                      getHorizontalSize(5.00),
-                                                  svgPath: ImageConstant
-                                                      .imgVectorstroke,
-                                                  margin: getMargin(
-                                                      left: 15,
-                                                      top: 13,
-                                                      right: 18,
-                                                      bottom: 13))
-                                            ]),
-                                            
-                                             AppbarSubtitle(
-                                text: "lbl_my_digitalcards".tr,
-                                margin:
-                                    getMargin(left: 40, top: 10)),
-                                            ])),
+                                      height: getVerticalSize(36.00),
+                                      width: getHorizontalSize(38.00),
+                                      margin: getMargin(
+                                          left: 38, top: 44, bottom: 14),
+                                      child: GestureDetector(
+                                          onTap: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                          child: Row(children: [
+                                            Stack(
+                                                alignment: Alignment.centerLeft,
+                                                children: [
+                                                  AppbarImage(
+                                                      height: getVerticalSize(
+                                                          36.00),
+                                                      width: getHorizontalSize(
+                                                          38.00),
+                                                      svgPath: ImageConstant
+                                                          .imgContrast),
+                                                  AppbarImage(
+                                                      height: getVerticalSize(
+                                                          10.00),
+                                                      width: getHorizontalSize(
+                                                          5.00),
+                                                      svgPath: ImageConstant
+                                                          .imgVectorstroke,
+                                                      margin: getMargin(
+                                                          left: 15,
+                                                          top: 13,
+                                                          right: 18,
+                                                          bottom: 13))
+                                                ]),
+                                            AppbarSubtitle(
+                                                text: "lbl_my_digitalcards".tr,
+                                                margin: getMargin(
+                                                    left: 40, top: 10)),
+                                          ])),
+                                    ),
                                     actions: [
                                       Card(
                                           clipBehavior: Clip.antiAlias,
@@ -153,7 +154,7 @@ class _MyDigitalCardsScreen extends State<MyDigitalCardsScreen> {
                           child: SingleChildScrollView(
                               child: Padding(
                                   padding:
-                                      getPadding(left: 37, top:20, right: 36),
+                                      getPadding(left: 37, top: 20, right: 36),
                                   child: Column(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.end,
@@ -178,8 +179,9 @@ class _MyDigitalCardsScreen extends State<MyDigitalCardsScreen> {
                                                 shrinkWrap: true,
                                                 gridDelegate:
                                                     SliverGridDelegateWithFixedCrossAxisCount(
-                                                        mainAxisExtent: getVerticalSize(
-                                                            160.00),
+                                                        mainAxisExtent:
+                                                            getVerticalSize(
+                                                                160.00),
                                                         crossAxisCount: 2,
                                                         mainAxisSpacing:
                                                             getHorizontalSize(
@@ -195,9 +197,11 @@ class _MyDigitalCardsScreen extends State<MyDigitalCardsScreen> {
                                                     .length,
                                                 itemBuilder: (context, index) {
                                                   GridbusinesscardsevenItemModel
-                                                      model = myDigitalCardsModelObj
-                                                          .value
-                                                          .gridbusinesscardsevenItemList[index];
+                                                      model =
+                                                      myDigitalCardsModelObj
+                                                              .value
+                                                              .gridbusinesscardsevenItemList[
+                                                          index];
                                                   return GridbusinesscardsevenItemWidget(
                                                       model);
                                                 }))),
@@ -327,9 +331,5 @@ class _MyDigitalCardsScreen extends State<MyDigitalCardsScreen> {
                                                 ]))
                                       ]))))
                     ]))));
-  }
-
-  onTapCreatedigitalcard() {
-    Get.toNamed(AppRoutes.digitalCardOptionsScreen);
   }
 }

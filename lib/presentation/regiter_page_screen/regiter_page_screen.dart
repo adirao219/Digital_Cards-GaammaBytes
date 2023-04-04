@@ -45,31 +45,33 @@ class _RegiterPageScreen extends State<RegiterPageScreen> {
                 height: getVerticalSize(94.00),
                 leadingWidth: 150,
                 leading: Container(
-                    height: getVerticalSize(36.00),
-                    width: getHorizontalSize(38.00),
-                    margin: getMargin(left: 38, top: 44, bottom: 14),
-                    child: Row(
-                      children: [
-                        Stack(alignment: Alignment.centerLeft, children: [
-                          AppbarImage(
-                              height: getVerticalSize(36.00),
-                              width: getHorizontalSize(38.00),
-                              svgPath: ImageConstant.imgContrast),
-                          AppbarImage(
-                              height: getVerticalSize(10.00),
-                              width: getHorizontalSize(5.00),
-                              svgPath: ImageConstant.imgVectorstroke,
-                              onTap: () {
-                                Navigator.of(context).pop();
-                              },
-                              margin: getMargin(
-                                  left: 15, top: 13, right: 18, bottom: 13)),
-                        ]),
-                        AppbarSubtitle(
-                            text: "msg_sign_up_get_started".tr,
-                            margin: getMargin(left: 10, top: 0)),
-                      ],
-                    )),
+                  height: getVerticalSize(36.00),
+                  width: getHorizontalSize(38.00),
+                  margin: getMargin(left: 38, top: 44, bottom: 14),
+                  child: GestureDetector(
+                      onTap: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: Row(
+                        children: [
+                          Stack(alignment: Alignment.centerLeft, children: [
+                            AppbarImage(
+                                height: getVerticalSize(36.00),
+                                width: getHorizontalSize(38.00),
+                                svgPath: ImageConstant.imgContrast),
+                            AppbarImage(
+                                height: getVerticalSize(10.00),
+                                width: getHorizontalSize(5.00),
+                                svgPath: ImageConstant.imgVectorstroke,
+                                margin: getMargin(
+                                    left: 15, top: 13, right: 18, bottom: 13)),
+                          ]),
+                          AppbarSubtitle(
+                              text: "msg_sign_up_get_started".tr,
+                              margin: getMargin(left: 10, top: 0)),
+                        ],
+                      )),
+                ),
                 actions: [],
                 styleType: Style.bgStyle_7)),
             body: SingleChildScrollView(
@@ -630,12 +632,12 @@ class _RegiterPageScreen extends State<RegiterPageScreen> {
             registerUser();
           } else {
             Get.snackbar('Error', resp.errorMessage.toString(),
-              backgroundColor: Color.fromARGB(255, 255, 230, 230),
-              colorText: Colors.red[900],
-              icon: Icon(
-                Icons.error,
-                color: Colors.red[900],
-              ));
+                backgroundColor: Color.fromARGB(255, 255, 230, 230),
+                colorText: Colors.red[900],
+                icon: Icon(
+                  Icons.error,
+                  color: Colors.red[900],
+                ));
           }
         } else {
           Get.snackbar('Error', resp.errorMessage.toString(),
@@ -677,16 +679,16 @@ class _RegiterPageScreen extends State<RegiterPageScreen> {
           "email": _emailController.text,
           "phonenumber": _phoneController.text,
           "userID": userID,
-          "isResetPassword":false
+          "isResetPassword": false
         });
       } else {
         Get.snackbar('Error', resp.errorMessage.toString(),
-              backgroundColor: Color.fromARGB(255, 255, 230, 230),
-              colorText: Colors.red[900],
-              icon: Icon(
-                Icons.error,
-                color: Colors.red[900],
-              ));
+            backgroundColor: Color.fromARGB(255, 255, 230, 230),
+            colorText: Colors.red[900],
+            icon: Icon(
+              Icons.error,
+              color: Colors.red[900],
+            ));
       }
     } catch (ex) {}
   }

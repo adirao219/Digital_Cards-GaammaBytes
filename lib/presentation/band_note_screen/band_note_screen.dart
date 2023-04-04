@@ -1,4 +1,3 @@
-
 import 'package:digitalcardsgaammabytes/core/app_export.dart';
 import 'package:digitalcardsgaammabytes/widgets/app_bar/appbar_image.dart';
 import 'package:digitalcardsgaammabytes/widgets/app_bar/appbar_title.dart';
@@ -8,12 +7,12 @@ import 'package:digitalcardsgaammabytes/widgets/custom_text_form_field.dart';
 import 'package:flutter/material.dart';
 
 class BandNoteScreen extends StatefulWidget {
-  const BandNoteScreen({ super.key});
+  const BandNoteScreen({super.key});
 
-                @override
-                // ignore: library_private_types_in_public_api
-                _BandNoteScreen createState() => _BandNoteScreen();
-            }
+  @override
+  // ignore: library_private_types_in_public_api
+  _BandNoteScreen createState() => _BandNoteScreen();
+}
 
 class _BandNoteScreen extends State<BandNoteScreen> {
   TextEditingController _heading_Controller = new TextEditingController();
@@ -24,10 +23,11 @@ class _BandNoteScreen extends State<BandNoteScreen> {
         top: false,
         bottom: false,
         child: Scaffold(
-            floatingActionButtonLocation: FloatingActionButtonLocation.miniEndTop,
-          floatingActionButton: Padding(
-            padding: const EdgeInsets.only(bottom: 75.0),
-            child:MoreOptionMenu()),
+            floatingActionButtonLocation:
+                FloatingActionButtonLocation.miniEndTop,
+            floatingActionButton: Padding(
+                padding: const EdgeInsets.only(bottom: 75.0),
+                child: MoreOptionMenu()),
             resizeToAvoidBottomInset: false,
             backgroundColor: ColorConstant.whiteA700,
             appBar: CustomAppBar(
@@ -59,9 +59,9 @@ class _BandNoteScreen extends State<BandNoteScreen> {
                                       AppbarImage(
                                           height: getVerticalSize(10.00),
                                           width: getHorizontalSize(5.00),
-                                onTap: () {
-                                  Navigator.of(context).pop();
-                                },
+                                          onTap: () {
+                                            Navigator.of(context).pop();
+                                          },
                                           svgPath:
                                               ImageConstant.imgVectorstroke,
                                           margin: getMargin(
@@ -75,7 +75,7 @@ class _BandNoteScreen extends State<BandNoteScreen> {
                                 margin: getMargin(left: 76, top: 16))
                           ]))
                     ])),
-                 // actions: [
+                // actions: [
                 //   AppbarImage(
                 //       height: getVerticalSize(35.00),
                 //       width: getHorizontalSize(43.00),

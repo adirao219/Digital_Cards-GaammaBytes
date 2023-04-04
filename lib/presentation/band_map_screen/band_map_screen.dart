@@ -1,4 +1,3 @@
-
 import 'package:digitalcardsgaammabytes/core/app_export.dart';
 import 'package:digitalcardsgaammabytes/widgets/app_bar/appbar_image.dart';
 import 'package:digitalcardsgaammabytes/widgets/app_bar/appbar_title.dart';
@@ -8,12 +7,12 @@ import 'package:digitalcardsgaammabytes/widgets/custom_text_form_field.dart';
 import 'package:flutter/material.dart';
 
 class BandMapScreen extends StatefulWidget {
-  const BandMapScreen({ super.key});
+  const BandMapScreen({super.key});
 
-                @override
-                // ignore: library_private_types_in_public_api
-                _BandMapScreen createState() => _BandMapScreen();
-            }
+  @override
+  // ignore: library_private_types_in_public_api
+  _BandMapScreen createState() => _BandMapScreen();
+}
 
 class _BandMapScreen extends State<BandMapScreen> {
   TextEditingController _heading_Controller = new TextEditingController();
@@ -25,10 +24,11 @@ class _BandMapScreen extends State<BandMapScreen> {
         top: false,
         bottom: false,
         child: Scaffold(
-            floatingActionButtonLocation: FloatingActionButtonLocation.miniEndTop,
-          floatingActionButton: Padding(
-            padding: const EdgeInsets.only(bottom: 75.0),
-            child:MoreOptionMenu()),
+            floatingActionButtonLocation:
+                FloatingActionButtonLocation.miniEndTop,
+            floatingActionButton: Padding(
+                padding: const EdgeInsets.only(bottom: 75.0),
+                child: MoreOptionMenu()),
             resizeToAvoidBottomInset: false,
             backgroundColor: ColorConstant.whiteA700,
             appBar: CustomAppBar(
@@ -45,38 +45,40 @@ class _BandMapScreen extends State<BandMapScreen> {
                       Padding(
                           padding: getPadding(
                               left: 38, top: 44, right: 151, bottom: 5),
-                          child: Row(children: [
-                            Container(
-                                height: getVerticalSize(36.00),
-                                width: getHorizontalSize(38.00),
-                                margin: getMargin(bottom: 8),
-                                child: Stack(
-                                    alignment: Alignment.centerLeft,
-                                    children: [
-                                      AppbarImage(
-                                          height: getVerticalSize(36.00),
-                                          width: getHorizontalSize(38.00),
-                                          svgPath: ImageConstant.imgContrast),
-                                      AppbarImage(
-                                          height: getVerticalSize(10.00),
-                                          width: getHorizontalSize(5.00),
-                                onTap: () {
-                                  Navigator.of(context).pop();
-                                },
-                                          svgPath:
-                                              ImageConstant.imgVectorstroke,
-                                          margin: getMargin(
-                                              left: 15,
-                                              top: 13,
-                                              right: 18,
-                                              bottom: 13))
-                                    ])),
-                            AppbarTitle(
-                                text: "lbl_bands2".tr.toUpperCase(),
-                                margin: getMargin(left: 76, top: 16))
-                          ]))
+                          child: GestureDetector(
+                              onTap: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: Row(children: [
+                                Container(
+                                    height: getVerticalSize(36.00),
+                                    width: getHorizontalSize(38.00),
+                                    margin: getMargin(bottom: 8),
+                                    child: Stack(
+                                        alignment: Alignment.centerLeft,
+                                        children: [
+                                          AppbarImage(
+                                              height: getVerticalSize(36.00),
+                                              width: getHorizontalSize(38.00),
+                                              svgPath:
+                                                  ImageConstant.imgContrast),
+                                          AppbarImage(
+                                              height: getVerticalSize(10.00),
+                                              width: getHorizontalSize(5.00),
+                                              svgPath:
+                                                  ImageConstant.imgVectorstroke,
+                                              margin: getMargin(
+                                                  left: 15,
+                                                  top: 13,
+                                                  right: 18,
+                                                  bottom: 13))
+                                        ])),
+                                AppbarTitle(
+                                    text: "lbl_bands2".tr.toUpperCase(),
+                                    margin: getMargin(left: 76, top: 16))
+                              ])))
                     ])),
-                 // actions: [
+                // actions: [
                 //   AppbarImage(
                 //       height: getVerticalSize(35.00),
                 //       width: getHorizontalSize(43.00),

@@ -1,16 +1,15 @@
-
 import 'package:digitalcardsgaammabytes/core/app_export.dart';
 import 'package:digitalcardsgaammabytes/widgets/app_bar/appbar_image.dart';
 import 'package:digitalcardsgaammabytes/widgets/app_bar/custom_app_bar.dart';
 import 'package:flutter/material.dart';
 
 class DigitalCardOptionsScreen extends StatefulWidget {
-  const DigitalCardOptionsScreen({ super.key});
+  const DigitalCardOptionsScreen({super.key});
 
-                @override
-                // ignore: library_private_types_in_public_api
-                _DigitalCardOptionsScreen createState() => _DigitalCardOptionsScreen();
-            }
+  @override
+  // ignore: library_private_types_in_public_api
+  _DigitalCardOptionsScreen createState() => _DigitalCardOptionsScreen();
+}
 
 class _DigitalCardOptionsScreen extends State<DigitalCardOptionsScreen> {
   @override
@@ -24,37 +23,43 @@ class _DigitalCardOptionsScreen extends State<DigitalCardOptionsScreen> {
                 height: getVerticalSize(108.00),
                 centerTitle: true,
                 title: Container(
-                    height: getVerticalSize(94.00),
-                    width: size.width,
-                    child: Stack(children: [
-                      AppbarImage(
-                          height: getVerticalSize(94.00),
-                          width: getHorizontalSize(375.00),
-                          imagePath: ImageConstant.imgVectorDeepOrangeA100),
-                      Container(
-                          height: getVerticalSize(36.00),
-                          width: getHorizontalSize(38.00),
-                          margin: getMargin(
-                              left: 38, top: 44, right: 299, bottom: 14),
-                          child:
-                              Stack(alignment: Alignment.centerLeft, children: [
-                            AppbarImage(
-                                height: getVerticalSize(36.00),
-                                width: getHorizontalSize(38.00),
-                                svgPath: ImageConstant.imgContrast,
-                                onTap: onTapContrast7),
-                            AppbarImage(
-                                height: getVerticalSize(10.00),
-                                width: getHorizontalSize(5.00),
-                                svgPath: ImageConstant.imgVectorstroke,
-                                onTap: () {
-                                  Navigator.of(context).pop();
-                                },
-                                margin: getMargin(
-                                    left: 15, top: 13, right: 18, bottom: 13))
-                          ]))
-                    ])),
-                 // actions: [
+                  height: getVerticalSize(94.00),
+                  width: size.width,
+                  child: GestureDetector(
+                      onTap: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: Stack(children: [
+                        AppbarImage(
+                            height: getVerticalSize(94.00),
+                            width: getHorizontalSize(375.00),
+                            imagePath: ImageConstant.imgVectorDeepOrangeA100),
+                        Container(
+                            height: getVerticalSize(36.00),
+                            width: getHorizontalSize(38.00),
+                            margin: getMargin(
+                                left: 38, top: 44, right: 299, bottom: 14),
+                            child: Stack(
+                                alignment: Alignment.centerLeft,
+                                children: [
+                                  AppbarImage(
+                                      height: getVerticalSize(36.00),
+                                      width: getHorizontalSize(38.00),
+                                      svgPath: ImageConstant.imgContrast,
+                                      onTap: onTapContrast7),
+                                  AppbarImage(
+                                      height: getVerticalSize(10.00),
+                                      width: getHorizontalSize(5.00),
+                                      svgPath: ImageConstant.imgVectorstroke,
+                                      margin: getMargin(
+                                          left: 15,
+                                          top: 13,
+                                          right: 18,
+                                          bottom: 13))
+                                ]))
+                      ])),
+                ),
+                // actions: [
                 //   AppbarImage(
                 //       height: getVerticalSize(35.00),
                 //       width: getHorizontalSize(43.00),
@@ -313,23 +318,23 @@ class _DigitalCardOptionsScreen extends State<DigitalCardOptionsScreen> {
   }
 
   onTapColumnbusinesscard() {
- Navigator.of(context).pushNamed(AppRoutes.basicCardEntryOneScreen);
+    Navigator.of(context).pushNamed(AppRoutes.basicCardEntryOneScreen);
   }
 
   onTapColumnvisitingcard() {
- Navigator.of(context).pushNamed(AppRoutes.basicCardEntryOneScreen);
+    Navigator.of(context).pushNamed(AppRoutes.basicCardEntryOneScreen);
   }
 
   onTapColumnlocationcard() {
- Navigator.of(context).pushNamed(AppRoutes.basicCardEntryOneScreen);
+    Navigator.of(context).pushNamed(AppRoutes.basicCardEntryOneScreen);
   }
 
   onTapColumnprofilecard() {
- Navigator.of(context).pushNamed(AppRoutes.basicCardEntryOneScreen);
+    Navigator.of(context).pushNamed(AppRoutes.basicCardEntryOneScreen);
   }
 
   onTapColumneventcard() {
- Navigator.of(context).pushNamed(AppRoutes.basicCardEntryOneScreen);
+    Navigator.of(context).pushNamed(AppRoutes.basicCardEntryOneScreen);
   }
 
   onTapContrast7() {

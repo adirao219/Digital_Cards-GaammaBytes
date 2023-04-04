@@ -543,7 +543,10 @@ class _HomePageScreen extends State<HomePageScreen> {
     GlobalVariables.setDisplayname("");
     GlobalVariables.setUserName("");
 
-    Navigator.of(context).pushNamed(AppRoutes.signupPageScreen);
+    // Navigator.of(context).pushAndRemoveUntil(AppRoutes.signupPageScreen);
+
+    Navigator.of(context).pushNamedAndRemoveUntil(
+        AppRoutes.signupPageScreen, (Route<dynamic> route) => false);
   }
 
   signoutGoogle() {

@@ -1,4 +1,3 @@
-
 import 'package:digitalcardsgaammabytes/core/app_export.dart';
 import 'package:digitalcardsgaammabytes/widgets/app_bar/appbar_image.dart';
 import 'package:digitalcardsgaammabytes/widgets/app_bar/appbar_title.dart';
@@ -7,12 +6,12 @@ import 'package:digitalcardsgaammabytes/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
 
 class BandsScreen extends StatefulWidget {
-  const BandsScreen({ super.key});
+  const BandsScreen({super.key});
 
-                @override
-                // ignore: library_private_types_in_public_api
-                _BandsScreen createState() => _BandsScreen();
-            }
+  @override
+  // ignore: library_private_types_in_public_api
+  _BandsScreen createState() => _BandsScreen();
+}
 
 class _BandsScreen extends State<BandsScreen> {
   @override
@@ -36,36 +35,38 @@ class _BandsScreen extends State<BandsScreen> {
                       Padding(
                           padding: getPadding(
                               left: 38, top: 44, right: 152, bottom: 7),
-                          child: Row(children: [
-                            Container(
-                                height: getVerticalSize(36.00),
-                                width: getHorizontalSize(38.00),
-                                margin: getMargin(bottom: 6),
-                                child: Stack(
-                                    alignment: Alignment.centerLeft,
-                                    children: [
-                                      AppbarImage(
-                                          height: getVerticalSize(36.00),
-                                          width: getHorizontalSize(38.00),
-                                          svgPath: ImageConstant.imgContrast),
-                                      AppbarImage(
-                                          height: getVerticalSize(10.00),
-                                          width: getHorizontalSize(5.00),
-                                onTap: () {
-                                  Navigator.of(context).pop();
-                                },
-                                          svgPath:
-                                              ImageConstant.imgVectorstroke,
-                                          margin: getMargin(
-                                              left: 15,
-                                              top: 13,
-                                              right: 18,
-                                              bottom: 13))
-                                    ])),
-                            AppbarTitle(
-                                text: "lbl_bands2".tr.toUpperCase(),
-                                margin: getMargin(left: 75, top: 14))
-                          ]))
+                          child: GestureDetector(
+                              onTap: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: Row(children: [
+                                Container(
+                                    height: getVerticalSize(36.00),
+                                    width: getHorizontalSize(38.00),
+                                    margin: getMargin(bottom: 6),
+                                    child: Stack(
+                                        alignment: Alignment.centerLeft,
+                                        children: [
+                                          AppbarImage(
+                                              height: getVerticalSize(36.00),
+                                              width: getHorizontalSize(38.00),
+                                              svgPath:
+                                                  ImageConstant.imgContrast),
+                                          AppbarImage(
+                                              height: getVerticalSize(10.00),
+                                              width: getHorizontalSize(5.00),
+                                              svgPath:
+                                                  ImageConstant.imgVectorstroke,
+                                              margin: getMargin(
+                                                  left: 15,
+                                                  top: 13,
+                                                  right: 18,
+                                                  bottom: 13))
+                                        ])),
+                                AppbarTitle(
+                                    text: "lbl_bands2".tr.toUpperCase(),
+                                    margin: getMargin(left: 75, top: 14))
+                              ])))
                     ])),
                 actions: [
                   AppbarImage(

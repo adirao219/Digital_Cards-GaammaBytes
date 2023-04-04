@@ -66,39 +66,41 @@ class _ChangePasswordScreen extends State<ChangePasswordScreen> {
                     right: 299,
                     bottom: 14,
                   ),
-                  child: Stack(
-                    alignment: Alignment.centerLeft,
-                    children: [
-                      AppbarImage(
-                        height: getVerticalSize(
-                          36.00,
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: Stack(
+                      alignment: Alignment.centerLeft,
+                      children: [
+                        AppbarImage(
+                          height: getVerticalSize(
+                            36.00,
+                          ),
+                          width: getHorizontalSize(
+                            38.00,
+                          ),
+                          svgPath: ImageConstant.imgContrast,
                         ),
-                        width: getHorizontalSize(
-                          38.00,
+                        AppbarImage(
+                          height: getVerticalSize(
+                            10.00,
+                          ),
+                          width: getHorizontalSize(
+                            5.00,
+                          ),
+                          svgPath: ImageConstant.imgVectorstroke,
+                          margin: getMargin(
+                            left: 15,
+                            top: 13,
+                            right: 18,
+                            bottom: 13,
+                          ),
                         ),
-                        svgPath: ImageConstant.imgContrast,
-                      ),
-                      AppbarImage(
-                        height: getVerticalSize(
-                          10.00,
-                        ),
-                        width: getHorizontalSize(
-                          5.00,
-                        ),
-                        svgPath: ImageConstant.imgVectorstroke,
-                        onTap: () {
-                          Navigator.of(context).pop();
-                        },
-                        margin: getMargin(
-                          left: 15,
-                          top: 13,
-                          right: 18,
-                          bottom: 13,
-                        ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
+                )
               ],
             ),
           ),

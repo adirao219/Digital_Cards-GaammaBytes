@@ -1,4 +1,3 @@
-
 import 'package:digitalcardsgaammabytes/core/app_export.dart';
 import 'package:digitalcardsgaammabytes/core/utils/validation_functions.dart';
 import 'package:digitalcardsgaammabytes/widgets/app_bar/appbar_image.dart';
@@ -10,12 +9,12 @@ import 'package:flutter/material.dart';
 
 // ignore_for_file: must_be_immutable
 class IconGroupScreen extends StatefulWidget {
-  const IconGroupScreen({ super.key});
+  const IconGroupScreen({super.key});
 
-                @override
-                // ignore: library_private_types_in_public_api
-                _IconGroupScreen createState() => _IconGroupScreen();
-            }
+  @override
+  // ignore: library_private_types_in_public_api
+  _IconGroupScreen createState() => _IconGroupScreen();
+}
 
 class _IconGroupScreen extends State<IconGroupScreen> {
   TextEditingController _name2_Controller = new TextEditingController();
@@ -45,35 +44,37 @@ class _IconGroupScreen extends State<IconGroupScreen> {
                       Padding(
                           padding: getPadding(
                               left: 38, top: 43, right: 123, bottom: 14),
-                          child: Row(children: [
-                            Container(
-                                height: getVerticalSize(36.00),
-                                width: getHorizontalSize(38.00),
-                                child: Stack(
-                                    alignment: Alignment.centerLeft,
-                                    children: [
-                                      AppbarImage(
-                                          height: getVerticalSize(36.00),
-                                          width: getHorizontalSize(38.00),
-                                          svgPath: ImageConstant.imgContrast),
-                                      AppbarImage(
-                                          height: getVerticalSize(10.00),
-                                          width: getHorizontalSize(5.00),
-                                          svgPath:
-                                              ImageConstant.imgVectorstroke,
-                                onTap: () {
-                                  Navigator.of(context).pop();
-                                },
-                                          margin: getMargin(
-                                              left: 15,
-                                              top: 13,
-                                              right: 18,
-                                              bottom: 13))
-                                    ])),
-                            AppbarTitle(
-                                text: "lbl_icon_group".tr.toUpperCase(),
-                                margin: getMargin(left: 48, bottom: 8))
-                          ]))
+                          child: GestureDetector(
+                              onTap: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: Row(children: [
+                                Container(
+                                    height: getVerticalSize(36.00),
+                                    width: getHorizontalSize(38.00),
+                                    child: Stack(
+                                        alignment: Alignment.centerLeft,
+                                        children: [
+                                          AppbarImage(
+                                              height: getVerticalSize(36.00),
+                                              width: getHorizontalSize(38.00),
+                                              svgPath:
+                                                  ImageConstant.imgContrast),
+                                          AppbarImage(
+                                              height: getVerticalSize(10.00),
+                                              width: getHorizontalSize(5.00),
+                                              svgPath:
+                                                  ImageConstant.imgVectorstroke,
+                                              margin: getMargin(
+                                                  left: 15,
+                                                  top: 13,
+                                                  right: 18,
+                                                  bottom: 13))
+                                        ])),
+                                AppbarTitle(
+                                    text: "lbl_icon_group".tr.toUpperCase(),
+                                    margin: getMargin(left: 48, bottom: 8))
+                              ])))
                     ])),
                 actions: [
                   AppbarImage(
@@ -368,7 +369,7 @@ class _IconGroupScreen extends State<IconGroupScreen> {
                                           CustomTextFormField(
                                               width: 326,
                                               focusNode: FocusNode(),
-                                              controller:_link7_Controller,
+                                              controller: _link7_Controller,
                                               hintText: "lbl_link_7".tr,
                                               margin: getMargin(top: 17)),
                                           CustomTextFormField(

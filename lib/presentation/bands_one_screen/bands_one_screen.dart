@@ -1,4 +1,3 @@
-
 import 'package:digitalcardsgaammabytes/core/app_export.dart';
 import 'package:digitalcardsgaammabytes/widgets/app_bar/appbar_image.dart';
 import 'package:digitalcardsgaammabytes/widgets/app_bar/appbar_title.dart';
@@ -6,12 +5,12 @@ import 'package:digitalcardsgaammabytes/widgets/app_bar/custom_app_bar.dart';
 import 'package:flutter/material.dart';
 
 class BandsOneScreen extends StatefulWidget {
-  const BandsOneScreen({ super.key});
+  const BandsOneScreen({super.key});
 
-                @override
-                // ignore: library_private_types_in_public_api
-                _BandsOneScreen createState() => _BandsOneScreen();
-            }
+  @override
+  // ignore: library_private_types_in_public_api
+  _BandsOneScreen createState() => _BandsOneScreen();
+}
 
 class _BandsOneScreen extends State<BandsOneScreen> {
   @override
@@ -49,9 +48,9 @@ class _BandsOneScreen extends State<BandsOneScreen> {
                                           svgPath: ImageConstant.imgContrast),
                                       AppbarImage(
                                           height: getVerticalSize(10.00),
-                                onTap: () {
-                                  Navigator.of(context).pop();
-                                },
+                                          onTap: () {
+                                            Navigator.of(context).pop();
+                                          },
                                           width: getHorizontalSize(5.00),
                                           svgPath:
                                               ImageConstant.imgVectorstroke,

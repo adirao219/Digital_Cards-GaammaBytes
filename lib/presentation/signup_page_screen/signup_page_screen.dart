@@ -258,7 +258,11 @@ class _SignupPageScreen extends State<SignupPageScreen> {
                           text: "lbl_sign_in2".tr,
                           margin: getMargin(top: 36),
                           fontStyle: ButtonFontStyle.InterSemiBold14,
-                          onTap: onTapSignin,
+                          // onTap: onTapSignin,
+                          onTap: () {
+                            Navigator.of(context)
+                                .pushNamed(AppRoutes.homePageScreen);
+                          },
                           alignment: Alignment.center),
                       Align(
                           alignment: Alignment.centerLeft,
@@ -511,7 +515,8 @@ class _SignupPageScreen extends State<SignupPageScreen> {
 
         // GlobalVariables.setUserPhotoUrl(googleUserPhotoURL);
 
-        Navigator.of(context).pushNamed(AppRoutes.googlesigninOneScreen,arguments: {"userInfo":_user});
+        Navigator.of(context).pushNamed(AppRoutes.googlesigninOneScreen,
+            arguments: {"userInfo": _user});
       });
     } catch (e) {}
   }

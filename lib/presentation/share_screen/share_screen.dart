@@ -1,4 +1,3 @@
-
 import 'package:digitalcardsgaammabytes/core/app_export.dart';
 import 'package:digitalcardsgaammabytes/widgets/app_bar/appbar_image.dart';
 import 'package:digitalcardsgaammabytes/widgets/app_bar/appbar_title.dart';
@@ -6,12 +5,12 @@ import 'package:digitalcardsgaammabytes/widgets/app_bar/custom_app_bar.dart';
 import 'package:flutter/material.dart';
 
 class ShareScreen extends StatefulWidget {
-  const ShareScreen({ super.key});
+  const ShareScreen({super.key});
 
-                @override
-                // ignore: library_private_types_in_public_api
-                _ShareScreen createState() => _ShareScreen();
-            }
+  @override
+  // ignore: library_private_types_in_public_api
+  _ShareScreen createState() => _ShareScreen();
+}
 
 class _ShareScreen extends State<ShareScreen> {
   @override
@@ -61,37 +60,39 @@ class _ShareScreen extends State<ShareScreen> {
                         margin: getMargin(
                           bottom: 6,
                         ),
-                        child: Stack(
-                          alignment: Alignment.centerLeft,
-                          children: [
-                            AppbarImage(
-                              height: getVerticalSize(
-                                36.00,
+                        child: GestureDetector(
+                          onTap: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: Stack(
+                            alignment: Alignment.centerLeft,
+                            children: [
+                              AppbarImage(
+                                height: getVerticalSize(
+                                  36.00,
+                                ),
+                                width: getHorizontalSize(
+                                  38.00,
+                                ),
+                                svgPath: ImageConstant.imgContrast,
                               ),
-                              width: getHorizontalSize(
-                                38.00,
+                              AppbarImage(
+                                height: getVerticalSize(
+                                  10.00,
+                                ),
+                                width: getHorizontalSize(
+                                  5.00,
+                                ),
+                                svgPath: ImageConstant.imgVectorstroke,
+                                margin: getMargin(
+                                  left: 15,
+                                  top: 13,
+                                  right: 18,
+                                  bottom: 13,
+                                ),
                               ),
-                              svgPath: ImageConstant.imgContrast,
-                            ),
-                            AppbarImage(
-                              height: getVerticalSize(
-                                10.00,
-                              ),
-                              width: getHorizontalSize(
-                                5.00,
-                              ),
-                                onTap: () {
-                                  Navigator.of(context).pop();
-                                },
-                              svgPath: ImageConstant.imgVectorstroke,
-                              margin: getMargin(
-                                left: 15,
-                                top: 13,
-                                right: 18,
-                                bottom: 13,
-                              ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                       AppbarTitle(
