@@ -246,7 +246,7 @@ class _MyProfileScreen extends State<MyProfileScreen> {
                   margin: getMargin(
                     top: 15,
                   ),
-                  textInputType: TextInputType.phone,
+                  textInputType: TextInputType.number,
                   validator: (value) {
                     if (!isValidPhone(value)) {
                       return "Please enter valid phone number";
@@ -269,6 +269,7 @@ class _MyProfileScreen extends State<MyProfileScreen> {
                   margin: getMargin(
                     top: 15,
                   ),
+                  textInputType: TextInputType.name,
                 ),
                 Container(
                   margin: getMargin(
