@@ -406,25 +406,25 @@ class _GoogleSigninRegiterPageScreen
   registerUser() async {
     try {
       var req = {
-        "TypeOfLogin": isPhoneNumber ? "2" : "1",
+        "TypeOfLogin": "1",
         "Email": _emailController.text,
         "PhoneNumber": _phoneController.text,
         "DisplayName": _nameController.text,
-        "Password": "a",
-        "ConfirmPassword": "a",
-        "CoupanCode": _couponCodeController.text
+        "Key": googleUser?.providerData[0].uid,
+        "Password": "Abc@123",
+        "ConfirmPassword": "Abc@123",
+        "CouponCode": _couponCodeController.text
       };
-      PostRegistrationResp resp =
-          await api.createRegistration(requestData: req);
+      PostRegistrationResp resp = await api.createGoogleUser(requestData: req);
       if (resp.isSuccess ?? false) {
         var res = resp.result;
         var userID = res!.userId;
-        var googleDisplayName = googleUser!.displayName ?? '';
-        var googleUseremail = googleUser!.email ?? '';
-        var googleUserToken = googleUser!.uid;
-        var googleUserName = googleUser!.email ?? '';
-        var googleUserPhoneNumber = googleUser!.phoneNumber ?? '';
-        var googleUserPhotoURL = googleUser!.photoURL ?? '';
+        var googleDisplayName = googleUser!.providerData[0].displayName ?? '';
+        var googleUseremail = googleUser!.providerData[0].email ?? '';
+        var googleUserToken = googleUser!.providerData[0].uid;
+        var googleUserName = googleUser!.providerData[0].email ?? '';
+        var googleUserPhoneNumber = googleUser!.providerData[0].phoneNumber ?? '';
+        var googleUserPhotoURL = googleUser!.providerData[0].photoURL ?? '';
 
         GlobalVariables.setUserID(userID ?? '');
         GlobalVariables.setLogin(true);
@@ -434,7 +434,15 @@ class _GoogleSigninRegiterPageScreen
 
         GlobalVariables.setUserPhotoUrl(googleUserPhotoURL);
 
-        Navigator.of(context).pushNamed(AppRoutes.homePageScreen);
+      Get.snackbar('Success', "Welcome to Gaamma Cards",
+            backgroundColor: Color.fromARGB(255, 208, 245, 216),
+            colorText: Colors.green[900],
+            icon: Icon(
+              Icons.done,
+              color: Colors.green[900],
+            ));
+      Navigator.of(context).pushNamedAndRemoveUntil(
+          AppRoutes.homePageScreen, (Route<dynamic> route) => false);
       } else {
         Get.snackbar('Error', resp.errorMessage.toString(),
             backgroundColor: Color.fromARGB(255, 255, 230, 230),

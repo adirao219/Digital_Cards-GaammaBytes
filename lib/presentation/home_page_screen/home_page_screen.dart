@@ -3,6 +3,7 @@ import 'package:digitalcardsgaammabytes/data/globals/globalvariables.dart';
 import 'package:digitalcardsgaammabytes/widgets/app_bar/appbar_image.dart';
 import 'package:digitalcardsgaammabytes/widgets/app_bar/appbar_subtitle.dart';
 import 'package:digitalcardsgaammabytes/widgets/app_bar/custom_app_bar.dart';
+import 'package:digitalcardsgaammabytes/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
@@ -265,21 +266,39 @@ class _HomePageScreen extends State<HomePageScreen> {
                         child: Stack(
                           alignment: Alignment.bottomRight,
                           children: [
-                            CustomImageView(
-                              imagePath: ImageConstant.imgProfiletransparent,
-                              height: getSize(
-                                94.00,
-                              ),
-                              width: getSize(
-                                94.00,
-                              ),
-                              radius: BorderRadius.circular(
-                                getHorizontalSize(
-                                  47.00,
-                                ),
-                              ),
-                              alignment: Alignment.center,
-                            ),
+                            GlobalVariables.userPhotoUrl.isEmpty
+                                ? CustomImageView(
+                                    imagePath:
+                                        ImageConstant.imgProfiletransparent,
+                                    height: getSize(
+                                      94.00,
+                                    ),
+                                    width: getSize(
+                                      94.00,
+                                    ),
+                                    radius: BorderRadius.circular(
+                                      getHorizontalSize(
+                                        47.00,
+                                      ),
+                                    ),
+                                    alignment: Alignment.center,
+                                  )
+                                : CustomImageView(
+                                    // imagePath: ImageConstant.imgProfiletransparent,
+                                    url: GlobalVariables.userPhotoUrl,
+                                    height: getSize(
+                                      90.00,
+                                    ),
+                                    width: getSize(
+                                      90.00,
+                                    ),
+                                    radius: BorderRadius.circular(
+                                      getHorizontalSize(
+                                        50.00,
+                                      ),
+                                    ),
+                                    alignment: Alignment.center,
+                                  ),
                             CustomImageView(
                               svgPath: ImageConstant.imgEdit,
                               height: getSize(
@@ -513,7 +532,9 @@ class _HomePageScreen extends State<HomePageScreen> {
                                   textAlign: TextAlign.left,
                                   style: AppStyle.txtNunitoSansSemiBold16,
                                 ),
-                                onTap: onTapLogout,
+                                onTap: () {
+                                  showAlertDialog(context);
+                                },
                               )
                             ])),
                       ],
@@ -525,6 +546,33 @@ class _HomePageScreen extends State<HomePageScreen> {
           ],
         ),
       ),
+    );
+  }
+
+  showAlertDialog(BuildContext context) {
+    // set up the button
+    Widget okButton = TextButton(
+      child: Text("Yes"),
+      onPressed: onTapLogout,
+    );
+    Widget cancelButtonn = TextButton(
+      child: Text("Cancel"),
+      onPressed: () {
+        Navigator.pop(context);
+      },
+    );
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text("Logout"),
+      content: Text("Are you sure you want to logout?"),
+      actions: [okButton, cancelButtonn],
+    );
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
     );
   }
 
@@ -542,9 +590,16 @@ class _HomePageScreen extends State<HomePageScreen> {
     GlobalVariables.setUserID("");
     GlobalVariables.setDisplayname("");
     GlobalVariables.setUserName("");
-
+    GlobalVariables.setGoogleLoggedIn(false);
+    GlobalVariables.setUserPhotoUrl("");
     // Navigator.of(context).pushAndRemoveUntil(AppRoutes.signupPageScreen);
-
+ Get.snackbar('Success', "Logged out successfully!",
+            backgroundColor: Color.fromARGB(255, 208, 245, 216),
+            colorText: Colors.green[900],
+            icon: Icon(
+              Icons.done,
+              color: Colors.green[900],
+            ));
     Navigator.of(context).pushNamedAndRemoveUntil(
         AppRoutes.signupPageScreen, (Route<dynamic> route) => false);
   }

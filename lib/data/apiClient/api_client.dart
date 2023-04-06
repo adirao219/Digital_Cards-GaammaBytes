@@ -287,6 +287,49 @@ class ApiClient extends GetConnect {
       rethrow;
     }
   }
+ 
+  Future<PostLoginResp> checkGoogleUser(
+      {Map<String, dynamic> queryParams = const {}}) async {
+    ProgressDialogUtils.showProgressDialog();
+    try {
+      await isNetworkConnected();
+      Response response =
+          await httpClient.get('$url/API/GetUserDataGmail', query: queryParams);
+      ProgressDialogUtils.hideProgressDialog();
+      if (_isSuccessCall(response)) {
+        return PostLoginResp.fromJson(response.body);
+      } else {
+        throw response.body != null
+            ? PostLoginResp.fromJson(response.body)
+            : 'Something Went Wrong!';
+      }
+    } catch (error, stackTrace) {
+      ProgressDialogUtils.hideProgressDialog();
+      Logger.log(error, stackTrace: stackTrace);
+      rethrow;
+    }
+  }
+  
+  Future<PostRegistrationResp> createGoogleUser({Map requestData = const {}}) async {
+    ProgressDialogUtils.showProgressDialog();
+    try {
+      await isNetworkConnected();
+      Response response =
+          await httpClient.post('$url/API/RegistrationGmail', body: requestData);
+      ProgressDialogUtils.hideProgressDialog();
+      if (_isSuccessCall(response)) {
+        return PostRegistrationResp.fromJson(response.body);
+      } else {
+        throw response.body != null
+            ? PostRegistrationResp.fromJson(response.body)
+            : 'Something Went Wrong!';
+      }
+    } catch (error, stackTrace) {
+      ProgressDialogUtils.hideProgressDialog();
+      Logger.log(error, stackTrace: stackTrace);
+      rethrow;
+    }
+  }
 
   Future<GetValidateCouponCodeResp> fetchValidateCouponCode(
       {Map<String, dynamic> queryParams = const {}}) async {

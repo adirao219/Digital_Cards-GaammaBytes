@@ -47,6 +47,7 @@ class _SignupPageScreen extends State<SignupPageScreen> {
   String googleUserPhoneNumber = "";
   String googleUserPhotoURL = "";
 
+  ApiClient api = new ApiClient();
   @override
   void initState() {
     AuthService.instance.initAuth();
@@ -179,7 +180,7 @@ class _SignupPageScreen extends State<SignupPageScreen> {
                                 )),
                             const SizedBox(height: 35),
                             TextFormField(
-                              obscureText: true,
+                                obscureText: true,
                                 autovalidateMode:
                                     AutovalidateMode.onUserInteraction,
                                 // validator: (text) {
@@ -203,7 +204,6 @@ class _SignupPageScreen extends State<SignupPageScreen> {
 
                                 controller: _passwordController,
                                 decoration: InputDecoration(
-                                  
                                   labelText: "lbl_password3".tr,
                                   labelStyle: AppStyle.txtNunitoSansRegular12
                                       .copyWith(
@@ -260,7 +260,7 @@ class _SignupPageScreen extends State<SignupPageScreen> {
                           text: "lbl_sign_in2".tr,
                           margin: getMargin(top: 36),
                           fontStyle: ButtonFontStyle.InterSemiBold14,
-                           onTap: onTapSignin,
+                          onTap: onTapSignin,
                           // onTap: () {
                           //   Navigator.of(context)
                           //       .pushNamed(AppRoutes.homePageScreen);
@@ -398,64 +398,11 @@ class _SignupPageScreen extends State<SignupPageScreen> {
     }
   }
 
-  onTapRowgooglelogoone1() async {
-    await GoogleAuthHelper().googleSignInProcess().then((googleUser) {
-      if (googleUser != null) {
-        print(googleUser.toString());
-        print("s");
-        //TODO Actions to be performed after signin
-      } else {
-        Get.snackbar('Error', 'user data is empty',
-            backgroundColor: Color.fromARGB(255, 255, 230, 230),
-            colorText: Colors.red[900],
-            icon: Icon(
-              Icons.error,
-              color: Colors.red[900],
-            ));
-      }
-    }).catchError((er) {
-      Get.snackbar('Error', er.toString(),
-          backgroundColor: Color.fromARGB(255, 255, 230, 230),
-          colorText: Colors.red[900],
-          icon: Icon(
-            Icons.error,
-            color: Colors.red[900],
-          ));
-    });
-  }
-
-  Future onTapRowgooglelogoone() async {
-    await GoogleSignInApi.login().then((googleUser) {
-      if (googleUser != null) {
-        print(googleUser.toString());
-        print("s");
-        //TODO Actions to be performed after signin
-      } else {
-        Get.snackbar('Error', 'user data is empty',
-            backgroundColor: Color.fromARGB(255, 255, 230, 230),
-            colorText: Colors.red[900],
-            icon: Icon(
-              Icons.error,
-              color: Colors.red[900],
-            ));
-      }
-    }).catchError((onError) {
-      Get.snackbar('Error', onError.toString(),
-          backgroundColor: Color.fromARGB(255, 255, 230, 230),
-          colorText: Colors.red[900],
-          icon: Icon(
-            Icons.error,
-            color: Colors.red[900],
-          ));
-    });
-  }
-
   onTapTxtForgotpassword2() {
     Navigator.of(context).pushNamed(AppRoutes.forgotPasswordoneScreen);
   }
 
   onTapSignin() async {
-    ApiClient api = new ApiClient();
     bool isEmail = false;
     try {
       isEmail = RegExp(
@@ -483,8 +430,8 @@ class _SignupPageScreen extends State<SignupPageScreen> {
       GlobalVariables.setUserName(_phoneController.text);
       GlobalVariables.setUserPhotoUrl(userPhoto);
 
-    Navigator.of(context).pushNamedAndRemoveUntil(
-        AppRoutes.homePageScreen, (Route<dynamic> route) => false);
+      Navigator.of(context).pushNamedAndRemoveUntil(
+          AppRoutes.homePageScreen, (Route<dynamic> route) => false);
     } else {
       Get.snackbar('Error', resp.errorMessage.toString(),
           backgroundColor: Color.fromARGB(255, 255, 230, 230),
@@ -500,27 +447,42 @@ class _SignupPageScreen extends State<SignupPageScreen> {
     String userID = "";
 
     try {
+      var req = {
+        "Email": _user!.providerData[0].email ?? '',
+        "Key": _user.providerData[0].uid,
+      };
 //Call api and Check Already Registerd, if already registed, then excute below
+      PostLoginResp resp = await api.checkGoogleUser(queryParams: req);
+      if (resp.isSuccess ?? false) {
+        setState(() {
+          googleUserName = _user.providerData[0].displayName ?? '';
+          googleUseremail = _user.providerData[0].email ?? '';
+          googleUserToken = _user.providerData[0].uid??'';
+          googleUserName = _user.providerData[0].email ?? '';
+          googleUserPhoneNumber = _user.providerData[0].phoneNumber ?? '';
+          googleUserPhotoURL = _user.providerData[0].photoURL ?? '';
 
-      setState(() {
-        // googleUserName = _user!.displayName ?? '';
-        // googleUseremail = _user.email ?? '';
-        // googleUserToken = _user.uid;
-        // googleUserName = _user.email ?? '';
-        // googleUserPhoneNumber = _user.phoneNumber ?? '';
-        // googleUserPhotoURL = _user.photoURL ?? '';
+          GlobalVariables.setUserID(userID);
+          GlobalVariables.setLogin(true);
+          GlobalVariables.setGoogleLoggedIn(true);
+          GlobalVariables.setDisplayname(googleUserName);
+          GlobalVariables.setUserName(googleUseremail);
 
-        // GlobalVariables.setUserID(userID);
-        // GlobalVariables.setLogin(true);
-        // GlobalVariables.setGoogleLoggedIn(true);
-        // GlobalVariables.setDisplayname(googleUserName);
-        // GlobalVariables.setUserName(googleUseremail);
-
-        // GlobalVariables.setUserPhotoUrl(googleUserPhotoURL);
-
+          GlobalVariables.setUserPhotoUrl(googleUserPhotoURL);
+           Get.snackbar('Success',  "Welcome to Gaamma Cards",
+            backgroundColor: Color.fromARGB(255, 208, 245, 216),
+            colorText: Colors.green[900],
+            icon: Icon(
+              Icons.done,
+              color: Colors.green[900],
+            ));
+      Navigator.of(context).pushNamedAndRemoveUntil(
+          AppRoutes.homePageScreen, (Route<dynamic> route) => false);
+        });
+      } else {
         Navigator.of(context).pushNamed(AppRoutes.googlesigninOneScreen,
             arguments: {"userInfo": _user});
-      });
+      }
     } catch (e) {}
   }
 
