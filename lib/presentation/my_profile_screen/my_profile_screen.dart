@@ -21,23 +21,23 @@ class MyProfileScreen extends StatefulWidget {
 }
 
 class _MyProfileScreen extends State<MyProfileScreen> {
-  TextEditingController _name_Controller = new TextEditingController();
-  TextEditingController _email_id4_Controller = new TextEditingController();
-  TextEditingController _place_Controller = new TextEditingController();
-  TextEditingController _phone_number_Controller = new TextEditingController();
-  TextEditingController _language_Controller = new TextEditingController();
-  TextEditingController _registered_on_Controller = new TextEditingController();
-  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  ApiClient api = new ApiClient();
   int? mainId;
   ProfileResult result = new ProfileResult(
       countryList: [], languageIdList: [], countryCodeList: []);
 
-  String? selectedContryCode;
   String? selectedContry;
-
+  String? selectedContryCode;
   int? selectedLanguage;
 
-  ApiClient api = new ApiClient();
+  TextEditingController _email_id4_Controller = new TextEditingController();
+  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  TextEditingController _language_Controller = new TextEditingController();
+  TextEditingController _name_Controller = new TextEditingController();
+  TextEditingController _phone_number_Controller = new TextEditingController();
+  TextEditingController _place_Controller = new TextEditingController();
+  TextEditingController _registered_on_Controller = new TextEditingController();
+
   @override
   void initState() {
     getProfileDetails();

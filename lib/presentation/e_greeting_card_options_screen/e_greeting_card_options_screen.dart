@@ -53,36 +53,38 @@ class _EGreetingCardOptionsScreen extends State<EGreetingCardOptionsScreen> {
               height: getVerticalSize(108.00),
               centerTitle: true,
               title: Container(
-                  height: getVerticalSize(94.00),
-                  width: size.width,
-                  child: Stack(children: [
-                    AppbarImage(
-                        height: getVerticalSize(94.00),
-                        width: getHorizontalSize(375.00),
-                        imagePath: ImageConstant.imgVectorDeepOrangeA100),
-                    Container(
-                        height: getVerticalSize(36.00),
-                        width: getHorizontalSize(38.00),
-                        margin: getMargin(
-                            left: 38, top: 44, right: 299, bottom: 14),
-                        child:
-                            Stack(alignment: Alignment.centerLeft, children: [
-                          AppbarImage(
-                              height: getVerticalSize(36.00),
-                              width: getHorizontalSize(38.00),
-                              svgPath: ImageConstant.imgContrast,
-                              onTap: onTapContrast5),
-                          AppbarImage(
-                              height: getVerticalSize(10.00),
-                              width: getHorizontalSize(5.00),
-                              svgPath: ImageConstant.imgVectorstroke,
-                              onTap: () {
-                                Navigator.of(context).pop();
-                              },
-                              margin: getMargin(
-                                  left: 15, top: 13, right: 18, bottom: 13))
-                        ]))
-                  ])),
+                height: getVerticalSize(94.00),
+                width: size.width,
+                child: GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: Stack(children: [
+                      AppbarImage(
+                          height: getVerticalSize(94.00),
+                          width: getHorizontalSize(375.00),
+                          imagePath: ImageConstant.imgVectorDeepOrangeA100),
+                      Container(
+                          height: getVerticalSize(36.00),
+                          width: getHorizontalSize(38.00),
+                          margin: getMargin(
+                              left: 38, top: 44, right: 299, bottom: 14),
+                          child:
+                              Stack(alignment: Alignment.centerLeft, children: [
+                            AppbarImage(
+                                height: getVerticalSize(36.00),
+                                width: getHorizontalSize(38.00),
+                                svgPath: ImageConstant.imgContrast,
+                                onTap: onTapContrast5),
+                            AppbarImage(
+                                height: getVerticalSize(10.00),
+                                width: getHorizontalSize(5.00),
+                                svgPath: ImageConstant.imgVectorstroke,
+                                margin: getMargin(
+                                    left: 15, top: 13, right: 18, bottom: 13))
+                          ]))
+                    ])),
+              ),
               // actions: [
               //   AppbarImage(
               //       height: getVerticalSize(35.00),
@@ -150,7 +152,6 @@ class _EGreetingCardOptionsScreen extends State<EGreetingCardOptionsScreen> {
         child: Container(
             width: getHorizontalSize(148.00),
             margin: getMargin(left: 15, top: 4, bottom: 5),
-            
             padding: getPadding(left: 5, top: 5, right: 5, bottom: 5),
             decoration: getDecorationBox(random.nextInt(6)),
             child: Column(
@@ -170,7 +171,9 @@ class _EGreetingCardOptionsScreen extends State<EGreetingCardOptionsScreen> {
                       radius: BorderRadius.circular(15),
                       // height: getVerticalSize(49.00),
                       // width: getHorizontalSize(129.00),
-                      margin: getMargin(top: 5, ))
+                      margin: getMargin(
+                        top: 5,
+                      ))
                 ])));
   }
 
@@ -195,19 +198,18 @@ class _EGreetingCardOptionsScreen extends State<EGreetingCardOptionsScreen> {
       case 5:
         return AppDecoration.fillDeeporangeA100a3
             .copyWith(borderRadius: BorderRadiusStyle.roundedBorder5);
-      
+
       default:
         return AppDecoration.fillLightblue50
             .copyWith(borderRadius: BorderRadiusStyle.roundedBorder5);
     }
   }
 
-
   onTapGreetingType(int index) {
     var typeID = greetingTypes[index].typeID;
     var typeName = greetingTypes[index].typeName;
     Navigator.of(context).pushNamed(AppRoutes.basicGreetingEntryScreen,
-        arguments: {"Type": typeID,"TypeName":typeName, "SelectedCardID": 0});
+        arguments: {"Type": typeID, "TypeName": typeName, "SelectedCardID": 0});
   }
 
   onTapContrast5() {
