@@ -13,6 +13,11 @@ class GlobalVariables {
   static String userPhotoUrl = "";
   static String currentLanguage = "1";
 
+  
+  static String tempCaptionContent = "";
+  static String tempMessageContent = "";
+  static String tempSenderContent = "";
+
   static init() {
     SharedPreferences.getInstance().then((value) {
       isLoggedIn = value.getBool("isLoggedIn") ?? false;

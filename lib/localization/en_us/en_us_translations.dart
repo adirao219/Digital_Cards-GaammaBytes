@@ -184,7 +184,7 @@ final Map<String, String> enUs = {
   "lbl_next": "Next",
   "lbl_band_map": "Band_Map",
   "lbl_band_video": "Band_Video",
-  "msg_create_e_greeting": "+ Create E-Greeting Card",
+  "msg_create_e_greeting": " Create E-Greeting Card",
   "lbl4": ")",
   "lbl2": "*",
   "lbl_mobile_no": "Mobile No",

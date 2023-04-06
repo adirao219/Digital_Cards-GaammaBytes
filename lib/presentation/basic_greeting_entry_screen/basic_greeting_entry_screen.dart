@@ -10,6 +10,8 @@ import 'package:digitalcardsgaammabytes/widgets/custom_text_form_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
+import 'package:flutter_widget_from_html/flutter_widget_from_html.dart'
+    as htmlwidget;
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 
@@ -55,6 +57,9 @@ class _BasicGreetingEntryScreen extends State<BasicGreetingEntryScreen> {
   var greetingCardTypeName = Get.arguments["TypeName"] as String?;
   String templateName = "";
 
+String? captionDefault="";
+String? messageDefault="";
+String? senderDefault="";
   bool? isUserDefinedBackground;
   String templateID = "";
   @override
@@ -62,6 +67,9 @@ class _BasicGreetingEntryScreen extends State<BasicGreetingEntryScreen> {
     if (selectedCardID != 0) {
       getCardDetails();
     }
+    _message_Controller.text = "Click here to update the content";
+    _caption_Controller.text = "Click here to update the content";
+    _sender_Controller.text = "Click here to update the content";
     super.initState();
   }
 
@@ -169,39 +177,108 @@ class _BasicGreetingEntryScreen extends State<BasicGreetingEntryScreen> {
                               //     controller: _template_Controller,
                               //     hintText: "lbl_template".tr,
                               //     margin: getMargin(top: 30)),
-                              CustomTextFormField(
-                                  width: 326,
-                                  focusNode: FocusNode(),
-                                  controller: _caption_Controller,
-                                  hintText: "lbl_caption".tr,
-                                  textInputType: TextInputType.text,
-                                  textCapitalization: TextCapitalization.words,
-                                  margin: getMargin(top: 19)),
-                              Row(
+
+                              Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Container(
+                                        margin: getMargin(
+                                          top: 15,
+                                        ),
+                                        child: Text("lbl_caption".tr,
+                                            style: AppStyle
+                                                .txtNotoSerifTeluguRegular12)),
+                                    GestureDetector(
+                                        child: Row(children: [
+                                          CustomTextFormField(
+                                              width: 285,
+                                              isEnabled: false,
+                                              focusNode: FocusNode(),
+                                              controller: _caption_Controller,
+                                              hintText: "lbl_caption".tr,
+                                              textInputType: TextInputType.text,
+                                              textCapitalization:
+                                                  TextCapitalization.words,
+                                              margin: getMargin(top: 5)),
+                                          IconButton(
+                                              onPressed: (){ goToHTMLEditor(0);},
+                                              icon: Icon(
+                                                Icons.edit,
+                                                color: Color.fromARGB(
+                                                    255, 97, 8, 8),
+                                              )),
+                                        ]),
+                                        onTap:(){ goToHTMLEditor(0);}),
+                                  ]),
+
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  CustomTextFormField(
-                                      width: 285,
-                                      maxLines: 4,
-                                      focusNode: FocusNode(),
-                                      controller: _message_Controller,
-                                      hintText: "lbl_message".tr,
-                                      margin: getMargin(top: 19)),
-                                  IconButton(
-                                      onPressed: goToHTMLEditor,
-                                      icon: Icon(
-                                        Icons.edit,
-                                        color: Color.fromARGB(255, 97, 8, 8),
-                                      ))
+                                  Container(
+                                      margin: getMargin(
+                                        top: 15,
+                                      ),
+                                      child: Text("lbl_message".tr,
+                                          style: AppStyle
+                                              .txtNotoSerifTeluguRegular12)),
+                                  GestureDetector(
+                                      child: Row(children: [
+                                        CustomTextFormField(
+                                            width: 285,
+                                            fontStyle: TextFormFieldFontStyle
+                                                .NunitoSansRegular14,
+                                            focusNode: FocusNode(),
+                                            isEnabled: false,
+                                            controller: _message_Controller,
+                                            hintText: "lbl_message".tr,
+                                            margin: getMargin(top: 10)),
+                                        IconButton(
+                                            onPressed:(){ goToHTMLEditor(1);},
+                                            icon: Icon(
+                                              Icons.edit,
+                                              color:
+                                                  Color.fromARGB(255, 97, 8, 8),
+                                            )),
+                                      ]),
+                                      onTap:(){ goToHTMLEditor(1);}),
                                 ],
                               ),
 
-                              CustomTextFormField(
-                                  width: 326,
-                                  focusNode: FocusNode(),
-                                  controller: _sender_Controller,
-                                  hintText: "lbl_sender".tr,
-                                  textCapitalization: TextCapitalization.words,
-                                  margin: getMargin(top: 19, bottom: 10)),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Container(
+                                      margin: getMargin(
+                                        top: 15,
+                                      ),
+                                      child: Text("lbl_sender".tr,
+                                          style: AppStyle
+                                              .txtNotoSerifTeluguRegular12)),
+                                  GestureDetector(
+                                      child: Row(children: [
+                                        CustomTextFormField(
+                                            width: 285,
+                                            isEnabled: false,
+                                            focusNode: FocusNode(),
+                                            controller: _sender_Controller,
+                                            hintText: "lbl_sender".tr,
+                                            textCapitalization:
+                                                TextCapitalization.words,
+                                            margin:
+                                                getMargin(top: 10, bottom: 10)),
+                                        IconButton(
+                                            onPressed:(){ goToHTMLEditor(2);},
+                                            padding: getPadding(all: 0),
+                                            icon: Icon(
+                                              Icons.edit,
+                                              color:
+                                                  Color.fromARGB(255, 97, 8, 8),
+                                            ))
+                                      ]),
+                                      onTap: (){ goToHTMLEditor(2);}),
+                                ],
+                              ),
+
                               Padding(
                                   padding: getPadding(left: 0),
                                   child: Row(
@@ -422,12 +499,12 @@ class _BasicGreetingEntryScreen extends State<BasicGreetingEntryScreen> {
                               //               ButtonFontStyle.InterSemiBold14,
                               //           alignment: Alignment.topRight)
                               //     ])),
-                              CustomButton(
-                                  height: 40,
-                                  width: 250,
-                                  text: "lbl_next".tr,
-                                  margin: getMargin(left: 40, top: 45),
-                                  onTap: createGreeting),
+                              // CustomButton(
+                              //     height: 40,
+                              //     width: 250,
+                              //     text: "lbl_next".tr,
+                              //     margin: getMargin(left: 40, top: 45),
+                              //     onTap: createGreeting),
                             ])))),
             bottomNavigationBar: CustomBottomBar(
                 onNextClicked: createGreeting,
@@ -441,6 +518,12 @@ class _BasicGreetingEntryScreen extends State<BasicGreetingEntryScreen> {
       templateID = value['selectedTemplateID'];
       setState(() {
         templateName = value['selectedTemplateName'];
+        
+        captionDefault = value['captionDefault'];
+        
+        messageDefault= value['messageDefault'];
+        
+       senderDefault = value['senderDefault'];
 
         isUserDefinedBackground = value['isUserBackground'] as bool?;
       });
@@ -548,15 +631,23 @@ class _BasicGreetingEntryScreen extends State<BasicGreetingEntryScreen> {
     Navigator.of(context).pushNamed(AppRoutes.eGreetingCardOptionsScreen);
   }
 
-  goToHTMLEditor() {
+  goToHTMLEditor(int initialIndex) {
+    // GlobalVariables.tempCaptionContent = captionDefault??"";
+    // GlobalVariables.tempMessageContent = messageDefault??"";
+    // GlobalVariables.tempSenderContent = senderDefault??"";
+    
     Get.toNamed(AppRoutes.htmlEditor,
-        arguments: {"currentContent": _message_Controller.text})?.then((value) {
-      var htmlContent = value['htmlContent'];
+        arguments: {"initialIndex":initialIndex,"captionContent": captionDefault,"messageContent":messageDefault,"senderContent":senderDefault})?.then((value) {
+      var messageContent = value['messageContent'];
+        var captionContent = value['captionContent'];
+          var senderContent = value['senderContent'];
       setState(() {
-        _message_Controller.text = htmlContent;
+        messageDefault = messageContent;
+        captionDefault= captionContent;
+        senderDefault = senderContent;
       });
     });
-    Navigator.of(context).pushNamed(AppRoutes.htmlEditor).then((value) => null);
+    // Navigator.of(context).pushNamed(AppRoutes.htmlEditor).then((value) => null);
   }
 
   createGreeting() async {
@@ -564,13 +655,13 @@ class _BasicGreetingEntryScreen extends State<BasicGreetingEntryScreen> {
       var req = {
         "UserIdString": GlobalVariables.userID,
         "Id": selectedCardID,
-        "TypeID": 9,
+        "TypeID": greetingType,
         "LanguageID": GlobalVariables.currentLanguage,
         "TemplateID": templateID,
         "GreetingStatus": selectedCardID == 0 ? 1 : 1,
-        "Caption": _caption_Controller.text,
-        "Message": _message_Controller.text,
-        "Sender": _sender_Controller.text,
+        "Caption": captionDefault!.replaceAll('"', '\\"'),
+        "Message": messageDefault!.replaceAll('"', '\\"'),
+        "Sender": senderDefault!.replaceAll('"', '\\"'),
         "files": {"Logo": firstImageBase64, "Picture": secondImageBase64}
       };
       PostCreateGreetingResp resp =
@@ -608,11 +699,11 @@ class _BasicGreetingEntryScreen extends State<BasicGreetingEntryScreen> {
           await api.fetchGetCreateGreeting(queryParams: req);
       if (resp.isSuccess ?? false) {
         setState(() {
-          _caption_Controller.text = resp.result?.greetingDetailsData?.caption;
+         captionDefault= resp.result?.greetingDetailsData?.caption;
 
-          _message_Controller.text = resp.result?.greetingDetailsData?.message;
+          messageDefault = resp.result?.greetingDetailsData?.message;
 
-          _sender_Controller.text = resp.result?.greetingDetailsData?.sender;
+          senderDefault = resp.result?.greetingDetailsData?.sender;
           templateName = resp.result?.greetingDetailsData?.templateName;
           templateID =
               resp.result?.greetingDetailsData?.templateID.toString() ?? '';

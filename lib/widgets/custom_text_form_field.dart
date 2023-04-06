@@ -20,6 +20,7 @@ class CustomTextFormField extends StatelessWidget {
       this.prefix,
       this.prefixConstraints,
       this.suffix,
+      this.isEnabled=true,
       this.suffixConstraints,
       this.onChanged,
       this.validator});
@@ -53,6 +54,7 @@ TextCapitalization? textCapitalization;
   String? hintText;
 
   Widget? prefix;
+  bool isEnabled ;
 
   BoxConstraints? prefixConstraints;
 
@@ -77,6 +79,7 @@ TextCapitalization? textCapitalization;
       width: getHorizontalSize(width ?? 0),
       margin: margin,
       child: TextFormField(
+        enabled: isEnabled,
         controller: controller,
         focusNode: focusNode,
         style: _setFontStyle(),

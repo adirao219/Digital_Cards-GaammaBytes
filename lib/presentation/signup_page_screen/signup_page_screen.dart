@@ -179,6 +179,7 @@ class _SignupPageScreen extends State<SignupPageScreen> {
                                 )),
                             const SizedBox(height: 35),
                             TextFormField(
+                              obscureText: true,
                                 autovalidateMode:
                                     AutovalidateMode.onUserInteraction,
                                 // validator: (text) {
@@ -202,6 +203,7 @@ class _SignupPageScreen extends State<SignupPageScreen> {
 
                                 controller: _passwordController,
                                 decoration: InputDecoration(
+                                  
                                   labelText: "lbl_password3".tr,
                                   labelStyle: AppStyle.txtNunitoSansRegular12
                                       .copyWith(
@@ -258,11 +260,11 @@ class _SignupPageScreen extends State<SignupPageScreen> {
                           text: "lbl_sign_in2".tr,
                           margin: getMargin(top: 36),
                           fontStyle: ButtonFontStyle.InterSemiBold14,
-                          // onTap: onTapSignin,
-                          onTap: () {
-                            Navigator.of(context)
-                                .pushNamed(AppRoutes.homePageScreen);
-                          },
+                           onTap: onTapSignin,
+                          // onTap: () {
+                          //   Navigator.of(context)
+                          //       .pushNamed(AppRoutes.homePageScreen);
+                          // },
                           alignment: Alignment.center),
                       Align(
                           alignment: Alignment.centerLeft,
@@ -481,7 +483,8 @@ class _SignupPageScreen extends State<SignupPageScreen> {
       GlobalVariables.setUserName(_phoneController.text);
       GlobalVariables.setUserPhotoUrl(userPhoto);
 
-      Navigator.of(context).pushNamed(AppRoutes.homePageScreen);
+    Navigator.of(context).pushNamedAndRemoveUntil(
+        AppRoutes.homePageScreen, (Route<dynamic> route) => false);
     } else {
       Get.snackbar('Error', resp.errorMessage.toString(),
           backgroundColor: Color.fromARGB(255, 255, 230, 230),

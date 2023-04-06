@@ -1,3 +1,6 @@
+import 'package:buttons_tabbar/buttons_tabbar.dart';
+import 'package:digitalcardsgaammabytes/core/app_export.dart';
+import 'package:digitalcardsgaammabytes/data/globals/globalvariables.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -13,14 +16,100 @@ class HtmlEditorScreen extends StatefulWidget {
 
 class _HtmlEditorScreenState extends State<HtmlEditorScreen> {
   String result = '';
-  final HtmlEditorController controller = HtmlEditorController();
+
+  int currentIndex = 0;
+  int previousIndex = 0;
+  final HtmlEditorController _captioncontroller = HtmlEditorController();
+  final HtmlEditorController _messagecontroller = HtmlEditorController();
+  final HtmlEditorController _sendercontroller = HtmlEditorController();
   // String htmlContent="";
-  String htmlContent = "";
+  var initialIndex = Get.arguments["initialIndex"] as int?;
+  var captionContent = Get.arguments["captionContent"] as String?;
+  var messageContent = Get.arguments["messageContent"] as String?;
+  var senderContent = Get.arguments["senderContent"] as String?;
 
   @override
   void initState() {
-    controller.setText(htmlContent);
+    // captionContent =GlobalVariables.tempCaptionContent;
+    // senderContent =GlobalVariables.tempMessageContent;
+    // messageContent =GlobalVariables.tempSenderContent;
+currentIndex = initialIndex??0;
     super.initState();
+  }
+
+  void getLastTabContent() {
+    switch (currentIndex) {
+      case 0:
+        _captioncontroller.getText().then((value) {
+          captionContent = value;
+          Navigator.pop(context, {
+            "messageContent": messageContent,
+            "captionContent": captionContent,
+            "senderContent": senderContent
+          });
+        });
+        break;
+
+      case 1:
+        _messagecontroller.getText().then((value) {
+          messageContent = value;
+          Navigator.pop(context, {
+            "messageContent": messageContent,
+            "captionContent": captionContent,
+            "senderContent": senderContent
+          });
+        });
+        break;
+      case 2:
+        _sendercontroller.getText().then((value) {
+          senderContent = value;
+          Navigator.pop(context, {
+            "messageContent": messageContent,
+            "captionContent": captionContent,
+            "senderContent": senderContent
+          });
+        });
+        break;
+    }
+  }
+
+  void getPrviousData() {
+    setState(() {
+      switch (previousIndex) {
+        case 0:
+          _captioncontroller.getText().then((value) {
+            captionContent = value;
+          });
+          break;
+
+        case 1:
+          _messagecontroller.getText().then((value) {
+            messageContent = value;
+          });
+          break;
+        case 2:
+          _sendercontroller.getText().then((value) {
+            senderContent = value;
+          });
+          break;
+      }
+    });
+  }
+
+  setCurrentData() {
+    setState(() {
+      switch (currentIndex) {
+        case 0:
+          _captioncontroller.setText(captionContent ?? '');
+          break;
+        case 1:
+          _messagecontroller.setText(messageContent ?? '');
+          break;
+        case 2:
+          _sendercontroller.setText(senderContent ?? '');
+          break;
+      }
+    });
   }
 
   @override
@@ -28,7 +117,7 @@ class _HtmlEditorScreenState extends State<HtmlEditorScreen> {
     return GestureDetector(
       onTap: () {
         if (!kIsWeb) {
-          controller.clearFocus();
+          _captioncontroller.clearFocus();
         }
       },
       child: Scaffold(
@@ -41,24 +130,46 @@ class _HtmlEditorScreenState extends State<HtmlEditorScreen> {
             IconButton(
                 icon: Icon(Icons.done_all),
                 onPressed: () async {
+                  getLastTabContent();
                   // if (kIsWeb) {
                   //   controller.reloadWeb();
                   // } else {
                   //   controller.editorController!.reload();
                   // }
 
-                  Navigator.pop(context);
-                  var txt = await controller.getText();
-                  htmlContent = txt;
-                  if (txt.contains('src=\"data:')) {
-                    txt =
-                        '<text removed due to base-64 data, displaying the text could cause the app to crash>';
-                  }
-                  setState(() {
-                    result = txt;
-                  });
+                  // Navigator.pop(context);
 
-                  Navigator.pop(context, {"htmlContent": htmlContent});
+                  // var txt = "";
+                  // var txt2 = "";
+                  // var txt3 = "";
+                  // switch (currentIndex) {
+                  //   case 0:
+                  //     txt = await _captioncontroller.getText();
+                  //     break;
+
+                  //   case 1:
+                  //     txt2 = await _messagecontroller.getText();
+                  //     break;
+
+                  //   case 2:
+                  //     txt3 = await _sendercontroller.getText();
+                  //     break;
+                  // }
+                  // messageContent = txt;
+                  // if (txt.contains('src=\"data:')) {
+                  //   txt =
+                  //       '<text removed due to base-64 data, displaying the text could cause the app to crash>';
+                  // } if (txt2.contains('src=\"data:')) {
+                  //   txt2 =
+                  //       '<text removed due to base-64 data, displaying the text could cause the app to crash>';
+                  // }
+                  //  if (txt.contains('src=\"data:')) {
+                  //   txt =
+                  //       '<text removed due to base-64 data, displaying the text could cause the app to crash>';
+                  // }
+                  // setState(() {
+                  //   result = txt;
+                  // });
                 })
           ],
         ),
@@ -66,77 +177,131 @@ class _HtmlEditorScreenState extends State<HtmlEditorScreen> {
           backgroundColor: Color.fromARGB(255, 97, 8, 8),
           foregroundColor: Colors.white,
           onPressed: () {
-            controller.toggleCodeView();
+            switch (currentIndex) {
+              case 0:
+                _captioncontroller.toggleCodeView();
+                break;
+
+              case 1:
+                _messagecontroller.toggleCodeView();
+                break;
+
+              case 2:
+                _sendercontroller.toggleCodeView();
+                break;
+            }
           },
           child: Text(r'<\>',
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
         ),
-        body: SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              HtmlEditor(
-                controller: controller,
-                htmlEditorOptions: HtmlEditorOptions(
-                  hint: 'Your text here...',
-                  shouldEnsureVisible: true,
-
-                  //initialText: "<p>text content initial, if any</p>",
+        body: SafeArea(
+          child: DefaultTabController(
+            initialIndex: initialIndex ?? 0,
+            length: 3,
+            child: Column(
+              children: <Widget>[
+                ButtonsTabBar(
+                  onTap: (index) {
+                    setState(() {
+                      previousIndex = currentIndex;
+                      currentIndex = index;
+                    });
+                    getPrviousData();
+                    setState(() {});
+                    setCurrentData();
+                    print('Current index' +
+                        index.toString() +
+                        "-" +
+                        previousIndex.toString());
+                  },
+                  backgroundColor: Color.fromARGB(255, 97, 8, 8),
+                  unselectedBackgroundColor: Colors.grey[300],
+                  unselectedLabelStyle: TextStyle(color: Colors.black),
+                  labelStyle: TextStyle(
+                      color: Colors.white, fontWeight: FontWeight.bold),
+                  tabs: [
+                    Tab(
+                      icon: Icon(Icons.closed_caption),
+                      text: "  Caption  ",
+                    ),
+                    Tab(
+                      icon: Icon(Icons.message),
+                      text: "  Message  ",
+                    ),
+                    Tab(
+                      icon: Icon(Icons.person),
+                      text: "  Sender  ",
+                    ),
+                  ],
                 ),
-                htmlToolbarOptions: HtmlToolbarOptions(
-                  toolbarPosition: ToolbarPosition.aboveEditor, //by default
-                  toolbarType: ToolbarType.nativeScrollable, //by default
-                  onButtonPressed:
-                      (ButtonType type, bool? status, Function? updateStatus) {
-                    print(
-                        "button '${describeEnum(type)}' pressed, the current selected status is $status");
-                    return true;
-                  },
-                  onDropdownChanged: (DropdownType type, dynamic changed,
-                      Function(dynamic)? updateSelectedItem) {
-                    print(
-                        "dropdown '${describeEnum(type)}' changed to $changed");
-                    return true;
-                  },
-                  mediaLinkInsertInterceptor:
-                      (String url, InsertFileType type) {
-                    print(url);
-                    return true;
-                  },
-                  mediaUploadInterceptor:
-                      (PlatformFile file, InsertFileType type) async {
-                    print(file.name); //filename
-                    print(file.size); //size in bytes
-                    print(file.extension); //file extension (eg jpeg or mp4)
-                    return true;
-                  },
-                ),
-                otherOptions: OtherOptions(height: 550),
-                callbacks: Callbacks(onBeforeCommand: (String? currentHtml) {
-                  print('html before change is $currentHtml');
-                }, onChangeContent: (String? changed) {
-                  print('content changed to $changed');
-                }, onChangeCodeview: (String? changed) {
-                  print('code changed to $changed');
-                }, onChangeSelection: (EditorSettings settings) {
-                  print('parent element is ${settings.parentElement}');
-                  print('font name is ${settings.fontName}');
-                }, onDialogShown: () {
-                  print('dialog shown');
-                }, onEnter: () {
-                  print('enter/return pressed');
-                }, onFocus: () {
-                  print('editor focused');
-                }, onBlur: () {
-                  print('editor unfocused');
-                }, onBlurCodeview: () {
-                  print('codeview either focused or unfocused');
-                }, onInit: () {
-                  print('init');
-                },
+                Expanded(
+                  child: TabBarView(
+                    children: <Widget>[
+                      HtmlEditor(
+                        controller: _captioncontroller,
+                        htmlEditorOptions: HtmlEditorOptions(
+                          hint: 'Your text here...',
+                          shouldEnsureVisible: true,
+                          initialText: captionContent,
+                        ),
+                        htmlToolbarOptions: HtmlToolbarOptions(
+                          toolbarPosition:
+                              ToolbarPosition.belowEditor, //by default
+                          toolbarType: ToolbarType.nativeGrid, //by default
+                          onButtonPressed: (ButtonType type, bool? status,
+                              Function? updateStatus) {
+                            print(
+                                "button '${describeEnum(type)}' pressed, the current selected status is $status");
+                            return true;
+                          },
+                          onDropdownChanged: (DropdownType type,
+                              dynamic changed,
+                              Function(dynamic)? updateSelectedItem) {
+                            print(
+                                "dropdown '${describeEnum(type)}' changed to $changed");
+                            return true;
+                          },
+                          mediaLinkInsertInterceptor:
+                              (String url, InsertFileType type) {
+                            print(url);
+                            return true;
+                          },
+                          mediaUploadInterceptor:
+                              (PlatformFile file, InsertFileType type) async {
+                            print(file.name); //filename
+                            print(file.size); //size in bytes
+                            print(file
+                                .extension); //file extension (eg jpeg or mp4)
+                            return true;
+                          },
+                        ),
+                        otherOptions: OtherOptions(height: 600),
+                        callbacks: Callbacks(
+                            onBeforeCommand: (String? currentHtml) {
+                          print('html before change is $currentHtml');
+                        }, onChangeContent: (String? changed) {
+                          print('content changed to $changed');
+                        }, onChangeCodeview: (String? changed) {
+                          print('code changed to $changed');
+                        }, onChangeSelection: (EditorSettings settings) {
+                          print('parent element is ${settings.parentElement}');
+                          print('font name is ${settings.fontName}');
+                        }, onDialogShown: () {
+                          print('dialog shown');
+                        }, onEnter: () {
+                          print('enter/return pressed');
+                        }, onFocus: () {
+                          print('editor focused');
+                        }, onBlur: () {
+                          print('editor unfocused');
+                        }, onBlurCodeview: () {
+                          print('codeview either focused or unfocused');
+                        }, onInit: () {
+                          print('init');
+                        },
 
-                    //this is commented because it overrides the default Summernote handlers
-                    /*onImageLinkInsert: (String? url) {
+                            //this is commented because it overrides the default Summernote handlers
+                            /*onImageLinkInsert: (String? url) {
                     print(url ?? "unknown url");
                   },
                   onImageUpload: (FileUpload file) async {
@@ -145,198 +310,380 @@ class _HtmlEditorScreenState extends State<HtmlEditorScreen> {
                     print(file.type);
                     print(file.base64);
                   },*/
-                    onImageUploadError: (FileUpload? file, String? base64Str,
-                        UploadError error) {
-                  print(describeEnum(error));
-                  print(base64Str ?? '');
-                  if (file != null) {
+                            onImageUploadError: (FileUpload? file,
+                                String? base64Str, UploadError error) {
+                          print(describeEnum(error));
+                          print(base64Str ?? '');
+                          if (file != null) {
+                            print(file.name);
+                            print(file.size);
+                            print(file.type);
+                          }
+                        }, onKeyDown: (int? keyCode) {
+                          print('$keyCode key downed');
+                          print(
+                              'current character count: ${_captioncontroller.characterCount}');
+                        }, onKeyUp: (int? keyCode) {
+                          print('$keyCode key released');
+                        }, onMouseDown: () {
+                          print('mouse downed');
+                        }, onMouseUp: () {
+                          print('mouse released');
+                        }, onNavigationRequestMobile: (String url) {
+                          print(url);
+                          return NavigationActionPolicy.ALLOW;
+                        }, onPaste: () {
+                          print('pasted into editor');
+                        }, onScroll: () {
+                          print('editor scrolled');
+                        }),
+                        plugins: [
+                          SummernoteAtMention(
+                              getSuggestionsMobile: (String value) {
+                                var mentions = <String>[
+                                  'test1',
+                                  'test2',
+                                  'test3'
+                                ];
+                                return mentions
+                                    .where((element) => element.contains(value))
+                                    .toList();
+                              },
+                              mentionsWeb: ['test1', 'test2', 'test3'],
+                              onSelect: (String value) {
+                                print(value);
+                              }),
+                        ],
+                      ),
+                      HtmlEditor(
+                        controller: _messagecontroller,
+                        htmlEditorOptions: HtmlEditorOptions(
+                          hint: 'Your text here...',
+                          shouldEnsureVisible: true,
+                          initialText: messageContent,
+                        ),
+                        htmlToolbarOptions: HtmlToolbarOptions(
+                          toolbarPosition:
+                              ToolbarPosition.belowEditor, //by default
+                          toolbarType: ToolbarType.nativeGrid, //by default
+                          onButtonPressed: (ButtonType type, bool? status,
+                              Function? updateStatus) {
+                            print(
+                                "button '${describeEnum(type)}' pressed, the current selected status is $status");
+                            return true;
+                          },
+                          onDropdownChanged: (DropdownType type,
+                              dynamic changed,
+                              Function(dynamic)? updateSelectedItem) {
+                            print(
+                                "dropdown '${describeEnum(type)}' changed to $changed");
+                            return true;
+                          },
+                          mediaLinkInsertInterceptor:
+                              (String url, InsertFileType type) {
+                            print(url);
+                            return true;
+                          },
+                          mediaUploadInterceptor:
+                              (PlatformFile file, InsertFileType type) async {
+                            print(file.name); //filename
+                            print(file.size); //size in bytes
+                            print(file
+                                .extension); //file extension (eg jpeg or mp4)
+                            return true;
+                          },
+                        ),
+                        otherOptions: OtherOptions(height: 600),
+                        callbacks: Callbacks(
+                            onBeforeCommand: (String? currentHtml) {
+                          print('html before change is $currentHtml');
+                        }, onChangeContent: (String? changed) {
+                          print('content changed to $changed');
+                        }, onChangeCodeview: (String? changed) {
+                          print('code changed to $changed');
+                        }, onChangeSelection: (EditorSettings settings) {
+                          print('parent element is ${settings.parentElement}');
+                          print('font name is ${settings.fontName}');
+                        }, onDialogShown: () {
+                          print('dialog shown');
+                        }, onEnter: () {
+                          print('enter/return pressed');
+                        }, onFocus: () {
+                          print('editor focused');
+                        }, onBlur: () {
+                          print('editor unfocused');
+                        }, onBlurCodeview: () {
+                          print('codeview either focused or unfocused');
+                        }, onInit: () {
+                          print('init');
+                        },
+
+                            //this is commented because it overrides the default Summernote handlers
+                            /*onImageLinkInsert: (String? url) {
+                    print(url ?? "unknown url");
+                  },
+                  onImageUpload: (FileUpload file) async {
                     print(file.name);
                     print(file.size);
                     print(file.type);
-                  }
-                }, onKeyDown: (int? keyCode) {
-                  print('$keyCode key downed');
-                  print(
-                      'current character count: ${controller.characterCount}');
-                }, onKeyUp: (int? keyCode) {
-                  print('$keyCode key released');
-                }, onMouseDown: () {
-                  print('mouse downed');
-                }, onMouseUp: () {
-                  print('mouse released');
-                }, onNavigationRequestMobile: (String url) {
-                  print(url);
-                  return NavigationActionPolicy.ALLOW;
-                }, onPaste: () {
-                  print('pasted into editor');
-                }, onScroll: () {
-                  print('editor scrolled');
-                }),
-                plugins: [
-                  SummernoteAtMention(
-                      getSuggestionsMobile: (String value) {
-                        var mentions = <String>['test1', 'test2', 'test3'];
-                        return mentions
-                            .where((element) => element.contains(value))
-                            .toList();
-                      },
-                      mentionsWeb: ['test1', 'test2', 'test3'],
-                      onSelect: (String value) {
-                        print(value);
-                      }),
-                ],
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    TextButton(
-                      style: TextButton.styleFrom(
-                        backgroundColor: Colors.deepOrange[50],
+                    print(file.base64);
+                  },*/
+                            onImageUploadError: (FileUpload? file,
+                                String? base64Str, UploadError error) {
+                          print(describeEnum(error));
+                          print(base64Str ?? '');
+                          if (file != null) {
+                            print(file.name);
+                            print(file.size);
+                            print(file.type);
+                          }
+                        }, onKeyDown: (int? keyCode) {
+                          print('$keyCode key downed');
+                          print(
+                              'current character count: ${_messagecontroller.characterCount}');
+                        }, onKeyUp: (int? keyCode) {
+                          print('$keyCode key released');
+                        }, onMouseDown: () {
+                          print('mouse downed');
+                        }, onMouseUp: () {
+                          print('mouse released');
+                        }, onNavigationRequestMobile: (String url) {
+                          print(url);
+                          return NavigationActionPolicy.ALLOW;
+                        }, onPaste: () {
+                          print('pasted into editor');
+                        }, onScroll: () {
+                          print('editor scrolled');
+                        }),
+                        plugins: [
+                          SummernoteAtMention(
+                              getSuggestionsMobile: (String value) {
+                                var mentions = <String>[
+                                  'test1',
+                                  'test2',
+                                  'test3'
+                                ];
+                                return mentions
+                                    .where((element) => element.contains(value))
+                                    .toList();
+                              },
+                              mentionsWeb: ['test1', 'test2', 'test3'],
+                              onSelect: (String value) {
+                                print(value);
+                              }),
+                        ],
                       ),
-                      onPressed: () {
-                        controller.undo();
-                      },
-                      child: Icon(
-                        Icons.undo,
-                        color: Color.fromARGB(255, 97, 8, 8),
+                      HtmlEditor(
+                        controller: _sendercontroller,
+                        htmlEditorOptions: HtmlEditorOptions(
+                          hint: 'Your text here...',
+                          shouldEnsureVisible: true,
+                          initialText: senderContent,
+                        ),
+                        htmlToolbarOptions: HtmlToolbarOptions(
+                          toolbarPosition:
+                              ToolbarPosition.belowEditor, //by default
+                          toolbarType: ToolbarType.nativeGrid, //by default
+                          onButtonPressed: (ButtonType type, bool? status,
+                              Function? updateStatus) {
+                            print(
+                                "button '${describeEnum(type)}' pressed, the current selected status is $status");
+                            return true;
+                          },
+                          onDropdownChanged: (DropdownType type,
+                              dynamic changed,
+                              Function(dynamic)? updateSelectedItem) {
+                            print(
+                                "dropdown '${describeEnum(type)}' changed to $changed");
+                            return true;
+                          },
+                          mediaLinkInsertInterceptor:
+                              (String url, InsertFileType type) {
+                            print(url);
+                            return true;
+                          },
+                          mediaUploadInterceptor:
+                              (PlatformFile file, InsertFileType type) async {
+                            print(file.name); //filename
+                            print(file.size); //size in bytes
+                            print(file
+                                .extension); //file extension (eg jpeg or mp4)
+                            return true;
+                          },
+                        ),
+                        otherOptions: OtherOptions(height: 600),
+                        callbacks: Callbacks(
+                            onBeforeCommand: (String? currentHtml) {
+                          print('html before change is $currentHtml');
+                        }, onChangeContent: (String? changed) {
+                          print('content changed to $changed');
+                        }, onChangeCodeview: (String? changed) {
+                          print('code changed to $changed');
+                        }, onChangeSelection: (EditorSettings settings) {
+                          print('parent element is ${settings.parentElement}');
+                          print('font name is ${settings.fontName}');
+                        }, onDialogShown: () {
+                          print('dialog shown');
+                        }, onEnter: () {
+                          print('enter/return pressed');
+                        }, onFocus: () {
+                          print('editor focused');
+                        }, onBlur: () {
+                          print('editor unfocused');
+                        }, onBlurCodeview: () {
+                          print('codeview either focused or unfocused');
+                        }, onInit: () {
+                          print('init');
+                        },
+
+                            //this is commented because it overrides the default Summernote handlers
+                            /*onImageLinkInsert: (String? url) {
+                    print(url ?? "unknown url");
+                  },
+                  onImageUpload: (FileUpload file) async {
+                    print(file.name);
+                    print(file.size);
+                    print(file.type);
+                    print(file.base64);
+                  },*/
+                            onImageUploadError: (FileUpload? file,
+                                String? base64Str, UploadError error) {
+                          print(describeEnum(error));
+                          print(base64Str ?? '');
+                          if (file != null) {
+                            print(file.name);
+                            print(file.size);
+                            print(file.type);
+                          }
+                        }, onKeyDown: (int? keyCode) {
+                          print('$keyCode key downed');
+                          print(
+                              'current character count: ${_sendercontroller.characterCount}');
+                        }, onKeyUp: (int? keyCode) {
+                          print('$keyCode key released');
+                        }, onMouseDown: () {
+                          print('mouse downed');
+                        }, onMouseUp: () {
+                          print('mouse released');
+                        }, onNavigationRequestMobile: (String url) {
+                          print(url);
+                          return NavigationActionPolicy.ALLOW;
+                        }, onPaste: () {
+                          print('pasted into editor');
+                        }, onScroll: () {
+                          print('editor scrolled');
+                        }),
+                        plugins: [
+                          SummernoteAtMention(
+                              getSuggestionsMobile: (String value) {
+                                var mentions = <String>[
+                                  'test1',
+                                  'test2',
+                                  'test3'
+                                ];
+                                return mentions
+                                    .where((element) => element.contains(value))
+                                    .toList();
+                              },
+                              mentionsWeb: ['test1', 'test2', 'test3'],
+                              onSelect: (String value) {
+                                print(value);
+                              }),
+                        ],
                       ),
-                    ),
-                    SizedBox(
-                      width: 16,
-                    ),
-                    TextButton(
-                      style: TextButton.styleFrom(
-                        backgroundColor: Colors.deepOrange[50],
-                      ),
-                      onPressed: () {
-                        controller.redo();
-                      },
-                      child: Icon(
-                        Icons.redo,
-                        color: Color.fromARGB(255, 97, 8, 8),
-                      ),
-                    ),
-                    SizedBox(
-                      width: 16,
-                    ),
-                    TextButton(
-                      style: TextButton.styleFrom(
-                        backgroundColor: Colors.deepOrange[50],
-                      ),
-                      onPressed: () {
-                        controller.clear();
-                      },
-                      child: Icon(
-                        Icons.refresh,
-                        color: Color.fromARGB(255, 97, 8, 8),
-                      ),
-                    ),
-                    SizedBox(
-                      width: 16,
-                    ),
-                    TextButton(
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      TextButton(
                         style: TextButton.styleFrom(
                           backgroundColor: Colors.deepOrange[50],
                         ),
                         onPressed: () {
-                          controller.disable();
+                          switch (currentIndex) {
+                            case 0:
+                              _captioncontroller.undo();
+                              break;
+
+                            case 1:
+                              _messagecontroller.undo();
+                              break;
+
+                            case 2:
+                              _sendercontroller.undo();
+                              break;
+                          }
                         },
                         child: Icon(
-                          Icons.disabled_by_default,
+                          Icons.undo,
                           color: Color.fromARGB(255, 97, 8, 8),
-                        )),
-                    SizedBox(
-                      width: 16,
-                    ),
-                    TextButton(
+                        ),
+                      ),
+                      SizedBox(
+                        width: 16,
+                      ),
+                      TextButton(
                         style: TextButton.styleFrom(
                           backgroundColor: Colors.deepOrange[50],
                         ),
-                        onPressed: () async {
-                          controller.enable();
+                        onPressed: () {
+                          switch (currentIndex) {
+                            case 0:
+                              _captioncontroller.redo();
+                              break;
+
+                            case 1:
+                              _messagecontroller.redo();
+                              break;
+
+                            case 2:
+                              _sendercontroller.redo();
+                              break;
+                          }
                         },
                         child: Icon(
-                          Icons.edit,
+                          Icons.redo,
                           color: Color.fromARGB(255, 97, 8, 8),
-                        )),
-                  ],
+                        ),
+                      ),
+                      SizedBox(
+                        width: 16,
+                      ),
+                      TextButton(
+                        style: TextButton.styleFrom(
+                          backgroundColor: Colors.deepOrange[50],
+                        ),
+                        onPressed: () {
+                          switch (currentIndex) {
+                            case 0:
+                              _captioncontroller.clear();
+                              break;
+
+                            case 1:
+                              _messagecontroller.clear();
+                              break;
+
+                            case 2:
+                              _sendercontroller.clear();
+                              break;
+                          }
+                        },
+                        child: Icon(
+                          Icons.refresh,
+                          color: Color.fromARGB(255, 97, 8, 8),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(00),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    TextButton(
-                      style: TextButton.styleFrom(
-                        backgroundColor: Colors.deepOrange[50],
-                      ),
-                      onPressed: () {
-                        controller.insertText('Google');
-                      },
-                      child: Text('Insert Text',
-                          style:
-                              TextStyle(color: Color.fromARGB(255, 97, 8, 8))),
-                    ),
-                    SizedBox(
-                      width: 16,
-                    ),
-                    TextButton(
-                      style: TextButton.styleFrom(
-                        backgroundColor: Colors.deepOrange[50],
-                      ),
-                      onPressed: () {
-                        controller.insertHtml(
-                            '''<p style="color: blue">Google in blue</p>''');
-                      },
-                      child: Text('Insert HTML',
-                          style:
-                              TextStyle(color: Color.fromARGB(255, 97, 8, 8))),
-                    ),
-                    SizedBox(
-                      width: 16,
-                    ),
-                    TextButton(
-                      style: TextButton.styleFrom(
-                          backgroundColor: Colors.deepOrange[50]),
-                      onPressed: () async {
-                        controller.insertLink(
-                            'Google linked', 'https://google.com', true);
-                      },
-                      child: Icon(
-                        Icons.link,
-                        color: Color.fromARGB(255, 97, 8, 8),
-                      ),
-                    ),
-                    SizedBox(
-                      width: 16,
-                    ),
-                    TextButton(
-                      style: TextButton.styleFrom(
-                          backgroundColor: Colors.deepOrange[50]),
-                      onPressed: () {
-                        controller.insertNetworkImage(
-                            'https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_92x30dp.png',
-                            filename: 'Google network image');
-                      },
-                      child: Icon(
-                        Icons.image,
-                        color: Color.fromARGB(255, 97, 8, 8),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(0.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[],
-                ),
-              ),
-            ],
+
+                // Container(margin: getMargin(bottom: 75)),
+              ],
+            ),
           ),
         ),
       ),

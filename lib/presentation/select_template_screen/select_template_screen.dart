@@ -25,8 +25,12 @@ class SelectTemplateScreen extends StatefulWidget {
 class _SelectTemplateScreen extends State<SelectTemplateScreen> {
   PreviewResult? previewResult;
   List<Result>? templates;
-  bool isUserDefinedBackground= false;
-  var htmlContent = '''
+  bool isUserDefinedBackground = false;
+  var captionDefault = "";
+  var messageDefault = "";
+  var senderDefault = "";
+  var htmlContent =
+      '''
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -77,17 +81,20 @@ class _SelectTemplateScreen extends State<SelectTemplateScreen> {
           previewResult = resp.result;
           setState(() {
             htmlContent = previewResult?.htmldata ?? '';
-isUserDefinedBackground=previewResult?.userPicture??false;
+            captionDefault = previewResult?.captionDefault??'';
+            messageDefault = previewResult?.messageDefault??'';
+            senderDefault = previewResult?.senderDefault??'';
+            isUserDefinedBackground = previewResult?.userPicture ?? false;
           });
         });
       } else {
         Get.snackbar('Error', resp.errorMessage.toString(),
-              backgroundColor: Color.fromARGB(255, 255, 230, 230),
-              colorText: Colors.red[900],
-              icon: Icon(
-                Icons.error,
-                color: Colors.red[900],
-              ));
+            backgroundColor: Color.fromARGB(255, 255, 230, 230),
+            colorText: Colors.red[900],
+            icon: Icon(
+              Icons.error,
+              color: Colors.red[900],
+            ));
       }
     } catch (e) {}
   }
@@ -109,12 +116,12 @@ isUserDefinedBackground=previewResult?.userPicture??false;
           getTemplate(selectedTemplate ?? '');
       } else {
         Get.snackbar('Error', resp.errorMessage.toString(),
-              backgroundColor: Color.fromARGB(255, 255, 230, 230),
-              colorText: Colors.red[900],
-              icon: Icon(
-                Icons.error,
-                color: Colors.red[900],
-              ));
+            backgroundColor: Color.fromARGB(255, 255, 230, 230),
+            colorText: Colors.red[900],
+            icon: Icon(
+              Icons.error,
+              color: Colors.red[900],
+            ));
       }
     } catch (e) {}
   }
@@ -227,8 +234,8 @@ isUserDefinedBackground=previewResult?.userPicture??false;
 
                               Container(
                                   height: getVerticalSize(529.00),
-                                  width: getHorizontalSize(335.00),
-                                  margin: getMargin(top: 17),
+                                  width: getHorizontalSize(380.00),
+                                  margin: getMargin(top: 0),
                                   child: Stack(
                                       alignment: Alignment.topRight,
                                       children: [
@@ -239,8 +246,8 @@ isUserDefinedBackground=previewResult?.userPicture??false;
                                                 width:
                                                     getHorizontalSize(296.00),
                                                 decoration: BoxDecoration(
-                                                    color: ColorConstant
-                                                        .whiteA700,
+                                                    color:
+                                                        ColorConstant.whiteA700,
                                                     borderRadius:
                                                         BorderRadius.circular(
                                                             getHorizontalSize(
@@ -257,7 +264,9 @@ isUserDefinedBackground=previewResult?.userPicture??false;
                                             alignment: Alignment.bottomLeft),
                                         Align(
                                             alignment: Alignment.center,
-                                            child: Container(
+                                            child: SingleChildScrollView(
+scrollDirection: Axis.vertical,
+  child:Container(
                                                 padding: getPadding(
                                                     top: 5,
                                                     left: 5,
@@ -265,6 +274,7 @@ isUserDefinedBackground=previewResult?.userPicture??false;
                                                     right: 5),
                                                 child: HtmlWidget(
                                                   htmlContent,
+                                                  
                                                   customStylesBuilder:
                                                       (element) {
                                                     if (element.classes
@@ -306,7 +316,7 @@ isUserDefinedBackground=previewResult?.userPicture??false;
                                                   // turn on `webView` if you need IFRAME support (it's disabled by default)
                                                   // webView: true,
                                                 ),
-                                                height: getVerticalSize(456.00),
+                                                height: getVerticalSize(650.00),
                                                 width:
                                                     getHorizontalSize(273.00),
                                                 decoration: BoxDecoration(
@@ -328,7 +338,7 @@ isUserDefinedBackground=previewResult?.userPicture??false;
                                                               getHorizontalSize(
                                                                   2.00),
                                                           offset: Offset(0, 4))
-                                                    ])))
+                                                    ]))))
                                       ])),
                               CustomButton(
                                   height: 40,
@@ -344,10 +354,12 @@ isUserDefinedBackground=previewResult?.userPicture??false;
   onTapSelect() {
     Get.back(result: {
       "selectedTemplateID": selectedTemplate,
+      "captionDefault":captionDefault,
+      "messageDefault":messageDefault,
+      "senderDefault":senderDefault,
       "selectedTemplateName": templates!
           .firstWhere((element) => element.value == selectedTemplate)
           .text,
-          
       "isUserBackground": isUserDefinedBackground
     });
   }
