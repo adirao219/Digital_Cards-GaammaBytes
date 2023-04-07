@@ -457,7 +457,7 @@ class _SignupPageScreen extends State<SignupPageScreen> {
         setState(() {
           googleUserName = _user.providerData[0].displayName ?? '';
           googleUseremail = _user.providerData[0].email ?? '';
-          googleUserToken = _user.providerData[0].uid??'';
+          googleUserToken = _user.providerData[0].uid ?? '';
           googleUserName = _user.providerData[0].email ?? '';
           googleUserPhoneNumber = _user.providerData[0].phoneNumber ?? '';
           googleUserPhotoURL = _user.providerData[0].photoURL ?? '';
@@ -469,15 +469,15 @@ class _SignupPageScreen extends State<SignupPageScreen> {
           GlobalVariables.setUserName(googleUseremail);
 
           GlobalVariables.setUserPhotoUrl(googleUserPhotoURL);
-           Get.snackbar('Success',  "Welcome to Gaamma Cards",
-            backgroundColor: Color.fromARGB(255, 208, 245, 216),
-            colorText: Colors.green[900],
-            icon: Icon(
-              Icons.done,
-              color: Colors.green[900],
-            ));
-      Navigator.of(context).pushNamedAndRemoveUntil(
-          AppRoutes.homePageScreen, (Route<dynamic> route) => false);
+          Get.snackbar('Success', "Welcome to Gaamma Cards",
+              backgroundColor: Color.fromARGB(255, 208, 245, 216),
+              colorText: Colors.green[900],
+              icon: Icon(
+                Icons.done,
+                color: Colors.green[900],
+              ));
+          Navigator.of(context).pushNamedAndRemoveUntil(
+              AppRoutes.homePageScreen, (Route<dynamic> route) => false);
         });
       } else {
         Navigator.of(context).pushNamed(AppRoutes.googlesigninOneScreen,

@@ -9,7 +9,7 @@ import 'package:digitalcardsgaammabytes/widgets/custom_button.dart';
 import 'package:digitalcardsgaammabytes/widgets/custom_text_form_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
-
+import 'package:path/path.dart' as p;
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart'
     as htmlwidget;
 import 'dart:io';
@@ -47,6 +47,8 @@ class _BasicGreetingEntryScreen extends State<BasicGreetingEntryScreen> {
   File? secondCroppedImage;
   String? firstImageBase64;
   String? secondImageBase64;
+  String? firstImageFileName;
+  String? secondImageFileName;
   void changeColor(Color color) {
     setState(() => pickerColor = color);
   }
@@ -57,9 +59,9 @@ class _BasicGreetingEntryScreen extends State<BasicGreetingEntryScreen> {
   var greetingCardTypeName = Get.arguments["TypeName"] as String?;
   String templateName = "";
 
-String? captionDefault="";
-String? messageDefault="";
-String? senderDefault="";
+  String? captionDefault = "";
+  String? messageDefault = "";
+  String? senderDefault = "";
   bool? isUserDefinedBackground;
   String templateID = "";
   @override
@@ -201,14 +203,18 @@ String? senderDefault="";
                                                   TextCapitalization.words,
                                               margin: getMargin(top: 5)),
                                           IconButton(
-                                              onPressed: (){ goToHTMLEditor(0);},
+                                              onPressed: () {
+                                                goToHTMLEditor(0);
+                                              },
                                               icon: Icon(
                                                 Icons.edit,
                                                 color: Color.fromARGB(
                                                     255, 97, 8, 8),
                                               )),
                                         ]),
-                                        onTap:(){ goToHTMLEditor(0);}),
+                                        onTap: () {
+                                          goToHTMLEditor(0);
+                                        }),
                                   ]),
 
                               Column(
@@ -233,14 +239,18 @@ String? senderDefault="";
                                             hintText: "lbl_message".tr,
                                             margin: getMargin(top: 10)),
                                         IconButton(
-                                            onPressed:(){ goToHTMLEditor(1);},
+                                            onPressed: () {
+                                              goToHTMLEditor(1);
+                                            },
                                             icon: Icon(
                                               Icons.edit,
                                               color:
                                                   Color.fromARGB(255, 97, 8, 8),
                                             )),
                                       ]),
-                                      onTap:(){ goToHTMLEditor(1);}),
+                                      onTap: () {
+                                        goToHTMLEditor(1);
+                                      }),
                                 ],
                               ),
 
@@ -267,7 +277,9 @@ String? senderDefault="";
                                             margin:
                                                 getMargin(top: 10, bottom: 10)),
                                         IconButton(
-                                            onPressed:(){ goToHTMLEditor(2);},
+                                            onPressed: () {
+                                              goToHTMLEditor(2);
+                                            },
                                             padding: getPadding(all: 0),
                                             icon: Icon(
                                               Icons.edit,
@@ -275,7 +287,9 @@ String? senderDefault="";
                                                   Color.fromARGB(255, 97, 8, 8),
                                             ))
                                       ]),
-                                      onTap: (){ goToHTMLEditor(2);}),
+                                      onTap: () {
+                                        goToHTMLEditor(2);
+                                      }),
                                 ],
                               ),
 
@@ -518,12 +532,12 @@ String? senderDefault="";
       templateID = value['selectedTemplateID'];
       setState(() {
         templateName = value['selectedTemplateName'];
-        
+
         captionDefault = value['captionDefault'];
-        
-        messageDefault= value['messageDefault'];
-        
-       senderDefault = value['senderDefault'];
+
+        messageDefault = value['messageDefault'];
+
+        senderDefault = value['senderDefault'];
 
         isUserDefinedBackground = value['isUserBackground'] as bool?;
       });
@@ -595,11 +609,13 @@ String? senderDefault="";
         firstImageBase64 = base64val1;
         firstCroppedImage = imageFile;
         isFirstImageSelected = true;
+        firstImageFileName = p.basename(imageFile.path);
       }
       if (pictureType == 2) {
         secondImageBase64 = base64val1;
         secondCroppedImage = imageFile;
         isSecondImageSelected = true;
+        secondImageFileName = p.basename(imageFile.path);
       }
     });
   }
@@ -635,15 +651,19 @@ String? senderDefault="";
     // GlobalVariables.tempCaptionContent = captionDefault??"";
     // GlobalVariables.tempMessageContent = messageDefault??"";
     // GlobalVariables.tempSenderContent = senderDefault??"";
-    
-    Get.toNamed(AppRoutes.htmlEditor,
-        arguments: {"initialIndex":initialIndex,"captionContent": captionDefault,"messageContent":messageDefault,"senderContent":senderDefault})?.then((value) {
+
+    Get.toNamed(AppRoutes.htmlEditor, arguments: {
+      "initialIndex": initialIndex,
+      "captionContent": captionDefault,
+      "messageContent": messageDefault,
+      "senderContent": senderDefault
+    })?.then((value) {
       var messageContent = value['messageContent'];
-        var captionContent = value['captionContent'];
-          var senderContent = value['senderContent'];
+      var captionContent = value['captionContent'];
+      var senderContent = value['senderContent'];
       setState(() {
         messageDefault = messageContent;
-        captionDefault= captionContent;
+        captionDefault = captionContent;
         senderDefault = senderContent;
       });
     });
@@ -662,7 +682,10 @@ String? senderDefault="";
         "Caption": captionDefault!.replaceAll('"', '\\"'),
         "Message": messageDefault!.replaceAll('"', '\\"'),
         "Sender": senderDefault!.replaceAll('"', '\\"'),
-        "files": {"Logo": firstImageBase64, "Picture": secondImageBase64}
+        "Logo": firstImageBase64,
+        "LogRef": firstImageFileName,
+        "Picture": secondImageBase64,
+        "PictureRef": secondImageFileName
       };
       PostCreateGreetingResp resp =
           await api.createCreateGreeting(requestData: req);
@@ -699,7 +722,7 @@ String? senderDefault="";
           await api.fetchGetCreateGreeting(queryParams: req);
       if (resp.isSuccess ?? false) {
         setState(() {
-         captionDefault= resp.result?.greetingDetailsData?.caption;
+          captionDefault = resp.result?.greetingDetailsData?.caption;
 
           messageDefault = resp.result?.greetingDetailsData?.message;
 

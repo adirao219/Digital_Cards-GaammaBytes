@@ -29,6 +29,7 @@ class _SelectTemplateScreen extends State<SelectTemplateScreen> {
   var captionDefault = "";
   var messageDefault = "";
   var senderDefault = "";
+  var backgroundImageURL = "";
   var htmlContent =
       '''
 <html>
@@ -81,9 +82,10 @@ class _SelectTemplateScreen extends State<SelectTemplateScreen> {
           previewResult = resp.result;
           setState(() {
             htmlContent = previewResult?.htmldata ?? '';
-            captionDefault = previewResult?.captionDefault??'';
-            messageDefault = previewResult?.messageDefault??'';
-            senderDefault = previewResult?.senderDefault??'';
+            captionDefault = previewResult?.captionDefault ?? '';
+            messageDefault = previewResult?.messageDefault ?? '';
+            senderDefault = previewResult?.senderDefault ?? '';
+            backgroundImageURL = previewResult?.background??'';
             isUserDefinedBackground = previewResult?.userPicture ?? false;
           });
         });
@@ -242,9 +244,9 @@ class _SelectTemplateScreen extends State<SelectTemplateScreen> {
                                         Align(
                                             alignment: Alignment.center,
                                             child: Container(
-                                                height: getVerticalSize(478.00),
+                                                height: getVerticalSize(450.00),
                                                 width:
-                                                    getHorizontalSize(296.00),
+                                                    getHorizontalSize(310.00),
                                                 decoration: BoxDecoration(
                                                     color:
                                                         ColorConstant.whiteA700,
@@ -252,93 +254,91 @@ class _SelectTemplateScreen extends State<SelectTemplateScreen> {
                                                         BorderRadius.circular(
                                                             getHorizontalSize(
                                                                 10.00))))),
-                                        CustomImageView(
-                                            svgPath: ImageConstant.imgClock,
-                                            height: getVerticalSize(46.00),
-                                            width: getHorizontalSize(42.00),
-                                            alignment: Alignment.topRight),
-                                        CustomImageView(
-                                            svgPath: ImageConstant.imgMinimize,
-                                            height: getVerticalSize(39.00),
-                                            width: getHorizontalSize(41.00),
-                                            alignment: Alignment.bottomLeft),
                                         Align(
                                             alignment: Alignment.center,
                                             child: SingleChildScrollView(
-scrollDirection: Axis.vertical,
-  child:Container(
-                                                padding: getPadding(
-                                                    top: 5,
-                                                    left: 5,
-                                                    bottom: 5,
-                                                    right: 5),
-                                                child: HtmlWidget(
-                                                  htmlContent,
-                                                  
-                                                  customStylesBuilder:
-                                                      (element) {
-                                                    if (element.classes
-                                                        .contains('foo')) {
-                                                      return {'color': 'red'};
-                                                    }
+                                                scrollDirection: Axis.vertical,
+                                                child: Container(
+                                                    padding: getPadding(
+                                                        top: 5,
+                                                        left: 5,
+                                                        bottom: 5,
+                                                        right: 5),
+                                                    child: HtmlWidget(
+                                                      htmlContent,
+                                                      customStylesBuilder:
+                                                          (element) {
+                                                        if (element.classes
+                                                            .contains('foo')) {
+                                                          return {
+                                                            'color': 'red'
+                                                          };
+                                                        }
 
-                                                    return null;
-                                                  },
+                                                        return null;
+                                                      },
 
-                                                  // render a custom widget
-                                                  customWidgetBuilder:
-                                                      (element) {},
+                                                      // render a custom widget
+                                                      customWidgetBuilder:
+                                                          (element) {},
 
-                                                  // these callbacks are called when a complicated element is loading
-                                                  // or failed to render allowing the app to render progress indicator
-                                                  // and fallback widget
-                                                  onErrorBuilder: (context,
-                                                          element, error) =>
-                                                      Text(
-                                                          '$element error: $error'),
-                                                  onLoadingBuilder: (context,
-                                                          element,
-                                                          loadingProgress) =>
-                                                      CircularProgressIndicator(),
+                                                      // these callbacks are called when a complicated element is loading
+                                                      // or failed to render allowing the app to render progress indicator
+                                                      // and fallback widget
+                                                      onErrorBuilder: (context,
+                                                              element, error) =>
+                                                          Text(
+                                                              '$element error: $error'),
+                                                      onLoadingBuilder: (context,
+                                                              element,
+                                                              loadingProgress) =>
+                                                          CircularProgressIndicator(),
 
-                                                  // this callback will be triggered when user taps a link
-                                                  // onTapUrl: (url) => print('tapped $url'),
+                                                      // this callback will be triggered when user taps a link
+                                                      // onTapUrl: (url) => print('tapped $url'),
 
-                                                  // select the render mode for HTML body
-                                                  // by default, a simple `Column` is rendered
-                                                  // consider using `ListView` or `SliverList` for better performance
-                                                  renderMode: RenderMode.column,
+                                                      // select the render mode for HTML body
+                                                      // by default, a simple `Column` is rendered
+                                                      // consider using `ListView` or `SliverList` for better performance
+                                                      renderMode:
+                                                          RenderMode.column,
 
-                                                  // set the default styling for text
-                                                  textStyle:
-                                                      TextStyle(fontSize: 14),
+                                                      // set the default styling for text
+                                                      textStyle: TextStyle(
+                                                          fontSize: 14),
 
-                                                  // turn on `webView` if you need IFRAME support (it's disabled by default)
-                                                  // webView: true,
-                                                ),
-                                                height: getVerticalSize(650.00),
-                                                width:
-                                                    getHorizontalSize(273.00),
-                                                decoration: BoxDecoration(
-                                                    //  color: Colors.white,
-                                                    border: Border.all(
-                                                        color: ColorConstant
-                                                            .whiteA700,
-                                                        width:
-                                                            getHorizontalSize(
-                                                                2.00)),
-                                                    boxShadow: [
-                                                      BoxShadow(
-                                                          color: ColorConstant
-                                                              .black9003f,
-                                                          spreadRadius:
-                                                              getHorizontalSize(
-                                                                  2.00),
-                                                          blurRadius:
-                                                              getHorizontalSize(
-                                                                  2.00),
-                                                          offset: Offset(0, 4))
-                                                    ]))))
+                                                      // turn on `webView` if you need IFRAME support (it's disabled by default)
+                                                      // webView: true,
+                                                    ),
+                                                    height:
+                                                        getVerticalSize(700.00),
+                                                    width: getHorizontalSize(
+                                                        350.00),
+                                                    decoration: BoxDecoration(
+                                                        image: DecorationImage(
+                                                          image: NetworkImage(backgroundImageURL),
+                                                          fit: BoxFit.fill,
+                                                        ),
+                                                        //  color: Colors.white,
+                                                        border: Border.all(
+                                                            color: ColorConstant
+                                                                .whiteA700,
+                                                            width:
+                                                                getHorizontalSize(
+                                                                    2.00)),
+                                                        boxShadow: [
+                                                          BoxShadow(
+                                                              color: ColorConstant
+                                                                  .black9003f,
+                                                              spreadRadius:
+                                                                  getHorizontalSize(
+                                                                      2.00),
+                                                              blurRadius:
+                                                                  getHorizontalSize(
+                                                                      2.00),
+                                                              offset:
+                                                                  Offset(0, 4))
+                                                        ]))))
                                       ])),
                               CustomButton(
                                   height: 40,
@@ -354,9 +354,9 @@ scrollDirection: Axis.vertical,
   onTapSelect() {
     Get.back(result: {
       "selectedTemplateID": selectedTemplate,
-      "captionDefault":captionDefault,
-      "messageDefault":messageDefault,
-      "senderDefault":senderDefault,
+      "captionDefault": captionDefault,
+      "messageDefault": messageDefault,
+      "senderDefault": senderDefault,
       "selectedTemplateName": templates!
           .firstWhere((element) => element.value == selectedTemplate)
           .text,

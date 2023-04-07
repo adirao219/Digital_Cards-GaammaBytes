@@ -5,6 +5,8 @@ import 'package:digitalcardsgaammabytes/widgets/app_bar/custom_app_bar.dart';
 import 'package:digitalcardsgaammabytes/widgets/custom_bottom_bar.dart';
 import 'package:flutter/material.dart';
 
+import '../../widgets/custom_button.dart';
+
 class CustomizationScreen extends StatefulWidget {
   const CustomizationScreen({super.key});
 
@@ -118,32 +120,13 @@ class _CustomizationScreen extends State<CustomizationScreen> {
                                                 fontWeight: FontWeight.w600))
                                       ]),
                                       textAlign: TextAlign.left)),
-                              GestureDetector(
-                                  onTap: () {
-                                    onTapTxtGroupThirtyFour();
-                                  },
-                                  child: Container(
-                                      width: getHorizontalSize(325.00),
-                                      margin: getMargin(top: 32),
-                                      padding: getPadding(
-                                          left: 30,
-                                          top: 17,
-                                          right: 101,
-                                          bottom: 17),
-                                      decoration: AppDecoration
-                                          .txtOutlineBlack9003f
-                                          .copyWith(
-                                              borderRadius: BorderRadiusStyle
-                                                  .txtRoundedBorder15),
-                                      child: Text("lbl_card_preview2".tr,
-                                          overflow: TextOverflow.ellipsis,
-                                          textAlign: TextAlign.left,
-                                          style: AppStyle
-                                              .txtNunitoSansBold16Pink900
-                                              .copyWith(
-                                                  letterSpacing:
-                                                      getHorizontalSize(
-                                                          0.36))))),
+                                       CustomButton(
+                                  height: 55,
+                                  width: 352,
+                                  text: "lbl_card_preview2".tr,
+                                  margin: getMargin(left: 0, top: 45),
+                                  onTap: onTapTxtGroupThirtyFour),
+                             
                             ])))),
             bottomNavigationBar: CustomBottomBar(
                 onNextClicked: onTapTxtGroupThirtyFour,

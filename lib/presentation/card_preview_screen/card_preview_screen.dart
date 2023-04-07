@@ -12,8 +12,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 
 import 'package:webcontent_converter/webcontent_converter.dart';
+import 'package:widgets_to_image/widgets_to_image.dart';
 import '../../data/apiClient/api_client.dart';
 import '../../data/models/previewGreetingCard/post_preview_greeting_card_resp.dart';
+import '../../data/models/previewGreetingTemplate/post_preview_greeting_template_resp.dart';
 
 class CardPreviewScreen extends StatefulWidget {
   const CardPreviewScreen({super.key});
@@ -25,7 +27,11 @@ class CardPreviewScreen extends StatefulWidget {
 
 class _CardPreviewScreen extends State<CardPreviewScreen> {
   var cardID = Get.arguments["CardID"] as int?;
-  var htmlContent = '''
+  
+  WidgetsToImageController _controller = WidgetsToImageController();
+  var backgroundImageURL = "";
+  var htmlContent =
+      '''
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -53,6 +59,13 @@ class _CardPreviewScreen extends State<CardPreviewScreen> {
 </html> 
 
   ''';
+
+  var newhtml='''
+
+        
+<div class="page-wrapper" style="box-shadow: 1px 2px 15px #48484833;position: relative;padding-top: 1px;background: url('https://digitalcard.gaamma.cards/images/AkshayaTritiya_squarecenter.png');background-repeat: no-repeat;background-size: 100%;height: 600px;width: 600px">        <style>.uppergreeting{&nbsp; &nbsp; }p {margin:5px !important;}</style><div class="uppergreeting" style="margin: 15px"><p class="MsoListParagraph" style="margin: 5px;margin-left: 1in;text-indent: -0.25in;text-align: center"><span style="font-size: 24pt; color: rgb(230, 126, 35); font-family: 'comic sans ms', sans-serif;"><strong><span lang="EN-IN" style="line-height: 107%;">&nbsp;</span></strong></span></p><p class="MsoListParagraph" style="margin: 5px;margin-left: 1in;text-indent: -0.25in;text-align: center"><span style="font-size: 24pt; color: rgb(230, 126, 35); font-family: 'comic sans ms', sans-serif;"><strong><span lang="EN-IN" style="line-height: 107%;">&nbsp;</span></strong></span></p><p class="MsoListParagraph" style="margin: 5px;margin-left: 1in;text-indent: -0.25in;text-align: center"><span style="font-size: 24pt; color: rgb(230, 126, 35); font-family: 'comic sans ms', sans-serif;"><strong><span lang="EN-IN" style="line-height: 107%;">&nbsp;</span></strong></span></p><p class="MsoListParagraph" style="margin: 5px;margin-left: 1in;text-indent: -0.25in;text-align: center"><span style="font-size: 24pt; color: rgb(230, 126, 35); font-family: 'comic sans ms', sans-serif;"><strong><span lang="EN-IN" style="line-height: 107%;">&nbsp; &nbsp;Happy Akshaya Tritiya&nbsp;</span></strong></span></p><p class="MsoListParagraph" style="margin: 5px;margin-left: 1in;text-indent: -0.25in;text-align: center"><span style="font-size: 8pt; color: rgb(230, 126, 35); font-family: 'comic sans ms', sans-serif;"><strong><span lang="EN-IN" style="line-height: 107%;">&nbsp;</span></strong></span></p><div class="col-md-12" style="margin-top:12px;"></div><p style="margin: 5px;text-align: center"><span lang="EN-IN" style="font-size: 14pt; line-height: 107%; font-family: 'book antiqua', palatino, serif; color: rgb(14, 84, 47);">May Akshaya Tritiya bring </span></p><p style="margin: 5px;text-align: center"><span lang="EN-IN" style="font-size: 14pt; line-height: 107%; font-family: 'book antiqua', palatino, serif; color: rgb(14, 84, 47);">prosperity, wealth and success in all your endeavours. </span></p><p style="margin: 5px;text-align: center"><span lang="EN-IN" style="font-size: 14pt; line-height: 107%; font-family: 'book antiqua', palatino, serif; color: rgb(14, 84, 47);">Wishing you a happy and blessed Akshaya Tritiya.</span></p><div class="col-md-12" style="margin-top:12px;"></div><p style="margin: 5px;text-align: center"><span style="font-size: 18pt; color: rgb(230, 126, 35); font-family: 'book antiqua', palatino, serif;"><em>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;-Sneha</em></span></p><p style="margin: 5px;text-align: center"><span style="font-size: 18pt; color: rgb(230, 126, 35); font-family: 'book antiqua', palatino, serif;"><em>&nbsp;</em></span></p><p style="margin: 5px;text-align: center"><span style="font-size: 18pt; color: rgb(230, 126, 35); font-family: 'book antiqua', palatino, serif;"><em>&nbsp;</em></span></p><p style="margin: 5px;text-align: center"><span style="font-size: 18pt; color: rgb(230, 126, 35); font-family: 'book antiqua', palatino, serif;"><em>&nbsp;</em></span></p><p style="margin: 5px;text-align: center"><span style="font-size: 18pt; color: rgb(230, 126, 35); font-family: 'book antiqua', palatino, serif;"><em>&nbsp;</em></span></p></div><div style=" text-align: center; padding: 5px; position: absolute;bottom:0;left: 0; right: 0;"><img src="https://digitalcard.gaamma.cards/images/defaultlogo.png"></div>        <!--COPYRIGHT-->    </div>
+
+''';
   ApiClient api = new ApiClient();
   @override
   void initState() {
@@ -64,12 +77,12 @@ class _CardPreviewScreen extends State<CardPreviewScreen> {
   void getCardPreview() async {
     try {
       var req = {"ID": cardID.toString(), "IsDownloadImage": true.toString()};
-      PostPreviewGreetingCardResp resp =
+      PostPreviewGreetingTemplateResp resp =
           await api.createPreviewGreetingCard(queryParams: req);
       if ((resp.isSuccess ?? false)) {
         setState(() {
-            htmlContent = resp.result ?? '';
-      
+          htmlContent = resp.result!.htmldata ?? '';//newhtml
+          backgroundImageURL =resp.result!.background??''; //resp.result.backgrouondImage;
         });
       } else {
         Get.snackbar('Error', resp.errorMessage.toString());
@@ -135,23 +148,13 @@ class _CardPreviewScreen extends State<CardPreviewScreen> {
                     children: [
                       Container(
                           height: getVerticalSize(529.00),
-                          width: getHorizontalSize(335.00),
+                          width: getHorizontalSize(380.00),
                           child:
                               Stack(alignment: Alignment.topRight, children: [
-                            CustomImageView(
-                                svgPath: ImageConstant.imgMinimize,
-                                height: getVerticalSize(39.00),
-                                width: getHorizontalSize(41.00),
-                                alignment: Alignment.bottomLeft),
-                            CustomImageView(
-                                svgPath: ImageConstant.imgClock,
-                                height: getVerticalSize(46.00),
-                                width: getHorizontalSize(42.00),
-                                alignment: Alignment.topRight),
                             Container(
                                 height: getVerticalSize(550.00),
                                 width: getHorizontalSize(350.00),
-                                margin: getMargin(top: 17),
+                                margin: getMargin(top: 0),
                                 child: Stack(
                                     alignment: Alignment.topRight,
                                     children: [
@@ -166,78 +169,93 @@ class _CardPreviewScreen extends State<CardPreviewScreen> {
                                                       BorderRadius.circular(
                                                           getHorizontalSize(
                                                               10.00))))),
-                                      Align(
+                                     WidgetsToImage(
+              controller: _controller,
+              child:  Align(
                                           alignment: Alignment.center,
-                                          child: Container(
-                                              padding: getPadding(
-                                                  top: 5,
-                                                  left: 5,
-                                                  bottom: 5,
-                                                  right: 5),
-                                              child: HtmlWidget(
-                                                htmlContent,
-                                                customStylesBuilder: (element) {
-                                                  if (element.classes
-                                                      .contains('foo')) {
-                                                    return {'color': 'red'};
-                                                  }
+                                          child: SingleChildScrollView(
+                                              scrollDirection: Axis.vertical,
+                                              child: Container(
+                                                  padding: getPadding(
+                                                      top: 5,
+                                                      left: 5,
+                                                      bottom: 5,
+                                                      right: 5),
+                                                  child: HtmlWidget(
+                                                    htmlContent,
+                                                    customStylesBuilder:
+                                                        (element) {
+                                                      if (element.classes
+                                                          .contains('foo')) {
+                                                        return {'color': 'red'};
+                                                      }
 
-                                                  return null;
-                                                },
+                                                      return null;
+                                                    },
 
-                                                // render a custom widget
-                                                customWidgetBuilder:
-                                                    (element) {},
+                                                    // render a custom widget
+                                                    customWidgetBuilder:
+                                                        (element) {},
 
-                                                // these callbacks are called when a complicated element is loading
-                                                // or failed to render allowing the app to render progress indicator
-                                                // and fallback widget
-                                                onErrorBuilder: (context,
-                                                        element, error) =>
-                                                    Text(
-                                                        '$element error: $error'),
-                                                onLoadingBuilder: (context,
-                                                        element,
-                                                        loadingProgress) =>
-                                                    CircularProgressIndicator(),
+                                                    // these callbacks are called when a complicated element is loading
+                                                    // or failed to render allowing the app to render progress indicator
+                                                    // and fallback widget
+                                                    onErrorBuilder: (context,
+                                                            element, error) =>
+                                                        Text(
+                                                            '$element error: $error'),
+                                                    onLoadingBuilder: (context,
+                                                            element,
+                                                            loadingProgress) =>
+                                                        CircularProgressIndicator(),
 
-                                                // this callback will be triggered when user taps a link
-                                                // onTapUrl: (url) => print('tapped $url'),
+                                                    // this callback will be triggered when user taps a link
+                                                    // onTapUrl: (url) => print('tapped $url'),
 
-                                                // select the render mode for HTML body
-                                                // by default, a simple `Column` is rendered
-                                                // consider using `ListView` or `SliverList` for better performance
-                                                renderMode: RenderMode.column,
+                                                    // select the render mode for HTML body
+                                                    // by default, a simple `Column` is rendered
+                                                    // consider using `ListView` or `SliverList` for better performance
+                                                    renderMode:
+                                                        RenderMode.column,
 
-                                                // set the default styling for text
-                                                textStyle:
-                                                    TextStyle(fontSize: 14),
+                                                    // set the default styling for text
+                                                    textStyle:
+                                                        TextStyle(fontSize: 14),
 
-                                                // turn on `webView` if you need IFRAME support (it's disabled by default)
-                                                // webView: true,
-                                              ),
-                                              height: getVerticalSize(456.00),
-                                              width: getHorizontalSize(273.00),
-                                              decoration: BoxDecoration(
-                                                  //  color: Colors.white,
-                                                  border: Border.all(
-                                                      color: ColorConstant
-                                                          .whiteA700,
-                                                      width: getHorizontalSize(
-                                                          2.00)),
-                                                  boxShadow: [
-                                                    BoxShadow(
-                                                        color: ColorConstant
-                                                            .black9003f,
-                                                        spreadRadius:
-                                                            getHorizontalSize(
-                                                                2.00),
-                                                        blurRadius:
-                                                            getHorizontalSize(
-                                                                2.00),
-                                                        offset: Offset(0, 4))
-                                                  ])))
-                                    ])),
+                                                    // turn on `webView` if you need IFRAME support (it's disabled by default)
+                                                    // webView: true,
+                                                  ),
+                                                  height:
+                                                      getVerticalSize(700.00),
+                                                  width:
+                                                      getHorizontalSize(325.00),
+                                                  decoration: BoxDecoration(
+                                                      image: DecorationImage(
+                                                        image: NetworkImage(
+                                                            backgroundImageURL),
+                                                        fit: BoxFit.fill,
+                                                      ),
+                                                      //  color: Colors.white,
+                                                      border: Border.all(
+                                                          color: ColorConstant
+                                                              .whiteA700,
+                                                          width:
+                                                              getHorizontalSize(
+                                                                  2.00)),
+                                                      boxShadow: [
+                                                        BoxShadow(
+                                                            color: ColorConstant
+                                                                .black9003f,
+                                                            spreadRadius:
+                                                                getHorizontalSize(
+                                                                    2.00),
+                                                            blurRadius:
+                                                                getHorizontalSize(
+                                                                    2.00),
+                                                            offset:
+                                                                Offset(0, 4))
+                                                      ])))))
+                                    ]))
                           ])),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -255,7 +273,7 @@ class _CardPreviewScreen extends State<CardPreviewScreen> {
                           CustomButton(
                               height: 40,
                               width: 150,
-                              text:  "lbl_Download".tr,
+                              text: "lbl_Download".tr,
                               margin: getMargin(top: 34, bottom: 5),
                               fontStyle: ButtonFontStyle.NunitoSansBlack16,
                               onTap: onTapDownload)
@@ -269,29 +287,29 @@ class _CardPreviewScreen extends State<CardPreviewScreen> {
   }
 
   onTapDownload() async {
-    var s= cardID;
-    var bytes = await WebcontentConverter.contentToImage(content: htmlContent);
+    var s = cardID;
+    // var bytes = await WebcontentConverter.contentToImage(content: htmlContent,);
+    var bytes = await _controller.capture() ?? new Uint8List(0);
     if (bytes.length > 0) {
       _saveFile(bytes);
     }
   }
 
   _saveFile(Uint8List bytes) async {
-    
-     ProgressDialogUtils.showSmallProgressDialog(context);
+    ProgressDialogUtils.showSmallProgressDialog(context);
     final result = await ImageGallerySaver.saveImage(Uint8List.fromList(bytes),
         quality: 100, name: "greeting1.jpg");
     if (result['isSuccess'] == true) {
-      Get.snackbar("Success",
-          "Image downloaded successfully. Please check your gallery",
-              backgroundColor: Color.fromARGB(255, 208, 245, 216),
-              colorText: Colors.green[900],
-              icon: Icon(
-                Icons.done,
-                color: Colors.green[900],
-              ));
-          
-    //  ProgressDialogUtils.hideProgressDialog();
+      Get.snackbar(
+          "Success", "Image downloaded successfully. Please check your gallery",
+          backgroundColor: Color.fromARGB(255, 208, 245, 216),
+          colorText: Colors.green[900],
+          icon: Icon(
+            Icons.done,
+            color: Colors.green[900],
+          ));
+
+      //  ProgressDialogUtils.hideProgressDialog();
     }
   }
 

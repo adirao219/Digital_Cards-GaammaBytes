@@ -353,7 +353,7 @@ class ApiClient extends GetConnect {
     }
   }
 
-  Future<PostPreviewGreetingCardResp> createPreviewGreetingCard(
+  Future<PostPreviewGreetingTemplateResp> createPreviewGreetingCard(
       {Map<String, dynamic> queryParams = const {},
       Map requestData = const {}}) async {
     ProgressDialogUtils.showProgressDialog();
@@ -363,10 +363,10 @@ class ApiClient extends GetConnect {
           query: queryParams, body: requestData);
       ProgressDialogUtils.hideProgressDialog();
       if (_isSuccessCall(response)) {
-        return PostPreviewGreetingCardResp.fromJson(response.body);
+        return PostPreviewGreetingTemplateResp.fromJson(response.body);
       } else {
         throw response.body != null
-            ? PostPreviewGreetingCardResp.fromJson(response.body)
+            ? PostPreviewGreetingTemplateResp.fromJson(response.body)
             : 'Something Went Wrong!';
       }
     } catch (error, stackTrace) {
