@@ -7,6 +7,7 @@ import 'package:digitalcardsgaammabytes/widgets/app_bar/custom_app_bar.dart';
 import 'package:digitalcardsgaammabytes/widgets/custom_bottom_bar.dart';
 import 'package:digitalcardsgaammabytes/widgets/custom_button.dart';
 import 'package:digitalcardsgaammabytes/widgets/custom_text_form_field.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:path/path.dart' as p;
@@ -58,7 +59,6 @@ class _BasicGreetingEntryScreen extends State<BasicGreetingEntryScreen> {
   var selectedCardID = Get.arguments["SelectedCardID"] as int?;
   var greetingCardTypeName = Get.arguments["TypeName"] as String?;
   String templateName = "";
-
   String? captionDefault = "";
   String? messageDefault = "";
   String? senderDefault = "";
@@ -601,21 +601,25 @@ class _BasicGreetingEntryScreen extends State<BasicGreetingEntryScreen> {
       String? imageFilePath = value["refinedImagePath"] as String?;
       int? pictureType = value["pictureType"] as int?;
 
-      imageFile = File(imageFilePath ?? '');
-      var base64val1 =
-          "data:image/png;base64," + base64Encode(imageFile.readAsBytesSync());
-      // print('base64:'+base64val1);
-      if (pictureType == 1) {
-        firstImageBase64 = base64val1;
-        firstCroppedImage = imageFile;
-        isFirstImageSelected = true;
-        firstImageFileName = p.basename(imageFile.path);
-      }
-      if (pictureType == 2) {
-        secondImageBase64 = base64val1;
-        secondCroppedImage = imageFile;
-        isSecondImageSelected = true;
-        secondImageFileName = p.basename(imageFile.path);
+      try {
+        imageFile = File(imageFilePath ?? '');
+        var base64val1 = "data:image/png;base64," +
+            base64Encode(imageFile.readAsBytesSync());
+        // print('base64:'+base64val1);
+        if (pictureType == 1) {
+          firstImageBase64 = base64val1;
+          firstCroppedImage = imageFile;
+          isFirstImageSelected = true;
+          firstImageFileName = p.basename(imageFile.path);
+        }
+        if (pictureType == 2) {
+          secondImageBase64 = base64val1;
+          secondCroppedImage = imageFile;
+          isSecondImageSelected = true;
+          secondImageFileName = p.basename(imageFile.path);
+        }
+      } catch (e) {
+        var s = 1;
       }
     });
   }
@@ -672,6 +676,9 @@ class _BasicGreetingEntryScreen extends State<BasicGreetingEntryScreen> {
 
   createGreeting() async {
     try {
+      var captionUpdated = captionDefault!.replaceAll('"', '\"');
+      var messageUpdated = messageDefault!.replaceAll('"', '\"');
+      var senderUpdated = senderDefault!.replaceAll('"', '\"');
       var req = {
         "UserIdString": GlobalVariables.userID,
         "Id": selectedCardID,
@@ -679,11 +686,11 @@ class _BasicGreetingEntryScreen extends State<BasicGreetingEntryScreen> {
         "LanguageID": GlobalVariables.currentLanguage,
         "TemplateID": templateID,
         "GreetingStatus": selectedCardID == 0 ? 1 : 1,
-        "Caption": captionDefault!.replaceAll('"', '\\"'),
-        "Message": messageDefault!.replaceAll('"', '\\"'),
-        "Sender": senderDefault!.replaceAll('"', '\\"'),
-        "Logo": firstImageBase64,
-        "LogRef": firstImageFileName,
+        "Caption": captionUpdated,
+        "Message": messageUpdated,
+        "Sender": senderUpdated,
+        "Logo": firstImageBase64 ?? '',
+        "LogoRef": firstImageFileName,
         "Picture": secondImageBase64,
         "PictureRef": secondImageFileName
       };
@@ -708,7 +715,9 @@ class _BasicGreetingEntryScreen extends State<BasicGreetingEntryScreen> {
       } else {
         Get.snackbar('Error', resp.errorMessage.toString());
       }
-    } catch (e) {}
+    } catch (e) {
+      var s = e;
+    }
   }
 
   getCardDetails() async {
@@ -732,6 +741,11 @@ class _BasicGreetingEntryScreen extends State<BasicGreetingEntryScreen> {
               resp.result?.greetingDetailsData?.templateID.toString() ?? '';
           greetingCardTypeName =
               resp.result?.greetingDetailsData?.typeIDName.toString() ?? '';
+          firstImageFileName =
+              (resp.result?.greetingDetailsData?.logoRef.toString() ?? '');
+          if ((firstImageFileName ?? '').trim().isNotEmpty) {
+            isFirstImageSelected = true;
+          }
         });
       } else {
         Get.snackbar('Error', resp.errorMessage.toString());

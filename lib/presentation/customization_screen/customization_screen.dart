@@ -115,7 +115,7 @@ class _CustomizationScreen extends State<CustomizationScreen> {
                                                 (templateName ?? ''),
                                             style: TextStyle(
                                                 color: ColorConstant.pink900,
-                                                fontSize: getFontSize(18),
+                                                fontSize: getFontSize(16),
                                                 fontFamily: 'Nunito',
                                                 fontWeight: FontWeight.w600))
                                       ]),

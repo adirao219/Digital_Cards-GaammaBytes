@@ -29,31 +29,50 @@ class GreetingItemWidget extends StatelessWidget {
             right: 3,
             bottom: 3,
           ),
-          decoration: AppDecoration.outlineBlack9002.copyWith(
-            borderRadius: BorderRadiusStyle.customBorderTL15,
-          ),
+          decoration: BoxDecoration(
+            boxShadow: [
+                                          BoxShadow(
+                                              color: ColorConstant.black9003f,
+                                              spreadRadius:
+                                                  getHorizontalSize(1.00),
+                                              blurRadius:
+                                                  getHorizontalSize(1.00),
+                                              offset: Offset(0, 1))
+                                        ],
+              color: ColorConstant.whiteA700,
+              border: Border.all(
+                color: ColorConstant.gray300,
+                width: getHorizontalSize(
+                  2.00,
+                ),
+                
+              )).copyWith(
+              borderRadius: BorderRadius.circular(
+            getHorizontalSize(
+              10.00,
+            ),
+            
+          )),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               CustomImageView(
-                url: (modelobj.thumbnailImage ?? ''),
-                // imagePath: ImageConstant.imgChristmasthumbnail,
-                height: getVerticalSize(
+                 url: (modelobj.thumbnailImage ?? ''),
+                      radius: BorderRadius.circular(15),
+                      // height: getVerticalSize(49.00),
+                      // width: getHorizontalSize(129.00),
+                      margin: getMargin(
+                        top: 5,
+                      ),
+                      height: getVerticalSize(
                   110.00,
                 ),
                 width: getHorizontalSize(
                   110.00,
                 ),
-                radius: BorderRadius.circular(
-                  getHorizontalSize(
-                    5.00,
-                  ),
-                ),
-                margin: getMargin(
-                  left: 2,
-                ),
+
               ),
               Padding(
                 padding: getPadding(
@@ -64,9 +83,10 @@ class GreetingItemWidget extends StatelessWidget {
                   modelobj.typeIDName ?? '',
                   overflow: TextOverflow.ellipsis,
                   textAlign: TextAlign.left,
-                  style: AppStyle.txtNunitoBold14.copyWith(
+                  
+                  style: AppStyle.txtInterSemiBold12.copyWith(
                     letterSpacing: getHorizontalSize(
-                      0.15,
+                      0.10,
                     ),
                   ),
                 ),
@@ -124,7 +144,10 @@ class GreetingItemWidget extends StatelessWidget {
 
   openGreeting(BuildContext mainContext) {
     Navigator.of(mainContext).pushNamed(AppRoutes.basicGreetingEntryScreen,
-        arguments: {"Type": 0, "SelectedCardID": this.modelobj.iD});
+        arguments: {
+          "Type": this.modelobj.typeID,
+          "SelectedCardID": this.modelobj.iD
+        });
   }
 
   void _showContextMenu(BuildContext context) async {

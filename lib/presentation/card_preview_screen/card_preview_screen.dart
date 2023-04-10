@@ -27,11 +27,10 @@ class CardPreviewScreen extends StatefulWidget {
 
 class _CardPreviewScreen extends State<CardPreviewScreen> {
   var cardID = Get.arguments["CardID"] as int?;
-  
+
   WidgetsToImageController _controller = WidgetsToImageController();
   var backgroundImageURL = "";
-  var htmlContent =
-      '''
+  var htmlContent = '''
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -60,7 +59,7 @@ class _CardPreviewScreen extends State<CardPreviewScreen> {
 
   ''';
 
-  var newhtml='''
+  var newhtml = '''
 
         
 <div class="page-wrapper" style="box-shadow: 1px 2px 15px #48484833;position: relative;padding-top: 1px;background: url('https://digitalcard.gaamma.cards/images/AkshayaTritiya_squarecenter.png');background-repeat: no-repeat;background-size: 100%;height: 600px;width: 600px">        <style>.uppergreeting{&nbsp; &nbsp; }p {margin:5px !important;}</style><div class="uppergreeting" style="margin: 15px"><p class="MsoListParagraph" style="margin: 5px;margin-left: 1in;text-indent: -0.25in;text-align: center"><span style="font-size: 24pt; color: rgb(230, 126, 35); font-family: 'comic sans ms', sans-serif;"><strong><span lang="EN-IN" style="line-height: 107%;">&nbsp;</span></strong></span></p><p class="MsoListParagraph" style="margin: 5px;margin-left: 1in;text-indent: -0.25in;text-align: center"><span style="font-size: 24pt; color: rgb(230, 126, 35); font-family: 'comic sans ms', sans-serif;"><strong><span lang="EN-IN" style="line-height: 107%;">&nbsp;</span></strong></span></p><p class="MsoListParagraph" style="margin: 5px;margin-left: 1in;text-indent: -0.25in;text-align: center"><span style="font-size: 24pt; color: rgb(230, 126, 35); font-family: 'comic sans ms', sans-serif;"><strong><span lang="EN-IN" style="line-height: 107%;">&nbsp;</span></strong></span></p><p class="MsoListParagraph" style="margin: 5px;margin-left: 1in;text-indent: -0.25in;text-align: center"><span style="font-size: 24pt; color: rgb(230, 126, 35); font-family: 'comic sans ms', sans-serif;"><strong><span lang="EN-IN" style="line-height: 107%;">&nbsp; &nbsp;Happy Akshaya Tritiya&nbsp;</span></strong></span></p><p class="MsoListParagraph" style="margin: 5px;margin-left: 1in;text-indent: -0.25in;text-align: center"><span style="font-size: 8pt; color: rgb(230, 126, 35); font-family: 'comic sans ms', sans-serif;"><strong><span lang="EN-IN" style="line-height: 107%;">&nbsp;</span></strong></span></p><div class="col-md-12" style="margin-top:12px;"></div><p style="margin: 5px;text-align: center"><span lang="EN-IN" style="font-size: 14pt; line-height: 107%; font-family: 'book antiqua', palatino, serif; color: rgb(14, 84, 47);">May Akshaya Tritiya bring </span></p><p style="margin: 5px;text-align: center"><span lang="EN-IN" style="font-size: 14pt; line-height: 107%; font-family: 'book antiqua', palatino, serif; color: rgb(14, 84, 47);">prosperity, wealth and success in all your endeavours. </span></p><p style="margin: 5px;text-align: center"><span lang="EN-IN" style="font-size: 14pt; line-height: 107%; font-family: 'book antiqua', palatino, serif; color: rgb(14, 84, 47);">Wishing you a happy and blessed Akshaya Tritiya.</span></p><div class="col-md-12" style="margin-top:12px;"></div><p style="margin: 5px;text-align: center"><span style="font-size: 18pt; color: rgb(230, 126, 35); font-family: 'book antiqua', palatino, serif;"><em>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;-Sneha</em></span></p><p style="margin: 5px;text-align: center"><span style="font-size: 18pt; color: rgb(230, 126, 35); font-family: 'book antiqua', palatino, serif;"><em>&nbsp;</em></span></p><p style="margin: 5px;text-align: center"><span style="font-size: 18pt; color: rgb(230, 126, 35); font-family: 'book antiqua', palatino, serif;"><em>&nbsp;</em></span></p><p style="margin: 5px;text-align: center"><span style="font-size: 18pt; color: rgb(230, 126, 35); font-family: 'book antiqua', palatino, serif;"><em>&nbsp;</em></span></p><p style="margin: 5px;text-align: center"><span style="font-size: 18pt; color: rgb(230, 126, 35); font-family: 'book antiqua', palatino, serif;"><em>&nbsp;</em></span></p></div><div style=" text-align: center; padding: 5px; position: absolute;bottom:0;left: 0; right: 0;"><img src="https://digitalcard.gaamma.cards/images/defaultlogo.png"></div>        <!--COPYRIGHT-->    </div>
@@ -81,8 +80,9 @@ class _CardPreviewScreen extends State<CardPreviewScreen> {
           await api.createPreviewGreetingCard(queryParams: req);
       if ((resp.isSuccess ?? false)) {
         setState(() {
-          htmlContent = resp.result!.htmldata ?? '';//newhtml
-          backgroundImageURL =resp.result!.background??''; //resp.result.backgrouondImage;
+          htmlContent = resp.result!.htmldata ?? ''; //newhtml
+          backgroundImageURL =
+              resp.result!.background ?? ''; //resp.result.backgrouondImage;
         });
       } else {
         Get.snackbar('Error', resp.errorMessage.toString());
@@ -125,11 +125,21 @@ class _CardPreviewScreen extends State<CardPreviewScreen> {
                                 text: "lbl_card_preview".tr,
                                 margin:
                                     getMargin(left: 15, top: 16, bottom: 11)),
-                            AppbarImage(
-                                height: getVerticalSize(53.00),
-                                width: getHorizontalSize(55.00),
-                                svgPath: ImageConstant.imgEye,
-                                margin: getMargin(left: 14))
+                            SizedBox(
+                              width: 30,
+                            ),
+                            // AppbarImage(
+                            //     height: getVerticalSize(53.00),
+                            //     width: getHorizontalSize(55.00),
+                            //     svgPath: ImageConstant.imgEye,
+                            //     margin: getMargin(left: 14))
+                            GestureDetector(
+                                child: Icon(
+                                  Icons.download,
+                                  size: 30,
+                                  color: ColorConstant.pink900,
+                                ),
+                                onTap: onTapDownload),
                           ]))
                     ])),
                 // actions: [
@@ -147,138 +157,114 @@ class _CardPreviewScreen extends State<CardPreviewScreen> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Container(
-                          height: getVerticalSize(529.00),
-                          width: getHorizontalSize(380.00),
+                          height: getVerticalSize(550.00),
+                          width: getHorizontalSize(350.00),
                           child:
                               Stack(alignment: Alignment.topRight, children: [
                             Container(
-                                height: getVerticalSize(550.00),
+                                height: getVerticalSize(750.00),
                                 width: getHorizontalSize(350.00),
                                 margin: getMargin(top: 0),
                                 child: Stack(
                                     alignment: Alignment.topRight,
                                     children: [
-                                      Align(
-                                          alignment: Alignment.center,
-                                          child: Container(
-                                              height: getVerticalSize(450.00),
-                                              width: getHorizontalSize(310.00),
-                                              decoration: BoxDecoration(
-                                                  color: Colors.transparent,
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          getHorizontalSize(
-                                                              10.00))))),
-                                     WidgetsToImage(
-              controller: _controller,
-              child:  Align(
-                                          alignment: Alignment.center,
-                                          child: SingleChildScrollView(
-                                              scrollDirection: Axis.vertical,
-                                              child: Container(
-                                                  padding: getPadding(
-                                                      top: 5,
-                                                      left: 5,
-                                                      bottom: 5,
-                                                      right: 5),
-                                                  child: HtmlWidget(
-                                                    htmlContent,
-                                                    customStylesBuilder:
-                                                        (element) {
-                                                      if (element.classes
-                                                          .contains('foo')) {
-                                                        return {'color': 'red'};
-                                                      }
+                                     
+                                      WidgetsToImage(
+                                          controller: _controller,
+                                          child: Align(
+                                              alignment: Alignment.center,
+                                              child: SingleChildScrollView(
+                                                  scrollDirection:
+                                                      Axis.vertical,
+                                                  child: Container(
+                                                      padding: getPadding(
+                                                          top: 5,
+                                                          left: 5,
+                                                          bottom: 5,
+                                                          right: 5),
+                                                      child: HtmlWidget(
+                                                        htmlContent,
+                                                        customStylesBuilder:
+                                                            (element) {
+                                                          if (element.classes
+                                                              .contains(
+                                                                  'foo')) {
+                                                            return {
+                                                              'color': 'red'
+                                                            };
+                                                          }
 
-                                                      return null;
-                                                    },
+                                                          return null;
+                                                        },
 
-                                                    // render a custom widget
-                                                    customWidgetBuilder:
-                                                        (element) {},
+                                                        // render a custom widget
+                                                        customWidgetBuilder:
+                                                            (element) {},
 
-                                                    // these callbacks are called when a complicated element is loading
-                                                    // or failed to render allowing the app to render progress indicator
-                                                    // and fallback widget
-                                                    onErrorBuilder: (context,
-                                                            element, error) =>
-                                                        Text(
-                                                            '$element error: $error'),
-                                                    onLoadingBuilder: (context,
-                                                            element,
-                                                            loadingProgress) =>
-                                                        CircularProgressIndicator(),
+                                                        // these callbacks are called when a complicated element is loading
+                                                        // or failed to render allowing the app to render progress indicator
+                                                        // and fallback widget
+                                                        onErrorBuilder: (context,
+                                                                element,
+                                                                error) =>
+                                                            Text(
+                                                                '$element error: $error'),
+                                                        onLoadingBuilder: (context,
+                                                                element,
+                                                                loadingProgress) =>
+                                                            CircularProgressIndicator(),
 
-                                                    // this callback will be triggered when user taps a link
-                                                    // onTapUrl: (url) => print('tapped $url'),
+                                                        // this callback will be triggered when user taps a link
+                                                        // onTapUrl: (url) => print('tapped $url'),
 
-                                                    // select the render mode for HTML body
-                                                    // by default, a simple `Column` is rendered
-                                                    // consider using `ListView` or `SliverList` for better performance
-                                                    renderMode:
-                                                        RenderMode.column,
+                                                        // select the render mode for HTML body
+                                                        // by default, a simple `Column` is rendered
+                                                        // consider using `ListView` or `SliverList` for better performance
+                                                        renderMode:
+                                                            RenderMode.column,
 
-                                                    // set the default styling for text
-                                                    textStyle:
-                                                        TextStyle(fontSize: 14),
+                                                        // set the default styling for text
+                                                        textStyle: TextStyle(
+                                                            fontSize: 14),
 
-                                                    // turn on `webView` if you need IFRAME support (it's disabled by default)
-                                                    // webView: true,
-                                                  ),
-                                                  height:
-                                                      getVerticalSize(700.00),
-                                                  width:
-                                                      getHorizontalSize(325.00),
-                                                  decoration: BoxDecoration(
-                                                      image: DecorationImage(
-                                                        image: NetworkImage(
-                                                            backgroundImageURL),
-                                                        fit: BoxFit.fill,
+                                                        // turn on `webView` if you need IFRAME support (it's disabled by default)
+                                                        // webView: true,
                                                       ),
-                                                      //  color: Colors.white,
-                                                      border: Border.all(
-                                                          color: ColorConstant
-                                                              .whiteA700,
-                                                          width:
-                                                              getHorizontalSize(
-                                                                  2.00)),
-                                                      boxShadow: [
-                                                        BoxShadow(
-                                                            color: ColorConstant
-                                                                .black9003f,
-                                                            spreadRadius:
-                                                                getHorizontalSize(
-                                                                    2.00),
-                                                            blurRadius:
-                                                                getHorizontalSize(
-                                                                    2.00),
-                                                            offset:
-                                                                Offset(0, 4))
-                                                      ])))))
+                                                      height: getVerticalSize(
+                                                          570.00),
+                                                      width: getHorizontalSize(
+                                                          375.00),
+                                                      decoration: BoxDecoration(
+                                                          image:
+                                                              DecorationImage(
+                                                            image: NetworkImage(
+                                                                backgroundImageURL),
+                                                            fit: BoxFit.fill,
+                                                          ),
+                                                          //  color: Colors.white,
+                                                          border: Border.all(
+                                                              color:
+                                                                  ColorConstant
+                                                                      .whiteA700,
+                                                              width:
+                                                                  getHorizontalSize(
+                                                                      2.00)),
+                                                          boxShadow: [
+                                                            BoxShadow(
+                                                                color: ColorConstant
+                                                                    .black9003f,
+                                                                spreadRadius:
+                                                                    getHorizontalSize(
+                                                                        2.00),
+                                                                blurRadius:
+                                                                    getHorizontalSize(
+                                                                        2.00),
+                                                                offset: Offset(
+                                                                    0, 4))
+                                                          ])))))
                                     ]))
                           ])),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          CustomButton(
-                              height: 40,
-                              width: 150,
-                              text: "lbl_ok".tr,
-                              margin: getMargin(top: 34, bottom: 5),
-                              fontStyle: ButtonFontStyle.NunitoSansBlack16,
-                              onTap: onTapOk),
-                          SizedBox(
-                            width: 20,
-                          ),
-                          CustomButton(
-                              height: 40,
-                              width: 150,
-                              text: "lbl_Download".tr,
-                              margin: getMargin(top: 34, bottom: 5),
-                              fontStyle: ButtonFontStyle.NunitoSansBlack16,
-                              onTap: onTapDownload)
-                        ],
-                      )
+                      
                     ]))));
   }
 
@@ -314,6 +300,6 @@ class _CardPreviewScreen extends State<CardPreviewScreen> {
   }
 
   onTapArrowleft4() {
-    Get.back();
+    Navigator.of(context).pop();
   }
 }

@@ -5,6 +5,8 @@ import 'package:digitalcardsgaammabytes/widgets/app_bar/custom_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'dart:math';
 import '../../data/models/getGreetingType/get_get_greeting_type_resp.dart';
+import '../../widgets/app_bar/appbar_title.dart';
+import '../../widgets/custom_button.dart';
 
 class EGreetingCardOptionsScreen extends StatefulWidget {
   const EGreetingCardOptionsScreen({super.key});
@@ -16,9 +18,13 @@ class EGreetingCardOptionsScreen extends StatefulWidget {
 
 class _EGreetingCardOptionsScreen extends State<EGreetingCardOptionsScreen> {
   ApiClient api = new ApiClient();
+  List<Result> allgreetingTypes = [];
   List<Result> greetingTypes = [];
 
   Random random = new Random();
+  TextEditingController _searchController = new TextEditingController();
+
+  bool showSearchOption = false;
   @override
   void initState() {
     getGreetingTypes();
@@ -30,7 +36,8 @@ class _EGreetingCardOptionsScreen extends State<EGreetingCardOptionsScreen> {
       GetGetGreetingTypeResp resp = await api.fetchGetGreetingType();
       if ((resp.isSuccess ?? false)) {
         setState(() {
-          greetingTypes.addAll(resp.result!.toList());
+          allgreetingTypes.addAll(resp.result!.toList());
+          greetingTypes = allgreetingTypes;
         });
       } else {
         Get.snackbar('Error', resp.errorMessage.toString());
@@ -53,38 +60,49 @@ class _EGreetingCardOptionsScreen extends State<EGreetingCardOptionsScreen> {
               height: getVerticalSize(108.00),
               centerTitle: true,
               title: Container(
-                height: getVerticalSize(94.00),
-                width: size.width,
-                child: GestureDetector(
-                    onTap: () {
-                      Navigator.of(context).pop();
-                    },
-                    child: Stack(children: [
-                      AppbarImage(
-                          height: getVerticalSize(94.00),
-                          width: getHorizontalSize(375.00),
-                          imagePath: ImageConstant.imgVectorDeepOrangeA100),
-                      Container(
-                          height: getVerticalSize(36.00),
-                          width: getHorizontalSize(38.00),
-                          margin: getMargin(
-                              left: 38, top: 44, right: 299, bottom: 14),
-                          child:
-                              Stack(alignment: Alignment.centerLeft, children: [
-                            AppbarImage(
-                                height: getVerticalSize(36.00),
-                                width: getHorizontalSize(38.00),
-                                svgPath: ImageConstant.imgContrast,
-                                onTap: onTapContrast5),
-                            AppbarImage(
-                                height: getVerticalSize(10.00),
-                                width: getHorizontalSize(5.00),
-                                svgPath: ImageConstant.imgVectorstroke,
-                                margin: getMargin(
-                                    left: 15, top: 13, right: 18, bottom: 13))
-                          ]))
-                    ])),
-              ),
+                  height: getVerticalSize(94.00),
+                  width: size.width,
+                  child: Stack(children: [
+                    AppbarImage(
+                        height: getVerticalSize(94.00),
+                        width: getHorizontalSize(375.00),
+                        imagePath: ImageConstant.imgVectorDeepOrangeA100),
+                    Padding(
+                        padding:
+                            getPadding(left: 38, top: 44, right: 99, bottom: 7),
+                        child: GestureDetector(
+                            onTap: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: Row(children: [
+                              Container(
+                                  height: getVerticalSize(36.00),
+                                  width: getHorizontalSize(38.00),
+                                  margin: getMargin(bottom: 6),
+                                  child: Stack(
+                                      alignment: Alignment.centerLeft,
+                                      children: [
+                                        AppbarImage(
+                                            height: getVerticalSize(36.00),
+                                            width: getHorizontalSize(38.00),
+                                            svgPath: ImageConstant.imgContrast,
+                                            onTap: onTapContrast5),
+                                        AppbarImage(
+                                            height: getVerticalSize(10.00),
+                                            width: getHorizontalSize(5.00),
+                                            svgPath:
+                                                ImageConstant.imgVectorstroke,
+                                            margin: getMargin(
+                                                left: 15,
+                                                top: 13,
+                                                right: 18,
+                                                bottom: 13))
+                                      ])),
+                              AppbarTitle(
+                                  text: "msg_greeting_type".tr.toUpperCase(),
+                                  margin: getMargin(left: 40, top: 0))
+                            ])))
+                  ])),
               // actions: [
               //   AppbarImage(
               //       height: getVerticalSize(35.00),
@@ -92,7 +110,7 @@ class _EGreetingCardOptionsScreen extends State<EGreetingCardOptionsScreen> {
               //       svgPath: ImageConstant.imgOverflowmenu,
               //       margin: getMargin(left: 3, top: 47, right: 3, bottom: 26))
               // ],
-              styleType: Style.bgStyle_18),
+              styleType: Style.bgStyle_22),
           body: Container(
             width: size.width,
             padding: getPadding(left: 15, top: 10, right: 15, bottom: 39),
@@ -101,27 +119,103 @@ class _EGreetingCardOptionsScreen extends State<EGreetingCardOptionsScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                  Padding(
-                      padding: getPadding(left: 24),
-                      child: Text("msg_choose_greeting".tr,
-                          overflow: TextOverflow.ellipsis,
-                          textAlign: TextAlign.left,
-                          style: AppStyle.txtNunitoBold20)),
-                  Column(children: gerAllGreetings(context))
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Padding(
+                          padding: getPadding(left: 24),
+                          child: Text("msg_choose_greeting".tr,
+                              overflow: TextOverflow.ellipsis,
+                              textAlign: TextAlign.left,
+                              style: AppStyle.txtNunitoBold20)),
+                      CustomImageView(
+                          onTap: () {
+                            setState(() {
+                              showSearchOption=!showSearchOption;
+                            });
+                          } ,
+                          
+                           svgPath:showSearchOption? ImageConstant.imgArrowdown:ImageConstant.imgSearch,
+                          height: getVerticalSize(17.00),
+                          width: getHorizontalSize(16.00),
+                          alignment: Alignment.centerLeft,
+                          margin:
+                              getMargin(left: 7, top: 6, right: 8, bottom: 6)),
+                     
+                    ],
+                  ),
+                   Visibility(
+                          visible: showSearchOption,
+                          child: Card(
+                            margin: getMargin(bottom: 10),
+                            elevation: 7,
+                              child: Container(
+                                margin: getMargin(bottom: 10),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                               
+                                Padding(
+                                    padding: getPadding(
+                                        left: 20,
+                                        right: 20,
+                                        top: 10,
+                                        bottom: 10),
+                                    child: TextFormField(
+                                        autovalidateMode:
+                                            AutovalidateMode.onUserInteraction,
+                                        controller: _searchController,
+                                        onChanged: ((value) {
+                                          setState(() {
+                                            var newgreetingTypes =
+                                                allgreetingTypes
+                                                    .where((element) => element
+                                                        .typeName!
+                                                        .toLowerCase()
+                                                        .contains(value
+                                                            .toLowerCase()))
+                                                    .toList();
+                                            greetingTypes = newgreetingTypes;
+                                          });
+                                        }),
+                                        
+                                        decoration: InputDecoration(
+                                          labelText: "lbl_search_greetings".tr,
+                                          labelStyle: AppStyle
+                                              .txtNunitoSansRegular12
+                                              .copyWith(
+                                                  height: getVerticalSize(1.10),
+                                                  fontSize: 13),
 
-                  // Padding(
-                  //     padding: getPadding(top: 0),
-                  //     child: GridView(
-                  //       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  //         crossAxisCount:2,
-                  //       ),
-                  //       children: [
-                  //         Image.network('https://picsum.photos/250?image=1'),
-                  //         Image.network('https://picsum.photos/250?image=2'),
-                  //         Image.network('https://picsum.photos/250?image=3'),
-                  //         Image.network('https://picsum.photos/250?image=4'),
-                  //       ],
-                  //     )),
+                                          enabledBorder: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(15.0),
+                                            borderSide: const BorderSide(
+                                              color: Color.fromARGB(
+                                                  255, 183, 183, 183),
+                                            ),
+                                          ),
+                                          suffixIcon:GestureDetector(onTap: () {
+                                      setState(() {
+                                        greetingTypes = allgreetingTypes;
+                                        _searchController.text = "";
+                                      });
+                                    },child:Icon(Icons.cancel,color: ColorConstant.pink900,)) ,
+                                          focusedBorder: OutlineInputBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(15.0),
+                                              borderSide: const BorderSide(
+                                                color: Color.fromARGB(
+                                                    255, 183, 183, 183),
+                                              )),
+                                          // filled: true,
+                                          contentPadding: EdgeInsets.all(15.0),
+                                        ))),
+                              ],
+                            ),
+                          ))),
+                  Column(children: gerAllGreetings(context))
                 ])),
           ),
         ));
@@ -203,6 +297,75 @@ class _EGreetingCardOptionsScreen extends State<EGreetingCardOptionsScreen> {
         return AppDecoration.fillLightblue50
             .copyWith(borderRadius: BorderRadiusStyle.roundedBorder5);
     }
+  }
+
+  Widget filterModalContent(StateSetter setModalState) {
+    return Card(
+        child: Container(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          GestureDetector(
+              onTap: () {
+                setModalState(() {
+                  greetingTypes = allgreetingTypes;
+                  _searchController.text = "";
+                  Navigator.pop(context);
+                });
+              },
+              child: Container(
+                  padding: getPadding(right: 20, top: 20),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Container(
+                        child: Text(
+                          'Clear Filters',
+                          style: TextStyle(
+                            decoration: TextDecoration.underline,
+                          ),
+                        ),
+                      )
+                    ],
+                  ))),
+          Padding(
+              padding: getPadding(left: 20, right: 20, top: 10, bottom: 10),
+              child: TextFormField(
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  controller: _searchController,
+                  onChanged: ((value) {
+                    setState(() {
+                      var newgreetingTypes = allgreetingTypes
+                          .where((element) => element.typeName!
+                              .toLowerCase()
+                              .contains(value.toLowerCase()))
+                          .toList();
+                      greetingTypes = newgreetingTypes;
+                    });
+                  }),
+                  decoration: InputDecoration(
+                    labelText: "lbl_search_greetings".tr,
+                    labelStyle: AppStyle.txtNunitoSansRegular12
+                        .copyWith(height: getVerticalSize(1.10), fontSize: 13),
+
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(15.0),
+                      borderSide: const BorderSide(
+                        color: Color.fromARGB(255, 183, 183, 183),
+                      ),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(15.0),
+                        borderSide: const BorderSide(
+                          color: Color.fromARGB(255, 183, 183, 183),
+                        )),
+                    // filled: true,
+                    contentPadding: EdgeInsets.all(15.0),
+                  ))),
+        ],
+      ),
+    ));
   }
 
   onTapGreetingType(int index) {

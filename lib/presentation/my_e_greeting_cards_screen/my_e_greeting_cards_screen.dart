@@ -341,7 +341,7 @@ class _MyEGreetingCardsScreen extends State<MyEGreetingCardsScreen> {
             children: [
               Container(
                 child: Text(
-                  'Search Details',
+                  "lbl_search_details".tr,
                   style: AppStyle.txtNunitoBold18.copyWith(
                     letterSpacing: getHorizontalSize(
                       0.15,
