@@ -310,6 +310,13 @@ class _SignupPageScreen extends State<SignupPageScreen> {
         signInWithGoogleTokens(
             authResult.accessToken ?? '', authResult.idToken ?? '');
       } else {
+         Get.snackbar('Failed',"Authorization un-successfull",
+          backgroundColor: Color.fromARGB(255, 255, 230, 230),
+          colorText: Colors.red[900],
+          icon: Icon(
+            Icons.error,
+            color: Colors.red[900],
+          ));
         // widget.setUnauthenticatedState();
       }
     } catch (er) {
@@ -483,7 +490,15 @@ class _SignupPageScreen extends State<SignupPageScreen> {
         Navigator.of(context).pushNamed(AppRoutes.googlesigninOneScreen,
             arguments: {"userInfo": _user});
       }
-    } catch (e) {}
+    } catch (e) {
+        Get.snackbar('Error', e.toString(),
+          backgroundColor: Color.fromARGB(255, 255, 230, 230),
+          colorText: Colors.red[900],
+          icon: Icon(
+            Icons.error,
+            color: Colors.red[900],
+          ));
+    }
   }
 
   onTapTxtDonthaveanaccount() {
