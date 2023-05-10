@@ -6,6 +6,7 @@ import 'package:digitalcardsgaammabytes/widgets/app_bar/custom_app_bar.dart';
 import 'package:digitalcardsgaammabytes/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 import '../../core/service/authenticationservice.dart';
 
@@ -21,6 +22,23 @@ class _HomePageScreen extends State<HomePageScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
   final GoogleSignIn _googleSignIn = GoogleSignIn();
+
+  @override
+  void initState() {
+    requestPermission();
+    super.initState();
+  }
+
+  Future<void> requestPermission() async {
+    var gallery = Permission.photos;
+    var storage = Permission.storage;
+    var location = Permission.locationWhenInUse;
+    var camera = Permission.camera;
+    final storagestatus = await storage.request();
+    final gallerystatus = await gallery.request();
+    final camerastatus = await camera.request();
+    final locationstatus = await location.request();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -347,26 +365,26 @@ class _HomePageScreen extends State<HomePageScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        Row(children: [
-                          CustomImageView(
-                            svgPath: ImageConstant.imgHome,
-                            height: getSize(
-                              21.00,
-                            ),
-                            width: getSize(
-                              21.00,
-                            ),
-                          ),
-                          SizedBox(
-                            width: 10,
-                          ),
-                          Text(
-                            "lbl_gaamma_cards".tr,
-                            overflow: TextOverflow.ellipsis,
-                            textAlign: TextAlign.left,
-                            style: AppStyle.txtNunitoSansSemiBold16,
-                          ),
-                        ]),
+                        // Row(children: [
+                        //   CustomImageView(
+                        //     svgPath: ImageConstant.imgHome,
+                        //     height: getSize(
+                        //       21.00,
+                        //     ),
+                        //     width: getSize(
+                        //       21.00,
+                        //     ),
+                        //   ),
+                        //   SizedBox(
+                        //     width: 10,
+                        //   ),
+                        //   Text(
+                        //     "lbl_gaamma_cards".tr,
+                        //     overflow: TextOverflow.ellipsis,
+                        //     textAlign: TextAlign.left,
+                        //     style: AppStyle.txtNunitoSansSemiBold16,
+                        //   ),
+                        // ]),
                         Padding(
                           padding: getPadding(
                             top: 35,
@@ -425,7 +443,6 @@ class _HomePageScreen extends State<HomePageScreen> {
                         ),
                         Padding(
                           padding: getPadding(
-                            left: 3,
                             top: 35,
                           ),
                           child: Row(children: [
@@ -476,37 +493,60 @@ class _HomePageScreen extends State<HomePageScreen> {
                                 textAlign: TextAlign.left,
                                 style: AppStyle.txtNunitoSansSemiBold16,
                               ),
-                              onTap: onTapPayment,
+                              onTap: onTapPayment ,
                             )
                           ]),
                         ),
-                        Padding(
+                          Padding(
                           padding: getPadding(
                             top: 35,
                           ),
                           child: Row(children: [
-                            CustomImageView(
-                              svgPath: ImageConstant.imgLock,
-                              height: getSize(
-                                21.00,
-                              ),
-                              width: getSize(
-                                21.00,
-                              ),
-                            ),
+                            Icon(Icons.history,size: 20,color: ColorConstant.pink900,),
                             SizedBox(
                               width: 10,
                             ),
                             GestureDetector(
                               child: Text(
-                                "lbl_change_password".tr,
+                                "lbl_payment_history".tr,
                                 overflow: TextOverflow.ellipsis,
                                 textAlign: TextAlign.left,
                                 style: AppStyle.txtNunitoSansSemiBold16,
                               ),
-                              onTap: onTapChangePassword,
+                              onTap:onTapCreditHistory,
                             )
                           ]),
+                        ),
+                        Visibility(
+                          child: Padding(
+                            padding: getPadding(
+                              top: 35,
+                            ),
+                            child: Row(children: [
+                              CustomImageView(
+                                svgPath: ImageConstant.imgLock,
+                                height: getSize(
+                                  21.00,
+                                ),
+                                width: getSize(
+                                  21.00,
+                                ),
+                              ),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              GestureDetector(
+                                child: Text(
+                                  "lbl_change_password".tr,
+                                  overflow: TextOverflow.ellipsis,
+                                  textAlign: TextAlign.left,
+                                  style: AppStyle.txtNunitoSansSemiBold16,
+                                ),
+                                onTap: onTapChangePassword,
+                              )
+                            ]),
+                          ),
+                          visible: !GlobalVariables.isGoogleLoggedIn,
                         ),
                         Padding(
                             padding: getPadding(
@@ -593,13 +633,13 @@ class _HomePageScreen extends State<HomePageScreen> {
     GlobalVariables.setGoogleLoggedIn(false);
     GlobalVariables.setUserPhotoUrl("");
     // Navigator.of(context).pushAndRemoveUntil(AppRoutes.signupPageScreen);
- Get.snackbar('Success', "Logged out successfully!",
-            backgroundColor: Color.fromARGB(255, 208, 245, 216),
-            colorText: Colors.green[900],
-            icon: Icon(
-              Icons.done,
-              color: Colors.green[900],
-            ));
+    Get.snackbar('Success', "Logged out successfully!",
+        backgroundColor: Color.fromARGB(255, 208, 245, 216),
+        colorText: Colors.green[900],
+        icon: Icon(
+          Icons.done,
+          color: Colors.green[900],
+        ));
     Navigator.of(context).pushNamedAndRemoveUntil(
         AppRoutes.signupPageScreen, (Route<dynamic> route) => false);
   }
@@ -613,6 +653,8 @@ class _HomePageScreen extends State<HomePageScreen> {
   }
 
   onTapColumnothersone() {
+    // Get.reset(clearRouteBindings: true,clearFactory: true);
+    //  Get.toNamed(AppRoutes.myEGreetingCardsScreen);
     Navigator.of(context).pushNamed(AppRoutes.myEGreetingCardsScreen);
   }
 
@@ -626,5 +668,8 @@ class _HomePageScreen extends State<HomePageScreen> {
 
   onTapPayment() {
     Navigator.of(context).pushNamed(AppRoutes.makePaymentScreen);
+  }
+  onTapCreditHistory() {
+    Navigator.of(context).pushNamed(AppRoutes.purchasecredithistory);
   }
 }

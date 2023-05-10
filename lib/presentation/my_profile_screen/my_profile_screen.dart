@@ -1,12 +1,19 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:digitalcardsgaammabytes/core/app_export.dart';
 import 'package:digitalcardsgaammabytes/core/utils/validation_functions.dart';
 import 'package:digitalcardsgaammabytes/data/apiClient/api_client.dart';
+import 'package:digitalcardsgaammabytes/data/models/deleteGreeting/post_delete_greeting_resp.dart';
 import 'package:digitalcardsgaammabytes/widgets/app_bar/appbar_image.dart';
 import 'package:digitalcardsgaammabytes/widgets/app_bar/custom_app_bar.dart';
 import 'package:digitalcardsgaammabytes/widgets/custom_button.dart';
 import 'package:digitalcardsgaammabytes/widgets/custom_text_form_field.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
+import 'package:path/path.dart' as path;
 import '../../data/globals/globalvariables.dart';
 import '../../data/models/myProfile/get_my_profile_resp.dart';
 import '../../data/models/myProfile/post_my_profile_resp.dart';
@@ -21,15 +28,19 @@ class MyProfileScreen extends StatefulWidget {
 }
 
 class _MyProfileScreen extends State<MyProfileScreen> {
+  ImagePicker _picker = new ImagePicker();
   ApiClient api = new ApiClient();
   int? mainId;
   ProfileResult result = new ProfileResult(
       countryList: [], languageIdList: [], countryCodeList: []);
-
+  String? regDate;
   String? selectedContry;
   String? selectedContryCode;
   int? selectedLanguage;
-
+  int creditsAvailable = 0;
+  String totalSpace = "";
+  String utilizedSapce = "";
+  String remainingSpace = "";
   TextEditingController _email_id4_Controller = new TextEditingController();
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   TextEditingController _language_Controller = new TextEditingController();
@@ -37,10 +48,19 @@ class _MyProfileScreen extends State<MyProfileScreen> {
   TextEditingController _phone_number_Controller = new TextEditingController();
   TextEditingController _place_Controller = new TextEditingController();
   TextEditingController _registered_on_Controller = new TextEditingController();
-
+  bool isFirstImageSelected = false;
+  bool isServerStoredLogo = false;
+  XFile? imageLogo;
+  File mainImageFile = new File('');
+  File? logoCroppedImage;
+  String? logoImageBase64;
+  String? logoImageFileName;
+  int? logoExistingId;
   @override
   void initState() {
     getProfileDetails();
+    getAvailableCredits();
+    getAvailableStorage();
     super.initState();
   }
 
@@ -62,8 +82,16 @@ class _MyProfileScreen extends State<MyProfileScreen> {
           _place_Controller.text = resp.result!.place ?? '';
           selectedContry = resp.result!.country;
           selectedContryCode = resp.result!.countryCode;
-
+          regDate = resp.result!.regDate;
           selectedLanguage = resp.result!.languageId;
+          logoImageFileName = resp.result!.logoref ?? '';
+          logoImageBase64 = resp.result!.logo ?? '';
+          if (logoImageBase64!.isNotEmpty && logoImageFileName!.isNotEmpty) {
+            isFirstImageSelected = true;
+            if (logoImageBase64!.startsWith("http")) {
+              isServerStoredLogo = true;
+            }
+          }
         });
       } else {
         Get.snackbar('Error', resp.errorMessage.toString(),
@@ -77,6 +105,54 @@ class _MyProfileScreen extends State<MyProfileScreen> {
     } catch (e) {}
   }
 
+  getAvailableCredits() async {
+    try {
+      var query = {
+        "UserId": GlobalVariables.userID,
+      };
+      APIResponse resp = await api.getCreditsAvailable(queryParams: query);
+      if (resp.isSuccess ?? false) {
+        setState(() {
+          creditsAvailable = resp.result;
+        });
+      } else {
+        Get.snackbar('Error', resp.errorMessage.toString(),
+            backgroundColor: Color.fromARGB(255, 255, 230, 230),
+            colorText: Colors.red[900],
+            icon: Icon(
+              Icons.error,
+              color: Colors.red[900],
+            ));
+      }
+    } catch (e) {}
+  }
+
+  getAvailableStorage() async {
+    try {
+      var query = {
+        "UserId": GlobalVariables.userID,
+      };
+      StorageResponse resp = await api.getStorageAvailable(queryParams: query);
+      if (resp.isSuccess ?? false) {
+        setState(() {
+          totalSpace = resp.result!.totalSpace ?? '-';
+          utilizedSapce = resp.result!.utilizedSapce ?? '-';
+          remainingSpace = resp.result!.remaningSapce ?? '-';
+        });
+      } else {
+        Get.snackbar('Error', resp.errorMessage.toString(),
+            backgroundColor: Color.fromARGB(255, 255, 230, 230),
+            colorText: Colors.red[900],
+            icon: Icon(
+              Icons.error,
+              color: Colors.red[900],
+            ));
+      }
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
   updateProfileDetails() async {
     try {
       var req = {
@@ -88,7 +164,9 @@ class _MyProfileScreen extends State<MyProfileScreen> {
         "Place": _place_Controller.text,
         "Country": selectedContry,
         "CountryCode": selectedContryCode,
-        "LanguageId": selectedLanguage
+        "LanguageId": selectedLanguage,
+        "Logo": logoImageBase64,
+        "LogoRef": logoImageFileName
       };
       PostMyProfileResp resp = await api.createMyProfile(requestData: req);
       if (resp.isSuccess ?? false) {
@@ -121,6 +199,15 @@ class _MyProfileScreen extends State<MyProfileScreen> {
       top: false,
       bottom: false,
       child: Scaffold(
+        floatingActionButtonLocation: FloatingActionButtonLocation.miniEndTop,
+        floatingActionButton: Padding(
+            padding: const EdgeInsets.only(bottom: 75.0, right: 30),
+            child: IconButton(
+                icon: Icon(CupertinoIcons.tray_2_fill,
+                    color: ColorConstant.pink900),
+                onPressed: () {
+                  showIncreaseStorageDialog(context);
+                })),
         resizeToAvoidBottomInset: false,
         backgroundColor: ColorConstant.whiteA700,
         appBar: CustomAppBar(
@@ -167,11 +254,12 @@ class _MyProfileScreen extends State<MyProfileScreen> {
                                     ])),
                             AppbarTitle(
                                 text: "lbl_my_profile".tr.toUpperCase(),
-                                margin: getMargin(left: 54, top: 14))
+                                margin: getMargin(left: 54, top: 0))
                           ])))
                 ])),
             styleType: Style.bgStyle_22),
-        body: Form(
+        body: SingleChildScrollView(
+            child: Form(
           key: _formKey,
           child: Container(
             width: size.width,
@@ -185,6 +273,28 @@ class _MyProfileScreen extends State<MyProfileScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Text(
+                      ('Credits Available  '),
+                      style: AppStyle.txtNunitoSansBold14,
+                    ),
+                    Container(
+                      padding: getPadding(left: 5, right: 5),
+                      decoration: BoxDecoration(
+                          border: Border.all(
+                            width: 2,
+                            color: ColorConstant.pink900,
+                          ),
+                          borderRadius: BorderRadius.all(Radius.circular(50))),
+                      child: Text(
+                        (creditsAvailable.toString()),
+                        style: AppStyle.txtNunitoSansBold14,
+                      ),
+                    )
+                  ],
+                ),
                 Container(
                   margin: getMargin(
                     top: 20,
@@ -198,7 +308,7 @@ class _MyProfileScreen extends State<MyProfileScreen> {
                   controller: _name_Controller,
                   hintText: "Enter your name here".tr,
                   margin: getMargin(
-                    top: 15,
+                    top: 10,
                   ),
                   validator: (value) {
                     if (!isText(value)) {
@@ -209,7 +319,7 @@ class _MyProfileScreen extends State<MyProfileScreen> {
                 ),
                 Container(
                   margin: getMargin(
-                    top: 15,
+                    top: 10,
                   ),
                   child: Text("lbl_email_id4".tr,
                       style: AppStyle.txtNunitoSansBold14Pink900),
@@ -220,7 +330,7 @@ class _MyProfileScreen extends State<MyProfileScreen> {
                   controller: _email_id4_Controller,
                   hintText: "Enter your email ID here".tr,
                   margin: getMargin(
-                    top: 15,
+                    top: 10,
                   ),
                   textInputType: TextInputType.emailAddress,
                   validator: (value) {
@@ -233,7 +343,7 @@ class _MyProfileScreen extends State<MyProfileScreen> {
                 ),
                 Container(
                   margin: getMargin(
-                    top: 15,
+                    top: 10,
                   ),
                   child: Text("lbl_phone_number".tr,
                       style: AppStyle.txtNunitoSansBold14Pink900),
@@ -244,7 +354,7 @@ class _MyProfileScreen extends State<MyProfileScreen> {
                   controller: _phone_number_Controller,
                   hintText: "Enter your phone number here".tr,
                   margin: getMargin(
-                    top: 15,
+                    top: 10,
                   ),
                   textInputType: TextInputType.number,
                   validator: (value) {
@@ -254,26 +364,26 @@ class _MyProfileScreen extends State<MyProfileScreen> {
                     return null;
                   },
                 ),
+                // Container(
+                //   margin: getMargin(
+                //     top:10,
+                //   ),
+                //   child: Text("lbl_place".tr,
+                //       style: AppStyle.txtNunitoSansBold14Pink900),
+                // ),
+                // CustomTextFormField(
+                //   width: 326,
+                //   focusNode: FocusNode(),
+                //   controller: _place_Controller,
+                //   hintText: "Enter your place here".tr,
+                //   margin: getMargin(
+                //     top:10,
+                //   ),
+                //   textInputType: TextInputType.name,
+                // ),
                 Container(
                   margin: getMargin(
-                    top: 15,
-                  ),
-                  child: Text("lbl_place".tr,
-                      style: AppStyle.txtNunitoSansBold14Pink900),
-                ),
-                CustomTextFormField(
-                  width: 326,
-                  focusNode: FocusNode(),
-                  controller: _place_Controller,
-                  hintText: "Enter your place here".tr,
-                  margin: getMargin(
-                    top: 15,
-                  ),
-                  textInputType: TextInputType.name,
-                ),
-                Container(
-                  margin: getMargin(
-                    top: 15,
+                    top: 10,
                   ),
                   child: Text("Country:".tr,
                       style: AppStyle.txtNunitoSansBold14Pink900),
@@ -306,7 +416,7 @@ class _MyProfileScreen extends State<MyProfileScreen> {
                 ),
                 Container(
                   margin: getMargin(
-                    top: 15,
+                    top: 10,
                   ),
                   child: Text("Country Code:".tr,
                       style: AppStyle.txtNunitoSansBold14Pink900),
@@ -339,7 +449,7 @@ class _MyProfileScreen extends State<MyProfileScreen> {
                 ),
                 Container(
                   margin: getMargin(
-                    top: 15,
+                    top: 10,
                   ),
                   child: Text("Language:".tr,
                       style: AppStyle.txtNunitoSansBold14Pink900),
@@ -370,16 +480,107 @@ class _MyProfileScreen extends State<MyProfileScreen> {
                     //  getTemplate(newValue ?? "");
                   },
                 ),
-                // CustomTextFormField(
-                //   width: 326,
-                //   focusNode: FocusNode(),
-                //   controller: _registered_on_Controller,
-                //   hintText: "lbl_registered_on".tr,
-                //   margin: getMargin(
-                //     top: 24,
-                //   ),
-                //   textInputAction: TextInputAction.done,
-                // ),
+
+                Container(
+                  margin: getMargin(
+                    top: 10,
+                  ),
+                  child: Text("lbl_logo".tr,
+                      style: AppStyle.txtNunitoSansBold14Pink900),
+                ),
+                Row(
+                  children: [
+                    isServerStoredLogo
+                        ? CustomImageView(
+                            url: logoImageBase64,
+                            width: 70,
+                            height: 70,
+                          )
+                        : (mainImageFile.path.isEmpty
+                            ? CustomImageView(
+                                url: "/data",
+                                width: 70,
+                                height: 70,
+                              )
+                            : CustomImageView(
+                                file: mainImageFile,
+                                width: 70,
+                                height: 70,
+                              )),
+                    SizedBox(
+                      width: 20,
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        onTapSelectimage();
+                      },
+                      child: CustomButton(
+                        width: 130,
+                        text: (isFirstImageSelected
+                            ? "lbl_image_selected".tr
+                            : "lbl_select_image".tr),
+                        variant: ButtonVariant.OutlineBlack9003f,
+                        shape: ButtonShape.RoundedBorder5,
+                        padding: ButtonPadding.PaddingT9,
+                        fontStyle: ButtonFontStyle.NunitoSansBlack12,
+                        alignment: Alignment.topCenter,
+                        prefixWidget: Container(
+                            margin: getMargin(right: 10),
+                            child: Icon(
+                              (isFirstImageSelected ? Icons.done : Icons.photo),
+                              color: Colors.white,
+                              size: 15,
+                            )),
+                      ),
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    CustomButton(
+                      height: 40,
+                      width: 40,
+                      // text: "Select Logo Position",
+                      prefixWidget: Icon(
+                        Icons.delete,
+                        color: ColorConstant.pink900,
+                        size: 20,
+                      ),
+                      // margin: getMargin(top: 22),
+                      variant: ButtonVariant.OutlineBlack9003f_1,
+                      shape: ButtonShape.RoundedBorder15,
+                      fontStyle: ButtonFontStyle.NunitoSansBold14,
+                      onTap: () {
+                        showAlertDialog(context);
+                      },
+                    ),
+                  ],
+                ),
+
+                Row(children: [
+                  Container(
+                    margin: getMargin(
+                      top: 10,
+                    ),
+                    child: Text("Registerd On:".tr,
+                        style: AppStyle.txtNunitoSansBold14Pink900),
+                  ),
+                  SizedBox(
+                    width: 20,
+                  ),
+                  Container(
+                      margin: getMargin(top: 10),
+                      child: Text(regDate ?? "",
+                          overflow: TextOverflow.ellipsis,
+                          textAlign: TextAlign.left,
+                          style: TextStyle(
+                            color: ColorConstant.pink900,
+                            fontSize: getFontSize(
+                              14,
+                            ),
+                            fontFamily: 'Nunito Sans',
+                            fontWeight: FontWeight.w500,
+                          )))
+                ]),
                 CustomButton(
                   height: 40,
                   width: 250,
@@ -394,8 +595,365 @@ class _MyProfileScreen extends State<MyProfileScreen> {
               ],
             ),
           ),
-        ),
+        )),
       ),
+    );
+  }
+
+  showAlertDialog(BuildContext context) {
+    // set up the buttons
+    Widget cancelButton = TextButton(
+      child: Text("Cancel"),
+      onPressed: () {
+        Navigator.pop(context);
+      },
+    );
+    Widget continueButton = TextButton(
+      child: Text("Continue"),
+      onPressed: () {
+        Navigator.pop(context);
+        removeSelectedImage();
+      },
+    );
+
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text("Confirmation"),
+      content: Text("Are you sure you want to delete the image?"),
+      actions: [
+        cancelButton,
+        continueButton,
+      ],
+    );
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
+
+  removeSelectedImage() {
+    setState(() {
+      logoExistingId = null;
+      imageLogo = null;
+      mainImageFile = File('');
+      isFirstImageSelected = false;
+      if (isServerStoredLogo) {
+        removeImage();
+      } else {
+        logoImageBase64 = "";
+        logoImageFileName = "";
+      }
+    });
+  }
+
+  removeImage() async {
+    try {
+      var req = {
+        "RefID": (mainId).toString(),
+        "RefTypeID": (7).toString(),
+        "SlNo": (1).toString(),
+        "FileRef": logoImageBase64
+      };
+      PostBooleanGreetingResp resp = await api.removeImage(queryParams: req);
+      if (resp.isSuccess ?? false) {
+        Get.snackbar('Success', "Logo removed successfully!",
+            backgroundColor: Color.fromARGB(255, 208, 245, 216),
+            colorText: Colors.green[900],
+            icon: Icon(
+              Icons.done,
+              color: Colors.green[900],
+            ));
+        setState(() {
+          logoImageBase64 = "";
+          logoImageFileName = "";
+          isServerStoredLogo = false;
+        });
+      } else {
+        Get.snackbar('Error', resp.errorMessage.toString(),
+            backgroundColor: Color.fromARGB(255, 255, 230, 230),
+            colorText: Colors.red[900],
+            icon: Icon(
+              Icons.error,
+              color: Colors.red[900],
+            ));
+      }
+    } catch (e) {}
+  }
+
+  onTapSelectimage() {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return StatefulBuilder(builder: (context, setPopupState) {
+            return AlertDialog(
+                title: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "Select Image!",
+                      style: AppStyle.txtNunitoBold18,
+                    ),
+                    IconButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        icon: Icon(Icons.close)),
+                  ],
+                ),
+                content: SingleChildScrollView(
+                    child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                      Text(
+                        "Please choose image from gallery or click a picture using camera",
+                        style: AppStyle.txtNunitoSansRegular14,
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                    ])),
+                actions: <Widget>[
+                  CustomButton(
+                    height: 40,
+                    width: 110,
+                    text: (' Camera'),
+                    prefixWidget: Icon(
+                      Icons.camera_alt_rounded,
+                      color: ColorConstant.pink900,
+                    ),
+                    // margin: getMargin(top: 22),
+                    variant: ButtonVariant.OutlineBlack9003f_1,
+                    shape: ButtonShape.RoundedBorder15,
+                    fontStyle: ButtonFontStyle.NunitoSansBold14,
+                    onTap: () {
+                      clickOrSelectImage("Camera");
+                    },
+                  ),
+                  CustomButton(
+                    height: 40,
+                    width: 110,
+                    text: (' Gallery'),
+                    prefixWidget: Icon(
+                      Icons.image_search_rounded,
+                      color: ColorConstant.pink900,
+                    ),
+                    // margin: getMargin(top: 22),
+                    variant: ButtonVariant.OutlineBlack9003f_1,
+                    shape: ButtonShape.RoundedBorder15,
+                    fontStyle: ButtonFontStyle.NunitoSansBold14,
+                    onTap: () {
+                      clickOrSelectImage("Gallery");
+                    },
+                  ),
+                ]);
+          });
+        });
+  }
+
+  clickOrSelectImage(String type) async {
+    Navigator.of(context).pop();
+    if (type == "Gallery") {
+      imageLogo = await _picker.pickImage(source: ImageSource.gallery);
+    } else {
+      imageLogo = await _picker.pickImage(source: ImageSource.camera);
+    }
+
+    setState(() {
+      if (imageLogo != null) isFirstImageSelected = true;
+    });
+    File imageFile = new File('');
+
+    if (imageLogo!.path.isNotEmpty) imageFile = File(imageLogo!.path);
+
+    gotoImageModify(imageFile);
+  }
+
+  gotoImageModify(File imageFile) {
+    Get.toNamed(AppRoutes.imageModifyScreen,
+        arguments: {"imageFile": imageFile, "pictureType": 1})?.then((value) {
+      double? width = value['width'];
+      double? height = value['height'];
+      bool? isSquare = value['isSquare'];
+      String? imageFilePath = value["refinedImagePath"] as String?;
+      int? pictureType = value["pictureType"] as int?;
+
+      try {
+        setState(() {
+          mainImageFile = imageFile = File(imageFilePath ?? '');
+          var base64val1 = "data:image/png;base64," +
+              base64Encode(imageFile.readAsBytesSync());
+          // print('base64:'+base64val1);
+
+          logoImageBase64 = base64val1;
+          logoCroppedImage = imageFile;
+          isFirstImageSelected = true;
+          logoImageFileName = path.basename(imageFile.path);
+          logoExistingId = null;
+        });
+      } catch (e) {
+        var s = 1;
+      }
+    });
+  }
+
+  showIncreaseStorageDialog(BuildContext context) {
+    // set up the buttons
+    Widget cancelButton = TextButton(
+      child: Text("Cancel"),
+      onPressed: () {
+        Navigator.pop(context);
+      },
+    );
+    Widget continueButton =
+        Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+      CustomButton(
+        height: 40,
+        width: 200,
+        text: ('   Increase Storage'),
+        prefixWidget: Icon(
+          CupertinoIcons.tray_arrow_up,
+          color: ColorConstant.pink900,
+        ),
+        // margin: getMargin(top: 22),
+        variant: ButtonVariant.OutlineBlack9003f_1,
+        shape: ButtonShape.RoundedBorder15,
+        fontStyle: ButtonFontStyle.NunitoSansBold14,
+        onTap: () {
+          Navigator.pop(context);
+
+          Navigator.of(context).pushNamed(AppRoutes.addstoragecredits);
+          // clickOrSelectImage("Gallery", pictureType);
+        },
+      )
+    ]);
+
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            "Storage",
+            style: AppStyle.txtNunitoBold18,
+          ),
+          IconButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              icon: Icon(Icons.close)),
+        ],
+      ),
+      content: Container(
+          height: 120,
+          child: Column(
+            children: [
+              Padding(
+                  padding: getPadding(left: 0, top: 7, bottom: 7),
+                  child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Padding(
+                            padding: getPadding(bottom: 0),
+                            child: Text("Total Size: ".tr,
+                                overflow: TextOverflow.ellipsis,
+                                textAlign: TextAlign.left,
+                                style: AppStyle.txtNunitoSansRegular16.copyWith(
+                                    letterSpacing: getHorizontalSize(0.36),
+                                    height: getVerticalSize(1.26)))),
+                        SizedBox(
+                          width: 40,
+                        ),
+                        Padding(
+                            padding: getPadding(bottom: 0),
+                            child: Text(totalSpace,
+                                overflow: TextOverflow.ellipsis,
+                                textAlign: TextAlign.left,
+                                style: TextStyle(
+                                  color: ColorConstant.pink900,
+                                  fontSize: getFontSize(
+                                    15,
+                                  ),
+                                  fontFamily: 'Nunito Sans',
+                                  fontWeight: FontWeight.w700,
+                                ))),
+                      ])),
+              Padding(
+                  padding: getPadding(left: 0, top: 7, bottom: 7),
+                  child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Padding(
+                            padding: getPadding(bottom: 0),
+                            child: Text("Utilized: ".tr,
+                                overflow: TextOverflow.ellipsis,
+                                textAlign: TextAlign.left,
+                                style: AppStyle.txtNunitoSansRegular16.copyWith(
+                                    letterSpacing: getHorizontalSize(0.36),
+                                    height: getVerticalSize(1.26)))),
+                        SizedBox(
+                          width: 40,
+                        ),
+                        Padding(
+                            padding: getPadding(bottom: 0),
+                            child: Text(utilizedSapce,
+                                overflow: TextOverflow.ellipsis,
+                                textAlign: TextAlign.left,
+                                style: TextStyle(
+                                  color: ColorConstant.pink900,
+                                  fontSize: getFontSize(
+                                    15,
+                                  ),
+                                  fontFamily: 'Nunito Sans',
+                                  fontWeight: FontWeight.w700,
+                                ))),
+                      ])),
+              Padding(
+                  padding: getPadding(left: 0, top: 7, bottom: 7),
+                  child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Padding(
+                            padding: getPadding(bottom: 0),
+                            child: Text("Available: ".tr,
+                                overflow: TextOverflow.ellipsis,
+                                textAlign: TextAlign.left,
+                                style: AppStyle.txtNunitoSansRegular16.copyWith(
+                                    letterSpacing: getHorizontalSize(0.36),
+                                    height: getVerticalSize(1.26)))),
+                        SizedBox(
+                          width: 40,
+                        ),
+                        Padding(
+                            padding: getPadding(bottom: 0),
+                            child: Text(remainingSpace,
+                                overflow: TextOverflow.ellipsis,
+                                textAlign: TextAlign.left,
+                                style: TextStyle(
+                                  color: ColorConstant.pink900,
+                                  fontSize: getFontSize(
+                                    15,
+                                  ),
+                                  fontFamily: 'Nunito Sans',
+                                  fontWeight: FontWeight.w700,
+                                ))),
+                      ])),
+            ],
+          )),
+      actions: [
+        continueButton,
+      ],
+    );
+
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
     );
   }
 }

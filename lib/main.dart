@@ -3,12 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'core/app_export.dart';
+import 'core/environment/env_config.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
   ]).then((value) {
+    
+    EnvConfig.initConfig(environment: ( true ? Environment.prod : Environment.dev));
     Logger.init(kReleaseMode ? LogMode.live : LogMode.debug);
     
    Firebase.initializeApp().then((val) {
@@ -34,6 +37,7 @@ class MyApp extends StatelessWidget {
       title: 'aditya_s_application3',
       initialBinding: InitialBindings(),
       initialRoute: AppRoutes.initialRoute,
+      // routes: AppRoutes.initpages,
       getPages: AppRoutes.pages,
     );
   }

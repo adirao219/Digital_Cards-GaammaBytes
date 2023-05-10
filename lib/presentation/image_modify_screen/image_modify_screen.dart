@@ -11,6 +11,7 @@ import 'package:image_cropper/image_cropper.dart';
 import 'dart:io';
 import 'package:image/image.dart' as IMG;
 import 'package:image_gallery_saver/image_gallery_saver.dart';
+import 'package:intl/intl.dart';
 
 import 'package:path_provider/path_provider.dart';
 import '../../core/utils/progress_dialog_utils.dart';
@@ -35,8 +36,13 @@ class _ImageModifyoneScreen extends State<ImageModifyScreen> {
 
   @override
   void initState() {
-    _size_x_controller.text = "100";
-    _size_y_controller.text = "100";
+    if (pictureType == 1) {
+      _size_x_controller.text = "100";
+      _size_y_controller.text = "100";
+    } else {
+      _size_x_controller.text = "600";
+      _size_y_controller.text = "600";
+    }
     cropImageFromPath();
     super.initState();
   }
@@ -118,10 +124,18 @@ class _ImageModifyoneScreen extends State<ImageModifyScreen> {
                           CustomImageView(
                               file: imageFile,
                               height: getSize(_size_x_controller.text.isNotEmpty
-                                  ? (double.parse(_size_x_controller.text) * 2)
+                                  ? (pictureType == 1
+                                      ? (double.parse(_size_x_controller.text) *
+                                          2)
+                                      : (double.parse(_size_x_controller.text) *
+                                          0.50))
                                   : 326.00),
                               width: getSize(_size_y_controller.text.isNotEmpty
-                                  ? (double.parse(_size_y_controller.text) * 2)
+                                  ? (pictureType == 1
+                                      ? (double.parse(_size_y_controller.text) *
+                                          2)
+                                      : (double.parse(_size_y_controller.text) *
+                                          0.50))
                                   : 326.00),
                               radius: BorderRadius.circular(getHorizontalSize(
                                   isSquareSelected ? 10.00 : 1000.00)),
@@ -339,10 +353,18 @@ class _ImageModifyoneScreen extends State<ImageModifyScreen> {
   }
 
   resizeImage() async {
-    if (double.parse(_size_x_controller.text) > 250 ||
-        double.parse(_size_y_controller.text) > 250) {
-      Get.snackbar('Warning', "Logo size cant be more than 250 * 250");
-      return;
+    if (pictureType == 1) {
+      if (double.parse(_size_x_controller.text) > 250 ||
+          double.parse(_size_y_controller.text) > 250) {
+        Get.snackbar('Warning', "Logo size cant be more than 250 * 250");
+        return;
+      }
+    } else {
+      if (double.parse(_size_x_controller.text) > 1000 ||
+          double.parse(_size_y_controller.text) > 1000) {
+        Get.snackbar('Warning', "Logo size cant be more than 600 * 600");
+        return;
+      }
     }
     IMG.Image? image =
         IMG.decodeImage(new File(imageFile.path).readAsBytesSync());
@@ -362,10 +384,13 @@ class _ImageModifyoneScreen extends State<ImageModifyScreen> {
   }
 
   Future<File> writeToFile(Uint8List data) async {
+    
+    DateTime now = DateTime.now();
+    String formattedDate = DateFormat('yyyyMMdHHmmss').format(now);
     Directory tempDir = await getTemporaryDirectory();
     String tempPath = tempDir.path;
     var filePath = tempPath +
-        '/resizedimage.png'; // file_01.tmp is dump file, can be anything
+        '/resizedimage_'+formattedDate+'.png'; // file_01.tmp is dump file, can be anything
     return new File(filePath).writeAsBytes(data);
   }
 

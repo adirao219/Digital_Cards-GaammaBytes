@@ -1,12 +1,11 @@
-class GetFilterGreetingTemplateResp {
+class CommonDropdownResp {
   bool? isSuccess;
   List<Result>? result;
   dynamic errorMessage;
 
-  GetFilterGreetingTemplateResp(
-      {this.isSuccess, this.result, this.errorMessage});
+  CommonDropdownResp({this.isSuccess, this.result, this.errorMessage});
 
-  GetFilterGreetingTemplateResp.fromJson(Map<String, dynamic> json) {
+  CommonDropdownResp.fromJson(Map<String, dynamic> json) {
     isSuccess = json['IsSuccess'];
     if (json['Result'] != null) {
       result = <Result>[];
@@ -65,6 +64,98 @@ class Result {
     }
     if (this.value != null) {
       data['Value'] = this.value;
+    }
+    return data;
+  }
+}
+class CaptionMessageResult {
+  bool? isSuccess;
+  List<DefaultCaptionMessageData>? result;
+  dynamic errorMessage;
+
+  CaptionMessageResult({this.isSuccess, this.result, this.errorMessage});
+
+  CaptionMessageResult.fromJson(Map<String, dynamic> json) {
+    isSuccess = json['IsSuccess'];
+    if (json['Result'] != null) {
+      result = <DefaultCaptionMessageData>[];
+      json['Result'].forEach((v) {
+        result?.add(DefaultCaptionMessageData.fromJson(v));
+      });
+    }
+    errorMessage = json['ErrorMessage'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = {};
+    if (this.isSuccess != null) {
+      data['IsSuccess'] = this.isSuccess;
+    }
+    if (this.result != null) {
+      data['Result'] = this.result?.map((v) => v.toJson()).toList();
+    }
+    if (this.errorMessage != null) {
+      data['ErrorMessage'] = this.errorMessage;
+    }
+    return data;
+  }
+}
+class DefaultCaptionMessageData {
+  int? id;
+  int? typeID;
+  String? typeIDName;
+  int? greetingTypeID;
+  String? greetingTypeIDName;
+  int? languageID;
+  String? languageName;
+  String? details;
+
+  DefaultCaptionMessageData(
+      {this.id,
+      this.typeID,
+      this.typeIDName,
+      this.greetingTypeID,
+      this.greetingTypeIDName,
+      this.languageID,
+      this.languageName,
+      this.details});
+
+  DefaultCaptionMessageData.fromJson(Map<String, dynamic> json) {
+    id = json['ID'];
+    typeID = json['TypeID'];
+    typeIDName = json['TypeIDName'];
+    greetingTypeID = json['GreetingTypeID'];
+    greetingTypeIDName = json['GreetingTypeIDName'];
+    languageID = json['LanguageID'];
+    languageName = json['LanguageName'];
+    details = json['Details'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = {};
+    if (this.id != null) {
+      data['ID'] = this.id;
+    }
+    if (this.typeID != null) {
+      data['TypeID'] = this.typeID;
+    }
+    if (this.typeIDName != null) {
+      data['TypeIDName'] = this.typeIDName;
+    }
+    if (this.greetingTypeID != null) {
+      data['GreetingTypeID'] = this.greetingTypeID;
+    }
+    if (this.greetingTypeIDName != null) {
+      data['GreetingTypeIDName'] = this.greetingTypeIDName;
+    }
+    if (this.languageID != null) {
+      data['LanguageID'] = this.languageID;
+    }
+    if (this.languageName != null) {
+      data['LanguageName'] = this.languageName;
+    }
+    if (this.details != null) {
+      data['Details'] = this.details;
     }
     return data;
   }

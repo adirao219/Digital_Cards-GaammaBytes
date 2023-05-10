@@ -90,11 +90,16 @@ class _VerifiactionPageScreen extends State<VerifiactionPageScreen> {
                               length: 4,
                               obscureText: false,
                               obscuringCharacter: '*',
-                              keyboardType: TextInputType.number,
+                              keyboardType: type == "1"
+                                  ? TextInputType.text
+                                  : TextInputType.number,
                               autoDismissKeyboard: true,
                               enableActiveFill: true,
                               inputFormatters: [
-                                FilteringTextInputFormatter.digitsOnly
+                                type == "1"
+                                    ? FilteringTextInputFormatter
+                                        .singleLineFormatter
+                                    : FilteringTextInputFormatter.digitsOnly
                               ],
                               onChanged: (value) {
                                 setState(() {
@@ -169,12 +174,12 @@ class _VerifiactionPageScreen extends State<VerifiactionPageScreen> {
                   color: Colors.green[900],
                 ));
           } else {
-            GlobalVariables.setLogin(true);
-            GlobalVariables.setUserID(userID ?? '');
+            // GlobalVariables.setLogin(true);
+            // GlobalVariables.setUserID(userID ?? '');
 
-            Navigator.of(context).pushNamed(AppRoutes.homePageScreen);
+            Navigator.of(context).pushNamed(AppRoutes.signupPageScreen);
 
-            Get.snackbar('Success', "Welcome to Gaamma Cards",
+            Get.snackbar('Account createad successfully', "Please signin to continue.",
                 backgroundColor: Color.fromARGB(255, 208, 245, 216),
                 colorText: Colors.green[900],
                 icon: Icon(

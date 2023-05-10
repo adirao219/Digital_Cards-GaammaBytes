@@ -10,6 +10,7 @@ import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
+import 'package:intl/intl.dart';
 
 import 'package:webcontent_converter/webcontent_converter.dart';
 import 'package:widgets_to_image/widgets_to_image.dart';
@@ -30,7 +31,10 @@ class _CardPreviewScreen extends State<CardPreviewScreen> {
 
   WidgetsToImageController _controller = WidgetsToImageController();
   var backgroundImageURL = "";
-  var htmlContent = '''
+  bool? isBackgroundImage = false;
+  var customColor = "";
+  var htmlContent =
+      '''
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -59,7 +63,8 @@ class _CardPreviewScreen extends State<CardPreviewScreen> {
 
   ''';
 
-  var newhtml = '''
+  var newhtml =
+      '''
 
         
 <div class="page-wrapper" style="box-shadow: 1px 2px 15px #48484833;position: relative;padding-top: 1px;background: url('https://digitalcard.gaamma.cards/images/AkshayaTritiya_squarecenter.png');background-repeat: no-repeat;background-size: 100%;height: 600px;width: 600px">        <style>.uppergreeting{&nbsp; &nbsp; }p {margin:5px !important;}</style><div class="uppergreeting" style="margin: 15px"><p class="MsoListParagraph" style="margin: 5px;margin-left: 1in;text-indent: -0.25in;text-align: center"><span style="font-size: 24pt; color: rgb(230, 126, 35); font-family: 'comic sans ms', sans-serif;"><strong><span lang="EN-IN" style="line-height: 107%;">&nbsp;</span></strong></span></p><p class="MsoListParagraph" style="margin: 5px;margin-left: 1in;text-indent: -0.25in;text-align: center"><span style="font-size: 24pt; color: rgb(230, 126, 35); font-family: 'comic sans ms', sans-serif;"><strong><span lang="EN-IN" style="line-height: 107%;">&nbsp;</span></strong></span></p><p class="MsoListParagraph" style="margin: 5px;margin-left: 1in;text-indent: -0.25in;text-align: center"><span style="font-size: 24pt; color: rgb(230, 126, 35); font-family: 'comic sans ms', sans-serif;"><strong><span lang="EN-IN" style="line-height: 107%;">&nbsp;</span></strong></span></p><p class="MsoListParagraph" style="margin: 5px;margin-left: 1in;text-indent: -0.25in;text-align: center"><span style="font-size: 24pt; color: rgb(230, 126, 35); font-family: 'comic sans ms', sans-serif;"><strong><span lang="EN-IN" style="line-height: 107%;">&nbsp; &nbsp;Happy Akshaya Tritiya&nbsp;</span></strong></span></p><p class="MsoListParagraph" style="margin: 5px;margin-left: 1in;text-indent: -0.25in;text-align: center"><span style="font-size: 8pt; color: rgb(230, 126, 35); font-family: 'comic sans ms', sans-serif;"><strong><span lang="EN-IN" style="line-height: 107%;">&nbsp;</span></strong></span></p><div class="col-md-12" style="margin-top:12px;"></div><p style="margin: 5px;text-align: center"><span lang="EN-IN" style="font-size: 14pt; line-height: 107%; font-family: 'book antiqua', palatino, serif; color: rgb(14, 84, 47);">May Akshaya Tritiya bring </span></p><p style="margin: 5px;text-align: center"><span lang="EN-IN" style="font-size: 14pt; line-height: 107%; font-family: 'book antiqua', palatino, serif; color: rgb(14, 84, 47);">prosperity, wealth and success in all your endeavours. </span></p><p style="margin: 5px;text-align: center"><span lang="EN-IN" style="font-size: 14pt; line-height: 107%; font-family: 'book antiqua', palatino, serif; color: rgb(14, 84, 47);">Wishing you a happy and blessed Akshaya Tritiya.</span></p><div class="col-md-12" style="margin-top:12px;"></div><p style="margin: 5px;text-align: center"><span style="font-size: 18pt; color: rgb(230, 126, 35); font-family: 'book antiqua', palatino, serif;"><em>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;-Sneha</em></span></p><p style="margin: 5px;text-align: center"><span style="font-size: 18pt; color: rgb(230, 126, 35); font-family: 'book antiqua', palatino, serif;"><em>&nbsp;</em></span></p><p style="margin: 5px;text-align: center"><span style="font-size: 18pt; color: rgb(230, 126, 35); font-family: 'book antiqua', palatino, serif;"><em>&nbsp;</em></span></p><p style="margin: 5px;text-align: center"><span style="font-size: 18pt; color: rgb(230, 126, 35); font-family: 'book antiqua', palatino, serif;"><em>&nbsp;</em></span></p><p style="margin: 5px;text-align: center"><span style="font-size: 18pt; color: rgb(230, 126, 35); font-family: 'book antiqua', palatino, serif;"><em>&nbsp;</em></span></p></div><div style=" text-align: center; padding: 5px; position: absolute;bottom:0;left: 0; right: 0;"><img src="https://digitalcard.gaamma.cards/images/defaultlogo.png"></div>        <!--COPYRIGHT-->    </div>
@@ -68,6 +73,8 @@ class _CardPreviewScreen extends State<CardPreviewScreen> {
   ApiClient api = new ApiClient();
   @override
   void initState() {
+    
+      ProgressDialogUtils.hideProgressDialog();
     // if (isGreeting) getGreetingTemplates();
     getCardPreview();
     super.initState();
@@ -75,19 +82,26 @@ class _CardPreviewScreen extends State<CardPreviewScreen> {
 
   void getCardPreview() async {
     try {
-      var req = {"ID": cardID.toString(), "IsDownloadImage": true.toString()};
+      var req = {"ID": cardID.toString(), "IsDownloadImage": false.toString()};
       PostPreviewGreetingTemplateResp resp =
           await api.createPreviewGreetingCard(queryParams: req);
       if ((resp.isSuccess ?? false)) {
         setState(() {
           htmlContent = resp.result!.htmldata ?? ''; //newhtml
-          backgroundImageURL =
-              resp.result!.background ?? ''; //resp.result.backgrouondImage;
+          backgroundImageURL = resp.result!.background ?? '';
+          isBackgroundImage = resp.result!.isBackgroundImage;
+          customColor = (resp.result!.editorColorHex ?? '');
         });
+        ProgressDialogUtils.hideProgressDialog();
       } else {
         Get.snackbar('Error', resp.errorMessage.toString());
+
+        ProgressDialogUtils.hideProgressDialog();
       }
-    } catch (e) {}
+    } catch (e) {
+      var s = 1;
+      ProgressDialogUtils.hideProgressDialog();
+    }
   }
 
   @override
@@ -126,7 +140,7 @@ class _CardPreviewScreen extends State<CardPreviewScreen> {
                                 margin:
                                     getMargin(left: 15, top: 16, bottom: 11)),
                             SizedBox(
-                              width: 30,
+                              width: 20,
                             ),
                             // AppbarImage(
                             //     height: getVerticalSize(53.00),
@@ -168,7 +182,6 @@ class _CardPreviewScreen extends State<CardPreviewScreen> {
                                 child: Stack(
                                     alignment: Alignment.topRight,
                                     children: [
-                                     
                                       WidgetsToImage(
                                           controller: _controller,
                                           child: Align(
@@ -231,14 +244,17 @@ class _CardPreviewScreen extends State<CardPreviewScreen> {
                                                         // webView: true,
                                                       ),
                                                       height: getVerticalSize(
-                                                          570.00),
+                                                          650.00),
                                                       width: getHorizontalSize(
                                                           375.00),
                                                       decoration: BoxDecoration(
                                                           image:
                                                               DecorationImage(
                                                             image: NetworkImage(
-                                                                backgroundImageURL),
+                                                                (isBackgroundImage ??
+                                                                        false)
+                                                                    ? backgroundImageURL
+                                                                    : ""),
                                                             fit: BoxFit.fill,
                                                           ),
                                                           //  color: Colors.white,
@@ -264,7 +280,6 @@ class _CardPreviewScreen extends State<CardPreviewScreen> {
                                                           ])))))
                                     ]))
                           ])),
-                      
                     ]))));
   }
 
@@ -273,6 +288,7 @@ class _CardPreviewScreen extends State<CardPreviewScreen> {
   }
 
   onTapDownload() async {
+    ProgressDialogUtils.showProgressDialog();
     var s = cardID;
     // var bytes = await WebcontentConverter.contentToImage(content: htmlContent,);
     var bytes = await _controller.capture() ?? new Uint8List(0);
@@ -282,20 +298,31 @@ class _CardPreviewScreen extends State<CardPreviewScreen> {
   }
 
   _saveFile(Uint8List bytes) async {
-    ProgressDialogUtils.showSmallProgressDialog(context);
-    final result = await ImageGallerySaver.saveImage(Uint8List.fromList(bytes),
-        quality: 100, name: "greeting1.jpg");
-    if (result['isSuccess'] == true) {
-      Get.snackbar(
-          "Success", "Image downloaded successfully. Please check your gallery",
-          backgroundColor: Color.fromARGB(255, 208, 245, 216),
-          colorText: Colors.green[900],
-          icon: Icon(
-            Icons.done,
-            color: Colors.green[900],
-          ));
+    try {
+      DateTime now = DateTime.now();
+      String formattedDate = DateFormat('yyyyMMdd-hhmmss').format(now);
 
-      //  ProgressDialogUtils.hideProgressDialog();
+      var filename = "greeting_" + formattedDate + ".jpg";
+      ProgressDialogUtils.showSmallProgressDialog(context);
+      final result = await ImageGallerySaver.saveImage(
+          Uint8List.fromList(bytes),
+          quality: 100,
+          name: filename);
+      if (result['isSuccess'] == true) {
+        ProgressDialogUtils.hideProgressDialog();
+        Get.snackbar("Success",
+            "Image downloaded successfully. Please check your gallery",
+            backgroundColor: Color.fromARGB(255, 208, 245, 216),
+            colorText: Colors.green[900],
+            icon: Icon(
+              Icons.done,
+              color: Colors.green[900],
+            ));
+      } else {
+        ProgressDialogUtils.hideProgressDialog();
+      }
+    } catch (e) {
+      ProgressDialogUtils.hideProgressDialog();
     }
   }
 

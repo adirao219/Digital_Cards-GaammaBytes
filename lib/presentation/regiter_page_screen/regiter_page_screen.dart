@@ -556,8 +556,8 @@ class _RegiterPageScreen extends State<RegiterPageScreen> {
                                   iAgree = vale ?? false;
                                 });
                               }),
-                          Text("I agree to the terms and conditions".tr,
-                              style: AppStyle.txtNunitoSansRegular14Pink900),
+                        GestureDetector(onTap:(){showTermsAlertDialog(context);},child:Text("I agree to the terms and conditions".tr,
+                              style: AppStyle.txtNunitoSansRegular14Pink900)),
                         ],
                       ),
                       GestureDetector(
@@ -580,8 +580,8 @@ class _RegiterPageScreen extends State<RegiterPageScreen> {
                                   getPadding(top: 20, right: 32, bottom: 5),
                               child: InkWell(
                                   onTap: () {
-                                    Get.toNamed(
-                                        AppRoutes.verifiactionPageScreen);
+                                    Navigator.pop(context);
+  
                                   },
                                   child: RichText(
                                       text: TextSpan(children: [
@@ -617,6 +617,63 @@ class _RegiterPageScreen extends State<RegiterPageScreen> {
 
   onTapRegister() {
     Navigator.of(context).pushNamed(AppRoutes.verifiactionPageScreen);
+  }
+
+  showTermsAlertDialog(BuildContext context) {
+    // set up the buttons
+    Widget okayButton = TextButton(
+      child: Text("Okay",style:AppStyle.txtNunitoSansRegular14Pink900 ,),
+      onPressed: () {
+        Navigator.pop(context);
+      },
+    );
+
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text("Terms and Conditions"),
+      content:SingleChildScrollView(
+                    child:  Column(
+        children: [
+          Text(
+              """Welcome to our app - Gaamma.Cards. If you continue to browse and use this website, you are agreeing to comply with and be bound by the following terms and conditions of use, which together with our privacy policy govern Gaammabytes Pvt Ltd ’s relationship with you in relation to this website.
+
+The term 'Gaammabytes Pvt Ltd' or 'Gaammabytes' or 'us' or 'we' refers to the owner of the website whose registered office is 363, 19th Main Road, 1 st Block, Rajaji Nagar, Bengaluru, Karnataka - 560010. The term 'you' refers to the user or viewer of our website.
+
+The use of this service is subject to the following terms of use:
+""",
+              style: TextStyle(color: Colors.grey[600], fontSize: 12)),
+          Text(
+              """• The content provided here is for planning purposes only. You expressly understand and agree that your use of the service and the content is at your sole risk and that the service and the content are provided "as is" and "as available." In particular, Gaammabytes, its subsidiaries and affiliates, and its licensors and their suppliers, do not represent or warrant to you that:
+(a) Your use of the service will meet your requirements;
+(b) Your use of the service will be uninterrupted, timely, secure or free from error;
+(c) The information obtained by you as a result of your use of the service will be accurate or reliable; and
+(d) Defects in the operation or functionality of any software provided to you as part of the service will be corrected.
+
+• Any content obtained through the use of this service is done at your own discretion and risk and you will be solely responsible for any damage to your computer system or other device, loss of data, or any other damage or injury that results from the download or use of any such content.
+
+• You must not reverse engineer, decompile or otherwise attempt to extract the source code of the Service or any part thereof, unless this is expressly permitted or required by applicable law.
+
+• The Service may include hyperlinks to other websites or content or resources. Gaammabyteshas no control over any web sites or resources that are provided by companies or persons other than us. You acknowledge and agree that Gaammabytes is not responsible for the availability of any such external sites or resources, and does not endorse any advertising, products, or other materials on or available from such websites or resources.
+
+• If any court of law that has jurisdiction rules that any provision of these Terms is invalid, then that provision will be removed from the Terms without affecting the rest of the Terms. The remaining provisions of the Terms will continue to be valid and enforceable.
+
+• Gaammabytes reserves the right to make changes to the Terms from time to time. You understand and agree that if you use the Service after the date on which the Terms have changed, Gaammabytes will treat your use as acceptance of the updated Terms. If a modification is unacceptable to you, you may terminate this agreement by ceasing use of the Service.
+
+• Your use of this website and any dispute arising out of such use of the website is subject to Bengaluru, India Jurisdiction""",
+              style: TextStyle(color: ColorConstant.pink900, fontSize: 12))
+        ],
+      )),
+      actions: [
+        // cancelButton,
+        okayButton,
+      ],
+    );
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
   }
 
   validateCouponCode() async {

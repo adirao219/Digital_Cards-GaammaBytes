@@ -76,7 +76,7 @@ class _CustomizationScreen extends State<CustomizationScreen> {
                                         ])),
                                 AppbarTitle(
                                     text: "lbl_card_details".tr.toUpperCase(),
-                                    margin: getMargin(left: 54, top: 14))
+                                    margin: getMargin(left:30, top: 0))
                               ])))
                     ])),
                 // actions: [
@@ -102,7 +102,7 @@ class _CustomizationScreen extends State<CustomizationScreen> {
                                   child: RichText(
                                       text: TextSpan(children: [
                                         TextSpan(
-                                            text: ("msg_card_type_ex_new2".tr) +
+                                            text: ("msg_card_type_ex_new3".tr) +
                                                 (greetingTypeName ?? '') +
                                                 "\n\n",
                                             style: TextStyle(
@@ -123,7 +123,7 @@ class _CustomizationScreen extends State<CustomizationScreen> {
                                        CustomButton(
                                   height: 55,
                                   width: 352,
-                                  text: "lbl_card_preview2".tr,
+                                  text: "lbl_card_preview".tr,
                                   margin: getMargin(left: 0, top: 45),
                                   onTap: onTapTxtGroupThirtyFour),
                              

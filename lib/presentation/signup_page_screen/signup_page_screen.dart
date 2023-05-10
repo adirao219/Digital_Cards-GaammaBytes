@@ -46,11 +46,13 @@ class _SignupPageScreen extends State<SignupPageScreen> {
   String googleUserToken = "";
   String googleUserPhoneNumber = "";
   String googleUserPhotoURL = "";
-
+  bool _passwordVisible = false;
   ApiClient api = new ApiClient();
   @override
   void initState() {
     AuthService.instance.initAuth();
+    _phoneController.text = "";
+    _passwordController.text = "";
     super.initState();
   }
 
@@ -180,7 +182,7 @@ class _SignupPageScreen extends State<SignupPageScreen> {
                                 )),
                             const SizedBox(height: 35),
                             TextFormField(
-                                obscureText: true,
+                                obscureText: !_passwordVisible,
                                 autovalidateMode:
                                     AutovalidateMode.onUserInteraction,
                                 // validator: (text) {
@@ -204,6 +206,23 @@ class _SignupPageScreen extends State<SignupPageScreen> {
 
                                 controller: _passwordController,
                                 decoration: InputDecoration(
+                                  suffixIcon: IconButton(
+                                    icon: Icon(
+                                      // Based on passwordVisible state choose the icon
+                                      _passwordVisible
+                                          ? Icons.visibility
+                                          : Icons.visibility_off,
+                                      color: ColorConstant.pink900,
+                                      size: 20,
+                                    ),
+                                    onPressed: () {
+                                      // Update the state i.e. toogle the state of passwordVisible variable
+                                      setState(() {
+                                        _passwordVisible = !_passwordVisible;
+                                      });
+                                    },
+                                  ),
+
                                   labelText: "lbl_password3".tr,
                                   labelStyle: AppStyle.txtNunitoSansRegular12
                                       .copyWith(
@@ -310,13 +329,13 @@ class _SignupPageScreen extends State<SignupPageScreen> {
         signInWithGoogleTokens(
             authResult.accessToken ?? '', authResult.idToken ?? '');
       } else {
-         Get.snackbar('Failed',"Authorization un-successfull",
-          backgroundColor: Color.fromARGB(255, 255, 230, 230),
-          colorText: Colors.red[900],
-          icon: Icon(
-            Icons.error,
-            color: Colors.red[900],
-          ));
+        Get.snackbar('Failed', "Authorization un-successfull",
+            backgroundColor: Color.fromARGB(255, 255, 230, 230),
+            colorText: Colors.red[900],
+            icon: Icon(
+              Icons.error,
+              color: Colors.red[900],
+            ));
         // widget.setUnauthenticatedState();
       }
     } catch (er) {
@@ -437,6 +456,13 @@ class _SignupPageScreen extends State<SignupPageScreen> {
       GlobalVariables.setUserName(_phoneController.text);
       GlobalVariables.setUserPhotoUrl(userPhoto);
 
+            Get.snackbar('Success', "Welcome to Gaamma Cards",
+                backgroundColor: Color.fromARGB(255, 208, 245, 216),
+                colorText: Colors.green[900],
+                icon: Icon(
+                  Icons.done,
+                  color: Colors.green[900],
+                ));
       Navigator.of(context).pushNamedAndRemoveUntil(
           AppRoutes.homePageScreen, (Route<dynamic> route) => false);
     } else {
@@ -462,6 +488,7 @@ class _SignupPageScreen extends State<SignupPageScreen> {
       PostLoginResp resp = await api.checkGoogleUser(queryParams: req);
       if (resp.isSuccess ?? false) {
         setState(() {
+          userID = resp.result['UserId'];
           googleUserName = _user.providerData[0].displayName ?? '';
           googleUseremail = _user.providerData[0].email ?? '';
           googleUserToken = _user.providerData[0].uid ?? '';
@@ -491,7 +518,7 @@ class _SignupPageScreen extends State<SignupPageScreen> {
             arguments: {"userInfo": _user});
       }
     } catch (e) {
-        Get.snackbar('Error', e.toString(),
+      Get.snackbar('Error', e.toString(),
           backgroundColor: Color.fromARGB(255, 255, 230, 230),
           colorText: Colors.red[900],
           icon: Icon(

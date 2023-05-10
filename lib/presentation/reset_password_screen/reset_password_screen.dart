@@ -23,6 +23,8 @@ class _ResetPasswordScreen extends State<ResetPasswordScreen> {
   ApiClient api = new ApiClient();
   String passwordtext = '';
   String confirmpasswordtext = '';
+  bool _passwordVisible=false;
+  bool _confirmpasswordVisible=false;
 
   @override
   Widget build(BuildContext context) {
@@ -173,9 +175,25 @@ class _ResetPasswordScreen extends State<ResetPasswordScreen> {
                               passwordtext = text;
                             });
                           },
-                          obscureText: true,
+                          obscureText: !_passwordVisible,
                           controller: _passwordController,
                           decoration: InputDecoration(
+                             suffixIcon: IconButton(
+                                    icon: Icon(
+                                      // Based on passwordVisible state choose the icon
+                                      _passwordVisible
+                                          ? Icons.visibility
+                                          : Icons.visibility_off,
+                                      color: ColorConstant.pink900,
+                                      size: 20,
+                                    ),
+                                    onPressed: () {
+                                      // Update the state i.e. toogle the state of passwordVisible variable
+                                      setState(() {
+                                        _passwordVisible = !_passwordVisible;
+                                      });
+                                    },
+                                  ),
                             labelText: "lbl_password3".tr,
                             labelStyle: AppStyle.txtNunitoSansRegular12
                                 .copyWith(
@@ -222,9 +240,25 @@ class _ResetPasswordScreen extends State<ResetPasswordScreen> {
                               confirmpasswordtext = text;
                             });
                           },
-                          obscureText: true,
+                          obscureText: !_confirmpasswordVisible,
                           controller: _confirmpasswordController,
                           decoration: InputDecoration(
+                             suffixIcon: IconButton(
+                                    icon: Icon(
+                                      // Based on passwordVisible state choose the icon
+                                      _confirmpasswordVisible
+                                          ? Icons.visibility
+                                          : Icons.visibility_off,
+                                      color: ColorConstant.pink900,
+                                      size: 20,
+                                    ),
+                                    onPressed: () {
+                                      // Update the state i.e. toogle the state of passwordVisible variable
+                                      setState(() {
+                                        _confirmpasswordVisible = !_confirmpasswordVisible;
+                                      });
+                                    },
+                                  ),
                             labelText: "msg_confirm_password".tr,
                             labelStyle: AppStyle.txtNunitoSansRegular12
                                 .copyWith(

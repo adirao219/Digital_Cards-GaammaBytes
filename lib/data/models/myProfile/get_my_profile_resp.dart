@@ -41,6 +41,8 @@ class ProfileResult {
   int? languageId;
   dynamic languageIdName;
   List<LanguageIdList>? languageIdList;
+  String? logo;
+  String? logoref;
 
   ProfileResult(
       {this.userId,
@@ -56,7 +58,9 @@ class ProfileResult {
       this.regDate,
       this.languageId,
       this.languageIdName,
-      this.languageIdList});
+      this.languageIdList,
+      this.logo,
+      this.logoref});
 
   ProfileResult.fromJson(Map<String, dynamic> json) {
     userId = json['UserId'];
@@ -88,6 +92,8 @@ class ProfileResult {
         languageIdList?.add(LanguageIdList.fromJson(v));
       });
     }
+    logo = json['Logo'];
+    logoref = json['LogoRef'];
   }
 
   Map<String, dynamic> toJson() {

@@ -31,7 +31,9 @@ class _HomeOnboardingScreen extends State<HomeOnboardingScreen> {
         });
         Future.delayed(const Duration(milliseconds: 1500), () {
           if (isAlreadyLoggedIn) {
-            Navigator.of(context).pushNamed(AppRoutes.homePageScreen);
+            Navigator.of(context).pushNamedAndRemoveUntil(
+                AppRoutes.homePageScreen, (Route<dynamic> route) => false);
+            // Navigator.of(context).pushNamed(AppRoutes.homePageScreen);
           }
         });
       }

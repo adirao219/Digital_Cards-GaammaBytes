@@ -1,6 +1,8 @@
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:digitalcardsgaammabytes/core/app_export.dart';
+import 'package:digitalcardsgaammabytes/data/models/deleteGreeting/post_delete_greeting_resp.dart';
 import 'package:digitalcardsgaammabytes/widgets/app_bar/appbar_image.dart';
 import 'package:digitalcardsgaammabytes/widgets/app_bar/appbar_title.dart';
 import 'package:digitalcardsgaammabytes/widgets/app_bar/custom_app_bar.dart';
@@ -9,17 +11,27 @@ import 'package:digitalcardsgaammabytes/widgets/custom_button.dart';
 import 'package:digitalcardsgaammabytes/widgets/custom_text_form_field.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+
+import 'package:flutter/services.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:path/path.dart' as p;
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart'
     as htmlwidget;
+import 'dart:async';
 import 'dart:io';
+import 'dart:typed_data';
+import 'package:path_provider/path_provider.dart';
+import 'package:digitalcardsgaammabytes/core/utils/progress_dialog_utils.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:toggle_switch/toggle_switch.dart';
 
 import '../../data/apiClient/api_client.dart';
 import '../../data/globals/globalvariables.dart';
 import '../../data/models/createGreeting/post_create_greeting_resp.dart';
+import '../../data/models/driveImages/drive_file_images_resp.dart';
 import '../../data/models/getCreateGreeting/get_get_create_greeting_resp.dart';
+import '../my_e_greeting_cards_screen/widgets/uploaded_images_widget.dart';
 
 class BasicGreetingEntryScreen extends StatefulWidget {
   const BasicGreetingEntryScreen({super.key});
@@ -35,14 +47,17 @@ class _BasicGreetingEntryScreen extends State<BasicGreetingEntryScreen> {
   TextEditingController _message_Controller = new TextEditingController();
   TextEditingController _sender_Controller = new TextEditingController();
   TextEditingController _card_color_Controller = new TextEditingController();
-
+  TextEditingController _hex_Controller = new TextEditingController();
+  int contentPosition = 0;
+  TextEditingController _searchController = new TextEditingController();
   Color? currentColor;
   Color pickerColor = Color(0xff443a49);
   ImagePicker _picker = new ImagePicker();
-
+  int? currentindex;
   bool isFirstImageSelected = false;
   bool isSecondImageSelected = false;
   XFile? imageFirst;
+  Random random = new Random();
   XFile? imageSecond;
   File? firstCroppedImage;
   File? secondCroppedImage;
@@ -50,8 +65,18 @@ class _BasicGreetingEntryScreen extends State<BasicGreetingEntryScreen> {
   String? secondImageBase64;
   String? firstImageFileName;
   String? secondImageFileName;
+  int? logoExistingId;
+  int? pictureExistingId;
+
+  bool isServerStoredLogo = false;
+  bool isServerStoredBackground = false;
+  String? createDateString;
+  String? lastEditDateString;
+  String? hexColor;
   void changeColor(Color color) {
-    setState(() => pickerColor = color);
+    setState(() {
+      pickerColor = color;
+    });
   }
 
   ApiClient api = new ApiClient();
@@ -61,14 +86,22 @@ class _BasicGreetingEntryScreen extends State<BasicGreetingEntryScreen> {
   String templateName = "";
   String? captionDefault = "";
   String? messageDefault = "";
+
+  List<DriveFilesData> allUserImages = [];
+  List<DriveFilesData> userImages = [];
+  String logoPositionName = " Select Logo Position";
   String? senderDefault = "";
   bool? isUserDefinedBackground;
   String templateID = "";
+  String? languageID = "";
+  int? logoPosition;
+  bool isBackgroundColor = false;
   @override
   void initState() {
     if (selectedCardID != 0) {
       getCardDetails();
     }
+    getUserImages();
     _message_Controller.text = "Click here to update the content";
     _caption_Controller.text = "Click here to update the content";
     _sender_Controller.text = "Click here to update the content";
@@ -133,7 +166,7 @@ class _BasicGreetingEntryScreen extends State<BasicGreetingEntryScreen> {
                                         ])),
                                 AppbarTitle(
                                     text: "lbl_card_details".tr.toUpperCase(),
-                                    margin: getMargin(left: 54, top: 14))
+                                    margin: getMargin(left: 30, top: 0))
                               ])))
                     ])),
                 // actions: [
@@ -187,7 +220,7 @@ class _BasicGreetingEntryScreen extends State<BasicGreetingEntryScreen> {
                                         margin: getMargin(
                                           top: 15,
                                         ),
-                                        child: Text("lbl_caption".tr,
+                                        child: Text("lbl_Edit_Greeting".tr,
                                             style: AppStyle
                                                 .txtNotoSerifTeluguRegular12)),
                                     GestureDetector(
@@ -217,83 +250,89 @@ class _BasicGreetingEntryScreen extends State<BasicGreetingEntryScreen> {
                                         }),
                                   ]),
 
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Container(
-                                      margin: getMargin(
-                                        top: 15,
-                                      ),
-                                      child: Text("lbl_message".tr,
-                                          style: AppStyle
-                                              .txtNotoSerifTeluguRegular12)),
-                                  GestureDetector(
-                                      child: Row(children: [
-                                        CustomTextFormField(
-                                            width: 285,
-                                            fontStyle: TextFormFieldFontStyle
-                                                .NunitoSansRegular14,
-                                            focusNode: FocusNode(),
-                                            isEnabled: false,
-                                            controller: _message_Controller,
-                                            hintText: "lbl_message".tr,
-                                            margin: getMargin(top: 10)),
-                                        IconButton(
-                                            onPressed: () {
-                                              goToHTMLEditor(1);
-                                            },
-                                            icon: Icon(
-                                              Icons.edit,
-                                              color:
-                                                  Color.fromARGB(255, 97, 8, 8),
-                                            )),
-                                      ]),
-                                      onTap: () {
-                                        goToHTMLEditor(1);
-                                      }),
-                                ],
+                              Visibility(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Container(
+                                        margin: getMargin(
+                                          top: 15,
+                                        ),
+                                        child: Text("lbl_message".tr,
+                                            style: AppStyle
+                                                .txtNotoSerifTeluguRegular12)),
+                                    GestureDetector(
+                                        child: Row(children: [
+                                          CustomTextFormField(
+                                              width: 285,
+                                              fontStyle: TextFormFieldFontStyle
+                                                  .NunitoSansRegular14,
+                                              focusNode: FocusNode(),
+                                              isEnabled: false,
+                                              controller: _message_Controller,
+                                              hintText: "lbl_message".tr,
+                                              margin: getMargin(top: 10)),
+                                          IconButton(
+                                              onPressed: () {
+                                                goToHTMLEditor(1);
+                                              },
+                                              icon: Icon(
+                                                Icons.edit,
+                                                color: Color.fromARGB(
+                                                    255, 97, 8, 8),
+                                              )),
+                                        ]),
+                                        onTap: () {
+                                          goToHTMLEditor(1);
+                                        }),
+                                  ],
+                                ),
+                                visible: false,
+                              ),
+                              Visibility(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Container(
+                                        margin: getMargin(
+                                          top: 15,
+                                        ),
+                                        child: Text("lbl_sender".tr,
+                                            style: AppStyle
+                                                .txtNotoSerifTeluguRegular12)),
+                                    GestureDetector(
+                                        child: Row(children: [
+                                          CustomTextFormField(
+                                              width: 285,
+                                              isEnabled: false,
+                                              focusNode: FocusNode(),
+                                              controller: _sender_Controller,
+                                              hintText: "lbl_sender".tr,
+                                              textCapitalization:
+                                                  TextCapitalization.words,
+                                              margin: getMargin(
+                                                  top: 10, bottom: 10)),
+                                          IconButton(
+                                              onPressed: () {
+                                                goToHTMLEditor(2);
+                                              },
+                                              padding: getPadding(all: 0),
+                                              icon: Icon(
+                                                Icons.edit,
+                                                color: Color.fromARGB(
+                                                    255, 97, 8, 8),
+                                              ))
+                                        ]),
+                                        onTap: () {
+                                          goToHTMLEditor(2);
+                                        }),
+                                  ],
+                                ),
+                                visible: false,
                               ),
 
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Container(
-                                      margin: getMargin(
-                                        top: 15,
-                                      ),
-                                      child: Text("lbl_sender".tr,
-                                          style: AppStyle
-                                              .txtNotoSerifTeluguRegular12)),
-                                  GestureDetector(
-                                      child: Row(children: [
-                                        CustomTextFormField(
-                                            width: 285,
-                                            isEnabled: false,
-                                            focusNode: FocusNode(),
-                                            controller: _sender_Controller,
-                                            hintText: "lbl_sender".tr,
-                                            textCapitalization:
-                                                TextCapitalization.words,
-                                            margin:
-                                                getMargin(top: 10, bottom: 10)),
-                                        IconButton(
-                                            onPressed: () {
-                                              goToHTMLEditor(2);
-                                            },
-                                            padding: getPadding(all: 0),
-                                            icon: Icon(
-                                              Icons.edit,
-                                              color:
-                                                  Color.fromARGB(255, 97, 8, 8),
-                                            ))
-                                      ]),
-                                      onTap: () {
-                                        goToHTMLEditor(2);
-                                      }),
-                                ],
-                              ),
-
-                              Padding(
+                              Visibility(
+                                child: Padding(
                                   padding: getPadding(left: 0),
                                   child: Row(
                                       mainAxisAlignment:
@@ -301,7 +340,7 @@ class _BasicGreetingEntryScreen extends State<BasicGreetingEntryScreen> {
                                       children: [
                                         Padding(
                                             padding: getPadding(bottom: 0),
-                                            child: Text("lbl_logo".tr,
+                                            child: Text("lbl_background".tr,
                                                 overflow: TextOverflow.ellipsis,
                                                 textAlign: TextAlign.left,
                                                 style: AppStyle
@@ -313,57 +352,46 @@ class _BasicGreetingEntryScreen extends State<BasicGreetingEntryScreen> {
                                                         height: getVerticalSize(
                                                             1.26)))),
                                         SizedBox(
-                                          width: 80,
+                                          width: 50,
                                         ),
-                                        GestureDetector(
-                                          onTap: () {
-                                            onTapSelectimage(1);
+                                        ToggleSwitch(
+                                          minWidth: 110.0,
+                                          initialLabelIndex: currentindex ?? 0,
+                                          cornerRadius: 10.0,
+                                          activeFgColor: Colors.white,
+                                          inactiveBgColor: Color.fromARGB(
+                                              255, 255, 245, 232),
+                                          inactiveFgColor:
+                                              ColorConstant.pink900,
+                                          totalSwitches: 2,
+                                          labels: [
+                                            (!(isUserDefinedBackground ?? false)
+                                                ? 'Default'
+                                                : 'Custom'),
+                                            'Color'
+                                          ],
+                                          icons: [
+                                            Icons.image,
+                                            Icons.color_lens_rounded
+                                          ],
+                                          activeBgColors: [
+                                            [ColorConstant.pink900],
+                                            [ColorConstant.pink900]
+                                          ],
+                                          // customTextStyles: [TextStyle(fontSize: )],
+                                          onToggle: (index) {
+                                            currentindex = index;
+                                            switchImageColor();
                                           },
-                                          child: CustomButton(
-                                            width: 140,
-                                            text: (isFirstImageSelected
-                                                ? "lbl_image_selected".tr
-                                                : "lbl_select_image".tr),
-                                            variant:
-                                                ButtonVariant.OutlineBlack9003f,
-                                            shape: ButtonShape.RoundedBorder5,
-                                            padding: ButtonPadding.PaddingT9,
-                                            fontStyle: ButtonFontStyle
-                                                .NunitoSansBlack12,
-                                            alignment: Alignment.topCenter,
-                                            prefixWidget: Container(
-                                                margin: getMargin(right: 10),
-                                                child: Icon(
-                                                  (isFirstImageSelected
-                                                      ? Icons.done
-                                                      : Icons.photo),
-                                                  color: Colors.white,
-                                                  size: 15,
-                                                )),
-                                          ),
                                         ),
-                                        SizedBox(
-                                          width: 20,
-                                        ),
-                                        CustomButton(
-                                            onTap: () {
-                                              removeSelectedImage(1);
-                                            },
-                                            height: 23,
-                                            width: 20,
-                                            // text: "lbl_remove".tr,
-                                            variant:
-                                                ButtonVariant.OutlineBlack9003f,
-                                            shape: ButtonShape.RoundedBorder5,
-                                            padding: ButtonPadding.PaddingT9,
-                                            fontStyle: ButtonFontStyle
-                                                .NunitoSansBlack12,
-                                            prefixWidget: Container(
-                                                margin: getMargin(right: 0),
-                                                child: CustomImageView(
-                                                    svgPath: ImageConstant
-                                                        .imgDelete)))
-                                      ])),
+                                      ]),
+                                ),
+                                visible: (true),
+                              ),
+
+                              SizedBox(
+                                height: 5,
+                              ),
                               Padding(
                                   padding: getPadding(left: 0),
                                   child: Visibility(
@@ -373,7 +401,8 @@ class _BasicGreetingEntryScreen extends State<BasicGreetingEntryScreen> {
                                         children: [
                                           Padding(
                                               padding: getPadding(bottom: 0),
-                                              child: Text("lbl_background".tr,
+                                              child: Text(
+                                                  "lbl_background_image".tr,
                                                   overflow:
                                                       TextOverflow.ellipsis,
                                                   textAlign: TextAlign.left,
@@ -387,14 +416,14 @@ class _BasicGreetingEntryScreen extends State<BasicGreetingEntryScreen> {
                                                               getVerticalSize(
                                                                   1.26)))),
                                           SizedBox(
-                                            width: 30,
+                                            width: 5,
                                           ),
                                           GestureDetector(
                                             onTap: () {
                                               onTapSelectimage(2);
                                             },
                                             child: CustomButton(
-                                              width: 140,
+                                              width: 130,
                                               text: (isSecondImageSelected
                                                   ? "lbl_image_selected".tr
                                                   : "lbl_select_image".tr),
@@ -417,108 +446,475 @@ class _BasicGreetingEntryScreen extends State<BasicGreetingEntryScreen> {
                                             ),
                                           ),
                                           SizedBox(
-                                            width: 20,
+                                            width: 10,
                                           ),
                                           CustomButton(
+                                            height: 40,
+                                            width: 40,
+                                            // text: "Select Logo Position",
+                                            prefixWidget: Icon(
+                                              Icons.delete,
+                                              color: ColorConstant.pink900,
+                                              size: 20,
+                                            ),
+                                            // margin: getMargin(top: 22),
+                                            variant: ButtonVariant
+                                                .OutlineBlack9003f_1,
+                                            shape: ButtonShape.RoundedBorder15,
+                                            fontStyle: ButtonFontStyle
+                                                .NunitoSansBold14,
+                                            onTap: () {
+                                              showAlertDialog(context, 2);
+                                            },
+                                          ),
+                                        ]),
+                                    visible:
+                                        (isUserDefinedBackground ?? false) &&
+                                            !isBackgroundColor,
+                                  )),
+
+                              Padding(
+                                  padding: getPadding(left: 0),
+                                  child: Visibility(
+                                    child: Container(
+                                        // height: getVerticalSize(52.00),
+                                        width: getHorizontalSize(326.00),
+                                        margin: getMargin(left: 0, top: 0),
+                                        child: Row(children: [
+                                          Text("lbl_background_color".tr,
+                                              overflow: TextOverflow.ellipsis,
+                                              textAlign: TextAlign.left,
+                                              style: AppStyle
+                                                  .txtNunitoSansRegular14
+                                                  .copyWith(
+                                                      letterSpacing:
+                                                          getHorizontalSize(
+                                                              0.36),
+                                                      height: getVerticalSize(
+                                                          1.26))),
+                                          SizedBox(
+                                            width: 10,
+                                          ),
+                                          CustomButton(
+                                              customColor: currentColor,
                                               onTap: () {
-                                                removeSelectedImage(2);
+                                                showDialog(
+                                                    context: context,
+                                                    builder: (ctx) =>
+                                                        AlertDialog(
+                                                            title: const Text(
+                                                                'Pick a color!'),
+                                                            content:
+                                                                SingleChildScrollView(
+                                                              child:
+                                                                  ColorPicker(
+                                                                hexInputBar:
+                                                                    true,
+                                                                hexInputController:
+                                                                    _hex_Controller,
+                                                                pickerColor:
+                                                                    pickerColor,
+                                                                onColorChanged:
+                                                                    changeColor,
+                                                              ),
+                                                            ),
+                                                            actions: <Widget>[
+                                                              ElevatedButton(
+                                                                child: const Text(
+                                                                    'Cancel'),
+                                                                onPressed: () {
+                                                                  Navigator.of(
+                                                                          context)
+                                                                      .pop();
+                                                                },
+                                                              ),
+                                                              ElevatedButton(
+                                                                child: const Text(
+                                                                    'Select'),
+                                                                onPressed: () {
+                                                                  setState(() =>
+                                                                      currentColor =
+                                                                          pickerColor);
+                                                                  getHexColor();
+                                                                  Navigator.of(
+                                                                          context)
+                                                                      .pop();
+                                                                },
+                                                              ),
+                                                            ]));
                                               },
-                                              height: 23,
-                                              width: 20,
-                                              // text: "lbl_remove".tr,
+                                              height: 20,
+                                              width: 80,
+                                              text: "",
+                                              suffixWidget: Icon(
+                                                Icons.color_lens_rounded,
+                                                color: Colors.white,
+                                              ),
+                                              margin: getMargin(top: 0),
+                                              // prefixWidget: Icon(Icons.color_lens_rounded,color: Colors.white,),
                                               variant: ButtonVariant
                                                   .OutlineBlack9003f,
                                               shape: ButtonShape.RoundedBorder5,
-                                              padding: ButtonPadding.PaddingT9,
+                                              padding:
+                                                  ButtonPadding.PaddingBottom9,
                                               fontStyle: ButtonFontStyle
-                                                  .NunitoSansBlack12,
-                                              prefixWidget: Container(
-                                                  margin: getMargin(right: 0),
-                                                  child: CustomImageView(
-                                                      svgPath: ImageConstant
-                                                          .imgDelete)))
-                                        ]),
-                                    visible: isUserDefinedBackground ?? false,
+                                                  .InterSemiBold14,
+                                              alignment: Alignment.topRight)
+                                        ])),
+                                    visible: isBackgroundColor,
                                   )),
+                              Visibility(
+                                child: Container(
+                                    height: getVerticalSize(1.00),
+                                    width: getHorizontalSize(326.00),
+                                    margin:
+                                        getMargin(left: 2, top: 5, bottom: 5),
+                                    decoration: BoxDecoration(
+                                        color: ColorConstant.gray300Cc,
+                                        borderRadius: BorderRadius.circular(
+                                            getHorizontalSize(1.00)))),
+                                visible: templateID == "-1",
+                              ),
+                              Visibility(
+                                  child: Padding(
+                                      padding: getPadding(left: 0),
+                                      child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          children: [
+                                            Padding(
+                                                padding: getPadding(bottom: 0),
+                                                child: Text(
+                                                    "lbl_content_position".tr,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                    textAlign: TextAlign.left,
+                                                    style: AppStyle
+                                                        .txtNunitoSansRegular14
+                                                        .copyWith(
+                                                            letterSpacing:
+                                                                getHorizontalSize(
+                                                                    0.36),
+                                                            height:
+                                                                getVerticalSize(
+                                                                    1.26)))),
+                                            SizedBox(
+                                              width: 20,
+                                            ),
+                                            CustomButton(
+                                              onTap: () {
+                                                setState(() {
+                                                  contentPosition = 1;
+                                                });
+                                              },
+                                              width: 75,
+                                              text: ("Top"),
+                                              variant: contentPosition == 1
+                                                  ? ButtonVariant
+                                                      .OutlineBlack9003f
+                                                  : ButtonVariant
+                                                      .OutlineBlack9003f_1,
+                                              shape: ButtonShape.RoundedBorder5,
+                                              padding: ButtonPadding.PaddingT9,
+                                              fontStyle: contentPosition == 1
+                                                  ? ButtonFontStyle
+                                                      .NunitoSansBlack12Reg
+                                                  : ButtonFontStyle
+                                                      .NunitoSansBold12,
+                                              alignment: Alignment.topCenter,
+                                              prefixWidget: Container(
+                                                margin: getMargin(right: 10),
+                                                child: Icon(
+                                                  (Icons.arrow_circle_up),
+                                                  color: contentPosition == 1
+                                                      ? Colors.white
+                                                      : ColorConstant.pink900,
+                                                  size: 20,
+                                                ),
+                                              ),
+                                            ),
+                                            SizedBox(
+                                              width: 10,
+                                            ),
+                                            CustomButton(
+                                              onTap: () {
+                                                setState(() {
+                                                  contentPosition = 2;
+                                                });
+                                              },
+                                              width: 90,
+                                              text: ("Bottom"),
+                                              variant: contentPosition == 2
+                                                  ? ButtonVariant
+                                                      .OutlineBlack9003f
+                                                  : ButtonVariant
+                                                      .OutlineBlack9003f_1,
+                                              shape: ButtonShape.RoundedBorder5,
+                                              padding: ButtonPadding.PaddingT9,
+                                              fontStyle: contentPosition == 2
+                                                  ? ButtonFontStyle
+                                                      .NunitoSansBlack12Reg
+                                                  : ButtonFontStyle
+                                                      .NunitoSansBold12,
+                                              alignment: Alignment.topCenter,
+                                              prefixWidget: Container(
+                                                margin: getMargin(right: 10),
+                                                child: Icon(
+                                                  (Icons
+                                                      .arrow_circle_down_outlined),
+                                                  color: contentPosition == 2
+                                                      ? Colors.white
+                                                      : ColorConstant.pink900,
+                                                  size: 20,
+                                                ),
+                                              ),
+                                            ),
+                                          ])),
+                                  visible: templateID == "-1"),
                               Container(
                                   height: getVerticalSize(1.00),
                                   width: getHorizontalSize(326.00),
-                                  margin: getMargin(left: 2, top: 0),
+                                  margin: getMargin(left: 2, top: 5, bottom: 5),
                                   decoration: BoxDecoration(
                                       color: ColorConstant.gray300Cc,
                                       borderRadius: BorderRadius.circular(
                                           getHorizontalSize(1.00)))),
-                              // Container(
-                              //     // height: getVerticalSize(52.00),
-                              //     width: getHorizontalSize(326.00),
-                              //     margin: getMargin(left: 2, top: 0),
-                              //     child: Row(children: [
-                              //       Text("lbl_card_color".tr,
-                              //           overflow: TextOverflow.ellipsis,
-                              //           textAlign: TextAlign.left,
-                              //           style: AppStyle.txtNunitoSansRegular14
-                              //               .copyWith(
-                              //                   letterSpacing:
-                              //                       getHorizontalSize(0.36),
-                              //                   height: getVerticalSize(1.26))),
-                              //       SizedBox(
-                              //         width: 40,
-                              //       ),
-                              //       CustomButton(
-                              //           customColor: currentColor,
-                              //           onTap: () {
-                              //             showDialog(
-                              //                 context: context,
-                              //                 builder: (ctx) => AlertDialog(
-                              //                         title: const Text(
-                              //                             'Pick a color!'),
-                              //                         content:
-                              //                             SingleChildScrollView(
-                              //                           child: ColorPicker(
-                              //                             pickerColor:
-                              //                                 pickerColor,
-                              //                             onColorChanged:
-                              //                                 changeColor,
-                              //                           ),
-                              //                         ),
-                              //                         actions: <Widget>[
-                              //                           ElevatedButton(
-                              //                             child: const Text(
-                              //                                 'Select'),
-                              //                             onPressed: () {
-                              //                               setState(() =>
-                              //                                   currentColor =
-                              //                                       pickerColor);
-                              //                               Navigator.of(
-                              //                                       context)
-                              //                                   .pop();
-                              //                             },
-                              //                           ),
-                              //                         ]));
-                              //           },
-                              //           height: 20,
-                              //           width: 80,
-                              //           text: "",
-                              //           suffixWidget: Icon(
-                              //             Icons.color_lens_rounded,
-                              //             color: Colors.white,
-                              //           ),
-                              //           margin: getMargin(top: 0),
-                              //           // prefixWidget: Icon(Icons.color_lens_rounded,color: Colors.white,),
-                              //           variant:
-                              //               ButtonVariant.OutlineBlack9003f,
-                              //           shape: ButtonShape.RoundedBorder5,
-                              //           padding: ButtonPadding.PaddingBottom9,
-                              //           fontStyle:
-                              //               ButtonFontStyle.InterSemiBold14,
-                              //           alignment: Alignment.topRight)
-                              //     ])),
-                              // CustomButton(
-                              //     height: 40,
-                              //     width: 250,
-                              //     text: "lbl_next".tr,
-                              //     margin: getMargin(left: 40, top: 45),
-                              //     onTap: createGreeting),
+                              Padding(
+                                  padding: getPadding(left: 0),
+                                  child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: [
+                                        Padding(
+                                            padding: getPadding(bottom: 0),
+                                            child: Text("lbl_logo".tr,
+                                                overflow: TextOverflow.ellipsis,
+                                                textAlign: TextAlign.left,
+                                                style: AppStyle
+                                                    .txtNunitoSansRegular14
+                                                    .copyWith(
+                                                        letterSpacing:
+                                                            getHorizontalSize(
+                                                                0.36),
+                                                        height: getVerticalSize(
+                                                            1.26)))),
+                                        SizedBox(
+                                          width: 105,
+                                        ),
+                                        GestureDetector(
+                                          onTap: () {
+                                            onTapSelectimage(1);
+                                          },
+                                          child: CustomButton(
+                                            width: 130,
+                                            text: (isFirstImageSelected
+                                                ? "lbl_image_selected".tr
+                                                : "lbl_select_image".tr),
+                                            variant:
+                                                ButtonVariant.OutlineBlack9003f,
+                                            shape: ButtonShape.RoundedBorder5,
+                                            padding: ButtonPadding.PaddingT9,
+                                            fontStyle: ButtonFontStyle
+                                                .NunitoSansBlack12,
+                                            alignment: Alignment.topCenter,
+                                            prefixWidget: Container(
+                                                margin: getMargin(right: 10),
+                                                child: Icon(
+                                                  (isFirstImageSelected
+                                                      ? Icons.done
+                                                      : Icons.photo),
+                                                  color: Colors.white,
+                                                  size: 15,
+                                                )),
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          width: 10,
+                                        ),
+                                        CustomButton(
+                                          height: 40,
+                                          width: 40,
+                                          // text: "Select Logo Position",
+                                          prefixWidget: Icon(
+                                            Icons.delete,
+                                            color: ColorConstant.pink900,
+                                            size: 20,
+                                          ),
+                                          // margin: getMargin(top: 22),
+                                          variant:
+                                              ButtonVariant.OutlineBlack9003f_1,
+                                          shape: ButtonShape.RoundedBorder15,
+                                          fontStyle:
+                                              ButtonFontStyle.NunitoSansBold14,
+                                          onTap: () {
+                                            showAlertDialog(context, 1);
+                                          },
+                                        ),
+                                      ])),
+                              Container(
+                                  height: getVerticalSize(1.00),
+                                  width: getHorizontalSize(326.00),
+                                  margin: getMargin(left: 2, top: 5, bottom: 5),
+                                  decoration: BoxDecoration(
+                                      color: ColorConstant.gray300Cc,
+                                      borderRadius: BorderRadius.circular(
+                                          getHorizontalSize(1.00)))),
+                              Padding(
+                                  padding: getPadding(left: 0),
+                                  child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: [
+                                        Padding(
+                                            padding: getPadding(bottom: 0),
+                                            child: Text("lbl_logo_position".tr,
+                                                overflow: TextOverflow.ellipsis,
+                                                textAlign: TextAlign.left,
+                                                style: AppStyle
+                                                    .txtNunitoSansRegular14
+                                                    .copyWith(
+                                                        letterSpacing:
+                                                            getHorizontalSize(
+                                                                0.36),
+                                                        height: getVerticalSize(
+                                                            1.26)))),
+                                        SizedBox(
+                                          width: 35,
+                                        ),
+                                        CustomButton(
+                                          height: 40,
+                                          width: 180,
+                                          text: logoPositionName,
+                                          prefixWidget: Icon(
+                                            Icons.fullscreen_rounded,
+                                            color: ColorConstant.pink900,
+                                          ),
+                                          // margin: getMargin(top: 22),
+                                          variant:
+                                              ButtonVariant.OutlineBlack9003f_1,
+                                          shape: ButtonShape.RoundedBorder15,
+                                          fontStyle:
+                                              ButtonFontStyle.NunitoSansBold14,
+                                          onTap: () {
+                                            // showAlertDialog(context);
+                                            showPostionSelectiontDialog(
+                                                context);
+                                          },
+                                        ),
+                                      ])),
+                              Container(
+                                  height: getVerticalSize(1.00),
+                                  width: getHorizontalSize(326.00),
+                                  margin: getMargin(left: 2, top: 5, bottom: 5),
+                                  decoration: BoxDecoration(
+                                      color: ColorConstant.gray300Cc,
+                                      borderRadius: BorderRadius.circular(
+                                          getHorizontalSize(1.00)))),
+                              Visibility(
+                                child: Padding(
+                                    padding:
+                                        getPadding(left: 0, top: 7, bottom: 7),
+                                    child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          Padding(
+                                              padding: getPadding(bottom: 0),
+                                              child: Text("lbl_created_date".tr,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  textAlign: TextAlign.left,
+                                                  style: AppStyle
+                                                      .txtNunitoSansRegular14
+                                                      .copyWith(
+                                                          letterSpacing:
+                                                              getHorizontalSize(
+                                                                  0.36),
+                                                          height:
+                                                              getVerticalSize(
+                                                                  1.26)))),
+                                          SizedBox(
+                                            width: 40,
+                                          ),
+                                          Padding(
+                                              padding: getPadding(bottom: 0),
+                                              child: Text(
+                                                  createDateString ?? "",
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  textAlign: TextAlign.left,
+                                                  style: TextStyle(
+                                                    color:
+                                                        ColorConstant.pink900,
+                                                    fontSize: getFontSize(
+                                                      14,
+                                                    ),
+                                                    fontFamily: 'Nunito Sans',
+                                                    fontWeight: FontWeight.w700,
+                                                  ))),
+                                        ])),
+                                visible: !(createDateString == null ||
+                                    createDateString!.isEmpty),
+                              ),
+                              Visibility(
+                                child: Container(
+                                    height: getVerticalSize(1.00),
+                                    width: getHorizontalSize(326.00),
+                                    margin:
+                                        getMargin(left: 2, top: 5, bottom: 5),
+                                    decoration: BoxDecoration(
+                                        color: ColorConstant.gray300Cc,
+                                        borderRadius: BorderRadius.circular(
+                                            getHorizontalSize(1.00)))),
+                                visible: !(createDateString == null ||
+                                    createDateString!.isEmpty),
+                              ),
+                              Visibility(
+                                child: Padding(
+                                    padding: getPadding(left: 0, top: 7),
+                                    child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          Padding(
+                                              padding: getPadding(bottom: 0),
+                                              child: Text(
+                                                  "lbl_last_edited_date".tr,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  textAlign: TextAlign.left,
+                                                  style: AppStyle
+                                                      .txtNunitoSansRegular14
+                                                      .copyWith(
+                                                          letterSpacing:
+                                                              getHorizontalSize(
+                                                                  0.36),
+                                                          height:
+                                                              getVerticalSize(
+                                                                  1.26)))),
+                                          SizedBox(
+                                            width: 15,
+                                          ),
+                                          Padding(
+                                              padding: getPadding(bottom: 0),
+                                              child: Text(
+                                                  lastEditDateString ?? '',
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  textAlign: TextAlign.left,
+                                                  style: TextStyle(
+                                                    color:
+                                                        ColorConstant.pink900,
+                                                    fontSize: getFontSize(
+                                                      14,
+                                                    ),
+                                                    fontFamily: 'Nunito Sans',
+                                                    fontWeight: FontWeight.w700,
+                                                  ))),
+                                        ])),
+                                visible: !(lastEditDateString == null ||
+                                    lastEditDateString!.isEmpty),
+                              ),
                             ])))),
             bottomNavigationBar: CustomBottomBar(
                 onNextClicked: createGreeting,
@@ -531,6 +927,7 @@ class _BasicGreetingEntryScreen extends State<BasicGreetingEntryScreen> {
         arguments: {"isGreeting": true, "type": greetingType})?.then((value) {
       templateID = value['selectedTemplateID'];
       setState(() {
+        if (templateID == "-1") contentPosition = 1;
         templateName = value['selectedTemplateName'];
 
         captionDefault = value['captionDefault'];
@@ -538,34 +935,276 @@ class _BasicGreetingEntryScreen extends State<BasicGreetingEntryScreen> {
         messageDefault = value['messageDefault'];
 
         senderDefault = value['senderDefault'];
+        languageID = value['languageID'];
+        var templogoPosition = value['logoPosition'] as int?;
+        setLogoPosition(templogoPosition ?? 0, isClosePopup: false);
+        currentindex = 0;
+        removeSelectedImage(2, true);
 
         isUserDefinedBackground = value['isUserBackground'] as bool?;
+        // isBackgroundColor = (isUserDefinedBackground ?? false) ? false : true;
       });
     });
+  }
+
+  getUserImages() async {
+    try {
+      var req = {"UserId": GlobalVariables.userID, "Anywhere": ""};
+      GetDriveFileImagesResp resp = await api.getUserImages(queryParams: req);
+      if (resp.isSuccess ?? false) {
+        setState(() {
+          allUserImages = userImages = resp.result ?? [];
+        });
+      } else {
+        Get.snackbar('Error', resp.errorMessage.toString(),
+            backgroundColor: Color.fromARGB(255, 255, 230, 230),
+            colorText: Colors.red[900],
+            icon: Icon(
+              Icons.error,
+              color: Colors.red[900],
+            ));
+      }
+    } catch (e) {}
   }
 
   onTapSelectimage(int pictureType) {
     showDialog(
         context: context,
-        builder: (ctx) => AlertDialog(
-                title: const Text('Select Type!'),
-                content: const SingleChildScrollView(
-                    child: Text(
-                        "You can select an image from gallery or click a picture using camera")),
+        builder: (BuildContext context) {
+          return StatefulBuilder(builder: (context, setPopupState) {
+            return AlertDialog(
+                title: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "Select Image!",
+                      style: AppStyle.txtNunitoBold18,
+                    ),
+                    IconButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        icon: Icon(Icons.close)),
+                  ],
+                ),
+                content: SingleChildScrollView(
+                    child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                      // Text(
+                      //   "Please choose image from previously uploaded images, gallery or click a picture using camera",
+                      //   style: AppStyle.txtNunitoSansRegular14,
+                      // ),
+                      // SizedBox(
+                      //   height: 10,
+                      // ),
+                      TextFormField(
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
+                          controller: _searchController,
+                          onChanged: ((value) {
+                            setPopupState(() {
+                              var newUserImages = allUserImages!
+                                  .where((element) => element.fileName!
+                                      .toLowerCase()
+                                      .contains(value.toLowerCase()))
+                                  .toList();
+                              userImages = newUserImages;
+                            });
+                          }),
+                          decoration: InputDecoration(
+                            labelText: "lbl_search_details".tr,
+                            labelStyle: AppStyle.txtNunitoSansRegular12
+                                .copyWith(
+                                    height: getVerticalSize(1.10),
+                                    fontSize: 13),
+
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(15.0),
+                              borderSide: const BorderSide(
+                                color: Color.fromARGB(255, 183, 183, 183),
+                              ),
+                            ),
+                            suffixIcon: GestureDetector(
+                                onTap: () {
+                                  setPopupState(() {
+                                    userImages = allUserImages;
+                                    _searchController.text = "";
+                                  });
+                                },
+                                child: Icon(
+                                  Icons.cancel,
+                                  color: ColorConstant.pink900,
+                                )),
+                            focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(15.0),
+                                borderSide: const BorderSide(
+                                  color: Color.fromARGB(255, 183, 183, 183),
+                                )),
+                            // filled: true,
+                            contentPadding: EdgeInsets.all(15.0),
+                          )),
+                      Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: getAllUserImages(context, pictureType))
+                      // Padding(
+                      //     padding: getPadding(top: 0),
+                      //     child: GridView.builder(
+                      //         shrinkWrap: true,
+                      //         gridDelegate:
+                      //             SliverGridDelegateWithFixedCrossAxisCount(
+                      //                 mainAxisExtent: getVerticalSize(160.00),
+                      //                 crossAxisCount: 2,
+                      //                 mainAxisSpacing: getHorizontalSize(20.00),
+                      //                 crossAxisSpacing: getHorizontalSize(20.00)),
+                      //         physics: NeverScrollableScrollPhysics(),
+                      //         itemCount: userImages!.length,
+                      //         itemBuilder: (context, index) {
+                      //           DriveFilesData model = userImages![index];
+                      //           return UploadedImageWidget(model, false);
+                      //         })),
+                    ])),
                 actions: <Widget>[
-                  ElevatedButton(
-                    child: const Text('Camera'),
-                    onPressed: () {
+                  CustomButton(
+                    height: 40,
+                    width: 110,
+                    text: (' Camera'),
+                    prefixWidget: Icon(
+                      Icons.camera_alt_rounded,
+                      color: ColorConstant.pink900,
+                    ),
+                    // margin: getMargin(top: 22),
+                    variant: ButtonVariant.OutlineBlack9003f_1,
+                    shape: ButtonShape.RoundedBorder15,
+                    fontStyle: ButtonFontStyle.NunitoSansBold14,
+                    onTap: () {
                       clickOrSelectImage("Camera", pictureType);
                     },
                   ),
-                  ElevatedButton(
-                    child: const Text('Gallery'),
-                    onPressed: () {
+                  CustomButton(
+                    height: 40,
+                    width: 110,
+                    text: (' Gallery'),
+                    prefixWidget: Icon(
+                      Icons.image_search_rounded,
+                      color: ColorConstant.pink900,
+                    ),
+                    // margin: getMargin(top: 22),
+                    variant: ButtonVariant.OutlineBlack9003f_1,
+                    shape: ButtonShape.RoundedBorder15,
+                    fontStyle: ButtonFontStyle.NunitoSansBold14,
+                    onTap: () {
                       clickOrSelectImage("Gallery", pictureType);
                     },
                   ),
-                ]));
+                ]);
+          });
+        });
+  }
+
+  List<Widget> getAllUserImages(BuildContext context, int pictureType) {
+    List<Widget> allWidgets = [];
+
+    for (int i = 0; i < userImages.length; i++) {
+      if (i % 2 == 0) {
+        allWidgets.add(Row(
+          children: [
+            UploadedImageWidget(userImages[i], pictureType,
+                selectedImageforCard, cropSelectedImageForCard),
+            if ((i + 1) < userImages.length)
+              UploadedImageWidget(userImages[i + 1], pictureType,
+                  selectedImageforCard, cropSelectedImageForCard),
+          ],
+        ));
+      }
+    }
+    return allWidgets;
+  }
+
+  selectedImageforCard(DriveFilesData image, int pictureType) {
+    setState(() {
+      if (pictureType == 1) {
+        logoExistingId = image.id;
+        firstImageBase64 = null;
+        firstImageFileName = null;
+        isFirstImageSelected = true;
+      } else {
+        pictureExistingId = image.id;
+        secondImageBase64 = null;
+        secondImageFileName = null;
+        isSecondImageSelected = true;
+      }
+    });
+    Navigator.pop(context);
+  }
+
+  cropSelectedImageForCard(DriveFilesData image, int pictureType) {
+    setState(() {
+      if (pictureType == 1) {
+        logoExistingId = null;
+        isFirstImageSelected = true;
+      } else {
+        pictureExistingId = null;
+        isSecondImageSelected = true;
+      }
+      ProgressDialogUtils.showProgressDialog();
+      getImageFromUrl(image.driveUrl ?? '', pictureType);
+    });
+    Navigator.pop(context);
+  }
+
+  getImageFromUrl(String imageUrl, int pictureType) async {
+    try {
+      Uint8List bytes =
+          (await NetworkAssetBundle(Uri.parse(imageUrl)).load(imageUrl))
+              .buffer
+              .asUint8List();
+
+      writeToFile(bytes).then((file) {
+        gotoImageModify(file, pictureType);
+      });
+
+      ProgressDialogUtils.hideProgressDialog();
+    } catch (e) {
+      ProgressDialogUtils.hideProgressDialog();
+    }
+  }
+
+  Future<File> writeToFile(Uint8List data) async {
+    DateTime now = DateTime.now();
+    String formattedDate = DateFormat('yyyyMMdd-hhmmss').format(now);
+    Directory tempDir = await getTemporaryDirectory();
+    String tempPath = tempDir.path;
+    var filePath = tempPath +
+        '/existingFile' +
+        formattedDate +
+        '.png'; // file_01.tmp is dump file, can be anything
+    File(filePath).writeAsBytesSync(data);
+    return File(filePath);
+  }
+
+  switchImageColor() {
+    setState(() {
+      isBackgroundColor = currentindex != 0;
+      if (currentindex != 0) {
+        removeSelectedImage(2, true);
+      } else {
+        currentColor = null;
+      }
+    });
+  }
+
+  getHexColor() {
+    setState(() {
+      if (currentColor == null) {
+        hexColor = "";
+      } else {
+        hexColor =
+            '#${(currentColor!.value & 0xFFFFFF).toRadixString(16).padLeft(6, '0').toUpperCase()}';
+      }
+      var s = 1;
+    });
   }
 
   clickOrSelectImage(String type, int pictureType) async {
@@ -576,7 +1215,7 @@ class _BasicGreetingEntryScreen extends State<BasicGreetingEntryScreen> {
       else
         imageSecond = await _picker.pickImage(source: ImageSource.gallery);
     } else {
-      if (pictureType == 2)
+      if (pictureType == 1)
         imageFirst = await _picker.pickImage(source: ImageSource.camera);
       else
         imageSecond = await _picker.pickImage(source: ImageSource.camera);
@@ -592,6 +1231,11 @@ class _BasicGreetingEntryScreen extends State<BasicGreetingEntryScreen> {
       imageFile = File(imageFirst!.path);
     if (pictureType == 2 && imageSecond!.path.isNotEmpty)
       imageFile = File(imageSecond!.path);
+
+    gotoImageModify(imageFile, pictureType);
+  }
+
+  gotoImageModify(File imageFile, int pictureType) {
     Get.toNamed(AppRoutes.imageModifyScreen,
             arguments: {"imageFile": imageFile, "pictureType": pictureType})
         ?.then((value) {
@@ -611,12 +1255,14 @@ class _BasicGreetingEntryScreen extends State<BasicGreetingEntryScreen> {
           firstCroppedImage = imageFile;
           isFirstImageSelected = true;
           firstImageFileName = p.basename(imageFile.path);
+          logoExistingId = null;
         }
         if (pictureType == 2) {
           secondImageBase64 = base64val1;
           secondCroppedImage = imageFile;
           isSecondImageSelected = true;
           secondImageFileName = p.basename(imageFile.path);
+          pictureExistingId = null;
         }
       } catch (e) {
         var s = 1;
@@ -624,19 +1270,96 @@ class _BasicGreetingEntryScreen extends State<BasicGreetingEntryScreen> {
     });
   }
 
-  removeSelectedImage(int pictureType) {
+  removeImage(int pictureType, bool isToggledToCardColor) async {
+    try {
+      var req = {
+        "RefID": (selectedCardID).toString(),
+        "RefTypeID": (pictureType == 1 ? 6 : 5).toString(),
+        "SlNo": (pictureType == 1 ? 2 : 1).toString(),
+        "FileRef": pictureType == 1 ? firstImageBase64 : secondImageBase64
+      };
+      PostBooleanGreetingResp resp = await api.removeImage(queryParams: req);
+      if (resp.isSuccess ?? false) {
+        if (!isToggledToCardColor) {
+          Get.snackbar(
+              'Success',
+              (pictureType == 1 ? "Logo" : "Background") +
+                  " image removed successfully!",
+              backgroundColor: Color.fromARGB(255, 208, 245, 216),
+              colorText: Colors.green[900],
+              icon: Icon(
+                Icons.done,
+                color: Colors.green[900],
+              ));
+        }
+      } else {
+        Get.snackbar('Error', resp.errorMessage.toString(),
+            backgroundColor: Color.fromARGB(255, 255, 230, 230),
+            colorText: Colors.red[900],
+            icon: Icon(
+              Icons.error,
+              color: Colors.red[900],
+            ));
+      }
+    } catch (e) {
+      var s = 2;
+    }
+  }
+
+  removeSelectedImage(int pictureType, bool isToggledToCardColor) {
     setState(() {
       if (pictureType == 1) {
+        logoExistingId = null;
         imageFirst = null;
 
         isFirstImageSelected = false;
+        if (isServerStoredLogo) {
+          removeImage(pictureType, isToggledToCardColor);
+        }
       }
       if (pictureType == 2) {
         imageSecond = null;
-
+        pictureExistingId = null;
         isSecondImageSelected = false;
+        if (isServerStoredBackground) {
+          removeImage(pictureType, isToggledToCardColor);
+        }
       }
     });
+  }
+
+  showAlertDialog(BuildContext context, int pictureType) {
+    // set up the buttons
+    Widget cancelButton = TextButton(
+      child: Text("Cancel"),
+      onPressed: () {
+        Navigator.pop(context);
+      },
+    );
+    Widget continueButton = TextButton(
+      child: Text("Continue"),
+      onPressed: () {
+        Navigator.pop(context);
+        removeSelectedImage(pictureType, false);
+      },
+    );
+
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text("Confirmation"),
+      content: Text("Are you sure you want to delete the image?"),
+      actions: [
+        cancelButton,
+        continueButton,
+      ],
+    );
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
   }
 
   onTapSelectimageOne() {
@@ -660,7 +1383,9 @@ class _BasicGreetingEntryScreen extends State<BasicGreetingEntryScreen> {
       "initialIndex": initialIndex,
       "captionContent": captionDefault,
       "messageContent": messageDefault,
-      "senderContent": senderDefault
+      "senderContent": senderDefault,
+      "templateID": templateID,
+      "greetingType": greetingType
     })?.then((value) {
       var messageContent = value['messageContent'];
       var captionContent = value['captionContent'];
@@ -682,18 +1407,27 @@ class _BasicGreetingEntryScreen extends State<BasicGreetingEntryScreen> {
       var req = {
         "UserIdString": GlobalVariables.userID,
         "Id": selectedCardID,
-        "TypeID": greetingType,
-        "LanguageID": GlobalVariables.currentLanguage,
+        "TypeID": greetingType.toString(),
+        "LanguageID": languageID,
         "TemplateID": templateID,
         "GreetingStatus": selectedCardID == 0 ? 1 : 1,
         "Caption": captionUpdated,
         "Message": messageUpdated,
         "Sender": senderUpdated,
+        "LogoPosition": logoPosition.toString(),
+        "ContentPosition": contentPosition.toString(),
+        "BackgroundColorHex": hexColor ?? "",
+        "BackgroundColor": "0",
+        "IsBackgroundImage": (!isBackgroundColor).toString(),
+        "UserPicture": isUserDefinedBackground.toString(),
+        "LogoRef": firstImageFileName ?? '',
+        "PictureRef": secondImageFileName ?? '',
         "Logo": firstImageBase64 ?? '',
-        "LogoRef": firstImageFileName,
-        "Picture": secondImageBase64,
-        "PictureRef": secondImageFileName
+        "Picture": secondImageBase64 ?? '',
+        "LogoOldId": logoExistingId ?? '',
+        "PictureOldId": pictureExistingId ?? '',
       };
+
       PostCreateGreetingResp resp =
           await api.createCreateGreeting(requestData: req);
       if (resp.isSuccess ?? false) {
@@ -711,16 +1445,21 @@ class _BasicGreetingEntryScreen extends State<BasicGreetingEntryScreen> {
           "CardID": selectedCardID,
           "TypeName": greetingCardTypeName,
           "templateName": templateName
+        }).then((value) {
+          if (selectedCardID != 0) {
+            getCardDetails();
+          }
         });
       } else {
         Get.snackbar('Error', resp.errorMessage.toString());
       }
     } catch (e) {
-      var s = e;
+      Get.snackbar('Error', e.toString());
     }
   }
 
   getCardDetails() async {
+    ProgressDialogUtils.showProgressDialog();
     try {
       var req = {
         "UserId": GlobalVariables.userID,
@@ -729,6 +1468,7 @@ class _BasicGreetingEntryScreen extends State<BasicGreetingEntryScreen> {
       };
       GetGetCreateGreetingResp resp =
           await api.fetchGetCreateGreeting(queryParams: req);
+      ProgressDialogUtils.hideProgressDialog();
       if (resp.isSuccess ?? false) {
         setState(() {
           captionDefault = resp.result?.greetingDetailsData?.caption;
@@ -739,17 +1479,291 @@ class _BasicGreetingEntryScreen extends State<BasicGreetingEntryScreen> {
           templateName = resp.result?.greetingDetailsData?.templateName;
           templateID =
               resp.result?.greetingDetailsData?.templateID.toString() ?? '';
+
           greetingCardTypeName =
               resp.result?.greetingDetailsData?.typeIDName.toString() ?? '';
           firstImageFileName =
-              (resp.result?.greetingDetailsData?.logoRef.toString() ?? '');
+              (resp.result?.greetingDetailsData?.logoRef ?? '').toString();
           if ((firstImageFileName ?? '').trim().isNotEmpty) {
             isFirstImageSelected = true;
+            if ((resp.result?.greetingDetailsData?.logo ?? '')
+                .toString()
+                .contains("http")) {
+              firstImageBase64 =
+                  (resp.result?.greetingDetailsData?.logo ?? '').toString();
+              isServerStoredLogo = true;
+            }
           }
+          secondImageFileName =
+              (resp.result?.greetingDetailsData?.pictureRef ?? '').toString();
+          if ((secondImageFileName ?? '').trim().isNotEmpty) {
+            isSecondImageSelected = true;
+            if ((resp.result?.greetingDetailsData?.picture ?? '')
+                .toString()
+                .contains("http")) {
+              secondImageBase64 =
+                  (resp.result?.greetingDetailsData?.picture ?? '').toString();
+              isServerStoredBackground = true;
+            }
+          }
+          isUserDefinedBackground =
+              (resp.result?.greetingDetailsData?.userPicture);
+          isBackgroundColor =
+              !(resp.result?.greetingDetailsData?.isBackgroundImage ?? false);
+          if (isBackgroundColor) {
+            currentindex = 1;
+            hexColor = (resp.result?.greetingDetailsData?.backgroundColorHex);
+            pickerColor = currentColor = fromHex(hexColor ?? '');
+          }
+          logoExistingId = resp.result?.greetingDetailsData?.logoOldId;
+          pictureExistingId = resp.result?.greetingDetailsData?.pictureOldId;
+          languageID =
+              (resp.result?.greetingDetailsData?.languageID).toString();
+          contentPosition =
+              (resp.result?.greetingDetailsData?.contentPosition ?? 0);
+          var templogoPosition =
+              (resp.result?.greetingDetailsData?.logoPosition ?? 0);
+          setLogoPosition(templogoPosition, isClosePopup: false);
+          createDateString = (resp
+                  .result?.greetingDetailsData?.creditExpiryDateString
+                  .toString() ??
+              '');
+          lastEditDateString = (resp
+                  .result?.greetingDetailsData?.lastEditedDateString
+                  .toString() ??
+              '');
         });
       } else {
         Get.snackbar('Error', resp.errorMessage.toString());
       }
-    } catch (e) {}
+    } catch (e) {
+      ProgressDialogUtils.hideProgressDialog();
+    }
+  }
+
+  setLogoPosition(int position, {bool isClosePopup = true}) {
+    setState(() {
+      logoPosition = position;
+      switch (logoPosition) {
+        case 0:
+          logoPositionName = " Select Logo Position";
+          break;
+
+        case 1:
+          logoPositionName = " Top Left";
+          break;
+
+        case 2:
+          logoPositionName = " Top Center";
+          break;
+
+        case 3:
+          logoPositionName = " Top Right";
+          break;
+
+        case 7:
+          logoPositionName = " Bottom Left";
+          break;
+
+        case 8:
+          logoPositionName = " Bottom Center";
+          break;
+        case 9:
+          logoPositionName = " Bottom Right";
+          break;
+      }
+      if (isClosePopup) Navigator.pop(context);
+    });
+  }
+
+  showPostionSelectiontDialog(BuildContext context) {
+    // set up the buttons
+    Widget cancelButton = TextButton(
+      child: Text(
+        "Cancel",
+        style: AppStyle.txtNunitoSansBold14Pink900,
+      ),
+      onPressed: () {
+        Navigator.pop(context);
+      },
+    );
+    Widget clearPosition = TextButton(
+      child: Text(
+        "Clear",
+        style: AppStyle.txtNunitoSansBold14Pink900,
+      ),
+      onPressed: () {
+        setLogoPosition(0);
+      },
+    );
+
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text(
+        "Select Logo Position",
+        style: AppStyle.txtNunitoSansBold14Pink900,
+      ),
+      content: Container(
+        height: 150,
+        child: Column(children: [
+          SizedBox(
+            height: 30,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              CustomButton(
+                height: 50,
+                width: 50,
+                // text: "Select Logo Position",
+                prefixWidget: Container(
+                    height: 30,
+                    width: 30,
+                    child: Image.asset(
+                      ImageConstant.imgLeftTop,
+                      height: 20,
+                      width: 20,
+                      fit: BoxFit.contain,
+                      color: ColorConstant.pink900,
+                    )),
+                // margin: getMargin(top: 22),
+                variant: ButtonVariant.OutlineBlack9003f_1,
+                shape: ButtonShape.RoundedBorder15,
+                fontStyle: ButtonFontStyle.NunitoSansBold14,
+                onTap: () {
+                  setLogoPosition(1);
+                },
+              ),
+              CustomButton(
+                height: 50,
+                width: 50,
+                // text: "Select Logo Position",
+                prefixWidget: Icon(
+                  Icons.arrow_circle_up,
+                  color: ColorConstant.pink900,
+                  size: 32,
+                ),
+                // margin: getMargin(top: 22),
+                variant: ButtonVariant.OutlineBlack9003f_1,
+                shape: ButtonShape.RoundedBorder15,
+                fontStyle: ButtonFontStyle.NunitoSansBold14,
+                onTap: () {
+                  setLogoPosition(2);
+                },
+              ),
+              CustomButton(
+                height: 50,
+                width: 50,
+                // text: "Select Logo Position",
+                prefixWidget: Container(
+                    height: 30,
+                    width: 30,
+                    child: Image.asset(
+                      ImageConstant.imgRightTop,
+                      height: 20,
+                      width: 20,
+                      fit: BoxFit.contain,
+                      color: ColorConstant.pink900,
+                    )),
+                // margin: getMargin(top: 22),
+                variant: ButtonVariant.OutlineBlack9003f_1,
+                shape: ButtonShape.RoundedBorder15,
+                fontStyle: ButtonFontStyle.NunitoSansBold14,
+                onTap: () {
+                  setLogoPosition(3);
+                },
+              ),
+            ],
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              CustomButton(
+                height: 50,
+                width: 50,
+                // text: "Select Logo Position",
+                prefixWidget: Container(
+                    height: 30,
+                    width: 30,
+                    child: Image.asset(
+                      ImageConstant.imgLeftBottom,
+                      height: 20,
+                      width: 20,
+                      fit: BoxFit.contain,
+                      color: ColorConstant.pink900,
+                    )),
+                // margin: getMargin(top: 22),
+                variant: ButtonVariant.OutlineBlack9003f_1,
+                shape: ButtonShape.RoundedBorder15,
+                fontStyle: ButtonFontStyle.NunitoSansBold14,
+                onTap: () {
+                  setLogoPosition(7);
+                },
+              ),
+              CustomButton(
+                height: 50,
+                width: 50,
+                // text: "Select Logo Position",
+                prefixWidget: Icon(
+                  Icons.arrow_circle_down,
+                  color: ColorConstant.pink900,
+                  size: 32,
+                ),
+                // margin: getMargin(top: 22),
+                variant: ButtonVariant.OutlineBlack9003f_1,
+                shape: ButtonShape.RoundedBorder15,
+                fontStyle: ButtonFontStyle.NunitoSansBold14,
+                onTap: () {
+                  setLogoPosition(8);
+                },
+              ),
+              CustomButton(
+                height: 50,
+                width: 50,
+                // text: "Select Logo Position",
+                prefixWidget: Container(
+                    height: 30,
+                    width: 30,
+                    child: Image.asset(
+                      ImageConstant.imgRightBottom,
+                      height: 10,
+                      width: 80,
+                      fit: BoxFit.contain,
+                      color: ColorConstant.pink900,
+                    )),
+                // margin: getMargin(top: 22),
+                variant: ButtonVariant.OutlineBlack9003f_1,
+                shape: ButtonShape.RoundedBorder15,
+                fontStyle: ButtonFontStyle.NunitoSansBold14,
+                onTap: () {
+                  setLogoPosition(9);
+                },
+              ),
+            ],
+          )
+        ]),
+      ),
+      actions: [
+        cancelButton,
+        clearPosition
+        // continueButton,
+      ],
+    );
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
+
+  static Color fromHex(String hexString) {
+    final buffer = StringBuffer();
+    if (hexString.length == 6 || hexString.length == 7) buffer.write('ff');
+    buffer.write(hexString.replaceFirst('#', ''));
+    return Color(int.parse(buffer.toString(), radix: 16));
   }
 }

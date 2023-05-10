@@ -4,6 +4,8 @@ import 'package:digitalcardsgaammabytes/core/app_export.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../core/environment/env_config.dart';
+
 // ignore: must_be_immutable
 class AppbarImage extends StatelessWidget {
   AppbarImage(
@@ -60,7 +62,8 @@ class MoreOptionMenu extends StatelessWidget {
       onSelected: (item) {
         switch (item) {
           case 1:
-            Navigator.of(context).pushNamed(AppRoutes.helponeScreen);
+            launchHelpURL();
+            // Navigator.of(context).pushNamed(AppRoutes.helponeScreen);
             break;
           case 2:
             launchYoutubeVideo();
@@ -91,6 +94,16 @@ class MoreOptionMenu extends StatelessWidget {
             ])),
       ],
     );
+  }
+
+  launchHelpURL() async {
+    String greetingHelpURL = EnvConfig.config.greetingHelpURL;
+
+    if (await canLaunch(greetingHelpURL)) {
+      await launch(greetingHelpURL);
+    } else {
+      throw 'Could not launch ' + greetingHelpURL;
+    }
   }
 
   launchYoutubeVideo() async {

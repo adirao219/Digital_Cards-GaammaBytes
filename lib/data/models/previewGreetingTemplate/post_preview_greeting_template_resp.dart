@@ -51,6 +51,8 @@ class PreviewResult {
   String? cSSVariables;
   String? htmldata;
   dynamic thumbnailImage;
+  bool? isBackgroundImage;
+  String? editorColorHex;
 
   PreviewResult(
       {this.id,
@@ -75,6 +77,8 @@ class PreviewResult {
       this.headerData4,
       this.cSSVariables,
       this.htmldata,
+      this.editorColorHex,
+      this.isBackgroundImage,
       this.thumbnailImage});
 
   PreviewResult.fromJson(Map<String, dynamic> json) {
@@ -101,6 +105,8 @@ class PreviewResult {
     cSSVariables = json['CSSVariables'];
     htmldata = json['htmldata'];
     thumbnailImage = json['ThumbnailImage'];
+    isBackgroundImage= json['IsBackgroundImage'];
+    editorColorHex = json['EditorColorHex'];
   }
 
   Map<String, dynamic> toJson() {
@@ -173,6 +179,12 @@ class PreviewResult {
     }
     if (this.thumbnailImage != null) {
       data['ThumbnailImage'] = this.thumbnailImage;
+    }
+    if (this.editorColorHex != null) {
+      data['EditorColorHex'] = this.editorColorHex;
+    }
+    if (this.isBackgroundImage != null) {
+      data['IsBackgroundImage'] = this.isBackgroundImage;
     }
     return data;
   }

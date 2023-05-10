@@ -46,10 +46,14 @@ import 'package:digitalcardsgaammabytes/presentation/band_banka_cdetails_screen/
 import 'package:digitalcardsgaammabytes/presentation/band_upicard_screen/band_upicard_screen.dart';
 
 import 'package:digitalcardsgaammabytes/presentation/app_navigation_screen/app_navigation_screen.dart';
+import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 
+import '../presentation/add_storage_using_credits/add_storage_using_credits.dart';
 import '../presentation/location_selection/location_selection.dart';
 import '../presentation/html_editing_screen/html_editing_screen.dart';
+import '../presentation/purchase_credit_history/purchase_credit_history.dart';
+import '../presentation/purchase_credit_history/purchase_credit_history_details.dart';
 
 class AppRoutes {
   static const String homeOnboardingScreen = '/home_onboarding_screen';
@@ -61,6 +65,15 @@ class AppRoutes {
 
   static const String googlesigninOneScreen =
       '/google_signin_regiter_page_screen';
+      
+  static const String addstoragecredits =
+      '/add_storage_using_credits';
+      
+  static const String purchasecredithistory  =
+      '/purchase_credit_history';
+      
+  static const String purchasecredithistoryDetails =
+      '/purchase_credit_history_details';
   static const String forgotPasswordtwoScreen = '/forgot_passwordtwo_screen';
 
   static const String selectTemplateScreen = '/select_template_screen';
@@ -153,6 +166,59 @@ class AppRoutes {
 
   static String initialRoute = '/initialRoute';
 
+  static Map<String, Widget Function(BuildContext)> initpages = {
+    initialRoute: (context) => HomeOnboardingScreen(),
+    homeOnboardingScreen: (context) => HomeOnboardingScreen(),
+    forgotPasswordoneScreen: (context) => ForgotPasswordoneScreen(),
+    forgotPasswordoneOneScreen: (context) => ForgotPasswordoneOneScreen(),
+    forgotPasswordtwoScreen: (context) => ForgotPasswordtwoScreen(),
+    regiterPageScreen: (context) => RegiterPageScreen(),
+    verifiactionPageScreen: (context) => VerifiactionPageScreen(),
+    signupPageScreen: (context) => SignupPageScreen(),
+    homePageScreen: (context) => HomePageScreen(),
+    myProfileScreen: (context) => MyProfileScreen(),
+    myDigitalCardsScreen: (context) => MyDigitalCardsScreen(),
+    myEGreetingCardsScreen: (context) => MyEGreetingCardsScreen(),
+    makePaymentScreen: (context) => MakePaymentScreen(),
+    changePasswordScreen: (context) => ChangePasswordScreen(),
+    resetPasswordScreen: (context) => ResetPasswordScreen(),
+    searchPopuponeScreen: (context) => SearchPopuponeScreen(),
+    searchPopuptwoScreen: (context) => SearchPopuptwoScreen(),
+    imageModifyScreen: (context) => ImageModifyScreen(),
+    basicCardEntryOneScreen: (context) => BasicCardEntryOneScreen(),
+    cardEntryoneScreen: (context) => CardEntryoneScreen(),
+    cardEntrytwoScreen: (context) => CardEntrytwoScreen(),
+    customizationoneScreen: (context) => CustomizationoneScreen(),
+    eGreetingCardOptionsScreen: (context) => EGreetingCardOptionsScreen(),
+    htmlEditor: (context) => HtmlEditorScreen(),
+    customizationScreen: (context) => CustomizationScreen(),
+    digitalCardOptionsScreen: (context) => DigitalCardOptionsScreen(),
+    basicCardEntryScreen: (context) => BasicCardEntryScreen(),
+    basicGreetingEntryScreen: (context) => BasicGreetingEntryScreen(),
+    cardPreviewScreen: (context) => CardPreviewScreen(),
+    selectTemplateScreen: (context) => SelectTemplateScreen(),
+    helponeScreen: (context) => HelponeScreen(),
+    footerScreen: (context) => FooterScreen(),
+    iconGroupScreen: (context) => IconGroupScreen(),
+    linkScreen: (context) => LinkScreen(),
+    advancedScreen: (context) => AdvancedScreen(),
+    shareScreen: (context) => ShareScreen(),
+    locationselection: (context) => LocationSelectionScreen(),
+    bandsScreen: (context) => BandsScreen(),
+    bandsOneScreen: (context) => BandsOneScreen(),
+    bandLinkScreen: (context) => BandLinkScreen(),
+    bandNoteScreen: (context) => BandNoteScreen(),
+    bandMapScreen: (context) => BandMapScreen(),
+    bandVideoScreen: (context) => BandVideoScreen(),
+    bandPictureScreen: (context) => BandPictureScreen(),
+    bandContactbandScreen: (context) => BandContactbandScreen(),
+    bandIcongroupScreen: (context) => BandIcongroupScreen(),
+    bandBankaCdetailsScreen: (context) => BandBankaCdetailsScreen(),
+    bandUpicardScreen: (context) => BandUpicardScreen(),
+    appNavigationScreen: (context) => AppNavigationScreen(),
+    googlesigninOneScreen: (context) => GoogleSigninRegiterPageScreen()
+  };
+
   static List<GetPage> pages = [
     GetPage(
       name: homeOnboardingScreen,
@@ -242,9 +308,7 @@ class AppRoutes {
       name: eGreetingCardOptionsScreen,
       page: () => EGreetingCardOptionsScreen(),
     ),
-    GetPage(
-        name: htmlEditor,
-        page: () => HtmlEditorScreen()),
+    GetPage(name: htmlEditor, page: () => HtmlEditorScreen()),
     GetPage(
       name: customizationScreen,
       page: () => CustomizationScreen(),
@@ -345,15 +409,22 @@ class AppRoutes {
       name: appNavigationScreen,
       page: () => AppNavigationScreen(),
     ),
-     GetPage(
+    GetPage(
       name: googlesigninOneScreen,
       page: () => GoogleSigninRegiterPageScreen(),
+    ), GetPage(
+      name: purchasecredithistoryDetails,
+      page: () => PurchaseCreditHistoryDetails(),
+    ), GetPage(
+      name: purchasecredithistory,
+      page: () => PurchaseCreditHistory(),
+    ), GetPage(
+      name: addstoragecredits,
+      page: () => AddStorageCredits(),
     ),
     GetPage(
       name: initialRoute,
       page: () => HomeOnboardingScreen(),
     ),
-    
-   
   ];
 }

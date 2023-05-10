@@ -6,6 +6,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:html_editor_enhanced/html_editor.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:toggle_switch/toggle_switch.dart';
+import 'package:flutter/services.dart';
+import '../../data/apiClient/api_client.dart';
+import '../../data/models/filterGreetingTemplate/get_filter_greeting_template_resp.dart';
+import '../../widgets/custom_button.dart';
 
 class HtmlEditorScreen extends StatefulWidget {
   HtmlEditorScreen({Key? key}) : super(key: key);
@@ -16,9 +21,11 @@ class HtmlEditorScreen extends StatefulWidget {
 
 class _HtmlEditorScreenState extends State<HtmlEditorScreen> {
   String result = '';
-
+  List<DefaultCaptionMessageData>? allDefaultCaptions;
+  List<DefaultCaptionMessageData>? defaultCaptions;
   int currentIndex = 0;
   int previousIndex = 0;
+  TextEditingController _searchController = new TextEditingController();
   final HtmlEditorController _captioncontroller = HtmlEditorController();
   final HtmlEditorController _messagecontroller = HtmlEditorController();
   final HtmlEditorController _sendercontroller = HtmlEditorController();
@@ -27,14 +34,44 @@ class _HtmlEditorScreenState extends State<HtmlEditorScreen> {
   var captionContent = Get.arguments["captionContent"] as String?;
   var messageContent = Get.arguments["messageContent"] as String?;
   var senderContent = Get.arguments["senderContent"] as String?;
+  int groupValue = 0;
+  var typeID = Get.arguments["templateID"] as String?;
+  var greetingTypeID = Get.arguments["greetingType"] as int?;
+  ApiClient api = new ApiClient();
 
+  List<Result>? languages;
+  String? selectedLanguage;
   @override
   void initState() {
     // captionContent =GlobalVariables.tempCaptionContent;
     // senderContent =GlobalVariables.tempMessageContent;
     // messageContent =GlobalVariables.tempSenderContent;
-currentIndex = initialIndex??0;
+    currentIndex = initialIndex ?? 0;
+    getLanguages();
     super.initState();
+  }
+
+  getLanguages() async {
+    try {
+      CommonDropdownResp resp = await api.getLanguages(queryParams: {});
+      if (resp.isSuccess ?? false) {
+        setState(() {
+          languages = resp.result;
+          selectedLanguage = languages?.first.value;
+          if (selectedLanguage != null && selectedLanguage!.isNotEmpty) {
+            getDefaultCaptions();
+          }
+        });
+      } else {
+        Get.snackbar('Error', resp.errorMessage.toString(),
+            backgroundColor: Color.fromARGB(255, 255, 230, 230),
+            colorText: Colors.red[900],
+            icon: Icon(
+              Icons.error,
+              color: Colors.red[900],
+            ));
+      }
+    } catch (e) {}
   }
 
   void getLastTabContent() {
@@ -196,16 +233,19 @@ currentIndex = initialIndex??0;
         ),
         body: SafeArea(
           child: DefaultTabController(
+            
             initialIndex: initialIndex ?? 0,
             length: 3,
             child: Column(
               children: <Widget>[
                 ButtonsTabBar(
+                  
                   onTap: (index) {
                     setState(() {
                       previousIndex = currentIndex;
                       currentIndex = index;
                     });
+                    getDefaultCaptions();
                     getPrviousData();
                     setState(() {});
                     setCurrentData();
@@ -236,17 +276,39 @@ currentIndex = initialIndex??0;
                 ),
                 Expanded(
                   child: TabBarView(
+                    physics: NeverScrollableScrollPhysics(),
                     children: <Widget>[
                       HtmlEditor(
+                        
                         controller: _captioncontroller,
                         htmlEditorOptions: HtmlEditorOptions(
-                          hint: 'Your text here...',
-                          shouldEnsureVisible: true,
-                          initialText: captionContent,
-                        ),
+                            hint: 'Your text here...',
+                            shouldEnsureVisible: true,
+                            initialText: captionContent,
+                            autoAdjustHeight: true),
                         htmlToolbarOptions: HtmlToolbarOptions(
+                          defaultToolbarButtons: [
+                            FontSettingButtons(
+                                // fontName: fal,
+                                fontSizeUnit: false),
+                            FontButtons(
+                                subscript: false,
+                                superscript: false,
+                                clearAll: false),
+                            ColorButtons(),
+                            ParagraphButtons(
+                                alignCenter: true,
+                                alignJustify: true,
+                                alignLeft: true,
+                                alignRight: true,
+                                lineHeight: true,
+                                caseConverter: false,
+                                decreaseIndent: true,
+                                increaseIndent: true,
+                                textDirection: false),
+                          ],
                           toolbarPosition:
-                              ToolbarPosition.belowEditor, //by default
+                              ToolbarPosition.aboveEditor, //by default
                           toolbarType: ToolbarType.nativeGrid, //by default
                           onButtonPressed: (ButtonType type, bool? status,
                               Function? updateStatus) {
@@ -363,8 +425,28 @@ currentIndex = initialIndex??0;
                           initialText: messageContent,
                         ),
                         htmlToolbarOptions: HtmlToolbarOptions(
+                          defaultToolbarButtons: [
+                            FontSettingButtons(
+                                // fontName: fal,
+                                fontSizeUnit: false),
+                            FontButtons(
+                                subscript: false,
+                                superscript: false,
+                                clearAll: false),
+                            ColorButtons(),
+                            ParagraphButtons(
+                                alignCenter: true,
+                                alignJustify: true,
+                                alignLeft: true,
+                                alignRight: true,
+                                lineHeight: true,
+                                caseConverter: false,
+                                decreaseIndent: true,
+                                increaseIndent: true,
+                                textDirection: false),
+                          ],
                           toolbarPosition:
-                              ToolbarPosition.belowEditor, //by default
+                              ToolbarPosition.aboveEditor, //by default
                           toolbarType: ToolbarType.nativeGrid, //by default
                           onButtonPressed: (ButtonType type, bool? status,
                               Function? updateStatus) {
@@ -481,8 +563,28 @@ currentIndex = initialIndex??0;
                           initialText: senderContent,
                         ),
                         htmlToolbarOptions: HtmlToolbarOptions(
+                          defaultToolbarButtons: [
+                            FontSettingButtons(
+                                // fontName: fal,
+                                fontSizeUnit: false),
+                            FontButtons(
+                                subscript: false,
+                                superscript: false,
+                                clearAll: false),
+                            ColorButtons(),
+                            ParagraphButtons(
+                                alignCenter: true,
+                                alignJustify: true,
+                                alignLeft: true,
+                                alignRight: true,
+                                lineHeight: true,
+                                caseConverter: false,
+                                decreaseIndent: true,
+                                increaseIndent: true,
+                                textDirection: false),
+                          ],
                           toolbarPosition:
-                              ToolbarPosition.belowEditor, //by default
+                              ToolbarPosition.aboveEditor, //by default
                           toolbarType: ToolbarType.nativeGrid, //by default
                           onButtonPressed: (ButtonType type, bool? status,
                               Function? updateStatus) {
@@ -599,11 +701,41 @@ currentIndex = initialIndex??0;
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      TextButton(
-                        style: TextButton.styleFrom(
-                          backgroundColor: Colors.deepOrange[50],
+                      Visibility(
+                          child: CustomButton(
+                            height: 40,
+                            width: 40,
+                            // text: logoPositionName,
+                            prefixWidget: Icon(
+                              Icons.edit_note_outlined,
+                              color: ColorConstant.pink900,
+                            ),
+                            // margin: getMargin(top: 22),
+                            variant: ButtonVariant.OutlineBlack9003f_1,
+                            shape: ButtonShape.RoundedBorder15,
+                            fontStyle: ButtonFontStyle.NunitoSansBold14,
+                            onTap: () {
+                              showCaptionSelection(context);
+                            },
+                          ),
+                          visible: (currentIndex == 0 || currentIndex == 1)),
+
+                      SizedBox(
+                        width: 16,
+                      ),
+                      CustomButton(
+                        height: 40,
+                        width: 40,
+                        // text: logoPositionName,
+                        prefixWidget: Icon(
+                          Icons.undo,
+                          color: ColorConstant.pink900,
                         ),
-                        onPressed: () {
+                        // margin: getMargin(top: 22),
+                        variant: ButtonVariant.OutlineBlack9003f_1,
+                        shape: ButtonShape.RoundedBorder15,
+                        fontStyle: ButtonFontStyle.NunitoSansBold14,
+                        onTap: () {
                           switch (currentIndex) {
                             case 0:
                               _captioncontroller.undo();
@@ -618,19 +750,24 @@ currentIndex = initialIndex??0;
                               break;
                           }
                         },
-                        child: Icon(
-                          Icons.undo,
-                          color: Color.fromARGB(255, 97, 8, 8),
-                        ),
                       ),
+
                       SizedBox(
                         width: 16,
                       ),
-                      TextButton(
-                        style: TextButton.styleFrom(
-                          backgroundColor: Colors.deepOrange[50],
+                      CustomButton(
+                        height: 40,
+                        width: 40,
+                        // text: logoPositionName,
+                        prefixWidget: Icon(
+                          Icons.redo,
+                          color: ColorConstant.pink900,
                         ),
-                        onPressed: () {
+                        // margin: getMargin(top: 22),
+                        variant: ButtonVariant.OutlineBlack9003f_1,
+                        shape: ButtonShape.RoundedBorder15,
+                        fontStyle: ButtonFontStyle.NunitoSansBold14,
+                        onTap: () {
                           switch (currentIndex) {
                             case 0:
                               _captioncontroller.redo();
@@ -645,38 +782,35 @@ currentIndex = initialIndex??0;
                               break;
                           }
                         },
-                        child: Icon(
-                          Icons.redo,
-                          color: Color.fromARGB(255, 97, 8, 8),
-                        ),
                       ),
-                      SizedBox(
-                        width: 16,
-                      ),
-                      TextButton(
-                        style: TextButton.styleFrom(
-                          backgroundColor: Colors.deepOrange[50],
-                        ),
-                        onPressed: () {
-                          switch (currentIndex) {
-                            case 0:
-                              _captioncontroller.clear();
-                              break;
 
-                            case 1:
-                              _messagecontroller.clear();
-                              break;
+                      // SizedBox(
+                      //   width: 16,
+                      // ),
+                      // TextButton(
+                      //   style: TextButton.styleFrom(
+                      //     backgroundColor: Colors.deepOrange[50],
+                      //   ),
+                      //   onPressed: () {
+                      //     switch (currentIndex) {
+                      //       case 0:
+                      //         _captioncontroller.clear();
+                      //         break;
 
-                            case 2:
-                              _sendercontroller.clear();
-                              break;
-                          }
-                        },
-                        child: Icon(
-                          Icons.refresh,
-                          color: Color.fromARGB(255, 97, 8, 8),
-                        ),
-                      ),
+                      //       case 1:
+                      //         _messagecontroller.clear();
+                      //         break;
+
+                      //       case 2:
+                      //         _sendercontroller.clear();
+                      //         break;
+                      //     }
+                      //   },
+                      //   child: Icon(
+                      //     Icons.refresh,
+                      //     color: Color.fromARGB(255, 97, 8, 8),
+                      //   ),
+                      // ),
                     ],
                   ),
                 ),
@@ -690,5 +824,238 @@ currentIndex = initialIndex??0;
     );
   }
 
+  showCaptionSelection(BuildContext context) {
+    // set up the buttons
+    Widget cancelButton = TextButton(
+      child: Text(
+        "Cancel",
+        style: AppStyle.txtNunitoSansBold14Pink900,
+      ),
+      onPressed: () {},
+    );
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return StatefulBuilder(builder: (context, setPopupState) {
+          return AlertDialog(
+            title: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  "Choose the caption",
+                  style: AppStyle.txtNunitoSansBold16Pink900,
+                ),
+                IconButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    icon: Icon(Icons.close)),
+              ],
+            ),
+            content: SingleChildScrollView(
+                child: Container(
+              height: 700,
+              width: 400,
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('Select Language',
+                        style: AppStyle.txtNunitoSansBold12),
+                    DropdownButtonFormField<String>(
+                      // Initial Value
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(15))),
+                      ),
+                      value: selectedLanguage,
+
+                      // Down Arrow Icon
+                      icon: const Icon(Icons.keyboard_arrow_down),
+
+                      // Array list of items
+                      items: languages?.map((items) {
+                        return DropdownMenuItem(
+                          value: items.value,
+                          child: Text(
+                            items.text ?? '',
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: getFontSize(
+                                16,
+                              ),
+                              fontFamily: 'Nunito Sans',
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ),
+                        );
+                      }).toList(),
+                      // After selecting the desired option,it will
+                      // change button value to selected value
+                      onChanged: (String? newValue) async {
+                        setPopupState(() {
+                          selectedLanguage = newValue!;
+                        });
+                        await getDefaultCaptions();
+                        setPopupState(() {});
+                      },
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    TextFormField(
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
+                        controller: _searchController,
+                        onChanged: ((value) {
+                          setPopupState(() {
+                            var newgreetingTypes = allDefaultCaptions!
+                                .where((element) => element.details!
+                                    .toLowerCase()
+                                    .contains(value.toLowerCase()))
+                                .toList();
+                            defaultCaptions = newgreetingTypes;
+                          });
+                        }),
+                        decoration: InputDecoration(
+                          labelText: "lbl_search_details".tr,
+                          labelStyle: AppStyle.txtNunitoSansRegular12.copyWith(
+                              height: getVerticalSize(1.10), fontSize: 13),
+
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(15.0),
+                            borderSide: const BorderSide(
+                              color: Color.fromARGB(255, 183, 183, 183),
+                            ),
+                          ),
+                          suffixIcon: GestureDetector(
+                              onTap: () {
+                                setPopupState(() {
+                                  defaultCaptions = allDefaultCaptions;
+                                  _searchController.text = "";
+                                });
+                              },
+                              child: Icon(
+                                Icons.cancel,
+                                color: ColorConstant.pink900,
+                              )),
+                          focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(15.0),
+                              borderSide: const BorderSide(
+                                color: Color.fromARGB(255, 183, 183, 183),
+                              )),
+                          // filled: true,
+                          contentPadding: EdgeInsets.all(15.0),
+                        )),
+                    Container(
+                        height: getVerticalSize(1.00),
+                        width: getHorizontalSize(326.00),
+                        margin: getMargin(left: 2, top: 10, bottom: 10),
+                        decoration: BoxDecoration(
+                            color: Colors.grey[700],
+                            borderRadius: BorderRadius.circular(
+                                getHorizontalSize(1.00)))),
+                    Container(
+                      padding: getPadding(bottom: 10),
+                      height: 450.0, // Change as per your requirement
+                      width: 300.0, // Change as per your requirement
+                      child: ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: defaultCaptions!.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return GestureDetector(
+                              child: Card(
+                                elevation: 5,
+                                child:
+                                    //  Row(children: [
+                                    ListTile(
+                                  leading: Icon(Icons.copy),
+                                  title: Text(
+                                    defaultCaptions![index].details ?? "",
+                                    style: AppStyle.txtOdibeeSansRegular14,
+                                  ),
+                                ),
+                                // Icon(Icons.done),
+                                // ])
+                              ),
+                              onTap: () {
+                                // _captioncontroller.getText().then((value) {
+                                // _captioncontroller.setText(value +
+                                //     "" +
+                                //     (defaultCaptions![index].details ?? ""));
+
+                                Clipboard.setData(ClipboardData(
+                                    text: (defaultCaptions![index].details ??
+                                        "")));
+                                Get.snackbar(
+                                    'Success',
+                                    ((currentIndex == 0
+                                            ? "Caption"
+                                            : "Message") +
+                                        " copied to clipboard!"),
+                                    backgroundColor:
+                                        Color.fromARGB(255, 208, 245, 216),
+                                    colorText: Colors.green[900],
+                                    icon: Icon(
+                                      Icons.done,
+                                      color: Colors.green[900],
+                                    ));
+                                // Fluttertoast.showToast(
+                                //   msg: (currentIndex == 0
+                                //           ? "Caption"
+                                //           : "Message") +
+                                //       " copied to clipboard!",
+                                //   toastLength: Toast.LENGTH_LONG ,
+                                //   gravity: ToastGravity.TOP,
+                                //   timeInSecForIosWeb: 1,
+                                //   backgroundColor: Colors.red,
+                                //   textColor: Colors.white,
+                                //   fontSize: 16.0);
+
+                                Navigator.pop(context);
+                                // });
+                              });
+                        },
+                      ),
+                    )
+                  ]),
+            )),
+            // actions: [
+            //   cancelButton
+            //   // continueButton,
+            // ],
+          );
+        });
+      },
+    );
+  }
+
   goToMainPage() {}
+
+  getDefaultCaptions() async {
+    try {
+      if (currentIndex == 0 || currentIndex == 1) {
+        var req = {
+          "TypeId": currentIndex == 0 ? "1" : "2",
+          "GreetingType": greetingTypeID.toString(),
+          "LanguageId": selectedLanguage ?? "",
+          "Anywhere": ""
+        };
+        CaptionMessageResult resp =
+            await api.getDefaultCaptionMessage(queryParams: req);
+        if (resp.isSuccess ?? false) {
+          setState(() {
+            allDefaultCaptions = defaultCaptions = resp.result;
+          });
+        } else {
+          Get.snackbar('Error', resp.errorMessage.toString(),
+              backgroundColor: Color.fromARGB(255, 255, 230, 230),
+              colorText: Colors.red[900],
+              icon: Icon(
+                Icons.error,
+                color: Colors.red[900],
+              ));
+        }
+      }
+    } catch (e) {}
+  }
 }

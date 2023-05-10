@@ -106,6 +106,8 @@ class GreetingDetailsData {
   List<TemplateList>? templateList;
   dynamic name;
   dynamic creditExpiryDate;
+  dynamic creditExpiryDateString;
+  dynamic lastEditedDateString;
   dynamic createdDate;
   dynamic publishedDate;
   int? greetingStatus;
@@ -114,13 +116,20 @@ class GreetingDetailsData {
   dynamic message;
   dynamic sender;
   bool? userPicture;
+  bool? isBackgroundImage;
   dynamic picture;
   dynamic pictureRef;
+  int? pictureOldId;
+  int? logoOldId;
   dynamic logo;
   dynamic logoRef;
   int? previewOption;
   dynamic publishFolder;
   dynamic thumbnailImage;
+  dynamic backgroundColor;
+  String? backgroundColorHex;
+  int? contentPosition;
+  int? logoPosition;
 
   GreetingDetailsData(
       {this.id,
@@ -140,6 +149,8 @@ class GreetingDetailsData {
       this.templateList,
       this.name,
       this.creditExpiryDate,
+      this.creditExpiryDateString,
+      this.lastEditedDateString,
       this.createdDate,
       this.publishedDate,
       this.greetingStatus,
@@ -152,8 +163,15 @@ class GreetingDetailsData {
       this.pictureRef,
       this.logo,
       this.logoRef,
+      this.logoOldId,
+      this.pictureOldId,
       this.previewOption,
+      this.backgroundColor,
+      this.backgroundColorHex,
       this.publishFolder,
+      this.isBackgroundImage,
+      this.contentPosition,
+      this.logoPosition,
       this.thumbnailImage});
 
   GreetingDetailsData.fromJson(Map<String, dynamic> json) {
@@ -189,6 +207,8 @@ class GreetingDetailsData {
     }
     name = json['Name'];
     creditExpiryDate = json['CreditExpiryDate'];
+    creditExpiryDateString = json['CreatedDateString'];
+    lastEditedDateString= json['LastEditDateString'];
     createdDate = json['CreatedDate'];
     publishedDate = json['PublishedDate'];
     greetingStatus = json['GreetingStatus'];
@@ -201,9 +221,16 @@ class GreetingDetailsData {
     pictureRef = json['PictureRef'];
     logo = json['Logo'];
     logoRef = json['LogoRef'];
+    logoOldId = json['LogoOldId'];
+    pictureOldId = json['PictureOldId'];
     previewOption = json['PreviewOption'];
     publishFolder = json['PublishFolder'];
     thumbnailImage = json['ThumbnailImage'];
+    contentPosition = json['ContentPosition'];
+    logoPosition = json['LogoPosition'];
+    isBackgroundImage= json['IsBackgroundImage'];
+    backgroundColor = json['BackgroundColor'];
+    backgroundColorHex = json['BackgroundColorHex'];
   }
 
   Map<String, dynamic> toJson() {
@@ -259,6 +286,12 @@ class GreetingDetailsData {
     if (this.creditExpiryDate != null) {
       data['CreditExpiryDate'] = this.creditExpiryDate;
     }
+    if (this.creditExpiryDateString != null) {
+      data['CreatedDateString'] = this.creditExpiryDateString;
+    }
+    if (this.lastEditedDateString != null) {
+      data['LastEditDateString'] = this.lastEditedDateString;
+    }
     if (this.createdDate != null) {
       data['CreatedDate'] = this.createdDate;
     }
@@ -267,6 +300,12 @@ class GreetingDetailsData {
     }
     if (this.greetingStatus != null) {
       data['GreetingStatus'] = this.greetingStatus;
+    }
+    if (this.logoOldId != null) {
+      data['LogoOldId'] = this.logoOldId;
+    }
+    if (this.pictureOldId != null) {
+      data['PictureOldId'] = this.pictureOldId;
     }
     if (this.greetingStatusName != null) {
       data['GreetingStatusName'] = this.greetingStatusName;

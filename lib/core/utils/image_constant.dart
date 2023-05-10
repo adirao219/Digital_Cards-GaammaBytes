@@ -6,6 +6,12 @@ class ImageConstant {
   static String imgInstagram = 'assets/images/img_instagram.svg';
 
   static String imgBusinessvisiti = 'assets/images/img_businessvisiti.png';
+  static String imgLeftTop = 'assets/images/topLeft.png';
+  static String imgLeftBottom = 'assets/images/bottomLeft.png';
+  static String imgRightTop = 'assets/images/topRight.png';
+  static String imgRightBottom = 'assets/images/bottomRight.png';
+  // static String imgupward = 'assets/images/upward.png';
+  // static String imgdownward = 'assets/images/downward.png';
 
   static String imgHolicolordown = 'assets/images/img_holicolordown.png';
 

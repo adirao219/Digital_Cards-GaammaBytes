@@ -1,8 +1,10 @@
 import 'package:digitalcardsgaammabytes/data/apiClient/api_client.dart';
 import 'package:digitalcardsgaammabytes/data/globals/globalvariables.dart';
 import 'package:digitalcardsgaammabytes/presentation/my_e_greeting_cards_screen/widgets/greeting_item_widget.dart';
+import 'package:flutter/cupertino.dart';
 
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+import '../../core/utils/progress_dialog_utils.dart';
 import '../../data/models/getGreetingType/get_get_greeting_type_resp.dart';
 import '../../data/models/greetingDetails/get_greeting_details_resp.dart';
 import '../../widgets/app_bar/appbar_subtitle.dart';
@@ -11,7 +13,7 @@ import 'package:digitalcardsgaammabytes/widgets/app_bar/appbar_image.dart';
 import 'package:digitalcardsgaammabytes/widgets/app_bar/custom_app_bar.dart';
 import 'package:digitalcardsgaammabytes/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
-
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'models/my_e_greeting_cards_model.dart';
 
 class MyEGreetingCardsScreen extends StatefulWidget {
@@ -26,28 +28,37 @@ class _MyEGreetingCardsScreen extends State<MyEGreetingCardsScreen> {
   Rx<MyEGreetingCardsModel> myEGreetingCardsModelObj =
       MyEGreetingCardsModel().obs;
   ApiClient api = new ApiClient();
+  RefreshController _refreshController =
+      RefreshController(initialRefresh: false);
+  RefreshController _innerrefreshController =
+      RefreshController(initialRefresh: false);
   TextEditingController _anywhere_Controller = new TextEditingController();
   int? selectedGreetingTypeID;
   List<Result> greetingTypes = [];
-  String? sortbyOption = "latestpublished";
+  String? sortbyOption = "latestcreated";
   bool? showHidden;
   @override
   void initState() {
+    Future.delayed(const Duration(milliseconds: 1000), () {
+      initialLoad();
+    });
+
+    super.initState();
+  }
+
+  void initialLoad() {
     setState(() {
-      sortbyOption = "latestpublished";
+      sortbyOption = "latestcreated";
     });
     getGreetingTypes();
     getGreetingList();
-    super.initState();
   }
 
   getGreetingList() async {
     try {
       var req = {
         "UserId": GlobalVariables.userID.toString(),
-        "GreetingType": (selectedGreetingTypeID == null
-            ? ""
-            : selectedGreetingTypeID.toString()),
+        "GreetingType": (selectedGreetingTypeID ?? "").toString(),
         "Hidden": (showHidden == null
             ? ""
             : (((showHidden ?? false) == false) ? "No" : "Yes")),
@@ -100,6 +111,29 @@ class _MyEGreetingCardsScreen extends State<MyEGreetingCardsScreen> {
     } catch (e) {}
   }
 
+  void _onRefresh() async {
+    // monitor network fetch
+    await Future.delayed(Duration(milliseconds: 1000));
+    // if failed,use refreshFailed()
+
+    await getGreetingList();
+    _refreshController.refreshCompleted();
+    _innerrefreshController.refreshCompleted();
+  }
+
+  void _onLoading() async {
+    // monitor network fetch
+    // await Future.delayed(Duration(milliseconds: 1000));
+    // // if failed,use loadFailed(),if no data return,use LoadNodata()
+    // items.add((items.length+1).toString());
+    // if(mounted)
+    // setState(() {
+
+    // });
+    _refreshController.loadComplete();
+    _innerrefreshController.loadComplete();
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -107,207 +141,304 @@ class _MyEGreetingCardsScreen extends State<MyEGreetingCardsScreen> {
         bottom: false,
         child: Scaffold(
             backgroundColor: ColorConstant.whiteA700,
-            body: Container(
-                width: size.width,
-                child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Container(
-                          width: size.width,
-                          decoration: BoxDecoration(
-                              image: DecorationImage(
-                                  image: AssetImage(
-                                      ImageConstant.imgVectorDeepOrangeA100),
-                                  fit: BoxFit.cover)),
-                          child: Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                CustomAppBar(
-                                    height: getVerticalSize(94.00),
-                                    leadingWidth: 150,
-                                    leading: Container(
-                                        height: getVerticalSize(36.00),
-                                        width: getHorizontalSize(38.00),
-                                        margin: getMargin(
-                                            left: 38, top: 44, bottom: 14),
-                                        child: Row(
-                                          children: [
-                                            Stack(
-                                                alignment: Alignment.centerLeft,
-                                                children: [
-                                                  AppbarImage(
-                                                      height: getVerticalSize(
-                                                          36.00),
-                                                      width: getHorizontalSize(
-                                                          38.00),
-                                                      svgPath: ImageConstant
-                                                          .imgContrast),
-                                                  AppbarImage(
-                                                      height: getVerticalSize(
-                                                          10.00),
-                                                      width: getHorizontalSize(
-                                                          5.00),
-                                                      svgPath: ImageConstant
-                                                          .imgVectorstroke,
-                                                      onTap: onTapBack,
-                                                      margin: getMargin(
-                                                          left: 15,
-                                                          top: 13,
-                                                          right: 18,
-                                                          bottom: 13)),
-                                                ]),
-                                            AppbarSubtitle(
-                                                text: "lbl_my_egreetings".tr,
+            body: SmartRefresher(
+                enablePullDown: true,
+                enablePullUp: true,
+                header: WaterDropHeader(),
+                controller: _refreshController,
+                onRefresh: _onRefresh,
+                onLoading: _onLoading,
+                child: Container(
+                    width: size.width,
+                    child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Container(
+                              width: size.width,
+                              decoration: BoxDecoration(
+                                  image: DecorationImage(
+                                      image: AssetImage(ImageConstant
+                                          .imgVectorDeepOrangeA100),
+                                      fit: BoxFit.cover)),
+                              child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    CustomAppBar(
+                                        height: getVerticalSize(94.00),
+                                        leadingWidth: 150,
+                                        leading: GestureDetector(
+                                            onTap: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                            child: Container(
+                                                height: getVerticalSize(36.00),
+                                                width: getHorizontalSize(38.00),
                                                 margin: getMargin(
-                                                    left: 40, top: 10)),
-                                          ],
-                                        )),
-                                    actions: [
-                                      Card(
-                                          clipBehavior: Clip.antiAlias,
-                                          elevation: 0,
-                                          margin: getMargin(
-                                              left: 35,
-                                              top: 50,
-                                              right: 35,
-                                              bottom: 15),
-                                          color: ColorConstant.gray50,
-                                          shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(
-                                                      getHorizontalSize(5.00))),
-                                          child: Container(
-                                              height: getVerticalSize(29.00),
-                                              width: getHorizontalSize(31.00),
-                                              decoration: BoxDecoration(
-                                                  color: ColorConstant.gray50,
+                                                    left: 38,
+                                                    top: 44,
+                                                    bottom: 14),
+                                                child: Row(
+                                                  children: [
+                                                    Stack(
+                                                        alignment: Alignment
+                                                            .centerLeft,
+                                                        children: [
+                                                          AppbarImage(
+                                                              height:
+                                                                  getVerticalSize(
+                                                                      36.00),
+                                                              width:
+                                                                  getHorizontalSize(
+                                                                      38.00),
+                                                              svgPath: ImageConstant
+                                                                  .imgContrast),
+                                                          AppbarImage(
+                                                              height:
+                                                                  getVerticalSize(
+                                                                      10.00),
+                                                              width:
+                                                                  getHorizontalSize(
+                                                                      5.00),
+                                                              svgPath: ImageConstant
+                                                                  .imgVectorstroke,
+                                                              onTap: onTapBack,
+                                                              margin: getMargin(
+                                                                  left: 15,
+                                                                  top: 13,
+                                                                  right: 18,
+                                                                  bottom: 13)),
+                                                        ]),
+                                                    AppbarSubtitle(
+                                                        text:
+                                                            "lbl_my_egreetings"
+                                                                .tr,
+                                                        margin: getMargin(
+                                                            left: 40, top: 10)),
+                                                  ],
+                                                ))),
+                                        actions: [
+                                          Card(
+                                              clipBehavior: Clip.antiAlias,
+                                              elevation: 0,
+                                              margin: getMargin(
+                                                  left: 35,
+                                                  top: 50,
+                                                  right: 35,
+                                                  bottom: 15),
+                                              color: ColorConstant.gray50,
+                                              shape: RoundedRectangleBorder(
                                                   borderRadius:
                                                       BorderRadius.circular(
                                                           getHorizontalSize(
                                                               5.00))),
-                                              child: Stack(
-                                                  alignment:
-                                                      Alignment.centerLeft,
-                                                  children: [
-                                                    CustomImageView(
-                                                        onTap: () =>
-                                                            showModalBottomSheet(
-                                                              context: context,
-                                                              isScrollControlled:
-                                                                  true,
-                                                              backgroundColor:
-                                                                  Colors
-                                                                      .transparent,
-                                                              builder:
-                                                                  (context) {
-                                                                return StatefulBuilder(builder:
-                                                                    (BuildContext
+                                              child: Container(
+                                                  height:
+                                                      getVerticalSize(29.00),
+                                                  width:
+                                                      getHorizontalSize(31.00),
+                                                  decoration: BoxDecoration(
+                                                      color:
+                                                          ColorConstant.gray50,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              getHorizontalSize(
+                                                                  5.00))),
+                                                  child: Stack(
+                                                      alignment:
+                                                          Alignment.centerLeft,
+                                                      children: [
+                                                        CustomImageView(
+                                                            onTap: () =>
+                                                                showModalBottomSheet(
+                                                                  context:
+                                                                      context,
+                                                                  isScrollControlled:
+                                                                      true,
+                                                                  backgroundColor:
+                                                                      Colors
+                                                                          .transparent,
+                                                                  builder:
+                                                                      (context) {
+                                                                    return StatefulBuilder(builder: (BuildContext
                                                                             context,
                                                                         StateSetter
                                                                             setModalState) {
-                                                                  return Container(
-                                                                    height: MediaQuery.of(context)
-                                                                            .size
-                                                                            .height *
-                                                                        0.75,
-                                                                    decoration:
-                                                                        new BoxDecoration(
-                                                                      color: Colors
-                                                                          .white,
-                                                                      borderRadius:
-                                                                          new BorderRadius
-                                                                              .only(
-                                                                        topLeft:
-                                                                            const Radius.circular(25.0),
-                                                                        topRight:
-                                                                            const Radius.circular(25.0),
-                                                                      ),
-                                                                    ),
-                                                                    child:
-                                                                        Center(
-                                                                      child: filterModalContent(
-                                                                          setModalState),
-                                                                    ),
-                                                                  );
-                                                                });
-                                                              },
-                                                            ),
-                                                        svgPath: ImageConstant
-                                                            .imgSearch,
-                                                        height: getVerticalSize(
-                                                            17.00),
-                                                        width:
-                                                            getHorizontalSize(
-                                                                16.00),
-                                                        alignment: Alignment
-                                                            .centerLeft,
-                                                        margin: getMargin(
-                                                            left: 7,
-                                                            top: 6,
-                                                            right: 8,
-                                                            bottom: 6))
-                                                  ])))
-                                    ],
-                                    styleType: Style.bgStyle_7)
-                              ])),
-                      Expanded(
-                          child: SingleChildScrollView(
-                              child: Padding(
-                                  padding:
-                                      getPadding(left: 40, top: 20, right: 33),
-                                  child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      children: [
-                                        CustomButton(
-                                            height: 57,
-                                            width: 237,
-                                            text: "msg_create_e_greeting".tr,
-                                            variant:
-                                                ButtonVariant.OutlineBlack9003f,
-                                            shape: ButtonShape.RoundedBorder28,
-                                            padding: ButtonPadding.PaddingAll18,
-                                            fontStyle:
-                                                ButtonFontStyle.NovaCut16,
-                                            onTap: onTapCreateegreetingcard),
-                                        Padding(
-                                            padding: getPadding(top: 0),
-                                            child: Obx(() => GridView.builder(
-                                                shrinkWrap: true,
-                                                gridDelegate:
-                                                    SliverGridDelegateWithFixedCrossAxisCount(
-                                                        mainAxisExtent:
-                                                            getVerticalSize(
-                                                                159.00),
-                                                        crossAxisCount: 2,
-                                                        mainAxisSpacing:
-                                                            getHorizontalSize(
-                                                                30.00),
-                                                        crossAxisSpacing:
-                                                            getHorizontalSize(
-                                                                30.00)),
-                                                physics:
-                                                    NeverScrollableScrollPhysics(),
-                                                itemCount: myEGreetingCardsModelObj
-                                                    .value
-                                                    .gridchristmasthumbnailItemList
-                                                    .length,
-                                                itemBuilder: (context, index) {
-                                                  GreetingListDetail model =
-                                                      myEGreetingCardsModelObj
-                                                              .value
-                                                              .gridchristmasthumbnailItemList[
-                                                          index];
-                                                  return GreetingItemWidget(
-                                                      model,
-                                                      (showHidden ?? false));
-                                                }))),
-                                      ]))))
-                    ]))));
+                                                                      return Container(
+                                                                        height: MediaQuery.of(context).size.height *
+                                                                            0.80,
+                                                                        decoration:
+                                                                            new BoxDecoration(
+                                                                          color:
+                                                                              Colors.white,
+                                                                          borderRadius:
+                                                                              new BorderRadius.only(
+                                                                            topLeft:
+                                                                                const Radius.circular(25.0),
+                                                                            topRight:
+                                                                                const Radius.circular(25.0),
+                                                                          ),
+                                                                        ),
+                                                                        child:
+                                                                            Center(
+                                                                          child:
+                                                                              filterModalContent(setModalState),
+                                                                        ),
+                                                                      );
+                                                                    });
+                                                                  },
+                                                                ),
+                                                            svgPath:
+                                                                ImageConstant
+                                                                    .imgSearch,
+                                                            height:
+                                                                getVerticalSize(
+                                                                    17.00),
+                                                            width:
+                                                                getHorizontalSize(
+                                                                    16.00),
+                                                            alignment: Alignment
+                                                                .centerLeft,
+                                                            margin: getMargin(
+                                                                left: 7,
+                                                                top: 6,
+                                                                right: 8,
+                                                                bottom: 6))
+                                                      ])))
+                                        ],
+                                        styleType: Style.bgStyle_7)
+                                  ])),
+                          Expanded(
+                              child: SmartRefresher(
+                                  enablePullDown: true,
+                                  enablePullUp: true,
+                                  header: WaterDropHeader(),
+                                  controller: _innerrefreshController,
+                                  onRefresh: _onRefresh,
+                                  onLoading: _onLoading,
+                                  child: SingleChildScrollView(
+                                      child: Padding(
+                                          padding: getPadding(
+                                              left: 40, top: 0, right: 33),
+                                          child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              children: [
+                                                CustomButton(
+                                                    height: 57,
+                                                    width: 237,
+                                                    text:
+                                                        "msg_create_e_greeting"
+                                                            .tr,
+                                                    variant: ButtonVariant
+                                                        .OutlineBlack9003f,
+                                                    shape: ButtonShape
+                                                        .RoundedBorder28,
+                                                    padding: ButtonPadding
+                                                        .PaddingAll18,
+                                                    fontStyle: ButtonFontStyle
+                                                        .NunitoSansBlack14,
+                                                    onTap:
+                                                        onTapCreateegreetingcard),
+                                                SizedBox(
+                                                  height: 10,
+                                                ),
+                                                Visibility(
+                                                    visible:
+                                                        myEGreetingCardsModelObj
+                                                                .value
+                                                                .gridchristmasthumbnailItemList
+                                                                .length >
+                                                            0,
+                                                    child: Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment.end,
+                                                      children: [
+                                                        Text(
+                                                          ('Total No. of Greetings  '),
+                                                          style: AppStyle
+                                                              .txtNunitoSansBold14,
+                                                        ),
+                                                        Container(
+                                                          padding: getPadding(
+                                                              left: 5,
+                                                              right: 5),
+                                                          decoration:
+                                                              BoxDecoration(
+                                                                  border: Border
+                                                                      .all(
+                                                                    width: 2,
+                                                                    color: ColorConstant
+                                                                        .pink900,
+                                                                  ),
+                                                                  borderRadius:
+                                                                      BorderRadius.all(
+                                                                          Radius.circular(
+                                                                              50))),
+                                                          child: Text(
+                                                            (myEGreetingCardsModelObj
+                                                                .value
+                                                                .gridchristmasthumbnailItemList
+                                                                .length
+                                                                .toString()),
+                                                            style: AppStyle
+                                                                .txtNunitoSansBold14,
+                                                          ),
+                                                        )
+                                                      ],
+                                                    )),
+                                                Padding(
+                                                    padding: getPadding(top: 0),
+                                                    child: Obx(() =>
+                                                        GridView.builder(
+                                                            shrinkWrap: true,
+                                                            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                                                                mainAxisExtent:
+                                                                    getVerticalSize(
+                                                                        160.00),
+                                                                crossAxisCount:
+                                                                    2,
+                                                                mainAxisSpacing:
+                                                                    getHorizontalSize(
+                                                                        15.00),
+                                                                crossAxisSpacing:
+                                                                    getHorizontalSize(
+                                                                        15.00)),
+                                                            physics:
+                                                                NeverScrollableScrollPhysics(),
+                                                            itemCount:
+                                                                myEGreetingCardsModelObj
+                                                                    .value
+                                                                    .gridchristmasthumbnailItemList
+                                                                    .length,
+                                                            itemBuilder:
+                                                                (context,
+                                                                    index) {
+                                                              GreetingListDetail
+                                                                  model =
+                                                                  myEGreetingCardsModelObj
+                                                                          .value
+                                                                          .gridchristmasthumbnailItemList[
+                                                                      index];
+                                                              return GreetingItemWidget(
+                                                                  model,
+                                                                  (showHidden ??
+                                                                      false),
+                                                                  actionPerformed);
+                                                            }))),
+                                              ])))))
+                        ])))));
+  }
+
+  actionPerformed() async {
+    Navigator.pop(context);
+    await getGreetingList();
+    Navigator.pop(context);
   }
 
   Widget filterModalContent(StateSetter setModalState) {
-    return Container(
+    return 
+    SingleChildScrollView(child:
+    Container(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.start,
@@ -318,7 +449,7 @@ class _MyEGreetingCardsScreen extends State<MyEGreetingCardsScreen> {
                   _anywhere_Controller.text = "";
                   selectedGreetingTypeID = null;
                   showHidden = null;
-                  sortbyOption = "latestpublished";
+                  sortbyOption = "latestcreated";
                 });
               },
               child: Container(
@@ -453,6 +584,36 @@ class _MyEGreetingCardsScreen extends State<MyEGreetingCardsScreen> {
                   RadioListTile(
                     contentPadding: getPadding(all: 0),
                     title: Text(
+                      "lbl_created_date_latest".tr,
+                      style: AppStyle.txtNunitoSansRegular14Gray70001,
+                    ),
+                    value: "latestcreated",
+                    groupValue: sortbyOption,
+                    selected: sortbyOption == "latestcreated",
+                    onChanged: (value) {
+                      setModalState(() {
+                        sortbyOption = value.toString();
+                      });
+                    },
+                  ),
+                  RadioListTile(
+                    contentPadding: getPadding(all: 0),
+                    title: Text(
+                      "lbl_created_date_oldest".tr,
+                      style: AppStyle.txtNunitoSansRegular14Gray70001,
+                    ),
+                    value: "oldestcreated",
+                    groupValue: sortbyOption,
+                    selected: sortbyOption == "oldestcreated",
+                    onChanged: (value) {
+                      setModalState(() {
+                        sortbyOption = value.toString();
+                      });
+                    },
+                  ),
+                  RadioListTile(
+                    contentPadding: getPadding(all: 0),
+                    title: Text(
                       "lbl_published_date_latest".tr,
                       style: AppStyle.txtNunitoSansRegular14Gray70001,
                     ),
@@ -480,58 +641,41 @@ class _MyEGreetingCardsScreen extends State<MyEGreetingCardsScreen> {
                       });
                     },
                   ),
-                  RadioListTile(
-                    contentPadding: getPadding(all: 0),
-                    title: Text(
-                      "lbl_created_date_latest".tr,
-                      style: AppStyle.txtNunitoSansRegular14Gray70001,
-                    ),
-                    value: "latestcreated",
-                    groupValue: sortbyOption,
-                    selected: sortbyOption == "latestcreated",
-                    onChanged: (value) {
-                      setModalState(() {
-                        sortbyOption = value.toString();
-                      });
-                    },
-                  ),
-                  RadioListTile(
-                    contentPadding: getPadding(all: 0),
-                    title: Text(
-                      "lbl_created_date_oldest".tr,
-                      style: AppStyle.txtNunitoSansRegular14Gray70001,
-                    ),
-                    value: "oldestcreated",
-                    groupValue: sortbyOption,
-                    selected: sortbyOption == "oldestcreated",
-                    onChanged: (value) {
-                      setModalState(() {
-                        sortbyOption = value.toString();
-                      });
-                    },
-                  )
                 ],
               )),
-          Container(
-              padding: getPadding(
-                  top: 0,
-                  left: MediaQuery.of(context).size.width * 0.2,
-                  bottom: 0),
-              child: CustomButton(
-                  height: 40,
-                  width: MediaQuery.of(context).size.width * 0.5,
-                  text: "lbl_apply".tr,
-                  margin: getMargin(top: 0, bottom: 5),
-                  fontStyle: ButtonFontStyle.NunitoSansBlack16,
-                  onTap: onTapOk)),
+          Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
+            Container(
+                padding: getPadding(top: 0, left: 0, bottom: 0),
+                child: CustomButton(
+                    height: 40,
+                    width: MediaQuery.of(context).size.width * 0.3,
+                    text: "lbl_apply".tr,
+                    margin: getMargin(top: 0, bottom: 5),
+                    fontStyle: ButtonFontStyle.NunitoSansBlack16,
+                    onTap: onTapOk)),
+            Container(
+                padding: getPadding(top: 0, left: 15, bottom: 0),
+                child: CustomButton(
+                    height: 40,
+                    width: MediaQuery.of(context).size.width * 0.3,
+                    text: "lbl_close".tr,
+                    margin: getMargin(top: 0, bottom: 5),
+                    fontStyle: ButtonFontStyle.NunitoSansBlack16,
+                    onTap: () {
+                      Navigator.pop(context);
+                    })),
+          ])
         ],
       ),
-    );
+    ));
   }
 
   onTapCreateegreetingcard() {
-    Navigator.of(context).pushNamed(AppRoutes.eGreetingCardOptionsScreen);
-    getGreetingList();
+    Navigator.of(context)
+        .pushNamed(AppRoutes.eGreetingCardOptionsScreen)
+        .then((value) {
+      getGreetingList();
+    });
   }
 
   onTapBack() {

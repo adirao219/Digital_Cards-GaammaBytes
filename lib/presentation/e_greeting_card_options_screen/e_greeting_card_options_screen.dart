@@ -345,7 +345,7 @@ class _EGreetingCardOptionsScreen extends State<EGreetingCardOptionsScreen> {
                     });
                   }),
                   decoration: InputDecoration(
-                    labelText: "lbl_search_greetings".tr,
+                    labelText: "lbl_search_details".tr,
                     labelStyle: AppStyle.txtNunitoSansRegular12
                         .copyWith(height: getVerticalSize(1.10), fontSize: 13),
 

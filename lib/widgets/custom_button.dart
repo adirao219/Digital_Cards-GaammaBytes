@@ -219,6 +219,15 @@ class CustomButton extends StatelessWidget {
           fontFamily: 'Nunito Sans',
           fontWeight: FontWeight.w700,
         );
+          case ButtonFontStyle.NunitoSansBold12:
+        return TextStyle(
+          color: ColorConstant.pink900,
+          fontSize: getFontSize(
+            12,
+          ),
+          fontFamily: 'Nunito Sans',
+          fontWeight: FontWeight.w700,
+        );
       case ButtonFontStyle.NunitoSansBlack12:
         return TextStyle(
           color: ColorConstant.whiteA700,
@@ -227,6 +236,15 @@ class CustomButton extends StatelessWidget {
           ),
           fontFamily: 'Nunito Sans',
           fontWeight: FontWeight.w900,
+        );
+        case ButtonFontStyle.NunitoSansBlack12Reg:
+        return TextStyle(
+          color: ColorConstant.whiteA700,
+          fontSize: getFontSize(
+            12,
+          ),
+          fontFamily: 'Nunito Sans',
+          fontWeight: FontWeight.w700,
         );
       case ButtonFontStyle.NunitoSansBold16:
         return TextStyle(
@@ -274,6 +292,8 @@ enum ButtonFontStyle {
   InterSemiBold14,
   NovaCut16,
   NunitoSansBold14,
+  NunitoSansBold12,
   NunitoSansBlack12,
+  NunitoSansBlack12Reg,
   NunitoSansBold16,
 }
