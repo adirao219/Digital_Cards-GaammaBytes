@@ -1,9 +1,15 @@
+import 'package:digitalcardsgaammabytes/data/apiClient/api_client.dart';
 import 'package:digitalcardsgaammabytes/presentation/card_entrytwo_screen/widgets/card_entrytwo_item_widget.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
 
 import '../../core/utils/osm_map.dart';
+import '../../data/globals/globalvariables.dart';
+import '../../data/models/createCard/post_create_card_resp.dart';
+import '../../data/models/deleteGreeting/post_delete_greeting_resp.dart';
+import '../../data/models/getCreateCard/get_get_create_card_resp.dart';
+import '../../helper/constants.dart';
 import 'models/card_entrytwo_item_model.dart';
 import 'package:digitalcardsgaammabytes/core/app_export.dart';
 import 'package:digitalcardsgaammabytes/widgets/app_bar/appbar_image.dart';
@@ -32,12 +38,28 @@ class _CardEntrytwoScreen extends State<CardEntrytwoScreen> {
   TextEditingController _latitude_Controller = new TextEditingController();
   TextEditingController _longitude_Controller = new TextEditingController();
   TextEditingController _card_color_Controller = new TextEditingController();
+
+  var cardType = Get.arguments["cardType"] as int?;
+  var selectedCardID = Get.arguments["SelectedCardID"] as int?;
+  var cardSubtypeID = Get.arguments["cardSubtypeID"] as int?;
+  var templateId = Get.arguments["templateId"] as String?;
+  var cardTypeName = Get.arguments["cardTypeName"] as String?;
+  var templateName = Get.arguments["templateName"] as String?;
+  var cardSubTypeName = Get.arguments["cardSubTypeName"] as String?;
+  var isPublishAvailable = Get.arguments["isPublishAvailable"] as bool?;
+  var cardName = Get.arguments["cardName"] as String?;
+  var mainResult = Get.arguments["cardDetails"] as GetCardResult?;
+  bool isPublished = (Get.arguments["isPublished"] as bool?) ?? false;
+  String publishedURL = (Get.arguments["publishedURL"] as String?) ?? "";
   Color pickerColor = Color(0xff443a49);
   Color? currentColor;
-
+  String? createDateString;
+  String? lastEditDateString;
+  String? cardURL;
+  String? hexColor;
   MapController _mapController = MapController();
   ImagePicker _picker = new ImagePicker();
-
+  ApiClient api = new ApiClient();
   LatLng? finalLocation;
   bool locationSelected = false;
   bool isFirstImageSelected = false;
@@ -54,8 +76,57 @@ class _CardEntrytwoScreen extends State<CardEntrytwoScreen> {
 
   @override
   void initState() {
+    if (mainResult != null) {
+      updateExistingData();
+    }
     getCurrentLocation();
     super.initState();
+  }
+
+  getCardData({bool showProgress = true}) async {
+    try {
+      var req = {
+        "UserIdString": GlobalVariables.userID,
+        "CardID": selectedCardID.toString(),
+        "CardType": "0",
+        "CardSubType": "0",
+      };
+      GetGetCreateCardResp resp = await api.fetchGetCreateCard(
+          queryParams: req, showProgress: showProgress);
+      if (resp.isSuccess ?? false) {
+        setState(() {
+          mainResult = resp.result;
+        });
+      } else {
+        Get.snackbar('Error', resp.errorMessage.toString(),
+            backgroundColor: Color.fromARGB(255, 255, 230, 230),
+            colorText: Colors.red[900],
+            icon: Icon(
+              Icons.error,
+              color: Colors.red[900],
+            ));
+      }
+    } catch (e) {}
+  }
+
+  updateExistingData() {
+    setState(() {
+      if ((mainResult?.latitude ?? 0.00) != 0.00 &&
+          (mainResult?.longitude ?? 0.00) != 0.0) {
+        finalLocation =
+            LatLng(mainResult?.latitude ?? 0.0, mainResult?.longitude ?? 0.0);
+        _latitude_Controller.text = mainResult?.latitude!.toString() ?? '';
+        _longitude_Controller.text = mainResult?.longitude!.toString() ?? '';
+        locationSelected = true;
+      }
+      if (mainResult?.cardColorInHex != null &&
+          mainResult?.cardColorInHex != "") {
+        hexColor = (mainResult?.cardColorInHex);
+        pickerColor = currentColor = fromHex(hexColor ?? '');
+      }
+      createDateString = mainResult?.createdDateString ?? '';
+      lastEditDateString = mainResult?.lastEditDateString ?? '';
+    });
   }
 
   getCurrentLocation() async {
@@ -66,7 +137,7 @@ class _CardEntrytwoScreen extends State<CardEntrytwoScreen> {
         Position position = await Geolocator.getCurrentPosition(
             desiredAccuracy: LocationAccuracy.high);
         setState(() {
-          finalLocation = LatLng(position.latitude, position.longitude);
+          //  finalLocation = LatLng(position.latitude, position.longitude);
         });
       }
       // ignore: empty_catches
@@ -100,6 +171,120 @@ class _CardEntrytwoScreen extends State<CardEntrytwoScreen> {
       // return false;
     }
     return true;
+  }
+
+  showPublishAlertDialog(BuildContext context) {
+    // set up the buttons
+    Widget cancelButton = TextButton(
+      child: Text("No"),
+      onPressed: () {
+        Navigator.pop(context);
+      },
+    );
+    Widget continueButton = TextButton(
+      child: Text("Yes"),
+      onPressed: () {
+        Navigator.pop(context);
+        publishCard();
+      },
+    );
+
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text("Confirmation"),
+      content: Text("Are you sure you want to publish the card?"),
+      actions: [
+        cancelButton,
+        continueButton,
+      ],
+    );
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
+
+  publishCard() async {
+    try {
+      var req = {
+        "UserId": GlobalVariables.userID,
+        "CardID": selectedCardID.toString(),
+      };
+      APIResponse resp = await api.fetchPublish(queryParams: req);
+      if ((resp.isSuccess ?? false)) {
+        setState(() {
+          isPublished = true;
+          publishedURL = resp.result.toString();
+        });
+        Get.snackbar('Success', "Card Published successfully!",
+            backgroundColor: Color.fromARGB(255, 208, 245, 216),
+            colorText: Colors.green[900],
+            icon: Icon(
+              Icons.done,
+              color: Colors.green[900],
+            ));
+      } else {
+        Get.snackbar('Error', resp.errorMessage.toString(),
+            backgroundColor: Color.fromARGB(255, 255, 230, 230),
+            colorText: Colors.red[900],
+            icon: Icon(
+              Icons.error,
+              color: Colors.red[900],
+            ));
+      }
+    } catch (e) {}
+  }
+
+  saveCardMain() async {
+    try {
+      var req = {
+        "UserIdString": GlobalVariables.userID,
+        "CardID": selectedCardID.toString(),
+        "Name": cardName,
+        "Latitude": double.tryParse(_latitude_Controller.text),
+        "Longitude": double.tryParse(_longitude_Controller.text),
+        "CardColorInHex": hexColor ?? ''
+      };
+      PostSaveResp resp = await api.saveCardOtherData(requestData: req);
+      if (resp.isSuccess ?? false) {
+        selectedCardID = resp.result;
+        Get.snackbar('Success', "Card Saved Successfully!",
+            backgroundColor: Color.fromARGB(255, 208, 245, 216),
+            colorText: Colors.green[900],
+            icon: Icon(
+              Icons.done,
+              color: Colors.green[900],
+            ));
+        Navigator.of(context)
+            .pushNamed(AppRoutes.customizationoneScreen, arguments: {
+          "cardType": cardType,
+          "cardSubtypeID": cardSubtypeID,
+          "templateId": templateId,
+          "cardTypeName": cardTypeName,
+          "templateName": templateName,
+          "cardSubTypeName": cardSubTypeName,
+          "SelectedCardID": selectedCardID,
+          "isPublishAvailable": isPublishAvailable,
+          "cardName": cardName,
+          "cardDetails": mainResult,
+          "isPublished": isPublished,
+          "publishedURL": publishedURL
+        }).then((value) {
+          getCardData(showProgress: false);
+        });
+      } else {
+        Get.snackbar('Error', resp.errorMessage.toString(),
+            backgroundColor: Color.fromARGB(255, 255, 230, 230),
+            colorText: Colors.red[900],
+            icon: Icon(
+              Icons.error,
+              color: Colors.red[900],
+            ));
+      }
+    } catch (e) {}
   }
 
   @override
@@ -172,253 +357,124 @@ class _CardEntrytwoScreen extends State<CardEntrytwoScreen> {
                 //       margin: getMargin(left: 3, top: 47, right: 3, bottom: 26))
                 // ],
                 styleType: Style.bgStyle_16),
-            body: SizedBox(
-                width: size.width,
-                child: SingleChildScrollView(
-                    child: Padding(
-                        padding: getPadding(left: 22, top: 31, right: 9),
-                        child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Container(
-                                  width: getHorizontalSize(266.00),
-                                  margin: getMargin(left: 14),
+            body: //SingleChildScrollView(child:
+                Padding(
+                    padding: getPadding(left: 22, top: 10, right: 20),
+                    child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Align(
+                              alignment: Alignment.centerLeft,
+                              child: Container(
+                                  // width: getHorizontalSize(266.00),
+                                  margin: getMargin(left: 0),
                                   child: RichText(
                                       text: TextSpan(children: [
                                         TextSpan(
-                                            text:
-                                                "msg_card_type_ex_buisness2".tr,
+                                            text: ("msg_card_type_ex_new2".tr) +
+                                                (cardTypeName ?? ""),
                                             style: TextStyle(
                                                 color: ColorConstant.pink900,
                                                 fontSize: getFontSize(18),
                                                 fontFamily: 'Nunito',
                                                 fontWeight: FontWeight.w700)),
+                                      ]),
+                                      textAlign: TextAlign.left))),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Align(
+                              alignment: Alignment.centerLeft,
+                              child: Container(
+                                  // width: getHorizontalSize(266.00),
+                                  margin: getMargin(left: 0),
+                                  child: RichText(
+                                      text: TextSpan(children: [
                                         TextSpan(
-                                            text: "msg_template_type".tr,
+                                            text: ("msg_template_type".tr) +
+                                                (templateName ?? ""),
                                             style: TextStyle(
                                                 color: ColorConstant.pink900,
                                                 fontSize: getFontSize(18),
                                                 fontFamily: 'Nunito',
                                                 fontWeight: FontWeight.w600))
                                       ]),
-                                      textAlign: TextAlign.left)),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Padding(
-                                      padding: getPadding(top: 15),
-                                      child: Text("lbl_location".tr,
-                                          overflow: TextOverflow.ellipsis,
-                                          textAlign: TextAlign.left,
-                                          style: AppStyle.txtNunitoSansRegular14
-                                              .copyWith(
-                                                  letterSpacing:
-                                                      getHorizontalSize(
-                                                          0.36)))),
-                                  SizedBox(
-                                    width: 50,
-                                  ),
-                                  CustomButton(
-                                    text: locationSelected
-                                        ? "  "+"lbl_change_location".tr
-                                        : "  "+"lbl_select_location".tr,
-                                    onTap: goToLocationPage,
-                                    margin: getMargin(left: 0),
-                                    height: 35,
-                                    width: 150,
-                                    fontStyle:
-                                        ButtonFontStyle.NunitoSansBlack12,
-                                    alignment: Alignment.topCenter,
-                                    prefixWidget: Icon(
-                                      Icons.location_pin,
-                                      color: Colors.white,
-                                      size: 20,
-                                    ),
-                                  ),
-                                ],
+                                      textAlign: TextAlign.left))),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          Text("lbl_location".tr,
+                              overflow: TextOverflow.ellipsis,
+                              textAlign: TextAlign.left,
+                              style: AppStyle.txtNunitoSansRegular14.copyWith(
+                                  letterSpacing: getHorizontalSize(0.36))),
+                          CustomButton(
+                              height: 50,
+                              width: 375,
+                              text: locationSelected
+                                  ? "  " + "lbl_change_location".tr
+                                  : "  " + "lbl_select_location".tr,
+                              margin: getMargin(top: 10),
+                              variant: ButtonVariant.OutlineBlack9003f_1,
+                              shape: ButtonShape.RoundedBorder15,
+                              fontStyle: ButtonFontStyle.NunitoSansBold14,
+                              alignment: Alignment.center,
+                              prefixWidget: Icon(
+                                Icons.location_pin,
+                                color: ColorConstant.pink900,
                               ),
-                              
-                              CustomTextFormField(
-                                  width: 326,
-                                  focusNode: FocusNode(),
-                                  controller: _latitude_Controller,
-                                  hintText: "lbl_latitude".tr,
-                                  margin: getMargin(top: 23)),
-                              CustomTextFormField(
-                                  width: 326,
-                                  focusNode: FocusNode(),
-                                  controller: _longitude_Controller,
-                                  hintText: "lbl_longitude".tr,
-                                  margin: getMargin(top: 24)),
-                              Padding(
-                                  padding: getPadding(left: 0),
-                                  child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      children: [
-                                        Padding(
-                                            padding: getPadding(bottom: 0),
-                                            child: Text("lbl_logo".tr,
-                                                overflow: TextOverflow.ellipsis,
-                                                textAlign: TextAlign.left,
-                                                style: AppStyle
-                                                    .txtNunitoSansRegular14
-                                                    .copyWith(
-                                                        letterSpacing:
-                                                            getHorizontalSize(
-                                                                0.36),
-                                                        height: getVerticalSize(
-                                                            1.26)))),
-                                        SizedBox(
-                                          width: 80,
-                                        ),
-                                        GestureDetector(
-                                          onTap: () {
-                                            onTapSelectimage(1);
-                                          },
-                                          child: CustomButton(
-                                            width: 140,
-                                            text: (isFirstImageSelected
-                                                ? "lbl_image_selected".tr
-                                                : "lbl_select_image".tr),
-                                            variant:
-                                                ButtonVariant.OutlineBlack9003f,
-                                            shape: ButtonShape.RoundedBorder5,
-                                            padding: ButtonPadding.PaddingT9,
-                                            fontStyle: ButtonFontStyle
-                                                .NunitoSansBlack12,
-                                            alignment: Alignment.topCenter,
-                                            prefixWidget: Container(
-                                                margin: getMargin(right: 10),
-                                                child: Icon(
-                                                  (isFirstImageSelected
-                                                      ? Icons.done
-                                                      : Icons.photo),
-                                                  color: Colors.white,
-                                                  size: 15,
-                                                )),
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          width: 20,
-                                        ),
-                                        CustomButton(
-                                            onTap: () {
-                                              removeSelectedImage(1);
-                                            },
-                                            height: 23,
-                                            width: 20,
-                                            // text: "lbl_remove".tr,
-                                            variant:
-                                                ButtonVariant.OutlineBlack9003f,
-                                            shape: ButtonShape.RoundedBorder5,
-                                            padding: ButtonPadding.PaddingT9,
-                                            fontStyle: ButtonFontStyle
-                                                .NunitoSansBlack12,
-                                            prefixWidget: Container(
-                                                margin: getMargin(right: 0),
-                                                child: CustomImageView(
-                                                    svgPath: ImageConstant
-                                                        .imgDelete)))
-                                      ])),
-                              Padding(
-                                  padding: getPadding(left: 0),
-                                  child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      children: [
-                                        Padding(
-                                            padding: getPadding(bottom: 0),
-                                            child: Text("lbl_background".tr,
-                                                overflow: TextOverflow.ellipsis,
-                                                textAlign: TextAlign.left,
-                                                style: AppStyle
-                                                    .txtNunitoSansRegular14
-                                                    .copyWith(
-                                                        letterSpacing:
-                                                            getHorizontalSize(
-                                                                0.36),
-                                                        height: getVerticalSize(
-                                                            1.26)))),
-                                        SizedBox(
-                                          width: 30,
-                                        ),
-                                        GestureDetector(
-                                          onTap: () {
-                                            onTapSelectimage(2);
-                                          },
-                                          child: CustomButton(
-                                            width: 140,
-                                            text: (isSecondImageSelected
-                                                ? "lbl_image_selected".tr
-                                                : "lbl_select_image".tr),
-                                            variant:
-                                                ButtonVariant.OutlineBlack9003f,
-                                            shape: ButtonShape.RoundedBorder5,
-                                            padding: ButtonPadding.PaddingT9,
-                                            fontStyle: ButtonFontStyle
-                                                .NunitoSansBlack12,
-                                            alignment: Alignment.topCenter,
-                                            prefixWidget: Container(
-                                                margin: getMargin(right: 10),
-                                                child: Icon(
-                                                  (isSecondImageSelected
-                                                      ? Icons.done
-                                                      : Icons.photo),
-                                                  color: Colors.white,
-                                                  size: 15,
-                                                )),
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          width: 20,
-                                        ),
-                                        CustomButton(
-                                            onTap: () {
-                                              removeSelectedImage(2);
-                                            },
-                                            height: 23,
-                                            width: 20,
-                                            // text: "lbl_remove".tr,
-                                            variant:
-                                                ButtonVariant.OutlineBlack9003f,
-                                            shape: ButtonShape.RoundedBorder5,
-                                            padding: ButtonPadding.PaddingT9,
-                                            fontStyle: ButtonFontStyle
-                                                .NunitoSansBlack12,
-                                            prefixWidget: Container(
-                                                margin: getMargin(right: 0),
-                                                child: CustomImageView(
-                                                    svgPath: ImageConstant
-                                                        .imgDelete)))
-                                      ])),
-                              Container(
-                                  height: getVerticalSize(1.00),
-                                  width: getHorizontalSize(326.00),
-                                  margin: getMargin(left: 2, top: 0),
-                                  decoration: BoxDecoration(
-                                      color: ColorConstant.gray300Cc,
-                                      borderRadius: BorderRadius.circular(
-                                          getHorizontalSize(1.00)))),
-                              Container(
-                                  // height: getVerticalSize(52.00),
-                                  width: getHorizontalSize(326.00),
-                                  margin: getMargin(left: 2, top: 0),
-                                  child: Row(children: [
-                                    Text("lbl_card_color".tr,
-                                        overflow: TextOverflow.ellipsis,
-                                        textAlign: TextAlign.left,
-                                        style: AppStyle.txtNunitoSansRegular14
-                                            .copyWith(
-                                                letterSpacing:
-                                                    getHorizontalSize(0.36),
-                                                height: getVerticalSize(1.26))),
-                                    SizedBox(
-                                      width: 40,
-                                    ),
-                                    CustomButton(
+                              onTap: () {
+                                goToLocationPage();
+                              }),
+                          CustomTextFormField(
+                              width: 326,
+                              focusNode: FocusNode(),
+                              controller: _latitude_Controller,
+                              hintText: "lbl_latitude".tr,
+                              margin: getMargin(top: 23)),
+                          CustomTextFormField(
+                              width: 326,
+                              focusNode: FocusNode(),
+                              controller: _longitude_Controller,
+                              hintText: "lbl_longitude".tr,
+                              margin: getMargin(top: 24)),
+                          Container(
+                              height: getVerticalSize(1.00),
+                              width: getHorizontalSize(326.00),
+                              margin: getMargin(left: 2, top: 0),
+                              decoration: BoxDecoration(
+                                  color: ColorConstant.gray300Cc,
+                                  borderRadius: BorderRadius.circular(
+                                      getHorizontalSize(1.00)))),
+                          Container(
+                              // height: getVerticalSize(52.00),
+                              width: getHorizontalSize(326.00),
+                              margin: getMargin(left: 2, top: 5),
+                              child: Row(children: [
+                                Text("lbl_icon_color".tr,
+                                    overflow: TextOverflow.ellipsis,
+                                    textAlign: TextAlign.left,
+                                    style: AppStyle.txtNunitoSansRegular14
+                                        .copyWith(
+                                            letterSpacing:
+                                                getHorizontalSize(0.36),
+                                            height: getVerticalSize(1.26))),
+                                SizedBox(
+                                  width: 40,
+                                ),
+                                Container(
+                                    margin: getMargin(all: 0),
+                                    padding: getPadding(left:5,right: 5),
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(
+                                                5.0) //                 <--- border radius here
+                                            ),
+                                            
+                                        border: Border.all(
+                                            color: ColorConstant.pink900)),
+                                    child: CustomButton(
                                         customColor: currentColor,
                                         onTap: () {
                                           showDialog(
@@ -443,6 +499,7 @@ class _CardEntrytwoScreen extends State<CardEntrytwoScreen> {
                                                             setState(() =>
                                                                 currentColor =
                                                                     pickerColor);
+                                                            getHexColor();
                                                             Navigator.of(
                                                                     context)
                                                                 .pop();
@@ -455,7 +512,7 @@ class _CardEntrytwoScreen extends State<CardEntrytwoScreen> {
                                         text: "",
                                         suffixWidget: Icon(
                                           Icons.color_lens_rounded,
-                                          color: Colors.white,
+                                          color:(hexColor=="#FFFFFF")?ColorConstant.pink900: Colors.white,
                                         ),
                                         margin: getMargin(top: 0),
                                         // prefixWidget: Icon(Icons.color_lens_rounded,color: Colors.white,),
@@ -465,105 +522,206 @@ class _CardEntrytwoScreen extends State<CardEntrytwoScreen> {
                                         padding: ButtonPadding.PaddingBottom9,
                                         fontStyle:
                                             ButtonFontStyle.InterSemiBold14,
-                                        alignment: Alignment.topRight)
-                                  ])),
-                              CustomButton(
-                                  height: 40,
-                                  width: 250,
-                                  text: "lbl_next".tr,
-                                  margin: getMargin(left: 40, top: 45),
-                                  onTap: onTapNext),
-                            ])))),
+                                        alignment: Alignment.topRight))
+                              ])),
+                          Visibility(
+                            child: Container(
+                                height: getVerticalSize(1.00),
+                                width: getHorizontalSize(326.00),
+                                margin: getMargin(left: 2, top: 5, bottom: 5),
+                                decoration: BoxDecoration(
+                                    color: ColorConstant.gray300Cc,
+                                    borderRadius: BorderRadius.circular(
+                                        getHorizontalSize(1.00)))),
+                            visible: !(cardURL == null || cardURL!.isEmpty),
+                          ),
+                          Visibility(
+                            child: Padding(
+                                padding: getPadding(left: 0, top: 7),
+                                child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      Padding(
+                                          padding: getPadding(bottom: 0),
+                                          child: Text("lbl_last_edited_date".tr,
+                                              overflow: TextOverflow.ellipsis,
+                                              textAlign: TextAlign.left,
+                                              style: AppStyle
+                                                  .txtNunitoSansRegular14
+                                                  .copyWith(
+                                                      letterSpacing:
+                                                          getHorizontalSize(
+                                                              0.36),
+                                                      height: getVerticalSize(
+                                                          1.26)))),
+                                      SizedBox(
+                                        width: 15,
+                                      ),
+                                      Padding(
+                                          padding: getPadding(bottom: 0),
+                                          child: Text(cardURL ?? '',
+                                              overflow: TextOverflow.ellipsis,
+                                              textAlign: TextAlign.left,
+                                              style: TextStyle(
+                                                color: ColorConstant.pink900,
+                                                fontSize: getFontSize(
+                                                  14,
+                                                ),
+                                                fontFamily: 'Nunito Sans',
+                                                fontWeight: FontWeight.w700,
+                                              ))),
+                                    ])),
+                            visible: !(cardURL == null || cardURL!.isEmpty),
+                          ),
+                          Visibility(
+                            child: Container(
+                                height: getVerticalSize(1.00),
+                                width: getHorizontalSize(326.00),
+                                margin: getMargin(left: 2, top: 5, bottom: 5),
+                                decoration: BoxDecoration(
+                                    color: ColorConstant.gray300Cc,
+                                    borderRadius: BorderRadius.circular(
+                                        getHorizontalSize(1.00)))),
+                            visible: !(createDateString == null ||
+                                createDateString!.isEmpty),
+                          ),
+                          Visibility(
+                            child: Padding(
+                                padding: getPadding(left: 0, top: 7, bottom: 7),
+                                child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      Padding(
+                                          padding: getPadding(bottom: 0),
+                                          child: Text("lbl_created_date".tr,
+                                              overflow: TextOverflow.ellipsis,
+                                              textAlign: TextAlign.left,
+                                              style: AppStyle
+                                                  .txtNunitoSansRegular14
+                                                  .copyWith(
+                                                      letterSpacing:
+                                                          getHorizontalSize(
+                                                              0.36),
+                                                      height: getVerticalSize(
+                                                          1.26)))),
+                                      SizedBox(
+                                        width: 40,
+                                      ),
+                                      Padding(
+                                          padding: getPadding(bottom: 0),
+                                          child: Text(createDateString ?? "",
+                                              overflow: TextOverflow.ellipsis,
+                                              textAlign: TextAlign.left,
+                                              style: TextStyle(
+                                                color: ColorConstant.pink900,
+                                                fontSize: getFontSize(
+                                                  14,
+                                                ),
+                                                fontFamily: 'Nunito Sans',
+                                                fontWeight: FontWeight.w700,
+                                              ))),
+                                    ])),
+                            visible: !(createDateString == null ||
+                                createDateString!.isEmpty),
+                          ),
+                          Visibility(
+                            child: Container(
+                                height: getVerticalSize(1.00),
+                                width: getHorizontalSize(326.00),
+                                margin: getMargin(left: 2, top: 5, bottom: 5),
+                                decoration: BoxDecoration(
+                                    color: ColorConstant.gray300Cc,
+                                    borderRadius: BorderRadius.circular(
+                                        getHorizontalSize(1.00)))),
+                            visible: !(lastEditDateString == null ||
+                                lastEditDateString!.isEmpty),
+                          ),
+                          Visibility(
+                            child: Padding(
+                                padding: getPadding(left: 0, top: 7),
+                                child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      Padding(
+                                          padding: getPadding(bottom: 0),
+                                          child: Text("lbl_last_edited_date".tr,
+                                              overflow: TextOverflow.ellipsis,
+                                              textAlign: TextAlign.left,
+                                              style: AppStyle
+                                                  .txtNunitoSansRegular14
+                                                  .copyWith(
+                                                      letterSpacing:
+                                                          getHorizontalSize(
+                                                              0.36),
+                                                      height: getVerticalSize(
+                                                          1.26)))),
+                                      SizedBox(
+                                        width: 15,
+                                      ),
+                                      Padding(
+                                          padding: getPadding(bottom: 0),
+                                          child: Text(lastEditDateString ?? '',
+                                              overflow: TextOverflow.ellipsis,
+                                              textAlign: TextAlign.left,
+                                              style: TextStyle(
+                                                color: ColorConstant.pink900,
+                                                fontSize: getFontSize(
+                                                  14,
+                                                ),
+                                                fontFamily: 'Nunito Sans',
+                                                fontWeight: FontWeight.w700,
+                                              ))),
+                                    ])),
+                            visible: !(lastEditDateString == null ||
+                                lastEditDateString!.isEmpty),
+                          ),
+                          SizedBox(height: 10),
+                           finalLocation == null
+                              ? Container()
+                              : Expanded(
+                                  child: Stack(children: [
+                                  FlutterMap(
+                                    options: MapOptions(
+                                        center: LatLng(finalLocation!.latitude,
+                                            finalLocation!.longitude),
+                                        interactiveFlags:
+                                            InteractiveFlag.pinchZoom,
+                                        zoom: 15.0,
+                                        maxZoom: 18,
+                                        minZoom: 6),
+                                    mapController: _mapController,
+                                    children: [
+                                      TileLayer(
+                                        urlTemplate:
+                                            "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                                        subdomains: ['a', 'b', 'c'],
+                                        // attributionBuilder: (_) {
+                                        //   return Text("© OpenStreetMap contributors");
+                                        // },
+                                      ),
+                                    ],
+                                  ),
+                                  // Positioned.fill(
+                                  //     child: IgnorePointer(
+                                  //   child: Center(
+                                  //     child: Icon(Icons.location_pin,
+                                  //         size: 50, color: ColorConstant.pink900),
+                                  //   ),
+                                  // )),
+                                ])),
+                        ]))
+            //)
+            ,
             bottomNavigationBar: CustomBottomBar(
+                cardID: selectedCardID ?? 0,
+                onPublish: () {
+                  showPublishAlertDialog(context);
+                },
                 onNextClicked: onTapNext,
-                isPublishAvailable: false,
+                isPublished: isPublished,
+                publishURL: publishedURL,
+                isPublishAvailable: isPublishAvailable ?? false,
                 onChanged: (BottomBarEnum type) {})));
-  }
-
-  onTapSelectimage(int pictureType) {
-    showDialog(
-        context: context,
-        builder: (ctx) => AlertDialog(
-                title: const Text('Select Type!'),
-                content: const SingleChildScrollView(
-                    child: Text(
-                        "You can select an image from gallery or click a picture using camera")),
-                actions: <Widget>[
-                  ElevatedButton(
-                    child: const Text('Camera'),
-                    onPressed: () {
-                      clickOrSelectImage("Camera", pictureType);
-                    },
-                  ),
-                  ElevatedButton(
-                    child: const Text('Gallery'),
-                    onPressed: () {
-                      clickOrSelectImage("Gallery", pictureType);
-                    },
-                  ),
-                ]));
-  }
-
-  clickOrSelectImage(String type, int pictureType) async {
-    Navigator.of(context).pop();
-    if (type == "Gallery") {
-      if (pictureType == 1)
-        imageFirst = await _picker.pickImage(source: ImageSource.gallery);
-      else
-        imageSecond = await _picker.pickImage(source: ImageSource.gallery);
-    } else {
-      if (pictureType == 2)
-        imageFirst = await _picker.pickImage(source: ImageSource.camera);
-      else
-        imageSecond = await _picker.pickImage(source: ImageSource.camera);
-    }
-
-    setState(() {
-      if (imageFirst != null && pictureType == 1) isFirstImageSelected = true;
-      if (imageSecond != null && pictureType == 2) isSecondImageSelected = true;
-    });
-    File imageFile = new File('');
-
-    if (pictureType == 1 && imageFirst!.path.isNotEmpty)
-      imageFile = File(imageFirst!.path);
-    if (pictureType == 2 && imageSecond!.path.isNotEmpty)
-      imageFile = File(imageSecond!.path);
-    Get.toNamed(AppRoutes.imageModifyScreen,
-            arguments: {"imageFile": imageFile, "pictureType": pictureType})
-        ?.then((value) {
-      double? width = value['width'];
-      double? height = value['height'];
-      bool? isSquare = value['isSquare'];
-      File? imageFile = value["imageFile"] as File?;
-      int? pictureType = value["pictureType"] as int?;
-      
-      var base64val1 =  base64Encode(imageFile!.readAsBytesSync());
-      if (pictureType == 1) {
-firstImageBase64 = base64val1;
-        firstCroppedImage = imageFile;
-        isFirstImageSelected = true;
-      }
-      if (pictureType == 2) {
-        secondImageBase64 = base64val1;
-        secondCroppedImage = imageFile;
-        isSecondImageSelected = true;
-      }
-    });
-  }
-
-  removeSelectedImage(int pictureType) {
-    setState(() {
-      if (pictureType == 1) {
-        imageFirst = null;
-
-        isFirstImageSelected = false;
-      }
-      if (pictureType == 2) {
-        imageSecond = null;
-
-        isSecondImageSelected = false;
-      }
-    });
   }
 
   onTapImageModify() {
@@ -571,7 +729,7 @@ firstImageBase64 = base64val1;
   }
 
   onTapNext() {
-    Navigator.of(context).pushNamed(AppRoutes.customizationoneScreen);
+    saveCardMain();
   }
 
   onTapEllipseFour() {
@@ -579,22 +737,40 @@ firstImageBase64 = base64val1;
   }
 
   onTapContrast3() {
-    Navigator.of(context).pushNamed(AppRoutes.cardEntryoneScreen);
+    Navigator.pop(context);
   }
 
   onTapBack() {
     Navigator.of(context).pop();
   }
 
+  getHexColor() {
+    setState(() {
+      if (currentColor == null) {
+        hexColor = "";
+      } else {
+        hexColor =
+            '#${(currentColor!.value & 0xFFFFFF).toRadixString(16).padLeft(6, '0').toUpperCase()}';
+      }
+      var s = 1;
+    });
+  }
+
   goToLocationPage() {
     Get.toNamed(AppRoutes.locationselection)?.then((value) {
+      setState(() {
+        finalLocation = null;
+      });
       setState(() {
         if (value['latLong'] != null) {
           locationSelected = true;
           var ltlng = value['latLong'] as LatLong;
           finalLocation = LatLng(ltlng.latitude, ltlng.longitude);
+          var newLatLong = LatLng(ltlng.latitude, ltlng.longitude);
           _latitude_Controller.text = ltlng.latitude.toString();
           _longitude_Controller.text = ltlng.longitude.toString();
+
+          _mapController.move(newLatLong, 15);
         }
       });
     });

@@ -15,6 +15,7 @@ import 'package:image_picker/image_picker.dart';
 
 import 'package:path/path.dart' as path;
 import '../../data/globals/globalvariables.dart';
+import '../../data/models/getCreateCard/get_get_create_card_resp.dart';
 import '../../data/models/myProfile/get_my_profile_resp.dart';
 import '../../data/models/myProfile/post_my_profile_resp.dart';
 import '../../widgets/app_bar/appbar_title.dart';
@@ -657,7 +658,7 @@ class _MyProfileScreen extends State<MyProfileScreen> {
         "SlNo": (1).toString(),
         "FileRef": logoImageBase64
       };
-      PostBooleanGreetingResp resp = await api.removeImage(queryParams: req);
+      APIBooleanResponse resp = await api.removeImage(queryParams: req);
       if (resp.isSuccess ?? false) {
         Get.snackbar('Success', "Logo removed successfully!",
             backgroundColor: Color.fromARGB(255, 208, 245, 216),
@@ -774,12 +775,11 @@ class _MyProfileScreen extends State<MyProfileScreen> {
 
   gotoImageModify(File imageFile) {
     Get.toNamed(AppRoutes.imageModifyScreen,
-        arguments: {"imageFile": imageFile, "pictureType": 1})?.then((value) {
+        arguments: {"imageFile": imageFile, "pictureType":UserImageType.logo})?.then((value) {
       double? width = value['width'];
       double? height = value['height'];
       bool? isSquare = value['isSquare'];
       String? imageFilePath = value["refinedImagePath"] as String?;
-      int? pictureType = value["pictureType"] as int?;
 
       try {
         setState(() {
@@ -825,7 +825,10 @@ class _MyProfileScreen extends State<MyProfileScreen> {
         onTap: () {
           Navigator.pop(context);
 
-          Navigator.of(context).pushNamed(AppRoutes.addstoragecredits);
+          Navigator.of(context).pushNamed(AppRoutes.addstoragecredits).then((value) {
+            getAvailableCredits();
+            getAvailableStorage();
+          });
           // clickOrSelectImage("Gallery", pictureType);
         },
       )

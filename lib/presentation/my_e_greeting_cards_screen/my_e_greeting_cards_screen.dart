@@ -34,6 +34,7 @@ class _MyEGreetingCardsScreen extends State<MyEGreetingCardsScreen> {
       RefreshController(initialRefresh: false);
   TextEditingController _anywhere_Controller = new TextEditingController();
   int? selectedGreetingTypeID;
+  bool isFirstTimeLoaded = false;
   List<Result> greetingTypes = [];
   String? sortbyOption = "latestcreated";
   bool? showHidden;
@@ -79,6 +80,8 @@ class _MyEGreetingCardsScreen extends State<MyEGreetingCardsScreen> {
         setState(() {
           myEGreetingCardsModelObj.value.gridchristmasthumbnailItemList =
               resp.result?.greetingDetailsList ?? [];
+              
+              isFirstTimeLoaded=true;
         });
       } else {
         Get.snackbar('Error', resp.errorMessage.toString(),
@@ -386,6 +389,37 @@ class _MyEGreetingCardsScreen extends State<MyEGreetingCardsScreen> {
                                                         )
                                                       ],
                                                     )),
+                                                Visibility(
+                                                    visible:
+                                                        (myEGreetingCardsModelObj
+                                                                .value
+                                                                .gridchristmasthumbnailItemList
+                                                                .length <=
+                                                            0) && isFirstTimeLoaded,
+                                                    child: Column(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      children: [
+
+                                                        SizedBox(height: 20,),
+                                                        Text(
+                                                          ('No Greetings Found'),
+                                                          style: AppStyle
+                                                              .txtNunitoSansRegular14,
+                                                        ),
+                                                        Container(
+                                                            padding: getPadding(
+                                                                left: 5,
+                                                                right: 5),
+                                                            child:
+                                                                CustomImageView(
+                                                              url: "/data",
+                                                              width: 100,
+                                                              height: 100,
+                                                            ))
+                                                      ],
+                                                    )),
                                                 Padding(
                                                     padding: getPadding(top: 0),
                                                     child: Obx(() =>
@@ -436,9 +470,8 @@ class _MyEGreetingCardsScreen extends State<MyEGreetingCardsScreen> {
   }
 
   Widget filterModalContent(StateSetter setModalState) {
-    return 
-    SingleChildScrollView(child:
-    Container(
+    return SingleChildScrollView(
+        child: Container(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.start,
@@ -512,7 +545,7 @@ class _MyEGreetingCardsScreen extends State<MyEGreetingCardsScreen> {
                   ))),
           Container(
               padding: getPadding(top: 10, left: 25, right: 20),
-              child: Text("msg_card_type".tr,
+              child: Text("msg_e_greeting_type".tr,
                   style: AppStyle.txtNunitoSansRegular14Pink900)),
           Container(
             padding: getPadding(top: 0, left: 20, right: 20, bottom: 0),
@@ -557,7 +590,7 @@ class _MyEGreetingCardsScreen extends State<MyEGreetingCardsScreen> {
             title: Container(
                 padding: getPadding(top: 0, left: 10, right: 20),
                 child: Text(
-                  "lbl_hidden_check".tr,
+                  "lbl_hidden_greeting_check".tr,
                   style: AppStyle.txtNunitoSansRegular14Pink900,
                 )), //    <-- label
             value: showHidden ?? false,
@@ -573,7 +606,7 @@ class _MyEGreetingCardsScreen extends State<MyEGreetingCardsScreen> {
           Container(
               padding: getPadding(top: 10, left: 25, right: 20),
               child: Text(
-                "lbl_sort_by".tr,
+                "lbl_sort_greetings_by".tr,
                 style: AppStyle.txtNunitoSansRegular14Pink900,
               )),
           Container(

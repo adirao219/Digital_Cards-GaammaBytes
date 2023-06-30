@@ -1,11 +1,11 @@
-class PostBooleanGreetingResp {
+class APIBooleanResponse {
   bool? isSuccess;
   bool? result;
   String? errorMessage;
 
-  PostBooleanGreetingResp({this.isSuccess, this.result, this.errorMessage});
+  APIBooleanResponse({this.isSuccess, this.result, this.errorMessage});
 
-  PostBooleanGreetingResp.fromJson(Map<String, dynamic> json) {
+  APIBooleanResponse.fromJson(Map<String, dynamic> json) {
     isSuccess = json['IsSuccess'];
     result = json['Result'];
     errorMessage = json['ErrorMessage'];
@@ -135,6 +135,7 @@ class CreditHistoryData {
   String? downloadLink;
   String? downloadFileName;
   String? remarks;
+  late bool isExpanded;
 
   CreditHistoryData(
       {this.slNo,
@@ -149,7 +150,8 @@ class CreditHistoryData {
       this.noOfCreditsPending,
       this.downloadLink,
       this.downloadFileName,
-      this.remarks});
+      this.remarks,
+      this.isExpanded = false});
 
   CreditHistoryData.fromJson(Map<String, dynamic> json) {
     slNo = json['SlNo'];
@@ -165,6 +167,7 @@ class CreditHistoryData {
     downloadLink = json['DownloadLink'];
     downloadFileName = json['DownloadFileName'];
     remarks = json['Remarks'];
+    isExpanded = false;
   }
 }
 

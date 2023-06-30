@@ -60,11 +60,25 @@ class AppStyle {
     ),
     fontFamily: 'Nunito Sans',
     fontWeight: FontWeight.w700,
+  ); static TextStyle txtNunitoSansBold12Pink900 = TextStyle(
+    color: ColorConstant.pink900,
+    fontSize: getFontSize(
+      12,
+    ),
+    fontFamily: 'Nunito Sans',
+    fontWeight: FontWeight.w700,
   );
   static TextStyle txtNunitoSansRegular12 = TextStyle(
     color: ColorConstant.black90066,
     fontSize: getFontSize(
       12,
+    ),
+    fontFamily: 'Nunito Sans',
+    fontWeight: FontWeight.w400,
+  );  static TextStyle txtNunitoSansRegular14Pink = TextStyle(
+    color: ColorConstant.pink900,
+    fontSize: getFontSize(
+      14,
     ),
     fontFamily: 'Nunito Sans',
     fontWeight: FontWeight.w400,
@@ -185,6 +199,13 @@ class AppStyle {
     ),
     fontFamily: 'Nunito Sans',
     fontWeight: FontWeight.w700,
+  ); static TextStyle txtNunitoSansBold12white = TextStyle(
+    color: Colors.white,
+    fontSize: getFontSize(
+      12,
+    ),
+    fontFamily: 'Nunito Sans',
+    fontWeight: FontWeight.w700,
   );
   static TextStyle txtNunitoSansRegular14white = TextStyle(
     color: Colors.white,
@@ -265,7 +286,14 @@ class AppStyle {
     fontFamily: 'Inter',
     fontWeight: FontWeight.w600,
   );
-
+ static TextStyle txtInterRegular10 = TextStyle(
+    color: ColorConstant.gray90001,
+    fontSize: getFontSize(
+      10,
+    ),
+    fontFamily: 'Inter',
+    fontWeight: FontWeight.w400,
+  );
   static TextStyle txtNunitoRegular16 = TextStyle(
     color: ColorConstant.pink900,
     fontSize: getFontSize(
@@ -301,7 +329,14 @@ class AppStyle {
     fontFamily: 'Nunito Sans',
     fontWeight: FontWeight.w400,
   );
-
+  static TextStyle txtNunitoSansRegular16Pink900 = TextStyle(
+    color: ColorConstant.pink900,
+    fontSize: getFontSize(
+      16,
+    ),
+    fontFamily: 'Nunito Sans',
+    fontWeight: FontWeight.w400,
+  );
   static TextStyle txtRobotoRegular16 = TextStyle(
     color: ColorConstant.bluegray400,
     fontSize: getFontSize(

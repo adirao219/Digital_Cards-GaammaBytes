@@ -52,6 +52,7 @@ import 'package:get/get.dart';
 import '../presentation/add_storage_using_credits/add_storage_using_credits.dart';
 import '../presentation/location_selection/location_selection.dart';
 import '../presentation/html_editing_screen/html_editing_screen.dart';
+import '../presentation/html_editing_screen/card_html_editing_screen.dart';
 import '../presentation/purchase_credit_history/purchase_credit_history.dart';
 import '../presentation/purchase_credit_history/purchase_credit_history_details.dart';
 
@@ -95,7 +96,7 @@ class AppRoutes {
   static const String myEGreetingCardsScreen = '/my_e_greeting_cards_screen';
 
   static const String makePaymentScreen = '/make_payment_screen';
-
+  
   static const String changePasswordScreen = '/change_password_screen';
 
   static const String resetPasswordScreen = '/reset_password_screen';
@@ -118,6 +119,8 @@ class AppRoutes {
       '/e_greeting_card_options_screen';
 
   static const String htmlEditor = '/html_editing_screen';
+
+  static const String cardHtmlEditor = '/card_html_editing_screen';
   static const String customizationScreen = '/customization_screen';
 
   static const String digitalCardOptionsScreen = '/digital_card_options_screen';
@@ -191,6 +194,7 @@ class AppRoutes {
     customizationoneScreen: (context) => CustomizationoneScreen(),
     eGreetingCardOptionsScreen: (context) => EGreetingCardOptionsScreen(),
     htmlEditor: (context) => HtmlEditorScreen(),
+    cardHtmlEditor: (context) => CardHtmlEditorScreen(),
     customizationScreen: (context) => CustomizationScreen(),
     digitalCardOptionsScreen: (context) => DigitalCardOptionsScreen(),
     basicCardEntryScreen: (context) => BasicCardEntryScreen(),
@@ -309,6 +313,7 @@ class AppRoutes {
       page: () => EGreetingCardOptionsScreen(),
     ),
     GetPage(name: htmlEditor, page: () => HtmlEditorScreen()),
+    GetPage(name: cardHtmlEditor, page: () => CardHtmlEditorScreen()),
     GetPage(
       name: customizationScreen,
       page: () => CustomizationScreen(),

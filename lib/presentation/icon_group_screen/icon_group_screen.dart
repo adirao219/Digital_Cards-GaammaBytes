@@ -7,6 +7,13 @@ import 'package:digitalcardsgaammabytes/widgets/custom_button.dart';
 import 'package:digitalcardsgaammabytes/widgets/custom_text_form_field.dart';
 import 'package:flutter/material.dart';
 
+import '../../data/apiClient/api_client.dart';
+import '../../data/globals/globalvariables.dart';
+import '../../data/models/deleteGreeting/post_delete_greeting_resp.dart';
+import '../../data/models/filterGreetingTemplate/get_filter_greeting_template_resp.dart';
+import '../../data/models/getBands/get_band_data_resp.dart';
+import '../../data/models/getFooter/get_get_footer_resp.dart';
+
 // ignore_for_file: must_be_immutable
 class IconGroupScreen extends StatefulWidget {
   const IconGroupScreen({super.key});
@@ -18,9 +25,147 @@ class IconGroupScreen extends StatefulWidget {
 
 class _IconGroupScreen extends State<IconGroupScreen> {
   TextEditingController _name2_Controller = new TextEditingController();
-  TextEditingController _link7_Controller = new TextEditingController();
-  TextEditingController _link8_Controller = new TextEditingController();
+
+  var cardType = Get.arguments["cardType"] as int?;
+  var selectedCardID = Get.arguments["SelectedCardID"] as int?;
+  var cardSubtypeID = Get.arguments["cardSubtypeID"] as int?;
+  var templateId = Get.arguments["templateId"] as String?;
+  var cardTypeName = Get.arguments["cardTypeName"] as String?;
+  var templateName = Get.arguments["templateName"] as String?;
+  var cardSubTypeName = Get.arguments["cardSubTypeName"] as String?;
+  var isPublishAvailable = Get.arguments["isPublishAvailable"] as bool?;
+  var bandID = Get.arguments["BandId"] as int?;
+  var cardName = Get.arguments["cardName"] as String?;
+  String? link1Value;
+  String? link2Value;
+  String? link3Value;
+  String? link4Value;
+  String? link5Value;
+  String? link6Value;
+  String? link7Value;
+  String? link8Value;
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  List<Result> allLinks = [];
+  ApiClient api = new ApiClient();
+  @override
+  void initState() {
+    getBandLinks();
+    super.initState();
+  }
+
+  getBandData() async {
+    try {
+      var req = {
+        "UserId": GlobalVariables.userID,
+        "CardID": selectedCardID.toString(),
+        "BandID": bandID.toString()
+      };
+      GetGetBandDataResp resp = await api.fetchGetBandData(queryParams: req);
+      if (resp.isSuccess ?? false) {
+        setState(() {
+          _name2_Controller.text = resp.result!.heading ?? '';
+          link1Value = resp.result!.link1 == null
+              ? null
+              : resp.result!.link1!.toString();
+          link2Value = resp.result!.link2 == null
+              ? null
+              : resp.result!.link2!.toString();
+          link3Value = resp.result!.link3 == null
+              ? null
+              : resp.result!.link3!.toString();
+          link4Value = resp.result!.link4 == null
+              ? null
+              : resp.result!.link4!.toString();
+          link5Value = resp.result!.link5 == null
+              ? null
+              : resp.result!.link5!.toString();
+          link6Value = resp.result!.link6 == null
+              ? null
+              : resp.result!.link6!.toString();
+          link7Value = resp.result!.link7 == null
+              ? null
+              : resp.result!.link7!.toString();
+          link8Value = resp.result!.link8 == null
+              ? null
+              : resp.result!.link8!.toString();
+        });
+      } else {
+        Get.snackbar('Error', resp.errorMessage.toString(),
+            backgroundColor: Color.fromARGB(255, 255, 230, 230),
+            colorText: Colors.red[900],
+            icon: Icon(
+              Icons.error,
+              color: Colors.red[900],
+            ));
+      }
+    } catch (e) {}
+  }
+
+  getBandLinks({bool isProgress=true}) async {
+    try {
+      var req = {"UserId": GlobalVariables.userID, "CardID": selectedCardID.toString()};
+      CommonDropdownResp resp =
+          await api.fetchGetBandLinkList(queryParams: req,isProgress:isProgress );
+      if (resp.isSuccess ?? false) {
+        setState(() {
+          allLinks = resp.result ?? [];
+          if (bandID != null && bandID != 0) {
+            getBandData();
+          }
+        });
+      } else {
+        Get.snackbar('Error', resp.errorMessage.toString(),
+            backgroundColor: Color.fromARGB(255, 255, 230, 230),
+            colorText: Colors.red[900],
+            icon: Icon(
+              Icons.error,
+              color: Colors.red[900],
+            ));
+      }
+    } catch (e) {}
+  }
+
+  saveBandLinks() async {
+    try {
+      var req = {
+        "CardBandID": (bandID == null || bandID == 0) ? "0" : bandID.toString(),
+        "CardID": selectedCardID.toString(),
+        "BandType": "7",
+        "Heading": _name2_Controller.text,
+        "CBContent": "",
+        "Latitude ": "",
+        "Longitude": "",
+        "Link1": link1Value ?? '',
+        "Link2": link2Value ?? '',
+        "Link3": link3Value ?? '',
+        "Link4": link4Value ?? '',
+        "Link5": link5Value ?? '',
+        "Link6": link6Value ?? '',
+        "Link7": link7Value ?? '',
+        "Link8": link8Value ?? '',
+        "DataPosition": "0"
+      };
+      APIBooleanResponse resp = await api.createSaveBands(requestData: req);
+      if (resp.result ?? false) {
+        Get.snackbar('Success', "Band Created successfully!",
+            backgroundColor: Color.fromARGB(255, 208, 245, 216),
+            colorText: Colors.green[900],
+            icon: Icon(
+              Icons.done,
+              color: Colors.green[900],
+            ));
+        Navigator.pop(context);
+      } else {
+        Get.snackbar('Error', resp.errorMessage.toString(),
+            backgroundColor: Color.fromARGB(255, 255, 230, 230),
+            colorText: Colors.red[900],
+            icon: Icon(
+              Icons.error,
+              color: Colors.red[900],
+            ));
+      }
+    } catch (e) {}
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,6 +173,11 @@ class _IconGroupScreen extends State<IconGroupScreen> {
         top: false,
         bottom: false,
         child: Scaffold(
+            floatingActionButtonLocation:
+                FloatingActionButtonLocation.miniEndTop,
+            floatingActionButton: Padding(
+                padding: const EdgeInsets.only(bottom: 75.0),
+                child: MoreOptionMenu()),
             resizeToAvoidBottomInset: false,
             backgroundColor: ColorConstant.whiteA700,
             appBar: CustomAppBar(
@@ -76,14 +226,6 @@ class _IconGroupScreen extends State<IconGroupScreen> {
                                     margin: getMargin(left: 48, bottom: 8))
                               ])))
                     ])),
-                actions: [
-                  AppbarImage(
-                      height: getSize(28.00),
-                      width: getSize(28.00),
-                      svgPath: ImageConstant.imgComputer,
-                      margin:
-                          getMargin(left: 32, top: 51, right: 32, bottom: 29))
-                ],
                 styleType: Style.bgStyle_26),
             body: Form(
                 key: _formKey,
@@ -97,373 +239,374 @@ class _IconGroupScreen extends State<IconGroupScreen> {
                         children: [
                           Align(
                               alignment: Alignment.centerLeft,
-                              child: Text("msg_card_name_ex".tr,
+                              child: Text(
+                                  ("msg_card_type_ex_new2".tr) +
+                                      (cardTypeName ?? ""),
                                   overflow: TextOverflow.ellipsis,
                                   textAlign: TextAlign.left,
                                   style: AppStyle.txtNunitoBold18)),
+                          SizedBox(
+                            height: 5,
+                          ),
+                          Align(
+                              alignment: Alignment.centerLeft,
+                              child: Text(("msg_band_type_ex_icon_group".tr),
+                                  overflow: TextOverflow.ellipsis,
+                                  textAlign: TextAlign.left,
+                                  style: AppStyle.txtNunitoRegular16)),
                           CustomTextFormField(
                               width: 326,
                               focusNode: FocusNode(),
                               controller: _name2_Controller,
                               hintText: "lbl_name2".tr,
-                              margin: getMargin(top: 5),
+                              margin: getMargin(top: 30, bottom: 5),
                               validator: (value) {
                                 if (!isText(value)) {
                                   return "Please enter valid text";
                                 }
                                 return null;
                               }),
-                          Padding(
-                              padding: getPadding(left: 45, top: 10, right: 25),
-                              child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Padding(
-                                        padding: getPadding(bottom: 1),
-                                        child: Text("lbl_link_1".tr,
-                                            overflow: TextOverflow.ellipsis,
-                                            textAlign: TextAlign.left,
-                                            style: AppStyle
-                                                .txtNunitoSansRegular14
-                                                .copyWith(
-                                                    letterSpacing:
-                                                        getHorizontalSize(
-                                                            0.36)))),
-                                    CustomImageView(
-                                        svgPath:
-                                            ImageConstant.imgArrowdownPink900,
-                                        height: getVerticalSize(8.00),
-                                        width: getHorizontalSize(15.00),
-                                        margin: getMargin(top: 13))
-                                  ])),
-                          Container(
-                              height: getVerticalSize(1.00),
-                              width: getHorizontalSize(326.00),
-                              margin: getMargin(top: 11),
-                              decoration: BoxDecoration(
-                                  color: ColorConstant.gray300Cc,
-                                  borderRadius: BorderRadius.circular(
-                                      getHorizontalSize(1.00)))),
-                          Padding(
-                              padding: getPadding(left: 45, top: 17, right: 25),
-                              child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Padding(
-                                        padding: getPadding(bottom: 3),
-                                        child: Text("lbl_link_2".tr,
-                                            overflow: TextOverflow.ellipsis,
-                                            textAlign: TextAlign.left,
-                                            style: AppStyle
-                                                .txtNunitoSansRegular14
-                                                .copyWith(
-                                                    letterSpacing:
-                                                        getHorizontalSize(
-                                                            0.36)))),
-                                    CustomImageView(
-                                        svgPath:
-                                            ImageConstant.imgArrowdownPink900,
-                                        height: getVerticalSize(8.00),
-                                        width: getHorizontalSize(15.00),
-                                        margin: getMargin(top: 14))
-                                  ])),
-                          Container(
-                              height: getVerticalSize(1.00),
-                              width: getHorizontalSize(326.00),
-                              margin: getMargin(top: 8),
-                              decoration: BoxDecoration(
-                                  color: ColorConstant.gray300Cc,
-                                  borderRadius: BorderRadius.circular(
-                                      getHorizontalSize(1.00)))),
-                          Padding(
-                              padding: getPadding(left: 45, top: 17, right: 25),
-                              child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Padding(
-                                        padding: getPadding(bottom: 4),
-                                        child: Text("lbl_link_3".tr,
-                                            overflow: TextOverflow.ellipsis,
-                                            textAlign: TextAlign.left,
-                                            style: AppStyle
-                                                .txtNunitoSansRegular14
-                                                .copyWith(
-                                                    letterSpacing:
-                                                        getHorizontalSize(
-                                                            0.36)))),
-                                    CustomImageView(
-                                        svgPath:
-                                            ImageConstant.imgArrowdownPink900,
-                                        height: getVerticalSize(8.00),
-                                        width: getHorizontalSize(15.00),
-                                        margin: getMargin(top: 15))
-                                  ])),
-                          Container(
-                              height: getVerticalSize(1.00),
-                              width: getHorizontalSize(326.00),
-                              margin: getMargin(top: 7),
-                              decoration: BoxDecoration(
-                                  color: ColorConstant.gray300Cc,
-                                  borderRadius: BorderRadius.circular(
-                                      getHorizontalSize(1.00)))),
-                          Padding(
-                              padding: getPadding(left: 45, top: 17, right: 25),
-                              child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Padding(
-                                        padding: getPadding(bottom: 2),
-                                        child: Text("lbl_link_4".tr,
-                                            overflow: TextOverflow.ellipsis,
-                                            textAlign: TextAlign.left,
-                                            style: AppStyle
-                                                .txtNunitoSansRegular14
-                                                .copyWith(
-                                                    letterSpacing:
-                                                        getHorizontalSize(
-                                                            0.36)))),
-                                    CustomImageView(
-                                        svgPath:
-                                            ImageConstant.imgArrowdownPink900,
-                                        height: getVerticalSize(8.00),
-                                        width: getHorizontalSize(15.00),
-                                        margin: getMargin(top: 14))
-                                  ])),
-                          Container(
-                              height: getVerticalSize(1.00),
-                              width: getHorizontalSize(326.00),
-                              margin: getMargin(top: 9),
-                              decoration: BoxDecoration(
-                                  color: ColorConstant.gray300Cc,
-                                  borderRadius: BorderRadius.circular(
-                                      getHorizontalSize(1.00)))),
-                          Padding(
-                              padding: getPadding(left: 45, top: 17, right: 25),
-                              child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Padding(
-                                        padding: getPadding(bottom: 4),
-                                        child: Text("lbl_link_5".tr,
-                                            overflow: TextOverflow.ellipsis,
-                                            textAlign: TextAlign.left,
-                                            style: AppStyle
-                                                .txtNunitoSansRegular14
-                                                .copyWith(
-                                                    letterSpacing:
-                                                        getHorizontalSize(
-                                                            0.36)))),
-                                    CustomImageView(
-                                        svgPath:
-                                            ImageConstant.imgArrowdownPink900,
-                                        height: getVerticalSize(8.00),
-                                        width: getHorizontalSize(15.00),
-                                        margin: getMargin(top: 15))
-                                  ])),
-                          Container(
-                              height: getVerticalSize(1.00),
-                              width: getHorizontalSize(326.00),
-                              margin: getMargin(top: 8),
-                              decoration: BoxDecoration(
-                                  color: ColorConstant.gray300Cc,
-                                  borderRadius: BorderRadius.circular(
-                                      getHorizontalSize(1.00)))),
-                          Container(
-                              height: getVerticalSize(133.00),
-                              width: getHorizontalSize(326.00),
-                              margin: getMargin(top: 14),
-                              child:
-                                  Stack(alignment: Alignment.center, children: [
-                                Align(
-                                    alignment: Alignment.bottomRight,
-                                    child: Container(
-                                        width: getHorizontalSize(15.00),
-                                        margin:
-                                            getMargin(right: 25, bottom: 11),
-                                        child: Column(
-                                            mainAxisSize: MainAxisSize.min,
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            children: [
-                                              CustomImageView(
-                                                  svgPath: ImageConstant
-                                                      .imgArrowdownPink900,
-                                                  height: getVerticalSize(8.00),
-                                                  width:
-                                                      getHorizontalSize(15.00)),
-                                              CustomImageView(
-                                                  svgPath: ImageConstant
-                                                      .imgArrowdownPink900,
-                                                  height: getVerticalSize(8.00),
-                                                  width:
-                                                      getHorizontalSize(15.00),
-                                                  margin: getMargin(top: 39))
-                                            ]))),
-                                Align(
-                                    alignment: Alignment.center,
-                                    child: Column(
-                                        mainAxisSize: MainAxisSize.min,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.end,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        children: [
-                                          Padding(
-                                              padding: getPadding(
-                                                  left: 44, right: 25),
-                                              child: Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Padding(
-                                                        padding: getPadding(
-                                                            bottom: 3),
-                                                        child: Text(
-                                                            "lbl_link_6".tr,
-                                                            overflow:
-                                                                TextOverflow
-                                                                    .ellipsis,
-                                                            textAlign:
-                                                                TextAlign.left,
-                                                            style: AppStyle
-                                                                .txtNunitoSansRegular14
-                                                                .copyWith(
-                                                                    letterSpacing:
-                                                                        getHorizontalSize(
-                                                                            0.36)))),
-                                                    CustomImageView(
-                                                        svgPath: ImageConstant
-                                                            .imgArrowdownPink900,
-                                                        height: getVerticalSize(
-                                                            8.00),
-                                                        width:
-                                                            getHorizontalSize(
-                                                                15.00),
-                                                        margin:
-                                                            getMargin(top: 14))
-                                                  ])),
-                                          Container(
-                                              height: getVerticalSize(1.00),
-                                              width: getHorizontalSize(326.00),
-                                              margin: getMargin(top: 9),
-                                              decoration: BoxDecoration(
-                                                  color:
-                                                      ColorConstant.gray300Cc,
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          getHorizontalSize(
-                                                              1.00)))),
-                                          CustomTextFormField(
-                                              width: 326,
-                                              focusNode: FocusNode(),
-                                              controller: _link7_Controller,
-                                              hintText: "lbl_link_7".tr,
-                                              margin: getMargin(top: 17)),
-                                          CustomTextFormField(
-                                              width: 326,
-                                              focusNode: FocusNode(),
-                                              controller: _link8_Controller,
-                                              hintText: "lbl_link_8".tr,
-                                              margin: getMargin(top: 17),
-                                              textInputAction:
-                                                  TextInputAction.done)
-                                        ]))
-                              ])),
-                          Padding(
-                              padding: getPadding(left: 1, top: 24),
-                              child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    CustomButton(
-                                        height: 40,
-                                        width: 148,
-                                        text: "lbl_other_links".tr,
-                                        padding: ButtonPadding.PaddingT9,
-                                        prefixWidget: Container(
-                                            margin: getMargin(right: 10),
-                                            child: CustomImageView(
-                                                svgPath: ImageConstant
-                                                    .imgSearchWhiteA700)),
-                                        onTap: onTapOtherlinks),
-                                    Container(
-                                        padding: getPadding(
-                                            left: 37,
-                                            top: 9,
-                                            right: 37,
-                                            bottom: 9),
-                                        decoration: AppDecoration.fillPink900
-                                            .copyWith(
-                                                borderRadius: BorderRadiusStyle
-                                                    .circleBorder20),
-                                        child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              CustomImageView(
-                                                  svgPath:
-                                                      ImageConstant.imgPlus,
-                                                  height:
-                                                      getVerticalSize(12.00),
-                                                  width:
-                                                      getHorizontalSize(14.00),
-                                                  margin: getMargin(
-                                                      top: 5, bottom: 4)),
-                                              Padding(
-                                                  padding: getPadding(
-                                                      left: 22, top: 1),
-                                                  child: Text("lbl_new".tr,
-                                                      overflow:
-                                                          TextOverflow.ellipsis,
-                                                      textAlign: TextAlign.left,
-                                                      style: AppStyle
-                                                          .txtNunitoSansBlack14))
-                                            ]))
-                                  ])),
-                          Align(
-                              alignment: Alignment.center,
-                              child: GestureDetector(
-                                  onTap: () {
-                                    onTapTxtBtnConfirm();
-                                  },
-                                  child: Container(
-                                      width: getHorizontalSize(241.00),
-                                      margin: getMargin(top: 25, bottom: 5),
-                                      padding: getPadding(
-                                          left: 30,
-                                          top: 8,
-                                          right: 93,
-                                          bottom: 8),
-                                      decoration: AppDecoration.txtFillPink900
-                                          .copyWith(
-                                              borderRadius: BorderRadiusStyle
-                                                  .txtCircleBorder20),
-                                      child: Text("lbl_save".tr,
-                                          overflow: TextOverflow.ellipsis,
-                                          textAlign: TextAlign.left,
-                                          style:
-                                              AppStyle.txtNunitoSansBlack16))))
+                          DropdownButton<String>(
+                            isExpanded: true,
+                            // Initial Value
+                            value: link1Value,
+                            icon: link1Value == null
+                                ? Icon(Icons.keyboard_arrow_down)
+                                : GestureDetector(
+                                    child: Icon(Icons.remove),
+                                    onTap: () {
+                                      setState(() {
+                                        if (link1Value != null)
+                                          link1Value = null;
+                                      });
+                                    },
+                                  ),
+                            hint: Text(
+                              ('lbl_link_1'.tr),
+                              style: AppStyle.txtNunitoSansRegular14Gray70001,
+                            ),
+
+                            // Array list of items
+                            items: allLinks.map((items) {
+                              return DropdownMenuItem(
+                                value: items.value,
+                                child: Text(
+                                  items.text ?? '',
+                                  style:
+                                      AppStyle.txtNunitoSansRegular14Gray70001,
+                                ),
+                              );
+                            }).toList(),
+                            onChanged: (String? newValue) {
+                              setState(() {
+                                link1Value = newValue;
+                              });
+                              //  getTemplate(newValue ?? "");
+                            },
+                          ),
+                          DropdownButton<String>(
+                            isExpanded: true,
+                            // Initial Value
+                            value: link2Value,
+                            icon: link2Value == null
+                                ? Icon(Icons.keyboard_arrow_down)
+                                : GestureDetector(
+                                    child: Icon(Icons.remove),
+                                    onTap: () {
+                                      setState(() {
+                                        if (link2Value != null)
+                                          link2Value = null;
+                                      });
+                                    },
+                                  ),
+                            hint: Text(
+                              ('lbl_link_2'.tr),
+                              style: AppStyle.txtNunitoSansRegular14Gray70001,
+                            ),
+                            // Array list of items
+                            items: allLinks.map((items) {
+                              return DropdownMenuItem(
+                                value: items.value,
+                                child: Text(
+                                  items.text ?? '',
+                                  style:
+                                      AppStyle.txtNunitoSansRegular14Gray70001,
+                                ),
+                              );
+                            }).toList(),
+                            onChanged: (String? newValue) {
+                              setState(() {
+                                link2Value = newValue;
+                              });
+                              //  getTemplate(newValue ?? "");
+                            },
+                          ),
+                          DropdownButton<String>(
+                            isExpanded: true,
+                            // Initial Value
+                            value: link3Value,
+                            icon: link3Value == null
+                                ? Icon(Icons.keyboard_arrow_down)
+                                : GestureDetector(
+                                    child: Icon(Icons.remove),
+                                    onTap: () {
+                                      setState(() {
+                                        if (link3Value != null)
+                                          link3Value = null;
+                                      });
+                                    },
+                                  ),
+                            hint: Text(
+                              ('lbl_link_3'.tr),
+                              style: AppStyle.txtNunitoSansRegular14Gray70001,
+                            ),
+                            // Array list of items
+                            items: allLinks.map((items) {
+                              return DropdownMenuItem(
+                                value: items.value,
+                                child: Text(
+                                  items.text ?? '',
+                                  style:
+                                      AppStyle.txtNunitoSansRegular14Gray70001,
+                                ),
+                              );
+                            }).toList(),
+                            onChanged: (String? newValue) {
+                              setState(() {
+                                link3Value = newValue;
+                              });
+                              //  getTemplate(newValue ?? "");
+                            },
+                          ),
+                          DropdownButton<String>(
+                            isExpanded: true,
+                            // Initial Value
+                            value: link4Value,
+                            icon: link4Value == null
+                                ? Icon(Icons.keyboard_arrow_down)
+                                : GestureDetector(
+                                    child: Icon(Icons.remove),
+                                    onTap: () {
+                                      setState(() {
+                                        if (link4Value != null)
+                                          link4Value = null;
+                                      });
+                                    },
+                                  ),
+                            hint: Text(
+                              ('lbl_link_4'.tr),
+                              style: AppStyle.txtNunitoSansRegular14Gray70001,
+                            ),
+                            // Array list of items
+                            items: allLinks.map((items) {
+                              return DropdownMenuItem(
+                                value: items.value,
+                                child: Text(
+                                  items.text ?? '',
+                                  style:
+                                      AppStyle.txtNunitoSansRegular14Gray70001,
+                                ),
+                              );
+                            }).toList(),
+                            onChanged: (String? newValue) {
+                              setState(() {
+                                link4Value = newValue;
+                              });
+                              //  getTemplate(newValue ?? "");
+                            },
+                          ),
+                          DropdownButton<String>(
+                            isExpanded: true,
+                            // Initial Value
+                            value: link5Value,
+                            icon: link5Value == null
+                                ? Icon(Icons.keyboard_arrow_down)
+                                : GestureDetector(
+                                    child: Icon(Icons.remove),
+                                    onTap: () {
+                                      setState(() {
+                                        if (link5Value != null)
+                                          link5Value = null;
+                                      });
+                                    },
+                                  ),
+                            hint: Text(
+                              ('lbl_link_5'.tr),
+                              style: AppStyle.txtNunitoSansRegular14Gray70001,
+                            ),
+                            // Array list of items
+                            items: allLinks.map((items) {
+                              return DropdownMenuItem(
+                                value: items.value,
+                                child: Text(
+                                  items.text ?? '',
+                                  style:
+                                      AppStyle.txtNunitoSansRegular14Gray70001,
+                                ),
+                              );
+                            }).toList(),
+                            onChanged: (String? newValue) {
+                              setState(() {
+                                link5Value = newValue;
+                              });
+                              //  getTemplate(newValue ?? "");
+                            },
+                          ),
+                          DropdownButton<String>(
+                            isExpanded: true,
+                            // Initial Value
+                            value: link6Value,
+                            icon: link6Value == null
+                                ? Icon(Icons.keyboard_arrow_down)
+                                : GestureDetector(
+                                    child: Icon(Icons.remove),
+                                    onTap: () {
+                                      setState(() {
+                                        if (link6Value != null)
+                                          link6Value = null;
+                                      });
+                                    },
+                                  ),
+                            hint: Text(
+                              ('lbl_link_6'.tr),
+                              style: AppStyle.txtNunitoSansRegular14Gray70001,
+                            ),
+                            // Array list of items
+                            items: allLinks.map((items) {
+                              return DropdownMenuItem(
+                                value: items.value,
+                                child: Text(
+                                  items.text ?? '',
+                                  style:
+                                      AppStyle.txtNunitoSansRegular14Gray70001,
+                                ),
+                              );
+                            }).toList(),
+                            onChanged: (String? newValue) {
+                              setState(() {
+                                link6Value = newValue;
+                              });
+                              //  getTemplate(newValue ?? "");
+                            },
+                          ),
+                          DropdownButton<String>(
+                            isExpanded: true,
+                            // Initial Value
+                            value: link7Value,
+                            icon: link7Value == null
+                                ? Icon(Icons.keyboard_arrow_down)
+                                : GestureDetector(
+                                    child: Icon(Icons.remove),
+                                    onTap: () {
+                                      setState(() {
+                                        if (link7Value != null)
+                                          link7Value = null;
+                                      });
+                                    },
+                                  ),
+                            hint: Text(
+                              ('lbl_link_7'.tr),
+                              style: AppStyle.txtNunitoSansRegular14Gray70001,
+                            ),
+                            // Array list of items
+                            items: allLinks.map((items) {
+                              return DropdownMenuItem(
+                                value: items.value,
+                                child: Text(
+                                  items.text ?? '',
+                                  style:
+                                      AppStyle.txtNunitoSansRegular14Gray70001,
+                                ),
+                              );
+                            }).toList(),
+                            onChanged: (String? newValue) {
+                              setState(() {
+                                link7Value = newValue;
+                              });
+                              //  getTemplate(newValue ?? "");
+                            },
+                          ),
+                          DropdownButton<String>(
+                            isExpanded: true,
+                            // Initial Value
+                            value: link8Value,
+                            icon: link8Value == null
+                                ? Icon(Icons.keyboard_arrow_down)
+                                : GestureDetector(
+                                    child: Icon(Icons.remove),
+                                    onTap: () {
+                                      setState(() {
+                                        if (link8Value != null)
+                                          link8Value = null;
+                                      });
+                                    },
+                                  ),
+                            hint: Text(
+                              ('lbl_link_8'.tr),
+                              style: AppStyle.txtNunitoSansRegular14Gray70001,
+                            ),
+                            // Array list of items
+                            items: allLinks.map((items) {
+                              return DropdownMenuItem(
+                                value: items.value,
+                                child: Text(
+                                  items.text ?? '',
+                                  style:
+                                      AppStyle.txtNunitoSansRegular14Gray70001,
+                                ),
+                              );
+                            }).toList(),
+                            onChanged: (String? newValue) {
+                              setState(() {
+                                link8Value = newValue;
+                              });
+                              //  getTemplate(newValue ?? "");
+                            },
+                          ),
+                          Column(
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              CustomButton(
+                                  height: 40,
+                                  width: 148,
+                                  text: "lbl_other_links".tr,
+                                  padding: ButtonPadding.PaddingT9,
+                                  prefixWidget: Container(
+                                      margin: getMargin(right: 10),
+                                      child: CustomImageView(
+                                          svgPath: ImageConstant
+                                              .imgSearchWhiteA700)),
+                                  onTap: onTapOtherlinks),
+                            ],
+                          ),
+                          CustomButton(
+                              height: 40,
+                              width: 148,
+                              text: "lbl_save".tr,
+                              padding: ButtonPadding.PaddingT9,
+                              onTap: onTapTxtBtnConfirm),
+                        ],
+                      )
                         ])))));
   }
 
-  onTapOtherlinks() {
-    Navigator.of(context).pushNamed(AppRoutes.linkScreen);
-  }
-
   onTapTxtBtnConfirm() {
-    Navigator.of(context).pushNamed(AppRoutes.customizationoneScreen);
+    saveBandLinks();
+  }
+  
+  onTapOtherlinks() {
+    Navigator.of(context).pushNamed(AppRoutes.linkScreen, arguments: {
+      "cardType": cardType,
+      "cardSubtypeID": cardSubtypeID,
+      "templateId": templateId,
+      "cardTypeName": cardTypeName,
+      "templateName": templateName,
+      "cardSubTypeName": cardSubTypeName,
+      "SelectedCardID": selectedCardID,
+      "isPublishAvailable": isPublishAvailable,
+      "cardName": cardName
+    }).then((value) => getBandLinks(isProgress: false));
   }
 }

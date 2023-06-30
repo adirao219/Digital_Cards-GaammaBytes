@@ -47,7 +47,7 @@ class GreetingItemWidget extends StatelessWidget {
               openCardPreview(context);
             }),
         FocusedMenuItem(
-            title: Text((isHidden ? "Un-Hide" : "Hide")),
+            title: Text((isHidden ? "Unhide" : "Hide")),
             trailingIcon:
                 Icon(isHidden ? Icons.unarchive : Icons.remove_circle),
             onPressed: () {
@@ -164,7 +164,7 @@ class GreetingItemWidget extends StatelessWidget {
     AlertDialog alert = AlertDialog(
       title: Text("Confirmation"),
       content: Text("Are you sure you want to " +
-          (isHide ? (isHidden ? "un-hide" : "hide") : "delete") +
+          (isHide ? (isHidden ? "Unhide" : "hide") : "delete") +
           " the card?"),
       actions: [
         cancelButton,
@@ -240,7 +240,7 @@ actionPerformed();
         "UserId": GlobalVariables.userID.toString(),
         "GreetingID": modelobj.iD.toString(),
       };
-      PostBooleanGreetingResp resp =
+      APIBooleanResponse resp =
           await api.createDeleteGreeting(queryParams: req);
       if ((resp.isSuccess ?? false)) {
         Get.snackbar('Success', "Greeting deleted successfully!",

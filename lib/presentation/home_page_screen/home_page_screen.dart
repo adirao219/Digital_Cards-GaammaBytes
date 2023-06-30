@@ -52,7 +52,7 @@ class _HomePageScreen extends State<HomePageScreen> {
                 FloatingActionButtonLocation.miniEndTop,
             floatingActionButton: Padding(
                 padding: const EdgeInsets.only(bottom: 75.0),
-                child: MoreOptionMenu()),
+                child: CommonMoreOptionMenu()),
             backgroundColor: ColorConstant.whiteA700,
             drawer: appDrawer(),
             appBar: CustomAppBar(
@@ -118,7 +118,7 @@ class _HomePageScreen extends State<HomePageScreen> {
                                 alignment: Alignment.center,
                                 child: GestureDetector(
                                     onTap: () {
-                                      onTapColumnotherstwo();
+                                      onTapDigitalCards();
                                     },
                                     child: Container(
                                         padding: getPadding(
@@ -180,7 +180,7 @@ class _HomePageScreen extends State<HomePageScreen> {
                                     alignment: Alignment.center,
                                     child: GestureDetector(
                                         onTap: () {
-                                          onTapColumnothersone();
+                                          onTapGreetings();
                                         },
                                         child: Container(
                                             padding: getPadding(
@@ -409,7 +409,7 @@ class _HomePageScreen extends State<HomePageScreen> {
                                 textAlign: TextAlign.left,
                                 style: AppStyle.txtNunitoSansSemiBold16,
                               ),
-                              onTap: onTapColumnotherstwo,
+                              onTap: onTapDigitalCards,
                             )
                           ]),
                         ),
@@ -437,7 +437,7 @@ class _HomePageScreen extends State<HomePageScreen> {
                                 textAlign: TextAlign.left,
                                 style: AppStyle.txtNunitoSansSemiBold16,
                               ),
-                              onTap: onTapColumnothersone,
+                              onTap: onTapGreetings,
                             )
                           ]),
                         ),
@@ -616,7 +616,8 @@ class _HomePageScreen extends State<HomePageScreen> {
     );
   }
 
-  onTapColumnotherstwo() {
+  onTapDigitalCards() {
+    // GlobalVariables.setUserID('2e1dcb65-421e-4164-8ccb-a7214a9a7b55');
     Navigator.of(context).pushNamed(AppRoutes.myDigitalCardsScreen);
     // Get.toNamed(AppRoutes.myProfileScreen);
   }
@@ -652,7 +653,7 @@ class _HomePageScreen extends State<HomePageScreen> {
     }
   }
 
-  onTapColumnothersone() {
+  onTapGreetings() {
     // Get.reset(clearRouteBindings: true,clearFactory: true);
     //  Get.toNamed(AppRoutes.myEGreetingCardsScreen);
     Navigator.of(context).pushNamed(AppRoutes.myEGreetingCardsScreen);

@@ -1,9 +1,17 @@
 import 'package:digitalcardsgaammabytes/core/app_export.dart';
+import 'package:digitalcardsgaammabytes/core/utils/progress_dialog_utils.dart';
+import 'package:digitalcardsgaammabytes/data/apiClient/api_client.dart';
 import 'package:digitalcardsgaammabytes/widgets/app_bar/appbar_image.dart';
 import 'package:digitalcardsgaammabytes/widgets/app_bar/appbar_title.dart';
 import 'package:digitalcardsgaammabytes/widgets/app_bar/custom_app_bar.dart';
 import 'package:digitalcardsgaammabytes/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
+
+import '../../data/globals/globalvariables.dart';
+import '../../data/models/deleteCard/get_delete_card_resp.dart';
+import '../../data/models/deleteGreeting/post_delete_greeting_resp.dart';
+import '../../data/models/getBands/get_get_bands_resp.dart';
+import '../../data/models/moveUp/post_move_up_resp.dart';
 
 class BandsScreen extends StatefulWidget {
   const BandsScreen({super.key});
@@ -14,12 +22,64 @@ class BandsScreen extends StatefulWidget {
 }
 
 class _BandsScreen extends State<BandsScreen> {
+  var cardType = Get.arguments["cardType"] as int?;
+  var selectedCardID = Get.arguments["SelectedCardID"] as int?;
+  var cardSubtypeID = Get.arguments["cardSubtypeID"] as int?;
+  var templateId = Get.arguments["templateId"] as String?;
+  var cardTypeName = Get.arguments["cardTypeName"] as String?;
+  var templateName = Get.arguments["templateName"] as String?;
+  var cardSubTypeName = Get.arguments["cardSubTypeName"] as String?;
+  var isPublishAvailable = Get.arguments["isPublishAvailable"] as bool?;
+  var cardName = Get.arguments["cardName"] as String?;
+  ApiClient api = new ApiClient();
+  List<BandsList> bandList = [];
+  @override
+  void initState() {
+    getBands(true);
+    super.initState();
+  }
+
+  getBands(bool showProgress) async {
+    try {
+      var req = {
+        "UserId": GlobalVariables.userID,
+        "CardID": selectedCardID.toString()
+      };
+      GetGetBandsResp resp =
+          await api.fetchGetBands(showProgress, queryParams: req);
+      if (resp.isSuccess ?? false) {
+        setState(() {
+          bandList = resp.result?.bandsList ?? [];
+          bandList.sort(
+              (a, b) => (a.dataPosition ?? 0).compareTo(b.dataPosition ?? 0));
+          // var s = 2;
+        });
+      } else {
+        Get.snackbar('Error', resp.errorMessage.toString(),
+            backgroundColor: Color.fromARGB(255, 255, 230, 230),
+            colorText: Colors.red[900],
+            icon: Icon(
+              Icons.error,
+              color: Colors.red[900],
+            ));
+      }
+      ProgressDialogUtils.hideProgressDialog();
+    } catch (e) {
+      var s = 1;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
         top: false,
         bottom: false,
         child: Scaffold(
+            floatingActionButtonLocation:
+                FloatingActionButtonLocation.miniEndTop,
+            floatingActionButton: Padding(
+                padding: const EdgeInsets.only(bottom: 75.0),
+                child: MoreOptionMenu()),
             backgroundColor: ColorConstant.whiteA700,
             appBar: CustomAppBar(
                 height: getVerticalSize(108.00),
@@ -65,358 +125,406 @@ class _BandsScreen extends State<BandsScreen> {
                                         ])),
                                 AppbarTitle(
                                     text: "lbl_bands2".tr.toUpperCase(),
-                                    margin: getMargin(left: 75, top: 14))
+                                    margin: getMargin(left: 75, top: 0))
                               ])))
                     ])),
-                actions: [
-                  AppbarImage(
-                      height: getSize(28.00),
-                      width: getSize(28.00),
-                      svgPath: ImageConstant.imgComputer,
-                      margin:
-                          getMargin(left: 32, top: 51, right: 32, bottom: 29),
-                      onTap: onTapComputer)
-                ],
                 styleType: Style.bgStyle_30),
-            body: SizedBox(
-                width: size.width,
-                child: SingleChildScrollView(
-                    child: Padding(
-                        padding:
-                            getPadding(left: 24, top: 10, right: 56, bottom: 5),
-                        child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Padding(
-                                  padding: getPadding(right: 8),
-                                  child: Text("msg_card_name_ex".tr,
-                                      overflow: TextOverflow.ellipsis,
-                                      textAlign: TextAlign.left,
-                                      style: AppStyle.txtNunitoBold18)),
-                              CustomButton(
-                                  height: 40,
-                                  width: 250,
-                                  text: "lbl_link".tr,
-                                  margin: getMargin(top: 40, right: 6),
-                                  variant: ButtonVariant.OutlineBlack9003f_1,
-                                  shape: ButtonShape.RoundedBorder15,
-                                  fontStyle: ButtonFontStyle.NunitoSansBold14,
-                                  onTap: onTapLink),
-                              CustomButton(
-                                  height: 40,
-                                  width: 250,
-                                  text: "lbl_note".tr,
-                                  margin: getMargin(top: 19, right: 6),
-                                  variant: ButtonVariant.OutlineBlack9003f_1,
-                                  shape: ButtonShape.RoundedBorder15,
-                                  fontStyle: ButtonFontStyle.NunitoSansBold14,
-                                  onTap: onTapNote),
-                              CustomButton(
-                                  height: 40,
-                                  width: 250,
-                                  text: "lbl_map".tr,
-                                  margin: getMargin(top: 21, right: 6),
-                                  variant: ButtonVariant.OutlineBlack9003f_1,
-                                  shape: ButtonShape.RoundedBorder15,
-                                  fontStyle: ButtonFontStyle.NunitoSansBold14,
-                                  onTap: onTapMap),
-                              CustomButton(
-                                  height: 40,
-                                  width: 250,
-                                  text: "lbl_video".tr,
-                                  margin: getMargin(top: 19, right: 6),
-                                  variant: ButtonVariant.OutlineBlack9003f_1,
-                                  shape: ButtonShape.RoundedBorder15,
-                                  fontStyle: ButtonFontStyle.NunitoSansBold14,
-                                  onTap: onTapVideo),
-                              GestureDetector(
-                                  onTap: () {
-                                    onTapTxtGroup118();
-                                  },
-                                  child: Container(
-                                      width: getHorizontalSize(250.00),
-                                      margin: getMargin(top: 23, right: 6),
-                                      padding: getPadding(
-                                          left: 30,
-                                          top: 9,
-                                          right: 94,
-                                          bottom: 9),
-                                      decoration: AppDecoration
-                                          .txtOutlineBlack9003f
-                                          .copyWith(
-                                              borderRadius: BorderRadiusStyle
-                                                  .txtRoundedBorder15),
-                                      child: Text("lbl_picture".tr,
-                                          overflow: TextOverflow.ellipsis,
-                                          textAlign: TextAlign.left,
-                                          style: AppStyle
-                                              .txtNunitoSansBold14Pink900
-                                              .copyWith(
-                                                  letterSpacing:
-                                                      getHorizontalSize(
-                                                          0.36))))),
-                              GestureDetector(
-                                  onTap: () {
-                                    onTapTxtGroup117();
-                                  },
-                                  child: Container(
-                                      width: getHorizontalSize(250.00),
-                                      margin: getMargin(top: 18, right: 6),
-                                      padding: getPadding(
-                                          left: 30,
-                                          top: 9,
-                                          right: 72,
-                                          bottom: 9),
-                                      decoration: AppDecoration
-                                          .txtOutlineBlack9003f
-                                          .copyWith(
-                                              borderRadius: BorderRadiusStyle
-                                                  .txtRoundedBorder15),
-                                      child: Text("lbl_contact_band".tr,
-                                          overflow: TextOverflow.ellipsis,
-                                          textAlign: TextAlign.left,
-                                          style: AppStyle
-                                              .txtNunitoSansBold14Pink900
-                                              .copyWith(
-                                                  letterSpacing:
-                                                      getHorizontalSize(
-                                                          0.36))))),
-                              Container(
-                                  height: getVerticalSize(169.00),
-                                  width: getHorizontalSize(250.00),
-                                  margin: getMargin(top: 20, right: 6),
-                                  child: Stack(
-                                      alignment: Alignment.center,
+            body: SingleChildScrollView(
+                child: Container(
+                    height: 700,
+                    width: 400,
+                    child: Column(children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Padding(
+                              padding: getPadding(left: 25),
+                              child: Text(
+                                  ("msg_card_type_ex_new2".tr) +
+                                      (cardTypeName ?? ""),
+                                  overflow: TextOverflow.ellipsis,
+                                  textAlign: TextAlign.left,
+                                  style: AppStyle.txtNunitoBold18))
+                        ],
+                      ),
+                      Visibility(
+                          child: CustomButton(
+                              height: 50,
+                              width: 275,
+                              text: "  Create New " + "lbl_note".tr + " Band",
+                              margin: getMargin(top: 10, right: 6),
+                              variant: ButtonVariant.OutlineBlack9003f_1,
+                              shape: ButtonShape.RoundedBorder15,
+                              fontStyle: ButtonFontStyle.NunitoSansBold14,
+                              prefixWidget: Icon(
+                                Icons.add_circle,
+                                color: ColorConstant.pink900,
+                              ),
+                              onTap: () {
+                                onTapNote(0);
+                              }),
+                          visible: true),
+                      Visibility(
+                          child: CustomButton(
+                              height: 50,
+                              width: 275,
+                              text: "  Create New " + "lbl_map".tr + " Band",
+                              margin: getMargin(top: 10, right: 6),
+                              variant: ButtonVariant.OutlineBlack9003f_1,
+                              shape: ButtonShape.RoundedBorder15,
+                              fontStyle: ButtonFontStyle.NunitoSansBold14,
+                              prefixWidget: Icon(
+                                Icons.add_circle,
+                                color: ColorConstant.pink900,
+                              ),
+                              onTap: () {
+                                onTapMap(0);
+                              }),
+                          visible: (cardType ?? 0) != 1),
+                      Visibility(
+                          child: CustomButton(
+                              height: 50,
+                              width: 275,
+                              text: "  Create New " +
+                                  "lbl_icon_group".tr +
+                                  " Band",
+                              margin: getMargin(top: 10, bottom: 10, right: 6),
+                              variant: ButtonVariant.OutlineBlack9003f_1,
+                              shape: ButtonShape.RoundedBorder15,
+                              fontStyle: ButtonFontStyle.NunitoSansBold14,
+                              prefixWidget: Icon(
+                                Icons.add_circle,
+                                color: ColorConstant.pink900,
+                              ),
+                              onTap: () {
+                                onTapIconGroup(0);
+                              }),
+                          visible: (cardType ?? 0) != 1),
+                      Divider(),
+                      Padding(
+                          padding: getPadding(left: 15, top: 10),
+                          child: Text("lbl_band_list".tr,
+                              overflow: TextOverflow.ellipsis,
+                              textAlign: TextAlign.left,
+                              style: AppStyle.txtNunitoSansBold16Pink900
+                                  .copyWith(
+                                      letterSpacing: getHorizontalSize(0.36)))),
+                      Expanded(
+                          child: ListView.builder(
+                        shrinkWrap: true,
+                        // Let the ListView know how many items it needs to build.
+                        itemCount: bandList.length,
+                        // Provide a builder function. This is where the magic happens.
+                        // Convert each item into a widget based on the type of item it is.
+                        itemBuilder: (context, index) {
+                          var data = bandList[index];
+                          return ListTile(
+                              leading: Visibility(
+                                  child: GestureDetector(
+                                      child: Container(
+                                          margin: getMargin(left: 5),
+                                          child: getIconByBandType(
+                                              data.bandType ?? 0)),
+                                      onTap: () {
+                                        editBand(data.cardBandID ?? 0,
+                                            data.bandType ?? 0);
+                                      }),
+                                  visible: (data.bandType) != 10),
+                              trailing: Visibility(
+                                  child: GestureDetector(
+                                      child: Container(
+                                          margin: getMargin(left: 5),
+                                          child: Icon(
+                                            Icons.delete,
+                                            color: ColorConstant.pink900,
+                                          )),
+                                      onTap: () {
+                                        showAlertDialog(
+                                            context,
+                                            data.cardBandID ?? 0,
+                                            data.bandType ?? 0);
+                                      }),
+                                  visible: (data.bandType) != 10),
+                              title: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          Text(data.bandTypeIDName ?? '',
+                                              overflow: TextOverflow.ellipsis,
+                                              textAlign: TextAlign.left,
+                                              style: AppStyle
+                                                  .txtNunitoSansBold14Pink900
+                                                  .copyWith(
+                                                      letterSpacing:
+                                                          getHorizontalSize(
+                                                              0.36))),
+                                          Text(data.heading ?? '',
+                                              overflow: TextOverflow.ellipsis,
+                                              textAlign: TextAlign.left,
+                                              style: AppStyle
+                                                  .txtNunitoSansRegular14Pink
+                                                  .copyWith(
+                                                      letterSpacing:
+                                                          getHorizontalSize(
+                                                              0.36)))
+                                        ]),
+                                    Row(
                                       children: [
-                                        Align(
-                                            alignment: Alignment.topCenter,
-                                            child: GestureDetector(
-                                                onTap: () {
-                                                  onTapRectangle4205();
-                                                },
-                                                child: Container(
-                                                    height:
-                                                        getVerticalSize(40.00),
-                                                    width: getHorizontalSize(
-                                                        250.00),
-                                                    decoration: BoxDecoration(
-                                                        color: ColorConstant
-                                                            .deepOrangeA10033,
-                                                        borderRadius:
-                                                            BorderRadius.circular(
-                                                                getHorizontalSize(
-                                                                    15.00)),
-                                                        boxShadow: [
-                                                          BoxShadow(
-                                                              color: ColorConstant
-                                                                  .black9003f,
-                                                              spreadRadius:
-                                                                  getHorizontalSize(
-                                                                      2.00),
-                                                              blurRadius:
-                                                                  getHorizontalSize(
-                                                                      2.00),
-                                                              offset:
-                                                                  Offset(0, 4))
-                                                        ])))),
-                                        Align(
-                                            alignment: Alignment.center,
-                                            child: GestureDetector(
-                                                onTap: () {
-                                                  onTapRectangle4206();
-                                                },
-                                                child: Container(
-                                                    height:
-                                                        getVerticalSize(40.00),
-                                                    width: getHorizontalSize(
-                                                        250.00),
-                                                    decoration: BoxDecoration(
-                                                        color: ColorConstant
-                                                            .deepOrangeA10033,
-                                                        borderRadius:
-                                                            BorderRadius.circular(
-                                                                getHorizontalSize(
-                                                                    15.00)),
-                                                        boxShadow: [
-                                                          BoxShadow(
-                                                              color: ColorConstant
-                                                                  .black9003f,
-                                                              spreadRadius:
-                                                                  getHorizontalSize(
-                                                                      2.00),
-                                                              blurRadius:
-                                                                  getHorizontalSize(
-                                                                      2.00),
-                                                              offset:
-                                                                  Offset(0, 4))
-                                                        ])))),
-                                        Align(
-                                            alignment: Alignment.bottomCenter,
-                                            child: GestureDetector(
-                                                onTap: () {
-                                                  onTapRectangle4207();
-                                                },
-                                                child: Container(
-                                                    height:
-                                                        getVerticalSize(40.00),
-                                                    width: getHorizontalSize(
-                                                        250.00),
-                                                    decoration: BoxDecoration(
-                                                        color: ColorConstant
-                                                            .deepOrangeA10033,
-                                                        borderRadius:
-                                                            BorderRadius.circular(
-                                                                getHorizontalSize(
-                                                                    15.00)),
-                                                        boxShadow: [
-                                                          BoxShadow(
-                                                              color: ColorConstant
-                                                                  .black9003f,
-                                                              spreadRadius:
-                                                                  getHorizontalSize(
-                                                                      2.00),
-                                                              blurRadius:
-                                                                  getHorizontalSize(
-                                                                      2.00),
-                                                              offset:
-                                                                  Offset(0, 4))
-                                                        ])))),
-                                        Align(
-                                            alignment: Alignment.centerRight,
-                                            child: Container(
-                                                width: getHorizontalSize(87.00),
-                                                margin: getMargin(right: 73),
-                                                child: Column(
-                                                    mainAxisSize:
-                                                        MainAxisSize.min,
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment.start,
-                                                    children: [
-                                                      Align(
-                                                          alignment:
-                                                              Alignment.center,
-                                                          child: Text(
-                                                              "lbl_icon_group"
-                                                                  .tr,
-                                                              overflow:
-                                                                  TextOverflow
-                                                                      .ellipsis,
-                                                              textAlign:
-                                                                  TextAlign
-                                                                      .left,
-                                                              style: AppStyle
-                                                                  .txtNunitoSansBold14Pink900
-                                                                  .copyWith(
-                                                                      letterSpacing:
-                                                                          getHorizontalSize(
-                                                                              0.36)))),
-                                                      Padding(
-                                                          padding: getPadding(
-                                                              top: 43),
-                                                          child: Text(
-                                                              "lbl_bank_details"
-                                                                  .tr,
-                                                              overflow:
-                                                                  TextOverflow
-                                                                      .ellipsis,
-                                                              textAlign:
-                                                                  TextAlign
-                                                                      .left,
-                                                              style: AppStyle
-                                                                  .txtNunitoSansBold14Pink900
-                                                                  .copyWith(
-                                                                      letterSpacing:
-                                                                          getHorizontalSize(
-                                                                              0.36)))),
-                                                      Padding(
-                                                          padding: getPadding(
-                                                              left: 10,
-                                                              top: 46),
-                                                          child: Text(
-                                                              "lbl_upi_card".tr,
-                                                              overflow:
-                                                                  TextOverflow
-                                                                      .ellipsis,
-                                                              textAlign:
-                                                                  TextAlign
-                                                                      .left,
-                                                              style: AppStyle
-                                                                  .txtNunitoSansBold14Pink900
-                                                                  .copyWith(
-                                                                      letterSpacing:
-                                                                          getHorizontalSize(
-                                                                              0.36))))
-                                                    ])))
-                                      ])),
-                              GestureDetector(
-                                  onTap: () {
-                                    onTapTxtBtnConfirm();
-                                  },
-                                  child: Container(
-                                      width: getHorizontalSize(250.00),
-                                      margin: getMargin(top: 104),
-                                      padding: getPadding(
-                                          left: 30,
-                                          top: 8,
-                                          right: 96,
-                                          bottom: 8),
-                                      decoration: AppDecoration.txtFillPink900
-                                          .copyWith(
-                                              borderRadius: BorderRadiusStyle
-                                                  .txtCircleBorder20),
-                                      child: Text("lbl_save".tr,
-                                          overflow: TextOverflow.ellipsis,
-                                          textAlign: TextAlign.left,
-                                          style:
-                                              AppStyle.txtNunitoSansBlack16)))
-                            ]))))));
+                                        Visibility(
+                                          child: GestureDetector(
+                                            child: Icon(
+                                              Icons.arrow_circle_up_rounded,
+                                              color: ColorConstant.pink900,
+                                              size: 32,
+                                            ),
+                                            onTap: () {
+                                              moveUp(data.cardBandID ?? 0,
+                                                  (data.dataPosition ?? 0));
+                                            },
+                                          ),
+                                          visible: index > 0,
+                                        ),
+                                        SizedBox(
+                                          width: 5,
+                                        ),
+                                        Visibility(
+                                          child: GestureDetector(
+                                            child: Icon(
+                                              Icons.arrow_circle_down_rounded,
+                                              color: ColorConstant.pink900,
+                                              size: 32,
+                                            ),
+                                            onTap: () {
+                                              moveDown(data.cardBandID ?? 0,
+                                                  (data.dataPosition ?? 0));
+                                            },
+                                          ),
+                                          visible:
+                                              index < (bandList.length - 1),
+                                        ),
+                                      ],
+                                    )
+                                  ]));
+                        },
+                      )),
+                      SizedBox(
+                        height: 10,
+                      ),
+                    ])))));
   }
 
-  onTapLink() {
-    Navigator.of(context).pushNamed(AppRoutes.bandLinkScreen);
+  Icon getIconByBandType(int bandType) {
+    switch (bandType) {
+      // case 2:
+      //   return Icon(
+      //     Icons.edit_note_rounded,
+      //     size: 30,
+      //   );
+
+      // case 3:
+      //   return Icon(Icons.edit_location_alt_rounded);
+
+      // case 7:
+      //   return Icon(
+      //     Icons.add_link_rounded,
+      //     size: 25,
+      //   );
+
+      default:
+        return Icon(
+          Icons.edit,
+          color: ColorConstant.pink900,
+        );
+    }
   }
 
-  onTapNote() {
-    Navigator.of(context).pushNamed(AppRoutes.bandNoteScreen);
+  editBand(int bandId, int bandTypeeID) {
+    if (bandTypeeID == 2) {
+      onTapNote(bandId);
+    } else if (bandTypeeID == 3) {
+      onTapMap(bandId);
+    } else if (bandTypeeID == 7) {
+      onTapIconGroup(bandId);
+    }
   }
 
-  onTapMap() {
-    Navigator.of(context).pushNamed(AppRoutes.bandMapScreen);
+  showAlertDialog(BuildContext context, int bandId, int bandTypeeID) {
+    // set up the buttons
+    Widget cancelButton = TextButton(
+      child: Text("Cancel"),
+      onPressed: () {
+        Navigator.pop(context);
+      },
+    );
+    Widget continueButton = TextButton(
+      child: Text("Continue"),
+      onPressed: () {
+        Navigator.pop(context);
+        deleteBandId(bandId, bandTypeeID);
+      },
+    );
+
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text("Confirmation"),
+      content: Text("Are you sure you want to delete the band?"),
+      actions: [
+        cancelButton,
+        continueButton,
+      ],
+    );
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
   }
 
-  onTapVideo() {
-    Navigator.of(context).pushNamed(AppRoutes.bandVideoScreen);
+  deleteBandId(int bandId, int bandTypeeID) async {
+    try {
+      var req = {
+        "BandId": bandId.toString(),
+      };
+      GetDeleteCardResp resp = await api.fetchDeleteBand(queryParams: req);
+      if ((resp.isSuccess ?? false) && (resp.result ?? false)) {
+        Get.snackbar('Success', "Band Deleted successfully!",
+            backgroundColor: Color.fromARGB(255, 208, 245, 216),
+            colorText: Colors.green[900],
+            icon: Icon(
+              Icons.done,
+              color: Colors.green[900],
+            ));
+        getBands(false);
+      } else {
+        Get.snackbar('Error', resp.errorMessage.toString(),
+            backgroundColor: Color.fromARGB(255, 255, 230, 230),
+            colorText: Colors.red[900],
+            icon: Icon(
+              Icons.error,
+              color: Colors.red[900],
+            ));
+      }
+    } catch (e) {
+      var s = 1;
+    }
   }
 
-  onTapTxtGroup118() {
-    Navigator.of(context).pushNamed(AppRoutes.bandPictureScreen);
+  moveUp(int bandId, int dataPosition) async {
+    try {
+      var req = {
+        "BandId": bandId.toString(),
+        "DataPosition": dataPosition.toString()
+      };
+      APIBooleanResponse resp = await api.createMoveUp(queryParams: req);
+      if ((resp.isSuccess ?? false) && (resp.result ?? false)) {
+        Get.snackbar('Success', "Band Moved Up!",
+            backgroundColor: Color.fromARGB(255, 208, 245, 216),
+            colorText: Colors.green[900],
+            icon: Icon(
+              Icons.done,
+              color: Colors.green[900],
+            ));
+        getBands(false);
+      } else {
+        Get.snackbar('Error', resp.errorMessage.toString(),
+            backgroundColor: Color.fromARGB(255, 255, 230, 230),
+            colorText: Colors.red[900],
+            icon: Icon(
+              Icons.error,
+              color: Colors.red[900],
+            ));
+      }
+    } catch (e) {
+      var s = 1;
+    }
   }
 
-  onTapTxtGroup117() {
-    Navigator.of(context).pushNamed(AppRoutes.bandContactbandScreen);
+  moveDown(int bandId, int dataPosition) async {
+    try {
+      var req = {
+        "BandId": bandId.toString(),
+        "DataPosition": dataPosition.toString()
+      };
+      APIBooleanResponse resp = await api.createMoveDown(queryParams: req);
+      if ((resp.isSuccess ?? false) && (resp.result ?? false)) {
+        Get.snackbar('Success', "Band Moved Down!",
+            backgroundColor: Color.fromARGB(255, 208, 245, 216),
+            colorText: Colors.green[900],
+            icon: Icon(
+              Icons.done,
+              color: Colors.green[900],
+            ));
+        getBands(false);
+      } else {
+        Get.snackbar('Error', resp.errorMessage.toString(),
+            backgroundColor: Color.fromARGB(255, 255, 230, 230),
+            colorText: Colors.red[900],
+            icon: Icon(
+              Icons.error,
+              color: Colors.red[900],
+            ));
+      }
+    } catch (e) {
+      var s = 1;
+    }
   }
 
-  onTapRectangle4205() {
-    Navigator.of(context).pushNamed(AppRoutes.bandIcongroupScreen);
+  onTapNote(int bandId) {
+    Navigator.of(context).pushNamed(AppRoutes.bandNoteScreen, arguments: {
+      "cardType": cardType,
+      "cardSubtypeID": cardSubtypeID,
+      "templateId": templateId,
+      "cardTypeName": cardTypeName,
+      "templateName": templateName,
+      "cardSubTypeName": cardSubTypeName,
+      "SelectedCardID": selectedCardID,
+      "isPublishAvailable": isPublishAvailable,
+      "BandId": bandId,
+      "cardName": cardName
+    }).then((value) {
+      getBands(false);
+    });
   }
 
-  onTapRectangle4206() {
-    Navigator.of(context).pushNamed(AppRoutes.bandBankaCdetailsScreen);
+  onTapMap(int bandId) {
+    Navigator.of(context).pushNamed(AppRoutes.bandMapScreen, arguments: {
+      "cardType": cardType,
+      "cardSubtypeID": cardSubtypeID,
+      "templateId": templateId,
+      "cardTypeName": cardTypeName,
+      "templateName": templateName,
+      "cardSubTypeName": cardSubTypeName,
+      "SelectedCardID": selectedCardID,
+      "isPublishAvailable": isPublishAvailable,
+      "BandId": bandId,
+      "cardName": cardName
+    }).then((value) {
+      getBands(false);
+    });
   }
 
-  onTapRectangle4207() {
-    Navigator.of(context).pushNamed(AppRoutes.bandUpicardScreen);
-  }
-
-  onTapTxtBtnConfirm() {
-    Navigator.of(context).pushNamed(AppRoutes.customizationoneScreen);
-  }
-
-  onTapComputer() {
-    Navigator.of(context).pushNamed(AppRoutes.bandsOneScreen);
+  onTapIconGroup(int bandId) {
+    Navigator.of(context).pushNamed(AppRoutes.iconGroupScreen, arguments: {
+      "cardType": cardType,
+      "cardSubtypeID": cardSubtypeID,
+      "templateId": templateId,
+      "cardTypeName": cardTypeName,
+      "templateName": templateName,
+      "cardSubTypeName": cardSubTypeName,
+      "SelectedCardID": selectedCardID,
+      "isPublishAvailable": isPublishAvailable,
+      "BandId": bandId,
+      "cardName": cardName
+    }).then((value) {
+      getBands(false);
+    });
   }
 }

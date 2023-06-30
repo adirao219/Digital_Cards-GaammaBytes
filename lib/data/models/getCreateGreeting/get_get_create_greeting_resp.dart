@@ -130,6 +130,7 @@ class GreetingDetailsData {
   String? backgroundColorHex;
   int? contentPosition;
   int? logoPosition;
+  dynamic editorColorHex;
 
   GreetingDetailsData(
       {this.id,
@@ -172,7 +173,8 @@ class GreetingDetailsData {
       this.isBackgroundImage,
       this.contentPosition,
       this.logoPosition,
-      this.thumbnailImage});
+      this.thumbnailImage,
+      this.editorColorHex});
 
   GreetingDetailsData.fromJson(Map<String, dynamic> json) {
     id = json['ID'];
@@ -231,6 +233,8 @@ class GreetingDetailsData {
     isBackgroundImage= json['IsBackgroundImage'];
     backgroundColor = json['BackgroundColor'];
     backgroundColorHex = json['BackgroundColorHex'];
+    
+    editorColorHex = json['EditorColorHex'];
   }
 
   Map<String, dynamic> toJson() {

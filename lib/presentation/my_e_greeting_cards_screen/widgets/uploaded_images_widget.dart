@@ -6,6 +6,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../../data/globals/globalvariables.dart';
 import '../../../data/models/deleteGreeting/post_delete_greeting_resp.dart';
 import '../../../data/models/driveImages/drive_file_images_resp.dart';
+import '../../../data/models/getCreateCard/get_get_create_card_resp.dart';
 import '../../../data/models/greetingDetails/get_greeting_details_resp.dart';
 import 'package:digitalcardsgaammabytes/core/app_export.dart';
 import 'package:flutter/material.dart';
@@ -20,9 +21,9 @@ class UploadedImageWidget extends StatelessWidget {
 
   Random random = new Random();
   DriveFilesData modelobj;
-  int pictureType;
-  Function(DriveFilesData, int) selectedCard;
-  Function(DriveFilesData, int) cropSelectedImage;
+  UserImageType pictureType;
+  Function(DriveFilesData, UserImageType) selectedCard;
+  Function(DriveFilesData, UserImageType) cropSelectedImage;
   ApiClient api = new ApiClient();
   Offset _tapPosition = Offset.zero;
   @override
@@ -46,7 +47,7 @@ class UploadedImageWidget extends StatelessWidget {
                   title: Text("Select"),
                   trailingIcon: Icon(Icons.done),
                   onPressed: () {
-                    selectedCard(this.modelobj, pictureType);
+                    selectedCard(this.modelobj,  pictureType);
                   }),
               FocusedMenuItem(
                   title: Text("Crop"),

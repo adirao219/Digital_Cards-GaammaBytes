@@ -3,7 +3,9 @@ import 'dart:convert';
 import 'package:digitalcardsgaammabytes/core/app_export.dart';
 import 'package:digitalcardsgaammabytes/core/utils/progress_dialog_utils.dart';
 import 'package:digitalcardsgaammabytes/data/models/comments/get_comments_resp.dart';
-
+import 'package:digitalcardsgaammabytes/data/models/getCardType/get_get_card_type_resp.dart';
+import 'package:digitalcardsgaammabytes/data/models/getCardSubType/get_get_card_sub_type_resp.dart';
+import 'package:digitalcardsgaammabytes/data/models/cardDetails/get_card_details_resp.dart';
 import 'package:digitalcardsgaammabytes/data/models/checkDuplicateEmail/get_check_duplicate_email_resp.dart';
 import 'package:digitalcardsgaammabytes/data/models/checkDuplicatePhoneNo/get_check_duplicate_phone_no_resp.dart';
 import 'package:digitalcardsgaammabytes/data/models/confirmUser/post_confirm_user_resp.dart';
@@ -23,7 +25,24 @@ import 'package:digitalcardsgaammabytes/data/models/publishGreeting/post_publish
 import 'package:digitalcardsgaammabytes/data/models/registration/post_registration_resp.dart';
 import 'package:digitalcardsgaammabytes/data/models/validateCouponCode/get_validate_coupon_code_resp.dart';
 import '../../core/environment/env_config.dart';
+import '../models/createCard/post_create_card_resp.dart';
+import '../models/deleteCard/get_delete_card_resp.dart';
 import '../models/driveImages/drive_file_images_resp.dart';
+import '../models/filterCardTheme/get_filter_card_theme_resp.dart';
+import '../models/getBands/get_band_data_resp.dart';
+import '../models/getBands/get_get_bands_resp.dart';
+import '../models/getCardTemplate/get_get_card_template_resp.dart';
+import '../models/getCreateCard/get_get_create_card_resp.dart';
+import '../models/getFooter/get_get_footer_resp.dart';
+import '../models/getLanguages/get_get_languages_resp.dart';
+import '../models/getLinkDefinition/get_get_link_definition_resp.dart';
+import '../models/getThemeDetails/post_get_theme_details_resp.dart';
+import '../models/hideCard/get_hide_card_resp.dart';
+import '../models/moveDown/post_move_down_resp.dart';
+import '../models/moveUp/post_move_up_resp.dart';
+import '../models/publish/get_publish_resp.dart';
+import '../models/saveFooter/post_save_footer_resp.dart';
+import '../models/saveLinkDefinition/post_save_link_definition_resp.dart';
 
 class ApiClient extends GetConnect {
   var url = EnvConfig.config.bASEURL;
@@ -114,6 +133,100 @@ class ApiClient extends GetConnect {
       rethrow;
     }
   }
+  Future<APIResponse> fetchRazorPayAPIKey(
+      {Map<String, dynamic> queryParams = const {}}) async {
+    ProgressDialogUtils.showProgressDialog();
+    try {
+      await isNetworkConnected();
+      Response response =
+          await httpClient.get('$url/API/GetRazorPayKey', query: queryParams);
+      ProgressDialogUtils.hideProgressDialog();
+      if (_isSuccessCall(response)) {
+        return APIResponse.fromJson(response.body);
+      } else {
+        throw response.body != null
+            ? APIResponse.fromJson(response.body)
+            : 'Something Went Wrong!';
+      }
+    } catch (error, stackTrace) {
+      ProgressDialogUtils.hideProgressDialog();
+      Logger.log(error, stackTrace: stackTrace);
+      rethrow;
+    }
+  }
+
+
+  Future<CommonGenericResp> makePaymentInitiation(
+      {Map requestData = const {}}) async {
+    ProgressDialogUtils.showProgressDialog();
+    try {
+      await isNetworkConnected();
+      Response response =
+          await httpClient.post('$url/API/MakePayment', body: requestData);
+      ProgressDialogUtils.hideProgressDialog();
+      if (_isSuccessCall(response)) {
+        return CommonGenericResp.fromJson(response.body);
+      } else {
+        throw response.body != null
+            ? CommonGenericResp.fromJson(response.body)
+            : 'Something Went Wrong!';
+      }
+    } catch (error, stackTrace) {
+      ProgressDialogUtils.hideProgressDialog();
+      Logger.log(error, stackTrace: stackTrace);
+      rethrow;
+    }
+  }
+
+   Future<APIResponse> updatePaymentSuccess(
+      {Map<String, dynamic> queryParams = const {},
+      Map requestData = const {}}) async {
+    ProgressDialogUtils.showProgressDialog();
+    try {
+      await isNetworkConnected();
+
+      httpClient.timeout = Duration(seconds: 120);
+      Response response = await httpClient.post('$url/API/SuccessCreateCredit',
+          query: queryParams, body: requestData);
+      ProgressDialogUtils.hideProgressDialog();
+      if (_isSuccessCall(response)) {
+        return APIResponse.fromJson(response.body);
+      } else {
+        throw response.body != null
+            ? APIResponse.fromJson(response.body)
+            : 'Something Went Wrong!';
+      }
+    } catch (error, stackTrace) {
+      ProgressDialogUtils.hideProgressDialog();
+      Logger.log(error, stackTrace: stackTrace);
+      rethrow;
+    }
+  }
+   Future<APIResponse> updatePaymentFailure(
+      {Map<String, dynamic> queryParams = const {},
+      Map requestData = const {}}) async {
+    ProgressDialogUtils.showProgressDialog();
+    try {
+      await isNetworkConnected();
+
+      httpClient.timeout = Duration(seconds: 120);
+      Response response = await httpClient.post('$url/API/PaymentFailure',
+          query: queryParams, body: requestData);
+      ProgressDialogUtils.hideProgressDialog();
+      if (_isSuccessCall(response)) {
+        return APIResponse.fromJson(response.body);
+      } else {
+        throw response.body != null
+            ? APIResponse.fromJson(response.body)
+            : 'Something Went Wrong!';
+      }
+    } catch (error, stackTrace) {
+      ProgressDialogUtils.hideProgressDialog();
+      Logger.log(error, stackTrace: stackTrace);
+      rethrow;
+    }
+  }
+
 
   Future<CommonGenericResp> createConfirmUser(
       {Map requestData = const {}}) async {
@@ -426,7 +539,7 @@ class ApiClient extends GetConnect {
     }
   }
 
-  Future<PostBooleanGreetingResp> createDeleteGreeting(
+  Future<APIBooleanResponse> createDeleteGreeting(
       {Map<String, dynamic> queryParams = const {},
       Map requestData = const {}}) async {
     ProgressDialogUtils.showProgressDialog();
@@ -436,10 +549,10 @@ class ApiClient extends GetConnect {
           query: queryParams, body: requestData);
       ProgressDialogUtils.hideProgressDialog();
       if (_isSuccessCall(response)) {
-        return PostBooleanGreetingResp.fromJson(response.body);
+        return APIBooleanResponse.fromJson(response.body);
       } else {
         throw response.body != null
-            ? PostBooleanGreetingResp.fromJson(response.body)
+            ? APIBooleanResponse.fromJson(response.body)
             : 'Something Went Wrong!';
       }
     } catch (error, stackTrace) {
@@ -583,7 +696,7 @@ class ApiClient extends GetConnect {
     }
   }
 
-  Future<PostBooleanGreetingResp> removeImage(
+  Future<APIBooleanResponse> removeImage(
       {Map<String, dynamic> queryParams = const {},
       Map requestData = const {}}) async {
     ProgressDialogUtils.showProgressDialog();
@@ -594,10 +707,10 @@ class ApiClient extends GetConnect {
           body: requestData, query: queryParams);
       ProgressDialogUtils.hideProgressDialog();
       if (_isSuccessCall(response)) {
-        return PostBooleanGreetingResp.fromJson(response.body);
+        return APIBooleanResponse.fromJson(response.body);
       } else {
         throw response.body != null
-            ? PostBooleanGreetingResp.fromJson(response.body)
+            ? APIBooleanResponse.fromJson(response.body)
             : 'Something Went Wrong!';
       }
     } catch (error, stackTrace) {
@@ -722,8 +835,8 @@ class ApiClient extends GetConnect {
     try {
       await isNetworkConnected();
       httpClient.timeout = Duration(seconds: 120);
-      Response response =
-          await httpClient.get('$url/API/GetCreditStorageSpace', query: queryParams);
+      Response response = await httpClient.get('$url/API/GetCreditStorageSpace',
+          query: queryParams);
       ProgressDialogUtils.hideProgressDialog();
       if (_isSuccessCall(response)) {
         return APIResponse.fromJson(response.body);
@@ -740,15 +853,18 @@ class ApiClient extends GetConnect {
   }
 
   Future<APIResponse> getCreditsAvailable(
-      {Map<String, dynamic> queryParams = const {},
+      {bool showProgress = true,
+      Map<String, dynamic> queryParams = const {},
       Map requestData = const {}}) async {
-    ProgressDialogUtils.showProgressDialog();
+    if (showProgress) {
+      ProgressDialogUtils.showProgressDialog();
+    }
     try {
       await isNetworkConnected();
       httpClient.timeout = Duration(seconds: 120);
       Response response = await httpClient.post('$url/API/GetCreditsAvailable',
           query: queryParams, body: requestData);
-      ProgressDialogUtils.hideProgressDialog();
+      if (showProgress) ProgressDialogUtils.hideProgressDialog();
       if (_isSuccessCall(response)) {
         return APIResponse.fromJson(response.body);
       } else {
@@ -757,7 +873,7 @@ class ApiClient extends GetConnect {
             : 'Something Went Wrong!';
       }
     } catch (error, stackTrace) {
-      ProgressDialogUtils.hideProgressDialog();
+      if (showProgress) ProgressDialogUtils.hideProgressDialog();
       Logger.log(error, stackTrace: stackTrace);
       rethrow;
     }
@@ -855,23 +971,767 @@ class ApiClient extends GetConnect {
     }
   }
 
-   Future<dynamic> generateAuth(String baseURL, {Map<String, dynamic> queryParams = const {},
+  Future<dynamic> generateAuth(String baseURL,
+      {Map<String, dynamic> queryParams = const {},
       Map requestData = const {}}) async {
     ProgressDialogUtils.showProgressDialog();
     try {
       await isNetworkConnected();
 
       httpClient.timeout = Duration(seconds: 120);
-      var key = {
-        "s":""
-      };
+      var key = {"s": ""};
       // var token = base64Encode(bytes)
-      Response response = await httpClient.post(baseURL,body: requestData,headers: {"Authorization":"Bearer "});
+      Response response = await httpClient.post(baseURL,
+          body: requestData, headers: {"Authorization": "Bearer "});
       ProgressDialogUtils.hideProgressDialog();
       if (_isSuccessCall(response)) {
         return response.bodyBytes;
       } else {
         throw 'Something Went Wrong!';
+      }
+    } catch (error, stackTrace) {
+      ProgressDialogUtils.hideProgressDialog();
+      Logger.log(error, stackTrace: stackTrace);
+      rethrow;
+    }
+  }
+
+  Future<APIBooleanResponse> createSaveLinkDefinition(
+      {Map requestData = const {}}) async {
+    ProgressDialogUtils.showProgressDialog();
+    try {
+      await isNetworkConnected();
+      httpClient.timeout = Duration(seconds: 120);
+      Response response = await httpClient.post('$url/APID/SaveLinkDefinition',
+          body: requestData);
+      ProgressDialogUtils.hideProgressDialog();
+      if (_isSuccessCall(response)) {
+        return APIBooleanResponse.fromJson(response.body);
+      } else {
+        throw response.body != null
+            ? APIBooleanResponse.fromJson(response.body)
+            : 'Something Went Wrong!';
+      }
+    } catch (error, stackTrace) {
+      ProgressDialogUtils.hideProgressDialog();
+      Logger.log(error, stackTrace: stackTrace);
+      rethrow;
+    }
+  }
+
+  Future<GetGetLinkDefinitionResp> fetchGetLinkDefinition(
+      {Map<String, dynamic> queryParams = const {}}) async {
+    ProgressDialogUtils.showProgressDialog();
+    try {
+      await isNetworkConnected();
+      Response response = await httpClient.get('$url/APID/GetLinkDefinition',
+          query: queryParams);
+      ProgressDialogUtils.hideProgressDialog();
+      if (_isSuccessCall(response)) {
+        return GetGetLinkDefinitionResp.fromJson(response.body);
+      } else {
+        throw response.body != null
+            ? GetGetLinkDefinitionResp.fromJson(response.body)
+            : 'Something Went Wrong!';
+      }
+    } catch (error, stackTrace) {
+      ProgressDialogUtils.hideProgressDialog();
+      Logger.log(error, stackTrace: stackTrace);
+      rethrow;
+    }
+  }
+
+  Future<APIBooleanResponse> createMoveDown(
+      {Map<String, dynamic> queryParams = const {},
+      Map requestData = const {}}) async {
+    ProgressDialogUtils.showProgressDialog();
+    try {
+      await isNetworkConnected();
+      Response response = await httpClient.post('$url/APID/MoveDown',
+          query: queryParams, body: requestData);
+      ProgressDialogUtils.hideProgressDialog();
+      if (_isSuccessCall(response)) {
+        return APIBooleanResponse.fromJson(response.body);
+      } else {
+        throw response.body != null
+            ? APIBooleanResponse.fromJson(response.body)
+            : 'Something Went Wrong!';
+      }
+    } catch (error, stackTrace) {
+      ProgressDialogUtils.hideProgressDialog();
+      Logger.log(error, stackTrace: stackTrace);
+      rethrow;
+    }
+  }
+
+  Future<APIBooleanResponse> createMoveUp(
+      {Map<String, dynamic> queryParams = const {},
+      Map requestData = const {}}) async {
+    ProgressDialogUtils.showProgressDialog();
+    try {
+      await isNetworkConnected();
+      Response response = await httpClient.post('$url/APID/MoveUp',
+          query: queryParams, body: requestData);
+      ProgressDialogUtils.hideProgressDialog();
+      if (_isSuccessCall(response)) {
+        return APIBooleanResponse.fromJson(response.body);
+      } else {
+        throw response.body != null
+            ? APIBooleanResponse.fromJson(response.body)
+            : 'Something Went Wrong!';
+      }
+    } catch (error, stackTrace) {
+      ProgressDialogUtils.hideProgressDialog();
+      Logger.log(error, stackTrace: stackTrace);
+      rethrow;
+    }
+  }
+
+  Future<GetGetBandsResp> fetchGetBands(bool showProgress,
+      {Map<String, dynamic> queryParams = const {}}) async {
+    if (showProgress) ProgressDialogUtils.showProgressDialog();
+    try {
+      await isNetworkConnected();
+      Response response =
+          await httpClient.get('$url/APID/GetBandsList', query: queryParams);
+      if (showProgress) ProgressDialogUtils.hideProgressDialog();
+      if (_isSuccessCall(response)) {
+        return GetGetBandsResp.fromJson(response.body);
+      } else {
+        throw response.body != null
+            ? GetGetBandsResp.fromJson(response.body)
+            : 'Something Went Wrong!';
+      }
+    } catch (error, stackTrace) {
+      if (showProgress) ProgressDialogUtils.hideProgressDialog();
+      Logger.log(error, stackTrace: stackTrace);
+      rethrow;
+    }
+  }
+
+  Future<APIBooleanResponse> createSaveFooter(
+      {Map requestData = const {}}) async {
+    ProgressDialogUtils.showProgressDialog();
+    try {
+      await isNetworkConnected();
+      Response response =
+          await httpClient.post('$url/APID/SaveFooter', body: requestData);
+      ProgressDialogUtils.hideProgressDialog();
+      if (_isSuccessCall(response)) {
+        return APIBooleanResponse.fromJson(response.body);
+      } else {
+        throw response.body != null
+            ? APIBooleanResponse.fromJson(response.body)
+            : 'Something Went Wrong!';
+      }
+    } catch (error, stackTrace) {
+      ProgressDialogUtils.hideProgressDialog();
+      Logger.log(error, stackTrace: stackTrace);
+      rethrow;
+    }
+  }
+
+  Future<APIBooleanResponse> createSaveBands(
+      {Map requestData = const {}}) async {
+    ProgressDialogUtils.showProgressDialog();
+    try {
+      await isNetworkConnected();
+      httpClient.timeout = Duration(seconds: 120);
+      Response response =
+          await httpClient.post('$url/APID/SaveBand', body: requestData);
+      ProgressDialogUtils.hideProgressDialog();
+      if (_isSuccessCall(response)) {
+        return APIBooleanResponse.fromJson(response.body);
+      } else {
+        throw response.body != null
+            ? APIBooleanResponse.fromJson(response.body)
+            : 'Something Went Wrong!';
+      }
+    } catch (error, stackTrace) {
+      ProgressDialogUtils.hideProgressDialog();
+      Logger.log(error, stackTrace: stackTrace);
+      rethrow;
+    }
+  }
+
+  Future<GetGetFooterResp> fetchGetFooter(
+      {Map<String, dynamic> queryParams = const {}}) async {
+    ProgressDialogUtils.showProgressDialog();
+    try {
+      await isNetworkConnected();
+      Response response =
+          await httpClient.get('$url/APID/GetFooter', query: queryParams);
+      ProgressDialogUtils.hideProgressDialog();
+      if (_isSuccessCall(response)) {
+        return GetGetFooterResp.fromJson(response.body);
+      } else {
+        throw response.body != null
+            ? GetGetFooterResp.fromJson(response.body)
+            : 'Something Went Wrong!';
+      }
+    } catch (error, stackTrace) {
+      ProgressDialogUtils.hideProgressDialog();
+      Logger.log(error, stackTrace: stackTrace);
+      rethrow;
+    }
+  }
+
+  Future<APIResponse> fetchPublish(
+      {Map<String, dynamic> queryParams = const {}}) async {
+    ProgressDialogUtils.showProgressDialog();
+    try {
+      await isNetworkConnected();
+      Response response =
+          await httpClient.get('$url/APID/Publish', query: queryParams);
+      ProgressDialogUtils.hideProgressDialog();
+      if (_isSuccessCall(response)) {
+        return APIResponse.fromJson(response.body);
+      } else {
+        throw response.body != null
+            ? APIResponse.fromJson(response.body)
+            : 'Something Went Wrong!';
+      }
+    } catch (error, stackTrace) {
+      ProgressDialogUtils.hideProgressDialog();
+      Logger.log(error, stackTrace: stackTrace);
+      rethrow;
+    }
+  }
+
+  Future<GetDeleteCardResp> fetchDeleteCard(
+      {Map<String, dynamic> queryParams = const {}}) async {
+    ProgressDialogUtils.showProgressDialog();
+    try {
+      await isNetworkConnected();
+      Response response =
+          await httpClient.get('$url/APID/DeleteCard', query: queryParams);
+      ProgressDialogUtils.hideProgressDialog();
+      if (_isSuccessCall(response)) {
+        return GetDeleteCardResp.fromJson(response.body);
+      } else {
+        throw response.body != null
+            ? GetDeleteCardResp.fromJson(response.body)
+            : 'Something Went Wrong!';
+      }
+    } catch (error, stackTrace) {
+      ProgressDialogUtils.hideProgressDialog();
+      Logger.log(error, stackTrace: stackTrace);
+      rethrow;
+    }
+  }
+
+  Future<GetGetBandDataResp> fetchGetBandData(
+      {Map<String, dynamic> queryParams = const {}}) async {
+    ProgressDialogUtils.showProgressDialog();
+    try {
+      await isNetworkConnected();
+      Response response =
+          await httpClient.get('$url/APID/GetBandData', query: queryParams);
+      ProgressDialogUtils.hideProgressDialog();
+      if (_isSuccessCall(response)) {
+        return GetGetBandDataResp.fromJson(response.body);
+      } else {
+        throw response.body != null
+            ? GetGetBandDataResp.fromJson(response.body)
+            : 'Something Went Wrong!';
+      }
+    } catch (error, stackTrace) {
+      ProgressDialogUtils.hideProgressDialog();
+      Logger.log(error, stackTrace: stackTrace);
+      rethrow;
+    }
+  }
+
+  Future<GetDeleteCardResp> fetchDeleteBand(
+      {Map<String, dynamic> queryParams = const {}}) async {
+    ProgressDialogUtils.showProgressDialog();
+    try {
+      await isNetworkConnected();
+      Response response =
+          await httpClient.post('$url/APID/DeleteBand', query: queryParams);
+      ProgressDialogUtils.hideProgressDialog();
+      if (_isSuccessCall(response)) {
+        return GetDeleteCardResp.fromJson(response.body);
+      } else {
+        throw response.body != null
+            ? GetDeleteCardResp.fromJson(response.body)
+            : 'Something Went Wrong!';
+      }
+    } catch (error, stackTrace) {
+      ProgressDialogUtils.hideProgressDialog();
+      Logger.log(error, stackTrace: stackTrace);
+      rethrow;
+    }
+  }
+
+  Future<GetHideCardResp> fetchHideCard(
+      {Map<String, dynamic> queryParams = const {}}) async {
+    ProgressDialogUtils.showProgressDialog();
+    try {
+      await isNetworkConnected();
+      Response response =
+          await httpClient.get('$url/APID/HideCard', query: queryParams);
+      ProgressDialogUtils.hideProgressDialog();
+      if (_isSuccessCall(response)) {
+        return GetHideCardResp.fromJson(response.body);
+      } else {
+        throw response.body != null
+            ? GetHideCardResp.fromJson(response.body)
+            : 'Something Went Wrong!';
+      }
+    } catch (error, stackTrace) {
+      ProgressDialogUtils.hideProgressDialog();
+      Logger.log(error, stackTrace: stackTrace);
+      rethrow;
+    }
+  }
+
+  Future<PostGetThemeDetailsResp> getThemeDetails(
+      {Map<String, dynamic> queryParams = const {},
+      Map requestData = const {}}) async {
+    ProgressDialogUtils.showProgressDialog();
+    try {
+      await isNetworkConnected();
+      Response response = await httpClient.post('$url/APID/GetThemeDetails',
+          query: queryParams, body: requestData);
+      ProgressDialogUtils.hideProgressDialog();
+      if (_isSuccessCall(response)) {
+        return PostGetThemeDetailsResp.fromJson(response.body);
+      } else {
+        throw response.body != null
+            ? PostGetThemeDetailsResp.fromJson(response.body)
+            : 'Something Went Wrong!';
+      }
+    } catch (error, stackTrace) {
+      ProgressDialogUtils.hideProgressDialog();
+      Logger.log(error, stackTrace: stackTrace);
+      rethrow;
+    }
+  }
+
+  Future<PostSaveResp> saveCardMain({Map requestData = const {}}) async {
+    ProgressDialogUtils.showProgressDialog();
+    try {
+      await isNetworkConnected();
+      httpClient.timeout = Duration(seconds: 120);
+      Response response =
+          await httpClient.post('$url/APID/SaveCardMain', body: requestData);
+      ProgressDialogUtils.hideProgressDialog();
+      if (_isSuccessCall(response)) {
+        return PostSaveResp.fromJson(response.body);
+      } else {
+        throw response.body != null
+            ? PostSaveResp.fromJson(response.body)
+            : 'Something Went Wrong!';
+      }
+    } catch (error, stackTrace) {
+      ProgressDialogUtils.hideProgressDialog();
+      Logger.log(error, stackTrace: stackTrace);
+      rethrow;
+    }
+  }
+
+  Future<PostSaveResp> saveCardAdvance({Map requestData = const {}}) async {
+    ProgressDialogUtils.showProgressDialog();
+    try {
+      await isNetworkConnected();
+      httpClient.timeout = Duration(seconds: 120);
+      Response response = await httpClient.post('$url/APID/SaveCardAdvanced',
+          body: requestData);
+      ProgressDialogUtils.hideProgressDialog();
+      if (_isSuccessCall(response)) {
+        return PostSaveResp.fromJson(response.body);
+      } else {
+        throw response.body != null
+            ? PostSaveResp.fromJson(response.body)
+            : 'Something Went Wrong!';
+      }
+    } catch (error, stackTrace) {
+      ProgressDialogUtils.hideProgressDialog();
+      Logger.log(error, stackTrace: stackTrace);
+      rethrow;
+    }
+  }
+
+  Future<PostSaveResp> saveCardOtherData({Map requestData = const {}}) async {
+    ProgressDialogUtils.showProgressDialog();
+    try {
+      await isNetworkConnected();
+      httpClient.timeout = Duration(seconds: 120);
+      Response response = await httpClient.post('$url/APID/SaveCardOtherData',
+          body: requestData);
+      ProgressDialogUtils.hideProgressDialog();
+      if (_isSuccessCall(response)) {
+        return PostSaveResp.fromJson(response.body);
+      } else {
+        throw response.body != null
+            ? PostSaveResp.fromJson(response.body)
+            : 'Something Went Wrong!';
+      }
+    } catch (error, stackTrace) {
+      ProgressDialogUtils.hideProgressDialog();
+      Logger.log(error, stackTrace: stackTrace);
+      rethrow;
+    }
+  }
+
+  Future<PostSaveResp> saveCardDetails({Map requestData = const {}}) async {
+    ProgressDialogUtils.showProgressDialog();
+    try {
+      await isNetworkConnected();
+      httpClient.timeout = Duration(seconds: 120);
+      Response response =
+          await httpClient.post('$url/APID/SaveCardDetails', body: requestData);
+      ProgressDialogUtils.hideProgressDialog();
+      if (_isSuccessCall(response)) {
+        return PostSaveResp.fromJson(response.body);
+      } else {
+        throw response.body != null
+            ? PostSaveResp.fromJson(response.body)
+            : 'Something Went Wrong!';
+      }
+    } catch (error, stackTrace) {
+      ProgressDialogUtils.hideProgressDialog();
+      Logger.log(error, stackTrace: stackTrace);
+      rethrow;
+    }
+  }
+
+  Future<GetGetCreateCardResp> fetchGetCreateCard(
+      {bool showProgress = true,
+      Map<String, dynamic> queryParams = const {}}) async {
+    if (showProgress) ProgressDialogUtils.showProgressDialog();
+    try {
+      await isNetworkConnected();
+      httpClient.timeout = Duration(seconds: 120);
+      Response response =
+          await httpClient.get('$url/APID/GetCreateCard', query: queryParams);
+      if (showProgress) ProgressDialogUtils.hideProgressDialog();
+      if (_isSuccessCall(response)) {
+        return GetGetCreateCardResp.fromJson(response.body);
+      } else {
+        throw response.body != null
+            ? GetGetCreateCardResp.fromJson(response.body)
+            : 'Something Went Wrong!';
+      }
+    } catch (error, stackTrace) {
+      if (showProgress) ProgressDialogUtils.hideProgressDialog();
+      Logger.log(error, stackTrace: stackTrace);
+      rethrow;
+    }
+  }
+
+  
+
+  Future<CommonDropdownResp> getBackgroundType(
+      {bool showProgress = true,
+      Map<String, dynamic> queryParams = const {}}) async {
+    if (showProgress) ProgressDialogUtils.showProgressDialog();
+    try {
+      await isNetworkConnected();
+      httpClient.timeout = Duration(seconds: 120);
+      Response response =
+          await httpClient.get('$url/APID/GetBackGroundType', query: queryParams);
+      if (showProgress) ProgressDialogUtils.hideProgressDialog();
+      if (_isSuccessCall(response)) {
+        return CommonDropdownResp.fromJson(response.body);
+      } else {
+        throw response.body != null
+            ? CommonDropdownResp.fromJson(response.body)
+            : 'Something Went Wrong!';
+      }
+    } catch (error, stackTrace) {
+      if (showProgress) ProgressDialogUtils.hideProgressDialog();
+      Logger.log(error, stackTrace: stackTrace);
+      rethrow;
+    }
+  }
+  
+
+  Future<CommonDropdownResp> getCreditType(
+      {bool showProgress = true,
+      Map<String, dynamic> queryParams = const {}}) async {
+    if (showProgress) ProgressDialogUtils.showProgressDialog();
+    try {
+      await isNetworkConnected();
+      httpClient.timeout = Duration(seconds: 120);
+      Response response =
+          await httpClient.get('$url/API/GetCreditType', query: queryParams);
+      if (showProgress) ProgressDialogUtils.hideProgressDialog();
+      if (_isSuccessCall(response)) {
+        return CommonDropdownResp.fromJson(response.body);
+      } else {
+        throw response.body != null
+            ? CommonDropdownResp.fromJson(response.body)
+            : 'Something Went Wrong!';
+      }
+    } catch (error, stackTrace) {
+      if (showProgress) ProgressDialogUtils.hideProgressDialog();
+      Logger.log(error, stackTrace: stackTrace);
+      rethrow;
+    }
+  }
+  
+  Future<APIResponse> checkCardEditExpiry(
+      {Map requestData = const {}}) async {
+    ProgressDialogUtils.showProgressDialog();
+    try {
+      await isNetworkConnected();
+      Response response =
+          await httpClient.post('$url/API/CheckCardEditExpiry', body: requestData);
+      ProgressDialogUtils.hideProgressDialog();
+      if (_isSuccessCall(response)) {
+        return APIResponse.fromJson(response.body);
+      } else {
+        throw response.body != null
+            ? APIResponse.fromJson(response.body)
+            : 'Something Went Wrong!';
+      }
+    } catch (error, stackTrace) {
+      ProgressDialogUtils.hideProgressDialog();
+      Logger.log(error, stackTrace: stackTrace);
+      rethrow;
+    }
+  }
+  Future<APIResponse> assignCardEditCredits(
+      {Map requestData = const {}}) async {
+    // ProgressDialogUtils.showProgressDialog();
+    try {
+      await isNetworkConnected();
+      Response response =
+          await httpClient.post('$url/API/assignCardEditCredits', body: requestData);
+      // ProgressDialogUtils.hideProgressDialog();
+      if (_isSuccessCall(response)) {
+        return APIResponse.fromJson(response.body);
+      } else {
+        throw response.body != null
+            ? APIResponse.fromJson(response.body)
+            : 'Something Went Wrong!';
+      }
+    } catch (error, stackTrace) {
+      ProgressDialogUtils.hideProgressDialog();
+      Logger.log(error, stackTrace: stackTrace);
+      rethrow;
+    }
+  }
+  
+
+  Future<CommonDropdownResp> getFontList(
+      {bool showProgress = true,
+      Map<String, dynamic> queryParams = const {}}) async {
+    if (showProgress) ProgressDialogUtils.showProgressDialog();
+    try {
+      await isNetworkConnected();
+      httpClient.timeout = Duration(seconds: 120);
+      Response response =
+          await httpClient.get('$url/API/GetFontList', query: queryParams);
+      if (showProgress) ProgressDialogUtils.hideProgressDialog();
+      if (_isSuccessCall(response)) {
+        return CommonDropdownResp.fromJson(response.body);
+      } else {
+        throw response.body != null
+            ? CommonDropdownResp.fromJson(response.body)
+            : 'Something Went Wrong!';
+      }
+    } catch (error, stackTrace) {
+      if (showProgress) ProgressDialogUtils.hideProgressDialog();
+      Logger.log(error, stackTrace: stackTrace);
+      rethrow;
+    }
+  }
+
+  
+
+  Future<GetGetCreateCardResp> previewCard(
+      {Map<String, dynamic> queryParams = const {}}) async {
+    ProgressDialogUtils.showProgressDialog();
+    try {
+      await isNetworkConnected();
+      httpClient.timeout = Duration(seconds: 120);
+      Response response =
+          await httpClient.get('$url/APID/PreviewCard', query: queryParams);
+      ProgressDialogUtils.hideProgressDialog();
+      if (_isSuccessCall(response)) {
+        return GetGetCreateCardResp.fromJson(response.body);
+      } else {
+        throw response.body != null
+            ? GetGetCreateCardResp.fromJson(response.body)
+            : 'Something Went Wrong!';
+      }
+    } catch (error, stackTrace) {
+      ProgressDialogUtils.hideProgressDialog();
+      Logger.log(error, stackTrace: stackTrace);
+      rethrow;
+    }
+  }
+
+  Future<GetGetCardTemplateResp> fetchGetCardTemplate(
+      {Map<String, dynamic> queryParams = const {}}) async {
+    ProgressDialogUtils.showProgressDialog();
+    try {
+      await isNetworkConnected();
+      Response response =
+          await httpClient.get('$url/APID/GetCardTemplate', query: queryParams);
+      ProgressDialogUtils.hideProgressDialog();
+      if (_isSuccessCall(response)) {
+        return GetGetCardTemplateResp.fromJson(response.body);
+      } else {
+        throw response.body != null
+            ? GetGetCardTemplateResp.fromJson(response.body)
+            : 'Something Went Wrong!';
+      }
+    } catch (error, stackTrace) {
+      ProgressDialogUtils.hideProgressDialog();
+      Logger.log(error, stackTrace: stackTrace);
+      rethrow;
+    }
+  }
+
+  Future<CommonDropdownResp> fetchGetLanguages() async {
+    ProgressDialogUtils.showProgressDialog();
+    try {
+      await isNetworkConnected();
+      Response response = await httpClient.get('$url/APID/GetLanguages');
+      ProgressDialogUtils.hideProgressDialog();
+      if (_isSuccessCall(response)) {
+        return CommonDropdownResp.fromJson(response.body);
+      } else {
+        throw response.body != null
+            ? CommonDropdownResp.fromJson(response.body)
+            : 'Something Went Wrong!';
+      }
+    } catch (error, stackTrace) {
+      ProgressDialogUtils.hideProgressDialog();
+      Logger.log(error, stackTrace: stackTrace);
+      rethrow;
+    }
+  }
+
+  Future<CommonDropdownResp> fetchGetBandLinkList(
+      {Map<String, dynamic> queryParams = const {}, bool isProgress=true}) async {
+      if(isProgress)
+    ProgressDialogUtils.showProgressDialog();
+    try {
+      await isNetworkConnected();
+      Response response =
+          await httpClient.get('$url/APID/GetBandLinkList', query: queryParams);
+          if(isProgress)
+      ProgressDialogUtils.hideProgressDialog();
+      if (_isSuccessCall(response)) {
+        return CommonDropdownResp.fromJson(response.body);
+      } else {
+        throw response.body != null
+            ? CommonDropdownResp.fromJson(response.body)
+            : 'Something Went Wrong!';
+      }
+    } catch (error, stackTrace) {
+      if(isProgress)
+      ProgressDialogUtils.hideProgressDialog();
+      Logger.log(error, stackTrace: stackTrace);
+      rethrow;
+    }
+  }
+
+  Future<CommonDropdownResp> fetchAfterExpiryList(
+      {Map<String, dynamic> queryParams = const {}}) async {
+    ProgressDialogUtils.showProgressDialog();
+    try {
+      await isNetworkConnected();
+      Response response = await httpClient.get('$url/APID/GetAfterExpiryList',
+          query: queryParams);
+      ProgressDialogUtils.hideProgressDialog();
+      if (_isSuccessCall(response)) {
+        return CommonDropdownResp.fromJson(response.body);
+      } else {
+        throw response.body != null
+            ? CommonDropdownResp.fromJson(response.body)
+            : 'Something Went Wrong!';
+      }
+    } catch (error, stackTrace) {
+      ProgressDialogUtils.hideProgressDialog();
+      Logger.log(error, stackTrace: stackTrace);
+      rethrow;
+    }
+  }
+
+  Future<CommonDropdownResp> fetchFilterCardTheme(
+      {Map<String, dynamic> queryParams = const {}}) async {
+    ProgressDialogUtils.showProgressDialog();
+    try {
+      await isNetworkConnected();
+      Response response =
+          await httpClient.get('$url/APID/FilterCardTheme', query: queryParams);
+      ProgressDialogUtils.hideProgressDialog();
+      if (_isSuccessCall(response)) {
+        return CommonDropdownResp.fromJson(response.body);
+      } else {
+        throw response.body != null
+            ? CommonDropdownResp.fromJson(response.body)
+            : 'Something Went Wrong!';
+      }
+    } catch (error, stackTrace) {
+      ProgressDialogUtils.hideProgressDialog();
+      Logger.log(error, stackTrace: stackTrace);
+      rethrow;
+    }
+  }
+
+  Future<GetCardDetailsResp> fetchCardDetails(
+      {Map<String, dynamic> queryParams = const {}}) async {
+    ProgressDialogUtils.showProgressDialog();
+    try {
+      await isNetworkConnected();
+      Response response =
+          await httpClient.get('$url/APID/CardDetails', query: queryParams);
+      ProgressDialogUtils.hideProgressDialog();
+      if (_isSuccessCall(response)) {
+        return GetCardDetailsResp.fromJson(response.body);
+      } else {
+        throw response.body != null
+            ? GetCardDetailsResp.fromJson(response.body)
+            : 'Something Went Wrong!';
+      }
+    } catch (error, stackTrace) {
+      ProgressDialogUtils.hideProgressDialog();
+      Logger.log(error, stackTrace: stackTrace);
+      rethrow;
+    }
+  }
+
+  Future<GetCardSubTypeResp> fetchGetCardSubType(
+      {Map<String, dynamic> queryParams = const {}}) async {
+    ProgressDialogUtils.showProgressDialog();
+    try {
+      await isNetworkConnected();
+      Response response =
+          await httpClient.get('$url/APID/GetCardSubType', query: queryParams);
+      ProgressDialogUtils.hideProgressDialog();
+      if (_isSuccessCall(response)) {
+        return GetCardSubTypeResp.fromJson(response.body);
+      } else {
+        throw response.body != null
+            ? GetCardSubTypeResp.fromJson(response.body)
+            : 'Something Went Wrong!';
+      }
+    } catch (error, stackTrace) {
+      ProgressDialogUtils.hideProgressDialog();
+      Logger.log(error, stackTrace: stackTrace);
+      rethrow;
+    }
+  }
+
+  Future<GetGetCardTypeResp> fetchGetCardType() async {
+    ProgressDialogUtils.showProgressDialog();
+    try {
+      await isNetworkConnected();
+      Response response = await httpClient.get('$url/APID/GetCardType');
+      ProgressDialogUtils.hideProgressDialog();
+      if (_isSuccessCall(response)) {
+        return GetGetCardTypeResp.fromJson(response.body);
+      } else {
+        throw response.body != null
+            ? GetGetCardTypeResp.fromJson(response.body)
+            : 'Something Went Wrong!';
       }
     } catch (error, stackTrace) {
       ProgressDialogUtils.hideProgressDialog();

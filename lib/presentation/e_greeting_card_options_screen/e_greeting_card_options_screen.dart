@@ -54,7 +54,7 @@ class _EGreetingCardOptionsScreen extends State<EGreetingCardOptionsScreen> {
           floatingActionButtonLocation: FloatingActionButtonLocation.miniEndTop,
           floatingActionButton: Padding(
               padding: const EdgeInsets.only(bottom: 75.0),
-              child: MoreOptionMenu()),
+              child: MoreOptionMenu(isGreeting:true ,)),
           backgroundColor: ColorConstant.whiteA700,
           appBar: CustomAppBar(
               height: getVerticalSize(108.00),
@@ -376,6 +376,6 @@ class _EGreetingCardOptionsScreen extends State<EGreetingCardOptionsScreen> {
   }
 
   onTapContrast5() {
-    Navigator.of(context).pushNamed(AppRoutes.myEGreetingCardsScreen);
+    Navigator.pop(context);
   }
 }

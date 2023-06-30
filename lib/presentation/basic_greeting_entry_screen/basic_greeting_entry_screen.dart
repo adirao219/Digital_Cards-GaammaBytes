@@ -25,12 +25,15 @@ import 'package:path_provider/path_provider.dart';
 import 'package:digitalcardsgaammabytes/core/utils/progress_dialog_utils.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:toggle_switch/toggle_switch.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../data/apiClient/api_client.dart';
 import '../../data/globals/globalvariables.dart';
 import '../../data/models/createGreeting/post_create_greeting_resp.dart';
 import '../../data/models/driveImages/drive_file_images_resp.dart';
+import '../../data/models/getCreateCard/get_get_create_card_resp.dart';
 import '../../data/models/getCreateGreeting/get_get_create_greeting_resp.dart';
+import '../../helper/constants.dart';
 import '../my_e_greeting_cards_screen/widgets/uploaded_images_widget.dart';
 
 class BasicGreetingEntryScreen extends StatefulWidget {
@@ -67,7 +70,7 @@ class _BasicGreetingEntryScreen extends State<BasicGreetingEntryScreen> {
   String? secondImageFileName;
   int? logoExistingId;
   int? pictureExistingId;
-
+  String editorColorHex = "#ffffff";
   bool isServerStoredLogo = false;
   bool isServerStoredBackground = false;
   String? createDateString;
@@ -118,7 +121,9 @@ class _BasicGreetingEntryScreen extends State<BasicGreetingEntryScreen> {
                 FloatingActionButtonLocation.miniEndTop,
             floatingActionButton: Padding(
                 padding: const EdgeInsets.only(bottom: 75.0),
-                child: MoreOptionMenu()),
+                child: MoreOptionMenu(
+                  isGreeting: true,
+                )),
             resizeToAvoidBottomInset: false,
             backgroundColor: ColorConstant.whiteA700,
             appBar: CustomAppBar(
@@ -165,7 +170,8 @@ class _BasicGreetingEntryScreen extends State<BasicGreetingEntryScreen> {
                                                   bottom: 13))
                                         ])),
                                 AppbarTitle(
-                                    text: "lbl_card_details".tr.toUpperCase(),
+                                    text:
+                                        "lbl_greeting_details".tr.toUpperCase(),
                                     margin: getMargin(left: 30, top: 0))
                               ])))
                     ])),
@@ -200,7 +206,7 @@ class _BasicGreetingEntryScreen extends State<BasicGreetingEntryScreen> {
                                   width: 250,
                                   text: templateName.isEmpty
                                       ? "lbl_select_template".tr
-                                      : "Template: " + templateName,
+                                      : "Template : " + templateName,
                                   margin: getMargin(top: 22),
                                   variant: ButtonVariant.OutlineBlack9003f_1,
                                   shape: ButtonShape.RoundedBorder15,
@@ -366,8 +372,8 @@ class _BasicGreetingEntryScreen extends State<BasicGreetingEntryScreen> {
                                           totalSwitches: 2,
                                           labels: [
                                             (!(isUserDefinedBackground ?? false)
-                                                ? 'Default'
-                                                : 'Custom'),
+                                                ? 'Image'
+                                                : 'Image'),
                                             'Color'
                                           ],
                                           icons: [
@@ -419,10 +425,18 @@ class _BasicGreetingEntryScreen extends State<BasicGreetingEntryScreen> {
                                             width: 5,
                                           ),
                                           GestureDetector(
-                                            onTap: () {
-                                              onTapSelectimage(2);
+                                            onLongPress: () {
+                                              if (isServerStoredBackground) {
+                                                var url = secondImageBase64;
+
+                                                launchURL(url ?? '');
+                                              }
                                             },
                                             child: CustomButton(
+                                              onTap: () {
+                                                onTapSelectimage(
+                                                    UserImageType.background);
+                                              },
                                               width: 130,
                                               text: (isSecondImageSelected
                                                   ? "lbl_image_selected".tr
@@ -464,7 +478,8 @@ class _BasicGreetingEntryScreen extends State<BasicGreetingEntryScreen> {
                                             fontStyle: ButtonFontStyle
                                                 .NunitoSansBold14,
                                             onTap: () {
-                                              showAlertDialog(context, 2);
+                                              showAlertDialog(context,
+                                                  UserImageType.background);
                                             },
                                           ),
                                         ]),
@@ -702,14 +717,21 @@ class _BasicGreetingEntryScreen extends State<BasicGreetingEntryScreen> {
                                           width: 105,
                                         ),
                                         GestureDetector(
-                                          onTap: () {
-                                            onTapSelectimage(1);
+                                          onLongPress: () {
+                                            if (isServerStoredLogo) {
+                                              var url = firstImageBase64;
+                                              launchURL(url ?? '');
+                                            }
                                           },
                                           child: CustomButton(
+                                            onTap: () {
+                                              onTapSelectimage(
+                                                  UserImageType.logo);
+                                            },
                                             width: 130,
                                             text: (isFirstImageSelected
-                                                ? "lbl_image_selected".tr
-                                                : "lbl_select_image".tr),
+                                                ? "lbl_logo_selected".tr
+                                                : "lbl_select_logo".tr),
                                             variant:
                                                 ButtonVariant.OutlineBlack9003f,
                                             shape: ButtonShape.RoundedBorder5,
@@ -747,7 +769,8 @@ class _BasicGreetingEntryScreen extends State<BasicGreetingEntryScreen> {
                                           fontStyle:
                                               ButtonFontStyle.NunitoSansBold14,
                                           onTap: () {
-                                            showAlertDialog(context, 1);
+                                            showAlertDialog(
+                                                context, UserImageType.logo);
                                           },
                                         ),
                                       ])),
@@ -923,13 +946,18 @@ class _BasicGreetingEntryScreen extends State<BasicGreetingEntryScreen> {
   }
 
   onTapSelecttemplateOne() {
-    Get.toNamed(AppRoutes.selectTemplateScreen,
-        arguments: {"isGreeting": true, "type": greetingType})?.then((value) {
+    Get.toNamed(AppRoutes.selectTemplateScreen, arguments: {
+      "isGreeting": true,
+      "type": greetingType,
+      "existingTemplateID": templateID,
+      "cardSubType": 0
+    })?.then((value) {
       templateID = value['selectedTemplateID'];
       setState(() {
         if (templateID == "-1") contentPosition = 1;
         templateName = value['selectedTemplateName'];
 
+        editorColorHex = value['editorColorHex'];
         captionDefault = value['captionDefault'];
 
         messageDefault = value['messageDefault'];
@@ -939,7 +967,7 @@ class _BasicGreetingEntryScreen extends State<BasicGreetingEntryScreen> {
         var templogoPosition = value['logoPosition'] as int?;
         setLogoPosition(templogoPosition ?? 0, isClosePopup: false);
         currentindex = 0;
-        removeSelectedImage(2, true);
+        removeSelectedImage(UserImageType.background, true);
 
         isUserDefinedBackground = value['isUserBackground'] as bool?;
         // isBackgroundColor = (isUserDefinedBackground ?? false) ? false : true;
@@ -967,7 +995,7 @@ class _BasicGreetingEntryScreen extends State<BasicGreetingEntryScreen> {
     } catch (e) {}
   }
 
-  onTapSelectimage(int pictureType) {
+  onTapSelectimage(UserImageType pictureType) {
     showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -1103,7 +1131,8 @@ class _BasicGreetingEntryScreen extends State<BasicGreetingEntryScreen> {
         });
   }
 
-  List<Widget> getAllUserImages(BuildContext context, int pictureType) {
+  List<Widget> getAllUserImages(
+      BuildContext context, UserImageType pictureType) {
     List<Widget> allWidgets = [];
 
     for (int i = 0; i < userImages.length; i++) {
@@ -1122,9 +1151,9 @@ class _BasicGreetingEntryScreen extends State<BasicGreetingEntryScreen> {
     return allWidgets;
   }
 
-  selectedImageforCard(DriveFilesData image, int pictureType) {
+  selectedImageforCard(DriveFilesData image, UserImageType pictureType) {
     setState(() {
-      if (pictureType == 1) {
+      if (pictureType.value == 1) {
         logoExistingId = image.id;
         firstImageBase64 = null;
         firstImageFileName = null;
@@ -1139,9 +1168,9 @@ class _BasicGreetingEntryScreen extends State<BasicGreetingEntryScreen> {
     Navigator.pop(context);
   }
 
-  cropSelectedImageForCard(DriveFilesData image, int pictureType) {
+  cropSelectedImageForCard(DriveFilesData image, UserImageType pictureType) {
     setState(() {
-      if (pictureType == 1) {
+      if (pictureType.value == 1) {
         logoExistingId = null;
         isFirstImageSelected = true;
       } else {
@@ -1154,7 +1183,7 @@ class _BasicGreetingEntryScreen extends State<BasicGreetingEntryScreen> {
     Navigator.pop(context);
   }
 
-  getImageFromUrl(String imageUrl, int pictureType) async {
+  getImageFromUrl(String imageUrl, UserImageType pictureType) async {
     try {
       Uint8List bytes =
           (await NetworkAssetBundle(Uri.parse(imageUrl)).load(imageUrl))
@@ -1188,7 +1217,7 @@ class _BasicGreetingEntryScreen extends State<BasicGreetingEntryScreen> {
     setState(() {
       isBackgroundColor = currentindex != 0;
       if (currentindex != 0) {
-        removeSelectedImage(2, true);
+        removeSelectedImage(UserImageType.background, true);
       } else {
         currentColor = null;
       }
@@ -1207,35 +1236,45 @@ class _BasicGreetingEntryScreen extends State<BasicGreetingEntryScreen> {
     });
   }
 
-  clickOrSelectImage(String type, int pictureType) async {
+  launchURL(String url) async {
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch ' + url;
+    }
+  }
+
+  clickOrSelectImage(String type, UserImageType pictureType) async {
     Navigator.of(context).pop();
     if (type == "Gallery") {
-      if (pictureType == 1)
+      if (pictureType.value == 1)
         imageFirst = await _picker.pickImage(source: ImageSource.gallery);
       else
         imageSecond = await _picker.pickImage(source: ImageSource.gallery);
     } else {
-      if (pictureType == 1)
+      if (pictureType.value == 1)
         imageFirst = await _picker.pickImage(source: ImageSource.camera);
       else
         imageSecond = await _picker.pickImage(source: ImageSource.camera);
     }
 
     setState(() {
-      if (imageFirst != null && pictureType == 1) isFirstImageSelected = true;
-      if (imageSecond != null && pictureType == 2) isSecondImageSelected = true;
+      if (imageFirst != null && pictureType.value == 1)
+        isFirstImageSelected = true;
+      if (imageSecond != null && pictureType.value == 2)
+        isSecondImageSelected = true;
     });
     File imageFile = new File('');
 
-    if (pictureType == 1 && imageFirst!.path.isNotEmpty)
+    if (pictureType.value == 1 && imageFirst!.path.isNotEmpty)
       imageFile = File(imageFirst!.path);
-    if (pictureType == 2 && imageSecond!.path.isNotEmpty)
+    if (pictureType.value == 2 && imageSecond!.path.isNotEmpty)
       imageFile = File(imageSecond!.path);
 
     gotoImageModify(imageFile, pictureType);
   }
 
-  gotoImageModify(File imageFile, int pictureType) {
+  gotoImageModify(File imageFile, UserImageType pictureType) {
     Get.toNamed(AppRoutes.imageModifyScreen,
             arguments: {"imageFile": imageFile, "pictureType": pictureType})
         ?.then((value) {
@@ -1243,21 +1282,21 @@ class _BasicGreetingEntryScreen extends State<BasicGreetingEntryScreen> {
       double? height = value['height'];
       bool? isSquare = value['isSquare'];
       String? imageFilePath = value["refinedImagePath"] as String?;
-      int? pictureType = value["pictureType"] as int?;
+      UserImageType pictureType = value["pictureType"] as UserImageType;
 
       try {
         imageFile = File(imageFilePath ?? '');
         var base64val1 = "data:image/png;base64," +
             base64Encode(imageFile.readAsBytesSync());
         // print('base64:'+base64val1);
-        if (pictureType == 1) {
+        if (pictureType.value == 1) {
           firstImageBase64 = base64val1;
           firstCroppedImage = imageFile;
           isFirstImageSelected = true;
           firstImageFileName = p.basename(imageFile.path);
           logoExistingId = null;
         }
-        if (pictureType == 2) {
+        if (pictureType.value == 2) {
           secondImageBase64 = base64val1;
           secondCroppedImage = imageFile;
           isSecondImageSelected = true;
@@ -1270,20 +1309,20 @@ class _BasicGreetingEntryScreen extends State<BasicGreetingEntryScreen> {
     });
   }
 
-  removeImage(int pictureType, bool isToggledToCardColor) async {
+  removeImage(UserImageType pictureType, bool isToggledToCardColor) async {
     try {
       var req = {
         "RefID": (selectedCardID).toString(),
-        "RefTypeID": (pictureType == 1 ? 6 : 5).toString(),
-        "SlNo": (pictureType == 1 ? 2 : 1).toString(),
-        "FileRef": pictureType == 1 ? firstImageBase64 : secondImageBase64
+        "RefTypeID": (pictureType.value == 1 ? 6 : 5).toString(),
+        "SlNo": (pictureType.value == 1 ? 2 : 1).toString(),
+        "FileRef": pictureType.value == 1 ? firstImageBase64 : secondImageBase64
       };
-      PostBooleanGreetingResp resp = await api.removeImage(queryParams: req);
+      APIBooleanResponse resp = await api.removeImage(queryParams: req);
       if (resp.isSuccess ?? false) {
         if (!isToggledToCardColor) {
           Get.snackbar(
               'Success',
-              (pictureType == 1 ? "Logo" : "Background") +
+              (pictureType.value == 1 ? "Logo" : "Background") +
                   " image removed successfully!",
               backgroundColor: Color.fromARGB(255, 208, 245, 216),
               colorText: Colors.green[900],
@@ -1306,9 +1345,9 @@ class _BasicGreetingEntryScreen extends State<BasicGreetingEntryScreen> {
     }
   }
 
-  removeSelectedImage(int pictureType, bool isToggledToCardColor) {
+  removeSelectedImage(UserImageType pictureType, bool isToggledToCardColor) {
     setState(() {
-      if (pictureType == 1) {
+      if (pictureType.value == 1) {
         logoExistingId = null;
         imageFirst = null;
 
@@ -1317,7 +1356,7 @@ class _BasicGreetingEntryScreen extends State<BasicGreetingEntryScreen> {
           removeImage(pictureType, isToggledToCardColor);
         }
       }
-      if (pictureType == 2) {
+      if (pictureType.value == 2) {
         imageSecond = null;
         pictureExistingId = null;
         isSecondImageSelected = false;
@@ -1328,7 +1367,7 @@ class _BasicGreetingEntryScreen extends State<BasicGreetingEntryScreen> {
     });
   }
 
-  showAlertDialog(BuildContext context, int pictureType) {
+  showAlertDialog(BuildContext context, UserImageType pictureType) {
     // set up the buttons
     Widget cancelButton = TextButton(
       child: Text("Cancel"),
@@ -1385,7 +1424,8 @@ class _BasicGreetingEntryScreen extends State<BasicGreetingEntryScreen> {
       "messageContent": messageDefault,
       "senderContent": senderDefault,
       "templateID": templateID,
-      "greetingType": greetingType
+      "greetingType": greetingType,
+      "backgroundColor": editorColorHex,
     })?.then((value) {
       var messageContent = value['messageContent'];
       var captionContent = value['captionContent'];
@@ -1510,9 +1550,11 @@ class _BasicGreetingEntryScreen extends State<BasicGreetingEntryScreen> {
               (resp.result?.greetingDetailsData?.userPicture);
           isBackgroundColor =
               !(resp.result?.greetingDetailsData?.isBackgroundImage ?? false);
+          editorColorHex =
+              (resp.result?.greetingDetailsData?.editorColorHex ?? '')
+                  .toString();
           if (isBackgroundColor) {
             currentindex = 1;
-            hexColor = (resp.result?.greetingDetailsData?.backgroundColorHex);
             pickerColor = currentColor = fromHex(hexColor ?? '');
           }
           logoExistingId = resp.result?.greetingDetailsData?.logoOldId;
@@ -1758,12 +1800,5 @@ class _BasicGreetingEntryScreen extends State<BasicGreetingEntryScreen> {
         return alert;
       },
     );
-  }
-
-  static Color fromHex(String hexString) {
-    final buffer = StringBuffer();
-    if (hexString.length == 6 || hexString.length == 7) buffer.write('ff');
-    buffer.write(hexString.replaceFirst('#', ''));
-    return Color(int.parse(buffer.toString(), radix: 16));
   }
 }

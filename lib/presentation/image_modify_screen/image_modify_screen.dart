@@ -1,11 +1,13 @@
 import 'dart:typed_data';
 
 import 'package:digitalcardsgaammabytes/core/app_export.dart';
+import 'package:digitalcardsgaammabytes/data/models/getCreateCard/get_get_create_card_resp.dart';
 import 'package:digitalcardsgaammabytes/widgets/app_bar/appbar_image.dart';
 import 'package:digitalcardsgaammabytes/widgets/app_bar/appbar_title.dart';
 import 'package:digitalcardsgaammabytes/widgets/app_bar/custom_app_bar.dart';
 import 'package:digitalcardsgaammabytes/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:image_cropper/image_cropper.dart';
 
 import 'dart:io';
@@ -28,15 +30,15 @@ class ImageModifyScreen extends StatefulWidget {
 class _ImageModifyoneScreen extends State<ImageModifyScreen> {
   File imageFile = Get.arguments["imageFile"] as File;
 
-  int pictureType = Get.arguments["pictureType"] as int;
+  UserImageType pictureType = Get.arguments["pictureType"] as UserImageType;
   bool isSquareSelected = true;
   TextEditingController _size_x_controller = new TextEditingController();
   TextEditingController _size_y_controller = new TextEditingController();
   CroppedFile? croppedFile;
-
+  bool isProcessing = false;
   @override
   void initState() {
-    if (pictureType == 1) {
+    if (pictureType == UserImageType.logo ||pictureType == UserImageType.footer||pictureType == UserImageType.header) {
       _size_x_controller.text = "100";
       _size_y_controller.text = "100";
     } else {
@@ -124,14 +126,14 @@ class _ImageModifyoneScreen extends State<ImageModifyScreen> {
                           CustomImageView(
                               file: imageFile,
                               height: getSize(_size_x_controller.text.isNotEmpty
-                                  ? (pictureType == 1
+                                  ? (pictureType!=UserImageType.background
                                       ? (double.parse(_size_x_controller.text) *
                                           2)
                                       : (double.parse(_size_x_controller.text) *
                                           0.50))
                                   : 326.00),
                               width: getSize(_size_y_controller.text.isNotEmpty
-                                  ? (pictureType == 1
+                                  ? (pictureType!=UserImageType.background
                                       ? (double.parse(_size_y_controller.text) *
                                           2)
                                       : (double.parse(_size_y_controller.text) *
@@ -338,9 +340,20 @@ class _ImageModifyoneScreen extends State<ImageModifyScreen> {
                                         textInputType: TextInputType.number,
                                         hintText: "lbl_height".tr,
                                         margin: getMargin(top: 23)),
-                                  ]))
+                                  ])),
+                        
                         ]))),
-            bottomNavigationBar: InkWell(
+            bottomNavigationBar:isProcessing? Padding(
+                    padding: getPadding(left: 25, right: 25, top: 25,bottom: 58),
+                    child: Padding(
+                    padding: getPadding(top: 25,bottom: 25),
+                    child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                              new CircularProgressIndicator(color: ColorConstant.pink900,),
+                              SizedBox(width: 10,),
+                              Text("Processing",style: AppStyle.txtNunitoSansBold14Pink900,),
+                            ]))):InkWell(
                 onTap: resizeImage,
                 child: Padding(
                     padding: getPadding(left: 25, right: 24, bottom: 58),
@@ -352,8 +365,9 @@ class _ImageModifyoneScreen extends State<ImageModifyScreen> {
                         ])))));
   }
 
-  resizeImage() async {
-    if (pictureType == 1) {
+  resizeImage() {
+    // ProgressDialogUtils.showProgressDialog();
+    if (pictureType!=UserImageType.background) {
       if (double.parse(_size_x_controller.text) > 250 ||
           double.parse(_size_y_controller.text) > 250) {
         Get.snackbar('Warning', "Logo size cant be more than 250 * 250");
@@ -366,13 +380,11 @@ class _ImageModifyoneScreen extends State<ImageModifyScreen> {
         return;
       }
     }
-    IMG.Image? image =
-        IMG.decodeImage(new File(imageFile.path).readAsBytesSync());
-    IMG.Image thumbnail = IMG.copyResize(image!,
-        width: int.parse(_size_x_controller.text),
-        height: int.parse(_size_y_controller.text));
-    writeToFile(Uint8List.fromList(IMG.encodePng(thumbnail))).then((value) {
-      imageEditingDone(value.path);
+    setState(() {
+      isProcessing = true;
+      Future.delayed(const Duration(milliseconds: 500), () {
+        writeFinalData();
+      });
     });
     // final result = await ImageGallerySaver.saveImage(
     //     Uint8List.fromList(IMG.encodePng(thumbnail)),
@@ -383,19 +395,46 @@ class _ImageModifyoneScreen extends State<ImageModifyScreen> {
     // }
   }
 
-  Future<File> writeToFile(Uint8List data) async {
+  writeFinalData() async {
+    try{
+      
+    IMG.Image? image =
+        IMG.decodeImage(new File(imageFile.path).readAsBytesSync());
+    IMG.Image thumbnail = IMG.copyResize(image!,
+        width: int.parse(_size_x_controller.text),
+        height: int.parse(_size_y_controller.text));
+    writeToFile(Uint8List.fromList(IMG.encodePng(thumbnail))).then((value) {
+      setState(() {
+        isProcessing = false;
+      });
+      imageEditingDone(value.path);
+
+      // ProgressDialogUtils.hideProgressDialog();
+    });
     
+    }catch(e)
+    {    Get.snackbar('Error', e.toString(),
+            backgroundColor: Color.fromARGB(255, 255, 230, 230),
+            colorText: Colors.red[900],
+            icon: Icon(
+              Icons.error,
+              color: Colors.red[900],
+            ));}
+  }
+
+  Future<File> writeToFile(Uint8List data) async {
     DateTime now = DateTime.now();
     String formattedDate = DateFormat('yyyyMMdHHmmss').format(now);
     Directory tempDir = await getTemporaryDirectory();
     String tempPath = tempDir.path;
     var filePath = tempPath +
-        '/resizedimage_'+formattedDate+'.png'; // file_01.tmp is dump file, can be anything
+        '/resizedimage_' +
+        formattedDate +
+        '.png'; // file_01.tmp is dump file, can be anything
     return new File(filePath).writeAsBytes(data);
   }
 
   imageEditingDone(String imagePath) {
-//
     Get.back(result: {
       "width": double.tryParse(_size_x_controller.text),
       "height": double.tryParse(_size_y_controller.text),

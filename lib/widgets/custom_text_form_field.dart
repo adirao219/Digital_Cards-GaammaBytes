@@ -20,6 +20,7 @@ class CustomTextFormField extends StatelessWidget {
       this.prefix,
       this.prefixConstraints,
       this.suffix,
+      this.onTap,
       this.isEnabled=true,
       this.suffixConstraints,
       this.onChanged,
@@ -32,7 +33,7 @@ Function(String)? onChanged;
   TextFormFieldVariant? variant;
 
   TextFormFieldFontStyle? fontStyle;
-
+Function()? onTap;
   Alignment? alignment;
 
   double? width;
@@ -83,6 +84,7 @@ TextCapitalization? textCapitalization;
         controller: controller,
         focusNode: focusNode,
         style: _setFontStyle(),
+        onTap: onTap,
         obscureText: isObscureText!,
         textInputAction: textInputAction,
         keyboardType: textInputType,

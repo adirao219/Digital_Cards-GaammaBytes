@@ -9,10 +9,12 @@ import 'package:digitalcardsgaammabytes/widgets/custom_drop_down.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
 import '../../core/utils/progress_dialog_utils.dart';
 import '../../data/apiClient/api_client.dart';
 import '../../data/models/filterGreetingTemplate/get_filter_greeting_template_resp.dart';
+import '../../data/models/getThemeDetails/post_get_theme_details_resp.dart';
 import '../../data/models/previewGreetingTemplate/post_preview_greeting_template_resp.dart';
 
 class SelectTemplateScreen extends StatefulWidget {
@@ -31,11 +33,14 @@ class _SelectTemplateScreen extends State<SelectTemplateScreen> {
 
   TextEditingController _searchController = TextEditingController();
   List<Result>? languages;
+
+  late final WebViewController _webViewcontroller;
   bool isUserDefinedBackground = false;
   var captionDefault = "";
   var messageDefault = "";
   var senderDefault = "";
   var backgroundImageURL = "";
+  var editorColorHex ="";
   var htmlContent = '''
 <html>
 <head>
@@ -94,8 +99,10 @@ class _SelectTemplateScreen extends State<SelectTemplateScreen> {
   ''';
 
   ApiClient api = new ApiClient();
-  var greetingType = Get.arguments["type"] as int;
-  var isGreeting = Get.arguments["isGreeting"] as bool;
+  var cardType = Get.arguments["type"] as int;
+  var cardSubType = Get.arguments["cardSubType"] as int?;
+  var existingTemplateId = Get.arguments["existingTemplateID"] as String?;
+  bool isGreeting = Get.arguments["isGreeting"] as bool;
   String? selectedTemplate;
   int logoPosition = 0;
   String logoPositionName = " Select Logo Position";
@@ -104,6 +111,10 @@ class _SelectTemplateScreen extends State<SelectTemplateScreen> {
   @override
   void initState() {
     getLanguages();
+    if (!isGreeting) {
+      logoPositionName = "Select Picture Position";
+    }
+
     super.initState();
   }
 
@@ -112,7 +123,8 @@ class _SelectTemplateScreen extends State<SelectTemplateScreen> {
       logoPosition = position;
       switch (logoPosition) {
         case 0:
-          logoPositionName = " Select Logo Position";
+          logoPositionName =
+              " Select " + (isGreeting ? "Logo" : "Picture") + " Position";
           break;
 
         case 1:
@@ -140,8 +152,16 @@ class _SelectTemplateScreen extends State<SelectTemplateScreen> {
       }
 
       Navigator.pop(context);
-      getTemplate(selectedTemplate ?? "");
+      getThemeOrTemplate(selectedTemplate ?? '');
     });
+  }
+
+  getThemeOrTemplate(String value) {
+    if (isGreeting) {
+      getTemplate(value);
+    } else {
+      getCardTheme(value);
+    }
   }
 
   void getTemplate(String templateID) async {
@@ -156,15 +176,18 @@ class _SelectTemplateScreen extends State<SelectTemplateScreen> {
         setState(() {
           previewResult = resp.result;
           setState(() {
-            htmlContent = previewResult?.htmldata ?? '';
+            // htmlContent = previewResult?.htmldata ?? '';
+            _webViewcontroller.loadUrl(previewResult?.htmldata ?? '');
             captionDefault = previewResult?.captionDefault ?? '';
             messageDefault = previewResult?.messageDefault ?? '';
             senderDefault = previewResult?.senderDefault ?? '';
             backgroundImageURL = previewResult?.background ?? '';
             isUserDefinedBackground = previewResult?.userPicture ?? false;
-            if (templateID == "-1") {
-              htmlContent = yourChoice;
-            }
+          editorColorHex = resp.result?.editorColorHex??'';
+            // if (templateID == "-1") {
+            //   // htmlContent=yourChoice;
+            //   _webViewcontroller.loadHtmlString(yourChoice);
+            // }
           });
         });
       } else {
@@ -179,21 +202,64 @@ class _SelectTemplateScreen extends State<SelectTemplateScreen> {
     } catch (e) {}
   }
 
-  void getGreetingTemplates() async {
+  void getCardTheme(String templateID) async {
     try {
       var req = {
-        "GreetingType": greetingType.toString(),
+        "ThemeID": templateID.toString(),
+        "LogoPosition": logoPosition.toString()
+      };
+      PostGetThemeDetailsResp resp =
+          await api.getThemeDetails(queryParams: req);
+      if ((resp.isSuccess ?? false)) {
+        setState(() {
+          // htmlContent = resp.result?.htmldata ?? '';
+          _webViewcontroller.loadUrl(resp.result?.htmldata ?? '');
+          messageDefault = resp.result?.hTMLContent ?? '';
+          backgroundImageURL = resp.result?.background ?? '';
+          isUserDefinedBackground = resp.result?.userPicture ?? false;
+          editorColorHex = resp.result?.editorColorHex??'';
+          // if (templateID == "-1") {
+          //   // htmlContent=yourChoice;
+          //   _webViewcontroller.loadHtmlString(yourChoice);
+          // }
+        });
+      } else {
+        Get.snackbar('Error', resp.errorMessage.toString(),
+            backgroundColor: Color.fromARGB(255, 255, 230, 230),
+            colorText: Colors.red[900],
+            icon: Icon(
+              Icons.error,
+              color: Colors.red[900],
+            ));
+      }
+    } catch (e) {}
+  }
+
+  void getAllTemplates() async {
+    try {
+      var greetingreq = {
+        "GreetingType": cardType.toString(),
         "LanguageId": selectedLanguage,
       };
-      CommonDropdownResp resp =
-          await api.fetchFilterGreetingTemplate(queryParams: req);
+      var cardreq = {
+        "CardType": cardType.toString(),
+        "CardSubType": cardSubType.toString(), //cardsubtype
+        "LanguageId": selectedLanguage,
+      };
+      CommonDropdownResp resp = isGreeting
+          ? await api.fetchFilterGreetingTemplate(queryParams: greetingreq)
+          : await api.fetchFilterCardTheme(queryParams: cardreq);
       if (resp.isSuccess ?? false) {
         setState(() {
           alltemplates = templates = resp.result;
           selectedTemplate = templates?.first.value;
+          if (existingTemplateId != null && existingTemplateId != "") {
+            selectedTemplate = existingTemplateId;
+          }
         });
-        if (selectedTemplate != null && selectedTemplate!.isNotEmpty)
-          getTemplate(selectedTemplate ?? '');
+        if (selectedTemplate != null && selectedTemplate!.isNotEmpty) {
+          getThemeOrTemplate(selectedTemplate ?? '');
+        }
       } else {
         Get.snackbar('Error', resp.errorMessage.toString(),
             backgroundColor: Color.fromARGB(255, 255, 230, 230),
@@ -208,15 +274,16 @@ class _SelectTemplateScreen extends State<SelectTemplateScreen> {
 
   getLanguages() async {
     try {
-      CommonDropdownResp resp = await api.getLanguages(queryParams: {});
+      CommonDropdownResp resp = isGreeting
+          ? await api.getLanguages(queryParams: {})
+          : await api.fetchGetLanguages();
       if (resp.isSuccess ?? false) {
         setState(() {
           languages = resp.result;
           selectedLanguage = languages?.first.value;
         });
-        if (selectedLanguage != null &&
-            selectedLanguage!.isNotEmpty &&
-            isGreeting) getGreetingTemplates();
+        if (selectedLanguage != null && selectedLanguage!.isNotEmpty)
+          getAllTemplates();
       } else {
         Get.snackbar('Error', resp.errorMessage.toString(),
             backgroundColor: Color.fromARGB(255, 255, 230, 230),
@@ -334,7 +401,7 @@ class _SelectTemplateScreen extends State<SelectTemplateScreen> {
                                             setState(() {
                                               selectedLanguage = newValue!;
                                             });
-                                            getGreetingTemplates();
+                                            getAllTemplates();
                                           },
                                         ),
                                       ],
@@ -397,7 +464,8 @@ class _SelectTemplateScreen extends State<SelectTemplateScreen> {
                                             setState(() {
                                               selectedTemplate = newValue!;
                                             });
-                                            getTemplate(newValue ?? "");
+                                            getThemeOrTemplate(
+                                                selectedTemplate ?? '');
                                           },
                                         ),
                                       ],
@@ -486,7 +554,7 @@ class _SelectTemplateScreen extends State<SelectTemplateScreen> {
                                                                           null &&
                                                                       selectedTemplate!
                                                                           .isNotEmpty)
-                                                                    getTemplate(
+                                                                    getThemeOrTemplate(
                                                                         selectedTemplate ??
                                                                             '');
                                                                 });
@@ -526,7 +594,7 @@ class _SelectTemplateScreen extends State<SelectTemplateScreen> {
                                   children: [
                                     CustomButton(
                                       height: 40,
-                                      width: 180,
+                                      width: 200,
                                       text: logoPositionName,
                                       prefixWidget: Icon(
                                         Icons.fullscreen_rounded,
@@ -575,105 +643,120 @@ class _SelectTemplateScreen extends State<SelectTemplateScreen> {
                                   child: Stack(
                                       alignment: Alignment.topRight,
                                       children: [
-                                        Align(
-                                            alignment: Alignment.center,
-                                            child: Container(
-                                                height: getVerticalSize(450.00),
-                                                width:
-                                                    getHorizontalSize(310.00),
-                                                decoration: BoxDecoration(
-                                                    color:
-                                                        ColorConstant.whiteA700,
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            getHorizontalSize(
-                                                                10.00))))),
-                                        Align(
-                                            alignment: Alignment.center,
-                                            child: SingleChildScrollView(
-                                                scrollDirection: Axis.vertical,
-                                                child: Container(
-                                                    padding: getPadding(
-                                                        top: 5,
-                                                        left: 5,
-                                                        bottom: 5,
-                                                        right: 5),
-                                                    child: HtmlWidget(
-                                                      htmlContent,
-                                                      customStylesBuilder:
-                                                          (element) {
-                                                        if (element.classes
-                                                            .contains('foo')) {
-                                                          return {
-                                                            'color': 'red'
-                                                          };
-                                                        }
+                                        WebView(
+                                          zoomEnabled: true,
+                                          navigationDelegate:
+                                              (NavigationRequest request) {
+                                            return NavigationDecision.prevent;
+                                          },
+                                          javascriptMode:
+                                              JavascriptMode.unrestricted,
+                                          onWebViewCreated: (controller) {
+                                            // We are getting an instance of the controller in the callback
+                                            // So we take it assign it our late variable value
+                                            _webViewcontroller = controller;
+                                            setState(() {});
+                                          },
+                                        ),
+                                        // Align(
+                                        //     alignment: Alignment.center,
+                                        //     child: Container(
+                                        //         height: getVerticalSize(450.00),
+                                        //         width:
+                                        //             getHorizontalSize(310.00),
+                                        //         decoration: BoxDecoration(
+                                        //             color:
+                                        //                 ColorConstant.whiteA700,
+                                        //             borderRadius:
+                                        //                 BorderRadius.circular(
+                                        //                     getHorizontalSize(
+                                        //                         10.00))))),
+                                        // Align(
+                                        //     alignment: Alignment.center,
+                                        //     child: SingleChildScrollView(
+                                        //         scrollDirection: Axis.vertical,
+                                        //         child: Container(
+                                        //             padding: getPadding(
+                                        //                 top: 5,
+                                        //                 left: 5,
+                                        //                 bottom: 5,
+                                        //                 right: 5),
+                                        //             child: HtmlWidget(
+                                        //               htmlContent,
+                                        //               customStylesBuilder:
+                                        //                   (element) {
+                                        //                 if (element.classes
+                                        //                     .contains('foo')) {
+                                        //                   return {
+                                        //                     'color': 'red'
+                                        //                   };
+                                        //                 }
 
-                                                        return null;
-                                                      },
+                                        //                 return null;
+                                        //               },
 
-                                                      // render a custom widget
-                                                      customWidgetBuilder:
-                                                          (element) {},
+                                        //               // render a custom widget
+                                        //               customWidgetBuilder:
+                                        //                   (element) {},
 
-                                                      // these callbacks are called when a complicated element is loading
-                                                      // or failed to render allowing the app to render progress indicator
-                                                      // and fallback widget
-                                                      onErrorBuilder: (context,
-                                                              element, error) =>
-                                                          Text(
-                                                              '$element error: $error'),
-                                                      onLoadingBuilder: (context,
-                                                              element,
-                                                              loadingProgress) =>
-                                                          CircularProgressIndicator(),
+                                        //               // these callbacks are called when a complicated element is loading
+                                        //               // or failed to render allowing the app to render progress indicator
+                                        //               // and fallback widget
+                                        //               onErrorBuilder: (context,
+                                        //                       element, error) =>
+                                        //                   Text(
+                                        //                       '$element error: $error'),
+                                        //               onLoadingBuilder: (context,
+                                        //                       element,
+                                        //                       loadingProgress) =>
+                                        //                   CircularProgressIndicator(),
 
-                                                      // this callback will be triggered when user taps a link
-                                                      // onTapUrl: (url) => print('tapped $url'),
+                                        //               // this callback will be triggered when user taps a link
+                                        //               // onTapUrl: (url) => print('tapped $url'),
 
-                                                      // select the render mode for HTML body
-                                                      // by default, a simple `Column` is rendered
-                                                      // consider using `ListView` or `SliverList` for better performance
-                                                      renderMode:
-                                                          RenderMode.column,
+                                        //               // select the render mode for HTML body
+                                        //               // by default, a simple `Column` is rendered
+                                        //               // consider using `ListView` or `SliverList` for better performance
+                                        //               renderMode:
+                                        //                   RenderMode.column,
 
-                                                      // set the default styling for text
-                                                      textStyle: TextStyle(
-                                                          fontSize: 14),
+                                        //               // set the default styling for text
+                                        //               textStyle: TextStyle(
+                                        //                   fontSize: 14),
 
-                                                      // turn on `webView` if you need IFRAME support (it's disabled by default)
-                                                      // webView: true,
-                                                    ),
-                                                    height:
-                                                        getVerticalSize(700.00),
-                                                    width: getHorizontalSize(
-                                                        350.00),
-                                                    decoration: BoxDecoration(
-                                                        image: DecorationImage(
-                                                          image: NetworkImage(
-                                                              backgroundImageURL),
-                                                          fit: BoxFit.fill,
-                                                        ),
-                                                        //  color: Colors.white,
-                                                        border: Border.all(
-                                                            color: ColorConstant
-                                                                .whiteA700,
-                                                            width:
-                                                                getHorizontalSize(
-                                                                    2.00)),
-                                                        boxShadow: [
-                                                          BoxShadow(
-                                                              color: ColorConstant
-                                                                  .black9003f,
-                                                              spreadRadius:
-                                                                  getHorizontalSize(
-                                                                      2.00),
-                                                              blurRadius:
-                                                                  getHorizontalSize(
-                                                                      2.00),
-                                                              offset:
-                                                                  Offset(0, 4))
-                                                        ]))))
+                                        //               // turn on `webView` if you need IFRAME support (it's disabled by default)
+                                        //               // webView: true,
+                                        //             ),
+                                        //             height:
+                                        //                 getVerticalSize(700.00),
+                                        //             width: getHorizontalSize(
+                                        //                 350.00),
+                                        //             decoration: BoxDecoration(
+                                        //                 image: DecorationImage(
+                                        //                   image: NetworkImage(
+                                        //                       backgroundImageURL),
+                                        //                   fit: BoxFit.fill,
+                                        //                 ),
+                                        //                 //  color: Colors.white,
+                                        //                 border: Border.all(
+                                        //                     color: ColorConstant
+                                        //                         .whiteA700,
+                                        //                     width:
+                                        //                         getHorizontalSize(
+                                        //                             2.00)),
+                                        //                 boxShadow: [
+                                        //                   BoxShadow(
+                                        //                       color: ColorConstant
+                                        //                           .black9003f,
+                                        //                       spreadRadius:
+                                        //                           getHorizontalSize(
+                                        //                               2.00),
+                                        //                       blurRadius:
+                                        //                           getHorizontalSize(
+                                        //                               2.00),
+                                        //                       offset:
+                                        //                           Offset(0, 4))
+                                        //                 ]))))
                                       ])),
                             ]))))));
   }
@@ -863,15 +946,14 @@ class _SelectTemplateScreen extends State<SelectTemplateScreen> {
   }
 
   onTapSelect() {
-    if(selectedTemplate==null)
-    {
-     return Get.snackbar('Warning', "Please select template",
-            backgroundColor: Color.fromARGB(255, 255, 230, 230),
-            colorText: Colors.red[900],
-            icon: Icon(
-              Icons.error,
-              color: Colors.red[900],
-            ));
+    if (selectedTemplate == null) {
+      return Get.snackbar('Warning', "Please select template",
+          backgroundColor: Color.fromARGB(255, 255, 230, 230),
+          colorText: Colors.red[900],
+          icon: Icon(
+            Icons.error,
+            color: Colors.red[900],
+          ));
     }
     Get.back(result: {
       "selectedTemplateID": selectedTemplate,
@@ -883,7 +965,8 @@ class _SelectTemplateScreen extends State<SelectTemplateScreen> {
       "selectedTemplateName": templates!
           .firstWhere((element) => element.value == selectedTemplate)
           .text,
-      "isUserBackground": isUserDefinedBackground
+      "isUserBackground": isUserDefinedBackground,
+      "editorColorHex":editorColorHex
     });
   }
 

@@ -40,8 +40,8 @@ class _PurchaseCreditHistoryDetails
   getPurchaseCreditHistoryDetails() async {
     try {
       var query = {
-        "UserId":
-           GlobalVariables.userID,
+        "UserId": GlobalVariables.userID,
+        "CreditId": creditHistoryID.toString()
       };
       CreditDetailsResponse resp =
           await api.getCreditDetails(queryParams: query);
@@ -136,26 +136,46 @@ class _PurchaseCreditHistoryDetails
                   children: [
                     Accordion(
                         maxOpenSections: 1,
-                        disableScrolling: false,
+                        disableScrolling: true,
                         openAndCloseAnimation: true,
                         paddingListHorizontal: 0,
                         scrollIntoViewOfItems: ScrollIntoViewOfItems.slow,
                         contentBorderColor: ColorConstant.pink900,
                         flipRightIconIfOpen: true,
                         headerBackgroundColor: ColorConstant.pink900,
-                        leftIcon:
-                            Icon(Icons.credit_score_rounded, size: 25, color: Colors.white),
+                        leftIcon: Icon(Icons.credit_score_rounded,
+                            size: 25, color: Colors.white),
                         children: creditDetails.map((element) {
                           return AccordionSection(
                             isOpen: true,
-                            header: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.start,
+                            header: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
                               children: [
-                                Text((element.parentTypeIdName ?? ''),
-                                    style: AppStyle.txtNunitoSansBold14white),
-                                Text((element.creditAddedOnString ?? ''),
-                                    style: AppStyle.txtNunitoSansRegular14white)
+                                Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      Text((element.parentTypeIdName ?? ''),
+                                          style: AppStyle
+                                              .txtNunitoSansBold14white),
+                                      Text((element.creditAddedOnString ?? ''),
+                                          style: AppStyle
+                                              .txtNunitoSansRegular14white),
+                                    ]),
+                                Container(
+                                    padding: getPadding(left: 5, right: 5),
+                                    decoration: BoxDecoration(
+                                        border: Border.all(
+                                          width: 2,
+                                          color: Colors.white,
+                                        ),
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(50))),
+                                    child: Text(
+                                        (element.noofCredits.toString()),
+                                        style: AppStyle
+                                            .txtNunitoSansRegular14white))
                               ],
                             ),
                             content: creditItem(context, element),

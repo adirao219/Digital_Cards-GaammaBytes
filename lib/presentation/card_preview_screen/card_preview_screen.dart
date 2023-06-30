@@ -1,5 +1,9 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:digitalcardsgaammabytes/core/app_export.dart';
 import 'package:digitalcardsgaammabytes/core/utils/progress_dialog_utils.dart';
+import 'package:digitalcardsgaammabytes/data/globals/globalvariables.dart';
 import 'package:digitalcardsgaammabytes/widgets/app_bar/appbar_iconbutton.dart';
 import 'package:digitalcardsgaammabytes/widgets/app_bar/appbar_image.dart';
 import 'package:digitalcardsgaammabytes/widgets/app_bar/appbar_subtitle.dart';
@@ -11,10 +15,21 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:intl/intl.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:share_plus/share_plus.dart';
 
-import 'package:webcontent_converter/webcontent_converter.dart';
+// // Import for Android features.
+import 'package:path_provider/path_provider.dart';
+// import 'package:webview_flutter_android/webview_flutter_android.dart';
+import 'package:webview_flutter_platform_interface/webview_flutter_platform_interface.dart';
+// // Import for iOS features.
+// import 'package:webview_flutter_wkwebview/webview_flutter_wkwebview.dart';
+
+// import 'package:webcontent_converter/webcontent_converter.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 import 'package:widgets_to_image/widgets_to_image.dart';
 import '../../data/apiClient/api_client.dart';
+import '../../data/models/getCreateCard/get_get_create_card_resp.dart';
 import '../../data/models/previewGreetingCard/post_preview_greeting_card_resp.dart';
 import '../../data/models/previewGreetingTemplate/post_preview_greeting_template_resp.dart';
 
@@ -28,6 +43,7 @@ class CardPreviewScreen extends StatefulWidget {
 
 class _CardPreviewScreen extends State<CardPreviewScreen> {
   var cardID = Get.arguments["CardID"] as int?;
+  var isDigitalCard = (Get.arguments["isDigitalCard"] as bool?) ?? false;
 
   WidgetsToImageController _controller = WidgetsToImageController();
   var backgroundImageURL = "";
@@ -70,27 +86,66 @@ class _CardPreviewScreen extends State<CardPreviewScreen> {
 <div class="page-wrapper" style="box-shadow: 1px 2px 15px #48484833;position: relative;padding-top: 1px;background: url('https://digitalcard.gaamma.cards/images/AkshayaTritiya_squarecenter.png');background-repeat: no-repeat;background-size: 100%;height: 600px;width: 600px">        <style>.uppergreeting{&nbsp; &nbsp; }p {margin:5px !important;}</style><div class="uppergreeting" style="margin: 15px"><p class="MsoListParagraph" style="margin: 5px;margin-left: 1in;text-indent: -0.25in;text-align: center"><span style="font-size: 24pt; color: rgb(230, 126, 35); font-family: 'comic sans ms', sans-serif;"><strong><span lang="EN-IN" style="line-height: 107%;">&nbsp;</span></strong></span></p><p class="MsoListParagraph" style="margin: 5px;margin-left: 1in;text-indent: -0.25in;text-align: center"><span style="font-size: 24pt; color: rgb(230, 126, 35); font-family: 'comic sans ms', sans-serif;"><strong><span lang="EN-IN" style="line-height: 107%;">&nbsp;</span></strong></span></p><p class="MsoListParagraph" style="margin: 5px;margin-left: 1in;text-indent: -0.25in;text-align: center"><span style="font-size: 24pt; color: rgb(230, 126, 35); font-family: 'comic sans ms', sans-serif;"><strong><span lang="EN-IN" style="line-height: 107%;">&nbsp;</span></strong></span></p><p class="MsoListParagraph" style="margin: 5px;margin-left: 1in;text-indent: -0.25in;text-align: center"><span style="font-size: 24pt; color: rgb(230, 126, 35); font-family: 'comic sans ms', sans-serif;"><strong><span lang="EN-IN" style="line-height: 107%;">&nbsp; &nbsp;Happy Akshaya Tritiya&nbsp;</span></strong></span></p><p class="MsoListParagraph" style="margin: 5px;margin-left: 1in;text-indent: -0.25in;text-align: center"><span style="font-size: 8pt; color: rgb(230, 126, 35); font-family: 'comic sans ms', sans-serif;"><strong><span lang="EN-IN" style="line-height: 107%;">&nbsp;</span></strong></span></p><div class="col-md-12" style="margin-top:12px;"></div><p style="margin: 5px;text-align: center"><span lang="EN-IN" style="font-size: 14pt; line-height: 107%; font-family: 'book antiqua', palatino, serif; color: rgb(14, 84, 47);">May Akshaya Tritiya bring </span></p><p style="margin: 5px;text-align: center"><span lang="EN-IN" style="font-size: 14pt; line-height: 107%; font-family: 'book antiqua', palatino, serif; color: rgb(14, 84, 47);">prosperity, wealth and success in all your endeavours. </span></p><p style="margin: 5px;text-align: center"><span lang="EN-IN" style="font-size: 14pt; line-height: 107%; font-family: 'book antiqua', palatino, serif; color: rgb(14, 84, 47);">Wishing you a happy and blessed Akshaya Tritiya.</span></p><div class="col-md-12" style="margin-top:12px;"></div><p style="margin: 5px;text-align: center"><span style="font-size: 18pt; color: rgb(230, 126, 35); font-family: 'book antiqua', palatino, serif;"><em>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;-Sneha</em></span></p><p style="margin: 5px;text-align: center"><span style="font-size: 18pt; color: rgb(230, 126, 35); font-family: 'book antiqua', palatino, serif;"><em>&nbsp;</em></span></p><p style="margin: 5px;text-align: center"><span style="font-size: 18pt; color: rgb(230, 126, 35); font-family: 'book antiqua', palatino, serif;"><em>&nbsp;</em></span></p><p style="margin: 5px;text-align: center"><span style="font-size: 18pt; color: rgb(230, 126, 35); font-family: 'book antiqua', palatino, serif;"><em>&nbsp;</em></span></p><p style="margin: 5px;text-align: center"><span style="font-size: 18pt; color: rgb(230, 126, 35); font-family: 'book antiqua', palatino, serif;"><em>&nbsp;</em></span></p></div><div style=" text-align: center; padding: 5px; position: absolute;bottom:0;left: 0; right: 0;"><img src="https://digitalcard.gaamma.cards/images/defaultlogo.png"></div>        <!--COPYRIGHT-->    </div>
 
 ''';
+  // late final WebViewController webViewController;
   ApiClient api = new ApiClient();
+  late final WebViewController _webViewcontroller;
   @override
   void initState() {
-    
-      ProgressDialogUtils.hideProgressDialog();
+    ProgressDialogUtils.hideProgressDialog();
     // if (isGreeting) getGreetingTemplates();
-    getCardPreview();
+    getCardOrGreetingPreview();
     super.initState();
   }
 
-  void getCardPreview() async {
+  getCardOrGreetingPreview() {
+    if (isDigitalCard) {
+      getCardPreview();
+    } else {
+      getGreetingCardPreview();
+    }
+  }
+
+  void getGreetingCardPreview() async {
     try {
       var req = {"ID": cardID.toString(), "IsDownloadImage": false.toString()};
       PostPreviewGreetingTemplateResp resp =
           await api.createPreviewGreetingCard(queryParams: req);
       if ((resp.isSuccess ?? false)) {
         setState(() {
-          htmlContent = resp.result!.htmldata ?? ''; //newhtml
+          // htmlContent = resp.result!.htmldata ?? ''; //newhtml
+          _webViewcontroller.loadUrl(resp.result!.htmldata ?? '');
+          // _webViewcontroller.loadUrl("https://gaamma.cards/happy-birthday/testvijay2.html");
+          // _webViewcontroller
+          //     .loadUrl("https://gaamma.cards/wedding/weddinginvitation.html");
+          // _webViewcontroller.loadUrl("https://gaamma.cards/wedding/haldiceremony.html");
+          // _webViewcontroller.loadUrl("https://gaamma.cards/event/upanayanainvitation.html");
           backgroundImageURL = resp.result!.background ?? '';
           isBackgroundImage = resp.result!.isBackgroundImage;
           customColor = (resp.result!.editorColorHex ?? '');
+        });
+        ProgressDialogUtils.hideProgressDialog();
+      } else {
+        Get.snackbar('Error', resp.errorMessage.toString());
+
+        ProgressDialogUtils.hideProgressDialog();
+      }
+    } catch (e) {
+      var s = 1;
+      ProgressDialogUtils.hideProgressDialog();
+    }
+  }
+
+  void getCardPreview() async {
+    try {
+      var req = {"UserId": GlobalVariables.userID, "CardId": cardID.toString()};
+      GetGetCreateCardResp resp = await api.previewCard(queryParams: req);
+      if ((resp.isSuccess ?? false)) {
+        setState(() {
+          // htmlContent = resp.result!.htmlData ?? ''; //newhtml
+          _webViewcontroller.loadUrl(resp.result!.htmlData ?? '');
+          backgroundImageURL = resp.result!.picture1 ?? '';
+          isBackgroundImage = true; //resp.result!.isBackgroundImage;
+          customColor = (resp.result!.backgroundColorHex ?? '');
         });
         ProgressDialogUtils.hideProgressDialog();
       } else {
@@ -129,31 +184,58 @@ class _CardPreviewScreen extends State<CardPreviewScreen> {
                           imagePath: ImageConstant.imgVectorDeepOrangeA100),
                       Padding(
                           padding: getPadding(
-                              left: 40, top: 35, right: 61, bottom: 6),
+                              left: 15, top: 35, right: 61, bottom: 6),
                           child: Row(children: [
                             AppbarIconbutton(
                                 svgPath: ImageConstant.imgArrowleft,
                                 margin: getMargin(top: 9, bottom: 6),
                                 onTap: onTapArrowleft4),
                             AppbarSubtitle(
-                                text: "lbl_card_preview".tr,
-                                margin:
-                                    getMargin(left: 15, top: 16, bottom: 11)),
+                                text: isDigitalCard
+                                    ? "lbl_card_preview2".tr
+                                    : "lbl_card_preview".tr,
+                                margin: getMargin(
+                                    left:60 ,
+                                    top: 16,
+                                    bottom: 11)),
                             SizedBox(
-                              width: 20,
+                              width: 10,
                             ),
                             // AppbarImage(
                             //     height: getVerticalSize(53.00),
                             //     width: getHorizontalSize(55.00),
                             //     svgPath: ImageConstant.imgEye,
                             //     margin: getMargin(left: 14))
-                            GestureDetector(
-                                child: Icon(
-                                  Icons.download,
-                                  size: 30,
-                                  color: ColorConstant.pink900,
-                                ),
-                                onTap: onTapDownload),
+                            Visibility(
+                              child: GestureDetector(
+                                  child: Icon(
+                                    Icons.download,
+                                    size: 30,
+                                    color: ColorConstant.pink900,
+                                  ),
+                                  onTap: () {
+                                    onTapDownload(isShare: false);
+                                  }),
+                              visible: false,
+                            ),
+                            Visibility(
+                              child: SizedBox(
+                                width: 15,
+                              ),
+                              visible: !isDigitalCard,
+                            ),
+                            Visibility(
+                              child: GestureDetector(
+                                  child: Icon(
+                                    Icons.share,
+                                    size: 25,
+                                    color: ColorConstant.pink900,
+                                  ),
+                                  onTap: () {
+                                    onTapDownload(isShare: true);
+                                  }),
+                              visible: false,
+                            ),
                           ]))
                     ])),
                 // actions: [
@@ -183,103 +265,139 @@ class _CardPreviewScreen extends State<CardPreviewScreen> {
                                     alignment: Alignment.topRight,
                                     children: [
                                       WidgetsToImage(
-                                          controller: _controller,
-                                          child: Align(
-                                              alignment: Alignment.center,
-                                              child: SingleChildScrollView(
-                                                  scrollDirection:
-                                                      Axis.vertical,
-                                                  child: Container(
-                                                      padding: getPadding(
-                                                          top: 5,
-                                                          left: 5,
-                                                          bottom: 5,
-                                                          right: 5),
-                                                      child: HtmlWidget(
-                                                        htmlContent,
-                                                        customStylesBuilder:
-                                                            (element) {
-                                                          if (element.classes
-                                                              .contains(
-                                                                  'foo')) {
-                                                            return {
-                                                              'color': 'red'
-                                                            };
-                                                          }
+                                        controller: _controller,
+                                        child:
+                                            //  Align(
+                                            //     alignment: Alignment.center,
+                                            //     child: SingleChildScrollView(
+                                            //         scrollDirection:
+                                            //             Axis.vertical,
+                                            //         child: Container(
+                                            //             padding: getPadding(
+                                            //                 top: 5,
+                                            //                 left: 5,
+                                            //                 bottom: 5,
+                                            //                 right: 5),
+                                            //             child:
+                                            WebView(
+                                          navigationDelegate:
+                                              (NavigationRequest request) {
+                                            if (!isDigitalCard) {
+                                              var content = request.url
+                                                  .replaceAll(
+                                                      "data:image/png;base64,",
+                                                      "");
 
-                                                          return null;
-                                                        },
+                                              onTapDownloadFromWebView(content);
+                                            }
+                                            return NavigationDecision.prevent;
+                                          },
+                                          javascriptMode:
+                                              JavascriptMode.unrestricted,
+                                          onWebViewCreated: (controller) {
+                                            // We are getting an instance of the controller in the callback
+                                            // So we take it assign it our late variable value
+                                            _webViewcontroller = controller;
 
-                                                        // render a custom widget
-                                                        customWidgetBuilder:
-                                                            (element) {},
+                                            setState(() {});
+                                          },
+                                        ),
+                                        // HtmlWidget(
+                                        //   htmlContent,
+                                        //   customStylesBuilder:
+                                        //       (element) {
+                                        //     if (element.classes
+                                        //         .contains(
+                                        //             'foo')) {
+                                        //       return {
+                                        //         'color': 'red'
+                                        //       };
+                                        //     }
 
-                                                        // these callbacks are called when a complicated element is loading
-                                                        // or failed to render allowing the app to render progress indicator
-                                                        // and fallback widget
-                                                        onErrorBuilder: (context,
-                                                                element,
-                                                                error) =>
-                                                            Text(
-                                                                '$element error: $error'),
-                                                        onLoadingBuilder: (context,
-                                                                element,
-                                                                loadingProgress) =>
-                                                            CircularProgressIndicator(),
+                                        //     return null;
+                                        //   },
 
-                                                        // this callback will be triggered when user taps a link
-                                                        // onTapUrl: (url) => print('tapped $url'),
+                                        //   // render a custom widget
+                                        //   customWidgetBuilder:
+                                        //       (element) {},
 
-                                                        // select the render mode for HTML body
-                                                        // by default, a simple `Column` is rendered
-                                                        // consider using `ListView` or `SliverList` for better performance
-                                                        renderMode:
-                                                            RenderMode.column,
+                                        //   // these callbacks are called when a complicated element is loading
+                                        //   // or failed to render allowing the app to render progress indicator
+                                        //   // and fallback widget
+                                        //   onErrorBuilder: (context,
+                                        //           element,
+                                        //           error) =>
+                                        //       Text(
+                                        //           '$element error: $error'),
+                                        //   onLoadingBuilder: (context,
+                                        //           element,
+                                        //           loadingProgress) =>
+                                        //       CircularProgressIndicator(),
 
-                                                        // set the default styling for text
-                                                        textStyle: TextStyle(
-                                                            fontSize: 14),
+                                        //   // this callback will be triggered when user taps a link
+                                        //   // onTapUrl: (url) => print('tapped $url'),
 
-                                                        // turn on `webView` if you need IFRAME support (it's disabled by default)
-                                                        // webView: true,
-                                                      ),
-                                                      height: getVerticalSize(
-                                                          650.00),
-                                                      width: getHorizontalSize(
-                                                          375.00),
-                                                      decoration: BoxDecoration(
-                                                          image:
-                                                              DecorationImage(
-                                                            image: NetworkImage(
-                                                                (isBackgroundImage ??
-                                                                        false)
-                                                                    ? backgroundImageURL
-                                                                    : ""),
-                                                            fit: BoxFit.fill,
-                                                          ),
-                                                          //  color: Colors.white,
-                                                          border: Border.all(
-                                                              color:
-                                                                  ColorConstant
-                                                                      .whiteA700,
-                                                              width:
-                                                                  getHorizontalSize(
-                                                                      2.00)),
-                                                          boxShadow: [
-                                                            BoxShadow(
-                                                                color: ColorConstant
-                                                                    .black9003f,
-                                                                spreadRadius:
-                                                                    getHorizontalSize(
-                                                                        2.00),
-                                                                blurRadius:
-                                                                    getHorizontalSize(
-                                                                        2.00),
-                                                                offset: Offset(
-                                                                    0, 4))
-                                                          ])))))
-                                    ]))
+                                        //   // select the render mode for HTML body
+                                        //   // by default, a simple `Column` is rendered
+                                        //   // consider using `ListView` or `SliverList` for better performance
+                                        //   renderMode:
+                                        //       RenderMode.column,
+
+                                        //   // set the default styling for text
+                                        //   textStyle: TextStyle(
+                                        //       fontSize: 14),
+
+                                        //   // turn on `webView` if you need IFRAME support (it's disabled by default)
+                                        //   // webView: true,
+                                        // ),
+                                        // height: getVerticalSize(
+                                        //     900.00),
+                                        // width: getHorizontalSize(
+                                        //     400.00),
+                                        // decoration: BoxDecoration(
+                                        //     image:
+                                        //         DecorationImage(
+                                        //       image: NetworkImage(
+                                        //           (isBackgroundImage ??
+                                        //                   false)
+                                        //               ? backgroundImageURL
+                                        //               : ""),
+                                        //       fit: BoxFit.fill,
+                                        //     ),
+                                        //     //  color: Colors.white,
+                                        //     border: Border.all(
+                                        //         color:
+                                        //             ColorConstant
+                                        //                 .whiteA700,
+                                        //         width:
+                                        //             getHorizontalSize(
+                                        //                 2.00)),
+                                        //     boxShadow: [
+                                        //       BoxShadow(
+                                        //           color: ColorConstant
+                                        //               .black9003f,
+                                        //           spreadRadius:
+                                        //               getHorizontalSize(
+                                        //                   2.00),
+                                        //           blurRadius:
+                                        //               getHorizontalSize(
+                                        //                   2.00),
+                                        //           offset: Offset(
+                                        //               0, 4))
+                                        //     ]))))
+                                      ),
+                                    ])),
                           ])),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Visibility(
+                          child: Container(
+                              child: Text(
+                            "Note: Few icons will work only after publishing card",
+                            style: AppStyle.txtNunitoSansBold12,
+                          )),
+                          visible: isDigitalCard),
                     ]))));
   }
 
@@ -287,43 +405,81 @@ class _CardPreviewScreen extends State<CardPreviewScreen> {
     Navigator.of(context).pop();
   }
 
-  onTapDownload() async {
+  onTapDownload({bool isShare = false}) async {
     ProgressDialogUtils.showProgressDialog();
-    var s = cardID;
+
     // var bytes = await WebcontentConverter.contentToImage(content: htmlContent,);
     var bytes = await _controller.capture() ?? new Uint8List(0);
     if (bytes.length > 0) {
-      _saveFile(bytes);
+      _saveFile(bytes, isShare);
     }
   }
 
-  _saveFile(Uint8List bytes) async {
+  onTapDownloadFromWebView(String content) async {
+    var isShare = await _webViewcontroller
+        .runJavascriptReturningResult('\$("#ShareImage").val()');
+
+    var bytes = base64.decode(content);
+    if (bytes.length > 0) {
+      _saveFile(bytes, (isShare == '"true"'));
+    }
+  }
+
+  _saveFile(Uint8List bytes, bool isShare) async {
     try {
       DateTime now = DateTime.now();
       String formattedDate = DateFormat('yyyyMMdd-hhmmss').format(now);
 
-      var filename = "greeting_" + formattedDate + ".jpg";
-      ProgressDialogUtils.showSmallProgressDialog(context);
-      final result = await ImageGallerySaver.saveImage(
-          Uint8List.fromList(bytes),
-          quality: 100,
-          name: filename);
-      if (result['isSuccess'] == true) {
-        ProgressDialogUtils.hideProgressDialog();
-        Get.snackbar("Success",
-            "Image downloaded successfully. Please check your gallery",
-            backgroundColor: Color.fromARGB(255, 208, 245, 216),
-            colorText: Colors.green[900],
-            icon: Icon(
-              Icons.done,
-              color: Colors.green[900],
-            ));
+      var filename = (isDigitalCard ? "digitalcard_" : "greeting_") +
+          formattedDate +
+          ".jpg";
+      try {
+        filename = await _webViewcontroller
+            .runJavascriptReturningResult('\$("#ImageName").val()');
+      } catch (e) {
+        var s = 1;
+      }
+      if (isShare) {
+        // ProgressDialogUtils.showSmallProgressDialog(context);
+        var file = await writeToFile(bytes);
+        await Share.shareFiles([file.path], text: '', subject: '');
       } else {
-        ProgressDialogUtils.hideProgressDialog();
+        ProgressDialogUtils.showSmallProgressDialog(context);
+        final result = await ImageGallerySaver.saveImage(
+            Uint8List.fromList(bytes),
+            quality: 100,
+            name: filename);
+
+        if (result['isSuccess'] == true) {
+          ProgressDialogUtils.hideProgressDialog();
+          Get.snackbar("Success",
+              "Image downloaded successfully. Please check your gallery",
+              backgroundColor: Color.fromARGB(255, 208, 245, 216),
+              colorText: Colors.green[900],
+              icon: Icon(
+                Icons.done,
+                color: Colors.green[900],
+              ));
+        } else {
+          ProgressDialogUtils.hideProgressDialog();
+        }
       }
     } catch (e) {
       ProgressDialogUtils.hideProgressDialog();
     }
+  }
+
+  Future<File> writeToFile(Uint8List data) async {
+    DateTime now = DateTime.now();
+    String formattedDate = DateFormat('yyyyMMdd-hhmmss').format(now);
+    Directory tempDir = await getTemporaryDirectory();
+    String tempPath = tempDir.path;
+    var filePath = tempPath +
+        '/existingFile' +
+        formattedDate +
+        '.png'; // file_01.tmp is dump file, can be anything
+    File(filePath).writeAsBytesSync(data);
+    return File(filePath);
   }
 
   onTapArrowleft4() {

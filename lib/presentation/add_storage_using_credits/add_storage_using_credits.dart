@@ -56,12 +56,12 @@ class _AddStorageCredits extends State<AddStorageCredits> {
       } else {
         try {
           var query = {
-            "UserId": GlobalVariables.userID,
+            "NoCredits": credits,
           };
           APIResponse resp = await api.getCreditStorage(queryParams: query);
           if (resp.isSuccess ?? false) {
             setState(() {
-              creditStorage = resp.result;
+              _totalspace_Controller.text = resp.result.toString();
             });
           } else {
             Get.snackbar('Error', resp.errorMessage.toString(),
@@ -77,12 +77,13 @@ class _AddStorageCredits extends State<AddStorageCredits> {
     }
   }
 
-  getAvailableCredits() async {
+  getAvailableCredits({bool showProgress = true}) async {
     try {
       var query = {
         "UserId": GlobalVariables.userID,
       };
-      APIResponse resp = await api.getCreditsAvailable(queryParams: query);
+      APIResponse resp = await api.getCreditsAvailable(
+          queryParams: query, showProgress: showProgress);
       if (resp.isSuccess ?? false) {
         setState(() {
           creditsAvailable = resp.result;
@@ -116,6 +117,7 @@ class _AddStorageCredits extends State<AddStorageCredits> {
                 color: Colors.green[900],
               ));
         });
+        getAvailableCredits(showProgress: false);
       } else {
         Get.snackbar('Error', resp.errorMessage.toString(),
             backgroundColor: Color.fromARGB(255, 255, 230, 230),
@@ -180,7 +182,7 @@ class _AddStorageCredits extends State<AddStorageCredits> {
                                     ])),
                             AppbarTitle(
                                 text: "Increase Storage".tr.toUpperCase(),
-                                margin: getMargin(left: 40, top: 0))
+                                margin: getMargin(left: 25, top: 0))
                           ])))
                 ])),
             styleType: Style.bgStyle_22),
@@ -261,7 +263,7 @@ class _AddStorageCredits extends State<AddStorageCredits> {
                   margin: getMargin(
                     top: 15,
                   ),
-                  child: Text("Total Space:",
+                  child: Text("Total Space (MB):",
                       style: AppStyle.txtNunitoSansBold14Pink900),
                 ),
                 CustomTextFormField(

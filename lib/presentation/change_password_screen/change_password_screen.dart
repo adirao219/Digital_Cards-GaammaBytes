@@ -25,6 +25,9 @@ class _ChangePasswordScreen extends State<ChangePasswordScreen> {
   String passwordtext = '';
   String confirmpasswordtext = '';
 
+  bool _oldpasswordVisible = false;
+  bool _newpasswordVisible = false;
+  bool _confirmpasswordVisible = false;
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -175,9 +178,25 @@ class _ChangePasswordScreen extends State<ChangePasswordScreen> {
                               passwordtext = text;
                             });
                           },
-                          obscureText: true,
+                          obscureText: !_oldpasswordVisible,
                           controller: _oldpasswordController,
                           decoration: InputDecoration(
+                            suffixIcon: IconButton(
+                                    icon: Icon(
+                                      // Based on passwordVisible state choose the icon
+                                      _oldpasswordVisible
+                                          ? Icons.visibility
+                                          : Icons.visibility_off,
+                                      color: ColorConstant.pink900,
+                                      size: 20,
+                                    ),
+                                    onPressed: () {
+                                      // Update the state i.e. toogle the state of passwordVisible variable
+                                      setState(() {
+                                        _oldpasswordVisible = !_oldpasswordVisible;
+                                      });
+                                    },
+                                  ),
                             labelText: "lbl_passwordold".tr,
                             labelStyle: AppStyle.txtNunitoSansRegular12
                                 .copyWith(
@@ -224,9 +243,25 @@ class _ChangePasswordScreen extends State<ChangePasswordScreen> {
                               passwordtext = text;
                             });
                           },
-                          obscureText: true,
+                          obscureText: !_newpasswordVisible,
                           controller: _passwordController,
                           decoration: InputDecoration(
+                              suffixIcon: IconButton(
+                                    icon: Icon(
+                                      // Based on passwordVisible state choose the icon
+                                      _newpasswordVisible
+                                          ? Icons.visibility
+                                          : Icons.visibility_off,
+                                      color: ColorConstant.pink900,
+                                      size: 20,
+                                    ),
+                                    onPressed: () {
+                                      // Update the state i.e. toogle the state of passwordVisible variable
+                                      setState(() {
+                                        _newpasswordVisible = !_newpasswordVisible;
+                                      });
+                                    },
+                                  ),
                             labelText: "lbl_password3".tr,
                             labelStyle: AppStyle.txtNunitoSansRegular12
                                 .copyWith(
@@ -273,9 +308,25 @@ class _ChangePasswordScreen extends State<ChangePasswordScreen> {
                               confirmpasswordtext = text;
                             });
                           },
-                          obscureText: true,
+                          obscureText: _confirmpasswordVisible,
                           controller: _confirmpasswordController,
                           decoration: InputDecoration(
+                                  suffixIcon: IconButton(
+                                    icon: Icon(
+                                      // Based on passwordVisible state choose the icon
+                                      _confirmpasswordVisible
+                                          ? Icons.visibility
+                                          : Icons.visibility_off,
+                                      color: ColorConstant.pink900,
+                                      size: 20,
+                                    ),
+                                    onPressed: () {
+                                      // Update the state i.e. toogle the state of passwordVisible variable
+                                      setState(() {
+                                        _confirmpasswordVisible = !_confirmpasswordVisible;
+                                      });
+                                    },
+                                  ),
                             labelText: "msg_confirm_password".tr,
                             labelStyle: AppStyle.txtNunitoSansRegular12
                                 .copyWith(

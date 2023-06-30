@@ -83,7 +83,7 @@ class ProfileResult {
         countryCodeList?.add(CountryCodeList.fromJson(v));
       });
     }
-    regDate = json['RegDate'];
+    regDate = json['RegDateString'];
     languageId = json['LanguageId'];
     languageIdName = json['LanguageIdName'];
     if (json['LanguageIdList'] != null) {

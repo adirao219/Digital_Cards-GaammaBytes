@@ -1,4 +1,5 @@
 import 'dart:io' show Platform;
+import 'dart:ui';
 
 const REFRESH_TOKEN_KEY = 'refresh_token';
 const BACKEND_TOKEN_KEY = 'backend_token';
@@ -26,3 +27,9 @@ String redirectUrl() {
   }
   return '';
 }
+  Color fromHex(String hexString) {
+    final buffer = StringBuffer();
+    if (hexString.length == 6 || hexString.length == 7) buffer.write('ff');
+    buffer.write(hexString.replaceFirst('#', ''));
+    return Color(int.parse(buffer.toString(), radix: 16));
+  }

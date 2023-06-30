@@ -14,23 +14,23 @@ class BottomBarButton extends StatefulWidget {
   final Color? selectedColor;
   final Color? unselectedColor;
 
-  const BottomBarButton({
-    Key? key,
-    this.isSelected = false,
-    this.icon = Icons.dashboard,
-    this.selectedColor,
-    this.unselectedColor,
-    this.isVisible = false,
-    this.title = '',
-    this.onTap
-  }) : super(key: key);
+  const BottomBarButton(
+      {Key? key,
+      this.isSelected = false,
+      this.icon = Icons.dashboard,
+      this.selectedColor,
+      this.unselectedColor,
+      this.isVisible = false,
+      this.title = '',
+      this.onTap})
+      : super(key: key);
 
   @override
   _BottomBarButtonState createState() => _BottomBarButtonState();
 }
 
-class _BottomBarButtonState extends State<BottomBarButton> with SingleTickerProviderStateMixin {
-
+class _BottomBarButtonState extends State<BottomBarButton>
+    with SingleTickerProviderStateMixin {
   late AnimationController animationController;
   late Animation<double> animation;
 
@@ -53,41 +53,42 @@ class _BottomBarButtonState extends State<BottomBarButton> with SingleTickerProv
 
   @override
   Widget build(BuildContext context) {
-    return Visibility(child:  Expanded(
-      child: InkResponse(
-        splashColor: Colors.transparent,
-        highlightColor: Colors.transparent,
-        onTap: widget.onTap as void Function(),
-        onHighlightChanged: (touched) {
-          if (!touched) {
-            animationController.forward().whenCompleteOrCancel(() {
-              animationController.reset();
-            });
-          }
-        },
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Icon(widget.icon,
-                color: widget.isSelected
-                    ? (widget.selectedColor ?? Color(0xFF078DF0))
-                    : (widget.unselectedColor ?? Color(0xFF9FACBE))),
-            Container(
-              height: animation.value,
-            ),
-            Text(widget.title,
-                style: TextStyle(
+    return Visibility(
+        child: Expanded(
+          child: InkResponse(
+            splashColor: Colors.transparent,
+            highlightColor: Colors.transparent,
+            onTap: widget.onTap as void Function(),
+            onHighlightChanged: (touched) {
+              if (!touched) {
+                animationController.forward().whenCompleteOrCancel(() {
+                  animationController.reset();
+                });
+              }
+            },
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Icon(widget.icon,
                     color: widget.isSelected
                         ? (widget.selectedColor ?? Color(0xFF078DF0))
-                        : (widget.unselectedColor ?? Color(0xFF9FACBE)),
-                    fontWeight: FontWeight.bold,
-                    fontSize: 10))
-          ],
+                        : (widget.unselectedColor ?? Color(0xFF9FACBE))),
+                Container(
+                  height: animation.value,
+                ),
+                Text(widget.title,
+                    style: TextStyle(
+                        color: widget.isSelected
+                            ? (widget.selectedColor ?? Color(0xFF078DF0))
+                            : (widget.unselectedColor ?? Color(0xFF9FACBE)),
+                        fontWeight: FontWeight.bold,
+                        fontSize: 10))
+              ],
+            ),
+          ),
         ),
-      ),
-    ),
-    visible: widget.isVisible);
+        visible: widget.isVisible);
   }
 
   @override
@@ -100,22 +101,22 @@ class _BottomBarButtonState extends State<BottomBarButton> with SingleTickerProv
 class BottomButtonData {
   final dynamic id;
   final IconData icon;
+  final Widget? child;
   final String title;
   final bool isVisible;
+  final bool isCustomChild;
 
   BottomButtonData({
     this.id,
-    this.isVisible =false,
-    
+    this.isVisible = false,
+    this.isCustomChild = false,
+    this.child,
     this.icon = Icons.home,
     this.title = '',
   });
 }
 
-
-
 class CustomBottomWidget extends StatefulWidget {
-
   final Color? backgroundColor;
   final List<BottomButtonData> buttonData;
   final Widget? fabIcon;
@@ -158,7 +159,6 @@ class _CustomBottomWidgetState extends State<CustomBottomWidget> {
 
   @override
   Widget build(BuildContext context) {
-
     final clipper = _PandaBarClipper(fabSize: fabSize);
 
     return Stack(
@@ -183,20 +183,22 @@ class _CustomBottomWidgetState extends State<CustomBottomWidget> {
                 List<Widget> trailingChildren = [];
 
                 widget.buttonData.asMap().forEach((i, data) {
-                  Widget btn = BottomBarButton(
-                    icon: data.icon,
-isVisible: data.isVisible,
-                    title: data.title,
-                    isSelected: data.id != null && selectedId == data.id,
-                    unselectedColor: widget.buttonColor,
-                    selectedColor: widget.buttonSelectedColor,
-                    onTap: () {
-                      setState(() {
-                        selectedId = data.id;
-                      });
-                      this.widget.onChange(data.id);
-                    },
-                  );
+                  Widget btn = data.isCustomChild
+                      ? (Visibility(child: (data.child??Container()),visible:data.isVisible)) 
+                      : BottomBarButton(
+                          icon: data.icon,
+                          isVisible: data.isVisible,
+                          title: data.title,
+                          isSelected: data.id != null && selectedId == data.id,
+                          unselectedColor: widget.buttonColor,
+                          selectedColor: widget.buttonSelectedColor,
+                          onTap: () {
+                            setState(() {
+                              selectedId = data.id;
+                            });
+                            this.widget.onChange(data.id);
+                          },
+                        );
 
                   if (i < 2) {
                     leadingChildren.add(btn);
@@ -274,7 +276,6 @@ class _PandaBarClipper extends CustomClipper<Path> {
 
   @override
   bool shouldReclip(oldClipper) => false;
-
 }
 
 class _ClipShadowPainter extends CustomPainter {

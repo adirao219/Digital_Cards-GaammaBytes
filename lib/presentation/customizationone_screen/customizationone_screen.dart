@@ -1,10 +1,15 @@
 import 'package:digitalcardsgaammabytes/core/app_export.dart';
+import 'package:digitalcardsgaammabytes/data/apiClient/api_client.dart';
 import 'package:digitalcardsgaammabytes/widgets/app_bar/appbar_image.dart';
 import 'package:digitalcardsgaammabytes/widgets/app_bar/appbar_title.dart';
 import 'package:digitalcardsgaammabytes/widgets/app_bar/custom_app_bar.dart';
 import 'package:digitalcardsgaammabytes/widgets/custom_bottom_bar.dart';
 import 'package:digitalcardsgaammabytes/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
+
+import '../../data/globals/globalvariables.dart';
+import '../../data/models/deleteGreeting/post_delete_greeting_resp.dart';
+import '../../data/models/getCreateCard/get_get_create_card_resp.dart';
 
 class CustomizationoneScreen extends StatefulWidget {
   const CustomizationoneScreen({super.key});
@@ -15,6 +20,22 @@ class CustomizationoneScreen extends StatefulWidget {
 }
 
 class _CustomizationoneScreen extends State<CustomizationoneScreen> {
+  var cardType = Get.arguments["cardType"] as int?;
+  var selectedCardID = Get.arguments["SelectedCardID"] as int?;
+  var cardSubtypeID = Get.arguments["cardSubtypeID"] as int?;
+  var templateId = Get.arguments["templateId"] as String?;
+  var cardTypeName = Get.arguments["cardTypeName"] as String?;
+  var templateName = Get.arguments["templateName"] as String?;
+  var cardSubTypeName = Get.arguments["cardSubTypeName"] as String?;
+  var isPublishAvailable = Get.arguments["isPublishAvailable"] as bool?;
+  var cardName = Get.arguments["cardName"] as String?;
+  var mainResult = Get.arguments["cardDetails"] as GetCardResult?;
+  bool isPublished = (Get.arguments["isPublished"] as bool?) ?? false;
+  String publishedURL = (Get.arguments["publishedURL"] as String?) ?? "";
+
+  ApiClient api = new ApiClient();
+  String? createDateString;
+  String? lastEditDateString;
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -92,28 +113,48 @@ class _CustomizationoneScreen extends State<CustomizationoneScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              Container(
-                                  width: getHorizontalSize(266.00),
-                                  margin: getMargin(left: 9),
-                                  child: RichText(
-                                      text: TextSpan(children: [
-                                        TextSpan(
-                                            text:
-                                                "msg_card_type_ex_buisness2".tr,
-                                            style: TextStyle(
-                                                color: ColorConstant.pink900,
-                                                fontSize: getFontSize(18),
-                                                fontFamily: 'Nunito',
-                                                fontWeight: FontWeight.w700)),
-                                        TextSpan(
-                                            text: "msg_template_type".tr,
-                                            style: TextStyle(
-                                                color: ColorConstant.pink900,
-                                                fontSize: getFontSize(18),
-                                                fontFamily: 'Nunito',
-                                                fontWeight: FontWeight.w600))
-                                      ]),
-                                      textAlign: TextAlign.left)),
+                              Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: Container(
+                                      // width: getHorizontalSize(266.00),
+                                      margin: getMargin(left: 0),
+                                      child: RichText(
+                                          text: TextSpan(children: [
+                                            TextSpan(
+                                                text: ("msg_card_type_ex_new2"
+                                                        .tr) +
+                                                    (cardTypeName ?? ""),
+                                                style: TextStyle(
+                                                    color:
+                                                        ColorConstant.pink900,
+                                                    fontSize: getFontSize(18),
+                                                    fontFamily: 'Nunito',
+                                                    fontWeight:
+                                                        FontWeight.w700)),
+                                          ]),
+                                          textAlign: TextAlign.left))),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: Container(
+                                      // width: getHorizontalSize(266.00),
+                                      margin: getMargin(left: 0),
+                                      child: RichText(
+                                          text: TextSpan(children: [
+                                            TextSpan(
+                                                text: ("msg_template_type".tr) +
+                                                    (templateName ?? ""),
+                                                style: TextStyle(
+                                                    color:
+                                                        ColorConstant.pink900,
+                                                    fontSize: getFontSize(18),
+                                                    fontFamily: 'Nunito',
+                                                    fontWeight:
+                                                        FontWeight.w600))
+                                          ]),
+                                          textAlign: TextAlign.left))),
                               CustomButton(
                                   height: 60,
                                   width: 325,
@@ -133,285 +174,353 @@ class _CustomizationoneScreen extends State<CustomizationoneScreen> {
                                           .copyWith(
                                               letterSpacing:
                                                   getHorizontalSize(0.36)))),
-                              Align(
-                                  alignment: Alignment.center,
-                                  child: Container(
-                                      height: getVerticalSize(212.00),
-                                      width: getHorizontalSize(289.00),
-                                      margin: getMargin(top: 13),
-                                      child: Stack(
-                                          alignment: Alignment.topRight,
-                                          children: [
-                                            Align(
-                                                alignment: Alignment.topLeft,
-                                                child: GestureDetector(
-                                                    onTap: () {
-                                                      onTapRectangle4214();
-                                                    },
-                                                    child: Container(
-                                                        height: getSize(80.00),
-                                                        width: getSize(80.00),
-                                                        decoration: BoxDecoration(
-                                                            color: ColorConstant
-                                                                .deepOrange40033,
-                                                            borderRadius:
-                                                                BorderRadius.circular(
-                                                                    getHorizontalSize(
-                                                                        5.00)))))),
-                                            Align(
-                                                alignment: Alignment.topRight,
-                                                child: GestureDetector(
-                                                    onTap: () {
-                                                      onTapRectangle4215();
-                                                    },
-                                                    child: Container(
-                                                        height: getSize(80.00),
-                                                        width: getSize(80.00),
-                                                        decoration: BoxDecoration(
-                                                            color: ColorConstant
-                                                                .deepOrange40033,
-                                                            borderRadius:
-                                                                BorderRadius.circular(
-                                                                    getHorizontalSize(
-                                                                        5.00)))))),
-                                            Align(
-                                                alignment: Alignment.topCenter,
-                                                child: GestureDetector(
-                                                    onTap: () {
-                                                      onTapRectangle4216();
-                                                    },
-                                                    child: Container(
-                                                        height: getSize(80.00),
-                                                        width: getSize(80.00),
-                                                        decoration: BoxDecoration(
-                                                            color: ColorConstant
-                                                                .deepOrange40033,
-                                                            borderRadius:
-                                                                BorderRadius.circular(
-                                                                    getHorizontalSize(
-                                                                        5.00)))))),
-                                            Align(
-                                                alignment: Alignment.bottomLeft,
-                                                child: GestureDetector(
-                                                    onTap: () {
-                                                      onTapStacksearch();
-                                                    },
-                                                    child: Card(
-                                                        clipBehavior:
-                                                            Clip.antiAlias,
-                                                        elevation: 0,
-                                                        margin:
-                                                            EdgeInsets.all(0),
-                                                        color: ColorConstant
-                                                            .deepOrange40033,
-                                                        shape: RoundedRectangleBorder(
-                                                            borderRadius:
-                                                                BorderRadiusStyle
-                                                                    .roundedBorder5),
-                                                        child: Container(
-                                                            height:
-                                                                getSize(80.00),
-                                                            width:
-                                                                getSize(80.00),
-                                                            padding: getPadding(
-                                                                all: 25),
-                                                            decoration: AppDecoration
-                                                                .fillDeeporangeA100a3
-                                                                .copyWith(
-                                                                    borderRadius:
-                                                                        BorderRadiusStyle
-                                                                            .roundedBorder5),
-                                                            child: Stack(
-                                                                children: [
-                                                                  CustomImageView(
-                                                                      svgPath:
-                                                                          ImageConstant
-                                                                              .imgSearchPink900,
-                                                                      height: getVerticalSize(
-                                                                          19.00),
-                                                                      width: getHorizontalSize(
-                                                                          29.00),
-                                                                      alignment:
-                                                                          Alignment
-                                                                              .bottomCenter)
-                                                                ]))))),
-                                            Align(
-                                                alignment: Alignment.centerLeft,
-                                                child: Padding(
-                                                    padding:
-                                                        getPadding(left: 2),
-                                                    child: Text(
-                                                        "msg_advanced_feature"
-                                                            .tr,
-                                                        overflow: TextOverflow
-                                                            .ellipsis,
-                                                        textAlign:
-                                                            TextAlign.left,
-                                                        style: AppStyle
-                                                            .txtNunitoSansBold16Pink900
-                                                            .copyWith(
-                                                                letterSpacing:
-                                                                    getHorizontalSize(
-                                                                        0.36))))),
-                                            Align(
-                                                alignment: Alignment.topLeft,
-                                                child: Padding(
-                                                    padding: getPadding(
-                                                        left: 8, top: 6),
-                                                    child: Column(
-                                                        mainAxisSize:
-                                                            MainAxisSize.min,
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .start,
-                                                        children: [
-                                                          Padding(
-                                                              padding:
-                                                                  getPadding(
-                                                                      left: 1),
-                                                              child: Row(
-                                                                  children: [
-                                                                    Text(
-                                                                        "lbl_footer"
-                                                                            .tr,
-                                                                        overflow:
-                                                                            TextOverflow
-                                                                                .ellipsis,
-                                                                        textAlign:
-                                                                            TextAlign
-                                                                                .left,
-                                                                        style: AppStyle
-                                                                            .txtNunitoSansRegular12Black900
-                                                                            .copyWith(letterSpacing: getHorizontalSize(0.36))),
-                                                                    Padding(
-                                                                        padding: getPadding(
-                                                                            left:
-                                                                                65),
-                                                                        child: Text(
-                                                                            "lbl_icon_groups"
-                                                                                .tr,
-                                                                            overflow:
-                                                                                TextOverflow.ellipsis,
-                                                                            textAlign: TextAlign.left,
-                                                                            style: AppStyle.txtNunitoSansRegular12Black900.copyWith(letterSpacing: getHorizontalSize(0.36)))),
-                                                                    Padding(
-                                                                        padding: getPadding(
-                                                                            left:
-                                                                                40),
-                                                                        child: Text(
-                                                                            "lbl_bands"
-                                                                                .tr,
-                                                                            overflow:
-                                                                                TextOverflow.ellipsis,
-                                                                            textAlign: TextAlign.left,
-                                                                            style: AppStyle.txtNunitoSansRegular12Black900.copyWith(letterSpacing: getHorizontalSize(0.36))))
-                                                                  ])),
-                                                          Padding(
-                                                              padding:
-                                                                  getPadding(
-                                                                      left: 18,
-                                                                      top: 7),
-                                                              child: Row(
-                                                                  children: [
-                                                                    CustomImageView(
-                                                                        svgPath:
-                                                                            ImageConstant
-                                                                                .imgVideocamera,
-                                                                        height: getVerticalSize(
-                                                                            25.00),
-                                                                        width: getHorizontalSize(
-                                                                            21.00),
-                                                                        margin: getMargin(
-                                                                            bottom:
-                                                                                1)),
-                                                                    CustomImageView(
-                                                                        svgPath:
-                                                                            ImageConstant
-                                                                                .imgLink,
-                                                                        height: getVerticalSize(
-                                                                            23.00),
-                                                                        width: getHorizontalSize(
-                                                                            32.00),
-                                                                        margin: getMargin(
-                                                                            left:
-                                                                                84,
-                                                                            top:
-                                                                                3))
-                                                                  ])),
-                                                          Padding(
-                                                              padding:
-                                                                  getPadding(
-                                                                      top: 82),
-                                                              child: Text(
-                                                                  "lbl_advanced"
-                                                                      .tr,
-                                                                  overflow:
-                                                                      TextOverflow
-                                                                          .ellipsis,
-                                                                  textAlign:
-                                                                      TextAlign
-                                                                          .left,
-                                                                  style: AppStyle
-                                                                      .txtNunitoSansRegular12Black900
-                                                                      .copyWith(
-                                                                          letterSpacing:
-                                                                              getHorizontalSize(0.36))))
-                                                        ]))),
-                                            CustomImageView(
-                                                svgPath: ImageConstant
-                                                    .imgGridPink900,
-                                                height: getVerticalSize(25.00),
-                                                width: getHorizontalSize(22.00),
-                                                alignment: Alignment.topRight,
-                                                margin: getMargin(
-                                                    top: 33, right: 28))
-                                          ]))),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  CustomButton(
+                                      height: 60,
+                                      width: 150,
+                                      text: "  " + "lbl_footer".tr,
+                                      margin: getMargin(top: 10),
+                                      variant:
+                                          ButtonVariant.OutlineBlack9003f_1,
+                                      shape: ButtonShape.RoundedBorder15,
+                                      padding: ButtonPadding.PaddingAll18,
+                                      fontStyle:
+                                          ButtonFontStyle.NunitoSansBold16,
+                                      prefixWidget: CustomImageView(
+                                          svgPath: ImageConstant.imgVideocamera,
+                                          height: getVerticalSize(25.00),
+                                          width: getHorizontalSize(21.00),
+                                          margin: getMargin(bottom: 1)),
+                                      onTap: onTapFooter),
+                                  CustomButton(
+                                      height: 60,
+                                      width: 150,
+                                      text: "  " + "lbl_bands".tr,
+                                      margin: getMargin(top: 10),
+                                      variant:
+                                          ButtonVariant.OutlineBlack9003f_1,
+                                      shape: ButtonShape.RoundedBorder15,
+                                      padding: ButtonPadding.PaddingAll18,
+                                      fontStyle:
+                                          ButtonFontStyle.NunitoSansBold16,
+                                      prefixWidget: CustomImageView(
+                                          svgPath: ImageConstant.imgGridPink900,
+                                          height: getVerticalSize(25.00),
+                                          width: getHorizontalSize(21.00),
+                                          margin: getMargin(bottom: 1)),
+                                      onTap: onTapBand),
+                                ],
+                              ),
                               Padding(
-                                  padding: getPadding(top: 42),
-                                  child: Text("msg_created_on_02_02_2023".tr,
+                                  padding: getPadding(left: 15, top: 31),
+                                  child: Text("msg_advanced_feature".tr,
                                       overflow: TextOverflow.ellipsis,
                                       textAlign: TextAlign.left,
-                                      style: AppStyle.txtNunitoSansRegular14
+                                      style: AppStyle.txtNunitoSansBold16Pink900
                                           .copyWith(
                                               letterSpacing:
                                                   getHorizontalSize(0.36)))),
-                              Padding(
-                                  padding: getPadding(top: 9),
-                                  child: Text("msg_published_on_02_02_2023".tr,
-                                      overflow: TextOverflow.ellipsis,
-                                      textAlign: TextAlign.left,
-                                      style: AppStyle.txtNunitoSansRegular14
-                                          .copyWith(
-                                              letterSpacing:
-                                                  getHorizontalSize(0.36)))),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  CustomButton(
+                                      height: 60,
+                                      width: 150,
+                                      text: "  " + "lbl_advanced".tr,
+                                      margin: getMargin(top: 10),
+                                      variant:
+                                          ButtonVariant.OutlineBlack9003f_1,
+                                      shape: ButtonShape.RoundedBorder15,
+                                      padding: ButtonPadding.PaddingAll18,
+                                      fontStyle:
+                                          ButtonFontStyle.NunitoSansBold16,
+                                      prefixWidget: CustomImageView(
+                                          svgPath:
+                                              ImageConstant.imgSearchPink900,
+                                          height: getVerticalSize(25.00),
+                                          width: getHorizontalSize(21.00),
+                                          margin: getMargin(bottom: 1)),
+                                      onTap: onTapAdvanced),
+                                ],
+                              ),
+                              Visibility(
+                                child: Container(
+                                    height: getVerticalSize(1.00),
+                                    width: getHorizontalSize(326.00),
+                                    margin:
+                                        getMargin(left: 2, top: 5, bottom: 5),
+                                    decoration: BoxDecoration(
+                                        color: ColorConstant.gray300Cc,
+                                        borderRadius: BorderRadius.circular(
+                                            getHorizontalSize(1.00)))),
+                                visible: !(createDateString == null ||
+                                    createDateString!.isEmpty),
+                              ),
+                              Visibility(
+                                child: Padding(
+                                    padding:
+                                        getPadding(left: 0, top: 7, bottom: 7),
+                                    child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          Padding(
+                                              padding: getPadding(bottom: 0),
+                                              child: Text("lbl_created_date".tr,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  textAlign: TextAlign.left,
+                                                  style: AppStyle
+                                                      .txtNunitoSansRegular14
+                                                      .copyWith(
+                                                          letterSpacing:
+                                                              getHorizontalSize(
+                                                                  0.36),
+                                                          height:
+                                                              getVerticalSize(
+                                                                  1.26)))),
+                                          SizedBox(
+                                            width: 40,
+                                          ),
+                                          Padding(
+                                              padding: getPadding(bottom: 0),
+                                              child: Text(
+                                                  createDateString ?? "",
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  textAlign: TextAlign.left,
+                                                  style: TextStyle(
+                                                    color:
+                                                        ColorConstant.pink900,
+                                                    fontSize: getFontSize(
+                                                      14,
+                                                    ),
+                                                    fontFamily: 'Nunito Sans',
+                                                    fontWeight: FontWeight.w700,
+                                                  ))),
+                                        ])),
+                                visible: !(createDateString == null ||
+                                    createDateString!.isEmpty),
+                              ),
+                              Visibility(
+                                child: Container(
+                                    height: getVerticalSize(1.00),
+                                    width: getHorizontalSize(326.00),
+                                    margin:
+                                        getMargin(left: 2, top: 5, bottom: 5),
+                                    decoration: BoxDecoration(
+                                        color: ColorConstant.gray300Cc,
+                                        borderRadius: BorderRadius.circular(
+                                            getHorizontalSize(1.00)))),
+                                visible: !(lastEditDateString == null ||
+                                    lastEditDateString!.isEmpty),
+                              ),
+                              Visibility(
+                                child: Padding(
+                                    padding: getPadding(left: 0, top: 7),
+                                    child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          Padding(
+                                              padding: getPadding(bottom: 0),
+                                              child: Text(
+                                                  "lbl_last_edited_date".tr,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  textAlign: TextAlign.left,
+                                                  style: AppStyle
+                                                      .txtNunitoSansRegular14
+                                                      .copyWith(
+                                                          letterSpacing:
+                                                              getHorizontalSize(
+                                                                  0.36),
+                                                          height:
+                                                              getVerticalSize(
+                                                                  1.26)))),
+                                          SizedBox(
+                                            width: 15,
+                                          ),
+                                          Padding(
+                                              padding: getPadding(bottom: 0),
+                                              child: Text(
+                                                  lastEditDateString ?? '',
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  textAlign: TextAlign.left,
+                                                  style: TextStyle(
+                                                    color:
+                                                        ColorConstant.pink900,
+                                                    fontSize: getFontSize(
+                                                      14,
+                                                    ),
+                                                    fontFamily: 'Nunito Sans',
+                                                    fontWeight: FontWeight.w700,
+                                                  ))),
+                                        ])),
+                                visible: !(lastEditDateString == null ||
+                                    lastEditDateString!.isEmpty),
+                              ),
                             ])))),
             bottomNavigationBar: CustomBottomBar(
+                cardID: selectedCardID ?? 0,
                 onNextClicked: onTapCardpreview,
-                isPublishAvailable: false,
+                onPublish: (){
+                  showPublishAlertDialog(context);
+                },
+                isPublished: isPublished,
+                publishURL: publishedURL,
+                isPublishAvailable: isPublishAvailable ?? false,
                 onChanged: (BottomBarEnum type) {})));
   }
 
   onTapCardpreview() {
-    Navigator.of(context).pushNamed(AppRoutes.cardPreviewScreen);
+    Navigator.of(context).pushNamed(AppRoutes.cardPreviewScreen,
+        arguments: {"CardID": this.selectedCardID, "isDigitalCard": true});
   }
 
-  onTapRectangle4214() {
-    Navigator.of(context).pushNamed(AppRoutes.footerScreen);
+
+  showPublishAlertDialog(BuildContext context) {
+    // set up the buttons
+    Widget cancelButton = TextButton(
+      child: Text("No"),
+      onPressed: () {
+        Navigator.pop(context);
+      },
+    );
+    Widget continueButton = TextButton(
+      child: Text("Yes"),
+      onPressed: () {
+        Navigator.pop(context);
+         publishCard();
+      },
+    );
+
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text("Confirmation"),
+      content: Text("Are you sure you want to publish the card?"),
+      actions: [
+        cancelButton,
+        continueButton,
+      ],
+    );
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
+  publishCard() async {
+    try {
+      var req = {
+        "UserId": GlobalVariables.userID,
+        "CardID": selectedCardID.toString(),
+      };
+      APIResponse resp = await api.fetchPublish(queryParams: req);
+      if ((resp.isSuccess ?? false)) {
+        setState(() {
+          isPublished = true;
+          publishedURL = resp.result;
+        });
+        Get.snackbar('Success', "Card Published successfully!",
+            backgroundColor: Color.fromARGB(255, 208, 245, 216),
+            colorText: Colors.green[900],
+            icon: Icon(
+              Icons.done,
+              color: Colors.green[900],
+            ));
+      } else {
+        Get.snackbar('Error', resp.errorMessage.toString(),
+            backgroundColor: Color.fromARGB(255, 255, 230, 230),
+            colorText: Colors.red[900],
+            icon: Icon(
+              Icons.error,
+              color: Colors.red[900],
+            ));
+      }
+    } catch (e) {}
   }
 
-  onTapRectangle4215() {
-    Navigator.of(context).pushNamed(AppRoutes.bandsScreen);
+  getCardData({bool showProgress=true}) async {
+    try {
+      var req = {
+        "UserIdString": GlobalVariables.userID,
+        "CardID": selectedCardID.toString(),
+        "CardType": "0",
+        "CardSubType": "0",
+      };
+      GetGetCreateCardResp resp =
+          await api.fetchGetCreateCard(queryParams: req,showProgress: showProgress);
+      if (resp.isSuccess ?? false) {
+        setState(() {
+          mainResult = resp.result;
+        });
+      } else {
+        Get.snackbar('Error', resp.errorMessage.toString(),
+            backgroundColor: Color.fromARGB(255, 255, 230, 230),
+            colorText: Colors.red[900],
+            icon: Icon(
+              Icons.error,
+              color: Colors.red[900],
+            ));
+      }
+    } catch (e) {}
+  }
+
+  onTapFooter() {
+    Navigator.of(context).pushNamed(AppRoutes.footerScreen, arguments: {
+      "cardType": cardType,
+      "cardSubtypeID": cardSubtypeID,
+      "templateId": templateId,
+      "cardTypeName": cardTypeName,
+      "templateName": templateName,
+      "cardSubTypeName": cardSubTypeName,
+      "SelectedCardID": selectedCardID,
+      "isPublishAvailable": isPublishAvailable,
+      "cardName": cardName
+    });
+  }
+
+  onTapBand() {
+    Navigator.of(context).pushNamed(AppRoutes.bandsScreen, arguments: {
+      "cardType": cardType,
+      "cardSubtypeID": cardSubtypeID,
+      "templateId": templateId,
+      "cardTypeName": cardTypeName,
+      "templateName": templateName,
+      "cardSubTypeName": cardSubTypeName,
+      "SelectedCardID": selectedCardID,
+      "isPublishAvailable": isPublishAvailable,
+      "cardName": cardName
+    });
   }
 
   onTapRectangle4216() {
     Navigator.of(context).pushNamed(AppRoutes.iconGroupScreen);
   }
 
-  onTapStacksearch() {
-    Navigator.of(context).pushNamed(AppRoutes.advancedScreen);
+  onTapAdvanced() {
+    Navigator.of(context).pushNamed(AppRoutes.advancedScreen, arguments: {
+      "cardType": cardType,
+      "cardSubtypeID": cardSubtypeID,
+      "templateId": templateId,
+      "cardTypeName": cardTypeName,
+      "templateName": templateName,
+      "cardSubTypeName": cardSubTypeName,
+      "SelectedCardID": selectedCardID,
+      "isPublishAvailable": isPublishAvailable,
+      "cardName": cardName,
+      "cardDetails": mainResult
+    }).then((value) {
+      getCardData(showProgress: false);
+    });
   }
 
   onTapEllipseFour() {

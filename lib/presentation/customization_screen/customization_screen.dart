@@ -29,7 +29,7 @@ class _CustomizationScreen extends State<CustomizationScreen> {
                 FloatingActionButtonLocation.miniEndTop,
             floatingActionButton: Padding(
                 padding: const EdgeInsets.only(bottom: 75.0),
-                child: MoreOptionMenu()),
+              child: MoreOptionMenu(isGreeting:true ,)),
             backgroundColor: ColorConstant.whiteA700,
             appBar: CustomAppBar(
                 height: getVerticalSize(108.00),

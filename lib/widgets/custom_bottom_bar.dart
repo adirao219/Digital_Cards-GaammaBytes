@@ -1,19 +1,32 @@
+
+
 import 'package:digitalcardsgaammabytes/core/app_export.dart';
+import 'package:digitalcardsgaammabytes/widgets/app_bar/appbar_image.dart';
 import 'package:digitalcardsgaammabytes/widgets/custom_bottom_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:pandabar/main.view.dart';
 import 'package:pandabar/pandabar.dart';
+import 'package:share_plus/share_plus.dart';
 
 class CustomBottomBar extends StatelessWidget {
   CustomBottomBar(
-      {this.onChanged, this.isPublishAvailable = false, this.onNextClicked});
+      {this.onChanged,
+      this.isPublishAvailable = false,
+      this.isPublished = false,
+      this.onPublish,
+      this.publishURL = "",
+      this.cardID = 0,
+      this.onNextClicked});
   RxInt selectedIndex = 0.obs;
 
   bool isPublishAvailable;
-
+  bool isPublished;
+  int cardID;
   Function(BottomBarEnum)? onChanged;
 
   Function()? onNextClicked;
+  Function()? onPublish;
+  String publishURL;
 
   @override
   Widget build(BuildContext context) {
@@ -44,11 +57,25 @@ class CustomBottomBar extends StatelessWidget {
                 isVisible: true,
                 icon: Icons.arrow_circle_right_rounded,
                 title: "lbl_go_next".tr),
-            BottomButtonData(
-                id: 'share',
-                isVisible: isPublishAvailable,
-                icon: Icons.share,
-                title: "lbl_share".tr),
+            isPublished
+                ? BottomButtonData(
+                    id: 'more',
+                    
+                    
+                    isVisible: isPublishAvailable,
+                    icon: Icons.remove_red_eye_rounded,
+                    title: "lbl_share".tr,
+                    isCustomChild: true,
+                    child: ShareAndOpenMenu(
+                      publishURL: publishURL,
+                      cardId: cardID,
+                    ))
+                : BottomButtonData(
+                    id: 'preview',
+                    
+                    isVisible: isPublishAvailable,
+                    icon: Icons.remove_red_eye_rounded,
+                    title: "lbl_preview".tr),
           ],
           onChange: (id) {
             switch (id) {
@@ -58,6 +85,12 @@ class CustomBottomBar extends StatelessWidget {
               case "next":
                 onNextClicked!();
                 break;
+              case "publish":
+                onPublish!();
+                break;
+              case "preview":
+                onPreview(context);
+                break;
             }
           },
           onFabButtonPressed: () {
@@ -65,6 +98,13 @@ class CustomBottomBar extends StatelessWidget {
           },
         ));
   }
+
+  onPreview(BuildContext context) {
+    Navigator.of(context).pushNamed(AppRoutes.cardPreviewScreen,
+        arguments: {"CardID": this.cardID, "isDigitalCard": true});
+  }
+
+
 }
 
 enum BottomBarEnum {
