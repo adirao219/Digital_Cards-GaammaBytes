@@ -133,6 +133,7 @@ class ApiClient extends GetConnect {
       rethrow;
     }
   }
+
   Future<APIResponse> fetchRazorPayAPIKey(
       {Map<String, dynamic> queryParams = const {}}) async {
     ProgressDialogUtils.showProgressDialog();
@@ -154,7 +155,6 @@ class ApiClient extends GetConnect {
       rethrow;
     }
   }
-
 
   Future<CommonGenericResp> makePaymentInitiation(
       {Map requestData = const {}}) async {
@@ -178,17 +178,17 @@ class ApiClient extends GetConnect {
     }
   }
 
-   Future<APIResponse> updatePaymentSuccess(
+  Future<APIResponse> updatePaymentSuccess(
       {Map<String, dynamic> queryParams = const {},
       Map requestData = const {}}) async {
-    ProgressDialogUtils.showProgressDialog();
+    // ProgressDialogUtils.showProgressDialog();
     try {
       await isNetworkConnected();
 
       httpClient.timeout = Duration(seconds: 120);
       Response response = await httpClient.post('$url/API/SuccessCreateCredit',
           query: queryParams, body: requestData);
-      ProgressDialogUtils.hideProgressDialog();
+      // ProgressDialogUtils.hideProgressDialog();
       if (_isSuccessCall(response)) {
         return APIResponse.fromJson(response.body);
       } else {
@@ -197,12 +197,13 @@ class ApiClient extends GetConnect {
             : 'Something Went Wrong!';
       }
     } catch (error, stackTrace) {
-      ProgressDialogUtils.hideProgressDialog();
+      // ProgressDialogUtils.hideProgressDialog();
       Logger.log(error, stackTrace: stackTrace);
       rethrow;
     }
   }
-   Future<APIResponse> updatePaymentFailure(
+
+  Future<APIResponse> updatePaymentFailure(
       {Map<String, dynamic> queryParams = const {},
       Map requestData = const {}}) async {
     ProgressDialogUtils.showProgressDialog();
@@ -226,7 +227,6 @@ class ApiClient extends GetConnect {
       rethrow;
     }
   }
-
 
   Future<CommonGenericResp> createConfirmUser(
       {Map requestData = const {}}) async {
@@ -642,6 +642,28 @@ class ApiClient extends GetConnect {
       } else {
         throw response.body != null
             ? CommonDropdownResp.fromJson(response.body)
+            : 'Something Went Wrong!';
+      }
+    } catch (error, stackTrace) {
+      ProgressDialogUtils.hideProgressDialog();
+      Logger.log(error, stackTrace: stackTrace);
+      rethrow;
+    }
+  }
+
+  Future<APIResponse> getLanguageCaptionData(
+      {Map<String, dynamic> queryParams = const {}}) async {
+    ProgressDialogUtils.showProgressDialog();
+    try {
+      await isNetworkConnected();
+      Response response = await httpClient
+          .get('$url/API/GetLanguageCaptionData', query: queryParams);
+      ProgressDialogUtils.hideProgressDialog();
+      if (_isSuccessCall(response)) {
+        return APIResponse.fromJson(response.body);
+      } else {
+        throw response.body != null
+            ? APIResponse.fromJson(response.body)
             : 'Something Went Wrong!';
       }
     } catch (error, stackTrace) {
@@ -1156,12 +1178,12 @@ class ApiClient extends GetConnect {
 
   Future<GetGetFooterResp> fetchGetFooter(
       {Map<String, dynamic> queryParams = const {}}) async {
-    ProgressDialogUtils.showProgressDialog();
+    // ProgressDialogUtils.showProgressDialog();
     try {
       await isNetworkConnected();
       Response response =
           await httpClient.get('$url/APID/GetFooter', query: queryParams);
-      ProgressDialogUtils.hideProgressDialog();
+      // ProgressDialogUtils.hideProgressDialog();
       if (_isSuccessCall(response)) {
         return GetGetFooterResp.fromJson(response.body);
       } else {
@@ -1400,13 +1422,17 @@ class ApiClient extends GetConnect {
   Future<GetGetCreateCardResp> fetchGetCreateCard(
       {bool showProgress = true,
       Map<String, dynamic> queryParams = const {}}) async {
-    if (showProgress) ProgressDialogUtils.showProgressDialog();
+    if (showProgress) {
+      ProgressDialogUtils.showProgressDialog();
+    }
     try {
       await isNetworkConnected();
       httpClient.timeout = Duration(seconds: 120);
       Response response =
           await httpClient.get('$url/APID/GetCreateCard', query: queryParams);
-      if (showProgress) ProgressDialogUtils.hideProgressDialog();
+      if (showProgress) {
+        ProgressDialogUtils.hideProgressDialog();
+      }
       if (_isSuccessCall(response)) {
         return GetGetCreateCardResp.fromJson(response.body);
       } else {
@@ -1421,8 +1447,6 @@ class ApiClient extends GetConnect {
     }
   }
 
-  
-
   Future<CommonDropdownResp> getBackgroundType(
       {bool showProgress = true,
       Map<String, dynamic> queryParams = const {}}) async {
@@ -1430,8 +1454,8 @@ class ApiClient extends GetConnect {
     try {
       await isNetworkConnected();
       httpClient.timeout = Duration(seconds: 120);
-      Response response =
-          await httpClient.get('$url/APID/GetBackGroundType', query: queryParams);
+      Response response = await httpClient.get('$url/APID/GetBackGroundType',
+          query: queryParams);
       if (showProgress) ProgressDialogUtils.hideProgressDialog();
       if (_isSuccessCall(response)) {
         return CommonDropdownResp.fromJson(response.body);
@@ -1446,7 +1470,6 @@ class ApiClient extends GetConnect {
       rethrow;
     }
   }
-  
 
   Future<CommonDropdownResp> getCreditType(
       {bool showProgress = true,
@@ -1471,14 +1494,13 @@ class ApiClient extends GetConnect {
       rethrow;
     }
   }
-  
-  Future<APIResponse> checkCardEditExpiry(
-      {Map requestData = const {}}) async {
+
+  Future<APIResponse> checkCardEditExpiry({Map requestData = const {}}) async {
     ProgressDialogUtils.showProgressDialog();
     try {
       await isNetworkConnected();
-      Response response =
-          await httpClient.post('$url/API/CheckCardEditExpiry', body: requestData);
+      Response response = await httpClient.post('$url/API/CheckCardEditExpiry',
+          body: requestData);
       ProgressDialogUtils.hideProgressDialog();
       if (_isSuccessCall(response)) {
         return APIResponse.fromJson(response.body);
@@ -1493,13 +1515,14 @@ class ApiClient extends GetConnect {
       rethrow;
     }
   }
+
   Future<APIResponse> assignCardEditCredits(
       {Map requestData = const {}}) async {
     // ProgressDialogUtils.showProgressDialog();
     try {
       await isNetworkConnected();
-      Response response =
-          await httpClient.post('$url/API/assignCardEditCredits', body: requestData);
+      Response response = await httpClient
+          .post('$url/API/assignCardEditCredits', body: requestData);
       // ProgressDialogUtils.hideProgressDialog();
       if (_isSuccessCall(response)) {
         return APIResponse.fromJson(response.body);
@@ -1514,7 +1537,6 @@ class ApiClient extends GetConnect {
       rethrow;
     }
   }
-  
 
   Future<CommonDropdownResp> getFontList(
       {bool showProgress = true,
@@ -1539,8 +1561,6 @@ class ApiClient extends GetConnect {
       rethrow;
     }
   }
-
-  
 
   Future<GetGetCreateCardResp> previewCard(
       {Map<String, dynamic> queryParams = const {}}) async {
@@ -1608,15 +1628,13 @@ class ApiClient extends GetConnect {
   }
 
   Future<CommonDropdownResp> fetchGetBandLinkList(
-      {Map<String, dynamic> queryParams = const {}, bool isProgress=true}) async {
-      if(isProgress)
-    ProgressDialogUtils.showProgressDialog();
+      {Map<String, dynamic> queryParams = const {}}) async {
+    // ProgressDialogUtils.showProgressDialog();
     try {
       await isNetworkConnected();
       Response response =
           await httpClient.get('$url/APID/GetBandLinkList', query: queryParams);
-          if(isProgress)
-      ProgressDialogUtils.hideProgressDialog();
+      // ProgressDialogUtils.hideProgressDialog();
       if (_isSuccessCall(response)) {
         return CommonDropdownResp.fromJson(response.body);
       } else {
@@ -1625,8 +1643,7 @@ class ApiClient extends GetConnect {
             : 'Something Went Wrong!';
       }
     } catch (error, stackTrace) {
-      if(isProgress)
-      ProgressDialogUtils.hideProgressDialog();
+      // ProgressDialogUtils.hideProgressDialog();
       Logger.log(error, stackTrace: stackTrace);
       rethrow;
     }

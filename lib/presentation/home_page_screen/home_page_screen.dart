@@ -1,5 +1,9 @@
+import 'dart:convert';
+
 import 'package:digitalcardsgaammabytes/core/app_export.dart';
 import 'package:digitalcardsgaammabytes/data/globals/globalvariables.dart';
+import 'package:digitalcardsgaammabytes/data/models/deleteGreeting/post_delete_greeting_resp.dart';
+import 'package:digitalcardsgaammabytes/localization/en_us/en_us_translations.dart';
 import 'package:digitalcardsgaammabytes/widgets/app_bar/appbar_image.dart';
 import 'package:digitalcardsgaammabytes/widgets/app_bar/appbar_subtitle.dart';
 import 'package:digitalcardsgaammabytes/widgets/app_bar/custom_app_bar.dart';
@@ -9,6 +13,8 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import '../../core/service/authenticationservice.dart';
+import '../../data/apiClient/api_client.dart';
+import '../../data/models/filterGreetingTemplate/get_filter_greeting_template_resp.dart';
 
 class HomePageScreen extends StatefulWidget {
   const HomePageScreen({super.key});
@@ -23,9 +29,16 @@ class _HomePageScreen extends State<HomePageScreen> {
 
   final GoogleSignIn _googleSignIn = GoogleSignIn();
 
+  ApiClient api = new ApiClient();
+  List<Result>? languages;
+  APIResponse languageCaptionResponse = new APIResponse();
+  Map<String, String> captionMap = new Map<String, String>();
+  String? selectedLanguage;
   @override
   void initState() {
     requestPermission();
+
+    getLanguages();
     super.initState();
   }
 
@@ -38,6 +51,49 @@ class _HomePageScreen extends State<HomePageScreen> {
     final gallerystatus = await gallery.request();
     final camerastatus = await camera.request();
     final locationstatus = await location.request();
+  }
+
+  getLanguages() async {
+    try {
+      CommonDropdownResp resp = await api.getLanguages(queryParams: {});
+      if (resp.isSuccess ?? false) {
+        setState(() {
+          languages = resp.result;
+          selectedLanguage = languages?.first.value;
+        });
+      } else {
+        Get.snackbar('Error', resp.errorMessage.toString(),
+            backgroundColor: Color.fromARGB(255, 255, 230, 230),
+            colorText: Colors.red[900],
+            icon: Icon(
+              Icons.error,
+              color: Colors.red[900],
+            ));
+      }
+    } catch (e) {}
+  }
+
+  getLanguageCaptionData(String languageID) async {
+    try {
+      var req = {"LanguageId": languageID};
+      APIResponse resp = await api.getLanguageCaptionData(queryParams: req);
+      if (resp.isSuccess ?? false) {
+        setState(() {
+          languageCaptionResponse = resp;
+
+          languageCaptionResponse.result
+              .forEach((key, value) => captionMap[key] = value.toString());
+        });
+      } else {
+        Get.snackbar('Error', resp.errorMessage.toString(),
+            backgroundColor: Color.fromARGB(255, 255, 230, 230),
+            colorText: Colors.red[900],
+            icon: Icon(
+              Icons.error,
+              color: Colors.red[900],
+            ));
+      }
+    } catch (e) {}
   }
 
   @override
@@ -493,16 +549,20 @@ class _HomePageScreen extends State<HomePageScreen> {
                                 textAlign: TextAlign.left,
                                 style: AppStyle.txtNunitoSansSemiBold16,
                               ),
-                              onTap: onTapPayment ,
+                              onTap: onTapPayment,
                             )
                           ]),
                         ),
-                          Padding(
+                        Padding(
                           padding: getPadding(
                             top: 35,
                           ),
                           child: Row(children: [
-                            Icon(Icons.history,size: 20,color: ColorConstant.pink900,),
+                            Icon(
+                              Icons.history,
+                              size: 20,
+                              color: ColorConstant.pink900,
+                            ),
                             SizedBox(
                               width: 10,
                             ),
@@ -513,7 +573,7 @@ class _HomePageScreen extends State<HomePageScreen> {
                                 textAlign: TextAlign.left,
                                 style: AppStyle.txtNunitoSansSemiBold16,
                               ),
-                              onTap:onTapCreditHistory,
+                              onTap: onTapCreditHistory,
                             )
                           ]),
                         ),
@@ -553,6 +613,31 @@ class _HomePageScreen extends State<HomePageScreen> {
                               top: 35,
                             ),
                             child: Row(children: [
+                              Icon(
+                                Icons.language,
+                                size: 20,
+                                color: ColorConstant.pink900,
+                              ),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              GestureDetector(
+                                child: Text(
+                                  "lbl_changelanguage".tr,
+                                  overflow: TextOverflow.ellipsis,
+                                  textAlign: TextAlign.left,
+                                  style: AppStyle.txtNunitoSansSemiBold16,
+                                ),
+                                onTap: () {
+                                  showLanguageDialog(context);
+                                },
+                              )
+                            ])),
+                        Padding(
+                            padding: getPadding(
+                              top: 35,
+                            ),
+                            child: Row(children: [
                               CustomImageView(
                                 svgPath: ImageConstant.imgRefresh,
                                 height: getSize(
@@ -586,6 +671,89 @@ class _HomePageScreen extends State<HomePageScreen> {
           ],
         ),
       ),
+    );
+  }
+
+  getLang(String value) async {
+    await getLanguageCaptionData(value);
+  }
+
+  showLanguageDialog(BuildContext context) {
+    // set up the button
+
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text("Choose your Language"),
+      content: Container(
+          child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: languages!.map((element) {
+                return GestureDetector(
+                  child: Container(
+                      child: Card(
+                    elevation: 2,
+                    child: Padding(
+                        padding: getPadding(top: 10, bottom: 10, left: 5),
+                        child: Row(children: [
+                          Icon(Icons.language, size: 18),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          Text(
+                            element.text ?? '',
+                            overflow: TextOverflow.ellipsis,
+                            textAlign: TextAlign.left,
+                            style: AppStyle.txtNunitoSansBold14Pink900,
+                          ),
+                        ])),
+                  )),
+                  onTap: () {
+                    Navigator.pop(context);
+                    setState(() async {
+                      if (element.value == "1") {
+                        Get.clearTranslations();
+
+                        Map<String, Map<String, String>> languageKeys = {
+                          'en_US': enUs
+                        };
+                        Get.addTranslations(languageKeys);
+                        var locale = Locale('en', 'US');
+                        Get.updateLocale(locale);
+
+                        GlobalVariables.setCurrentLocale("en_US");
+                      } else {
+                        await getLang(element.value ?? '');
+                        Get.clearTranslations();
+
+                        Map<String, Map<String, String>> languageKeys = {
+                          element.group: captionMap
+                        };
+                        var lang = element.group?.toString().split('_')[0];
+                        var country = element.group?.toString().split('_')[1];
+                        Get.addTranslations(languageKeys);
+                        var locale = Locale(lang ?? '', country ?? '');
+                        Get.updateLocale(locale);
+
+                        GlobalVariables.setCurrentLocale(
+                            element.group.toString());
+                        var encodedJSON = json.encode(captionMap);
+                        GlobalVariables.setCurrentLocaleTranslations(
+                            encodedJSON);
+                      }
+                    });
+                  },
+                );
+              }).toList())),
+      // actions: [okButton, cancelButtonn],
+    );
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
     );
   }
 
@@ -628,6 +796,17 @@ class _HomePageScreen extends State<HomePageScreen> {
       final bool isUnauthenticated = await AuthService.instance.logout();
       signoutGoogle();
     }
+
+    setState(() {
+      Get.clearTranslations();
+
+      Map<String, Map<String, String>> languageKeys = {'en_US': enUs};
+      Get.addTranslations(languageKeys);
+      var locale = Locale('en', 'US');
+      Get.updateLocale(locale);
+
+      GlobalVariables.setCurrentLocale("en_US");
+    });
     GlobalVariables.setUserID("");
     GlobalVariables.setDisplayname("");
     GlobalVariables.setUserName("");
@@ -670,6 +849,7 @@ class _HomePageScreen extends State<HomePageScreen> {
   onTapPayment() {
     Navigator.of(context).pushNamed(AppRoutes.makePaymentScreen);
   }
+
   onTapCreditHistory() {
     Navigator.of(context).pushNamed(AppRoutes.purchasecredithistory);
   }

@@ -10,7 +10,6 @@ import 'package:digitalcardsgaammabytes/widgets/app_bar/custom_app_bar.dart';
 import 'package:digitalcardsgaammabytes/widgets/custom_text_form_field.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
-import 'package:digitalcardsgaammabytes/domain/facebookauth/facebook_auth_helper.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
@@ -160,7 +159,7 @@ class _LinkScreen extends State<LinkScreen> {
         "OtherURL2": _other2_Controller.text,
         "PaymentQRCode": logoImageBase64,
         "PaymentQRCodeRef": logoImageFileName,
-        "PaymentQRCodeOldId": logoExistingId
+        "PaymentQRCodeOldId": logoExistingId ?? ''
       };
       APIBooleanResponse resp =
           await api.createSaveLinkDefinition(requestData: req);
@@ -182,7 +181,15 @@ class _LinkScreen extends State<LinkScreen> {
               color: Colors.red[900],
             ));
       }
-    } catch (e) {}
+    } catch (e) {
+      Get.snackbar('Error', e.toString(),
+          backgroundColor: Color.fromARGB(255, 255, 230, 230),
+          colorText: Colors.red[900],
+          icon: Icon(
+            Icons.error,
+            color: Colors.red[900],
+          ));
+    }
   }
 
   @override
@@ -760,8 +767,9 @@ class _LinkScreen extends State<LinkScreen> {
 
   selectedImageforCard(DriveFilesData image, UserImageType pictureType) {
     setState(() {
+      isServerStoredLogo = true;
       logoExistingId = image.id;
-      logoImageBase64 = null;
+      logoImageBase64 = image.driveUrl;
       logoImageFileName = null;
     });
     Navigator.pop(context);
@@ -837,6 +845,9 @@ class _LinkScreen extends State<LinkScreen> {
 
   clickOrSelectImage(String type) async {
     Navigator.of(context).pop();
+    if (isServerStoredLogo) {
+      removeImage();
+    }
     if (type == "Gallery") {
       imageLogo = await _picker.pickImage(source: ImageSource.gallery);
     } else {
@@ -855,7 +866,7 @@ class _LinkScreen extends State<LinkScreen> {
       var base64val1 =
           "data:image/png;base64," + base64Encode(imageFile.readAsBytesSync());
       // print('base64:'+base64val1);
-
+      isServerStoredLogo = false;
       logoImageBase64 = base64val1;
       logoCroppedImage = imageFile;
       isFirstImageSelected = true;
@@ -917,8 +928,8 @@ class _LinkScreen extends State<LinkScreen> {
     try {
       var req = {
         "RefID": (selectedCardID).toString(),
-        "RefTypeID": (7).toString(),
-        "SlNo": (1).toString(),
+        "RefTypeID": (4).toString(),
+        "SlNo": (4).toString(),
         "FileRef": logoImageBase64
       };
       APIBooleanResponse resp = await api.removeImage(queryParams: req);

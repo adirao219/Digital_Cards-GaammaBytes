@@ -1246,13 +1246,18 @@ class _BasicGreetingEntryScreen extends State<BasicGreetingEntryScreen> {
 
   clickOrSelectImage(String type, UserImageType pictureType) async {
     Navigator.of(context).pop();
+    if (pictureType == UserImageType.logo) {
+      if (isServerStoredLogo) removeImage(pictureType, true);
+    } else {
+      if (isServerStoredBackground) removeImage(pictureType, true);
+    }
     if (type == "Gallery") {
-      if (pictureType.value == 1)
+      if (pictureType == UserImageType.logo)
         imageFirst = await _picker.pickImage(source: ImageSource.gallery);
       else
         imageSecond = await _picker.pickImage(source: ImageSource.gallery);
     } else {
-      if (pictureType.value == 1)
+      if (pictureType == UserImageType.logo)
         imageFirst = await _picker.pickImage(source: ImageSource.camera);
       else
         imageSecond = await _picker.pickImage(source: ImageSource.camera);
@@ -1313,8 +1318,8 @@ class _BasicGreetingEntryScreen extends State<BasicGreetingEntryScreen> {
     try {
       var req = {
         "RefID": (selectedCardID).toString(),
-        "RefTypeID": (pictureType.value == 1 ? 6 : 5).toString(),
-        "SlNo": (pictureType.value == 1 ? 2 : 1).toString(),
+        "RefTypeID": (pictureType == UserImageType.logo ? 6 : 5).toString(),
+        "SlNo": (pictureType == UserImageType.logo ? 6 : 5).toString(),
         "FileRef": pictureType.value == 1 ? firstImageBase64 : secondImageBase64
       };
       APIBooleanResponse resp = await api.removeImage(queryParams: req);

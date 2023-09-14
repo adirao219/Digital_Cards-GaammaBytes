@@ -11,12 +11,13 @@ void main() {
     DeviceOrientation.portraitUp,
   ]).then((value) {
     
-    EnvConfig.initConfig(environment: ( true ? Environment.prod : Environment.dev));
+    EnvConfig.initConfig(environment: (true ? Environment.prod : Environment.dev));
     Logger.init(kReleaseMode ? LogMode.live : LogMode.debug);
+    
+
     
    Firebase.initializeApp().then((val) {
 
-   
     runApp(MyApp());
    });
   });
@@ -31,6 +32,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
           visualDensity: VisualDensity.standard,
       ),
+      
       translations: AppLocalization(),
       locale: Get.deviceLocale, //for setting localization strings
       fallbackLocale: Locale('en', 'US'),

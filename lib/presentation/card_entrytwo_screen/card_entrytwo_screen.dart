@@ -1,3 +1,4 @@
+import 'package:digitalcardsgaammabytes/core/utils/progress_dialog_utils.dart';
 import 'package:digitalcardsgaammabytes/data/apiClient/api_client.dart';
 import 'package:digitalcardsgaammabytes/presentation/card_entrytwo_screen/widgets/card_entrytwo_item_widget.dart';
 import 'package:flutter_map/flutter_map.dart';
@@ -97,6 +98,7 @@ class _CardEntrytwoScreen extends State<CardEntrytwoScreen> {
         setState(() {
           mainResult = resp.result;
         });
+        ProgressDialogUtils.hideProgressDialog();
       } else {
         Get.snackbar('Error', resp.errorMessage.toString(),
             backgroundColor: Color.fromARGB(255, 255, 230, 230),

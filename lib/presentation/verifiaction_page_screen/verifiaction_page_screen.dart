@@ -179,7 +179,7 @@ class _VerifiactionPageScreen extends State<VerifiactionPageScreen> {
 
             Navigator.of(context).pushNamed(AppRoutes.signupPageScreen);
 
-            Get.snackbar('Account createad successfully', "Please signin to continue.",
+            Get.snackbar('Account created successfully', "Please signin to continue.",
                 backgroundColor: Color.fromARGB(255, 208, 245, 216),
                 colorText: Colors.green[900],
                 icon: Icon(

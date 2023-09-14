@@ -1,7 +1,11 @@
+import 'dart:convert';
+
 import 'package:digitalcardsgaammabytes/core/app_export.dart';
 import 'package:digitalcardsgaammabytes/data/globals/globalvariables.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../localization/en_us/en_us_translations.dart';
 
 class HomeOnboardingScreen extends StatefulWidget {
   const HomeOnboardingScreen({super.key});
@@ -28,6 +32,35 @@ class _HomeOnboardingScreen extends State<HomeOnboardingScreen> {
           GlobalVariables.displayName = value.getString("displayName") ?? '';
           GlobalVariables.userName = value.getString("userName") ?? '';
           GlobalVariables.userPhotoUrl = value.getString("userPhotoUrl") ?? '';
+          try {
+            var currenntlanguage = (value.getString("currentLocale") ?? '');
+            if (currenntlanguage == "" || currenntlanguage == "en_US") {
+              Get.clearTranslations();
+              Map<String, Map<String, String>> languageKeys = {'en_US': enUs};
+              Get.addTranslations(languageKeys);
+              var locale = Locale('en', 'US');
+              Get.updateLocale(locale);
+            } else {
+              var currentLocale = (value.getString("currentLocale") ?? '');
+              var currentLocaleTranslations =
+                  (value.getString("currentLocaleTranslations") ?? '');
+               
+              var localeTranslations = json.decode(currentLocaleTranslations);
+              Map<String, String> translations =Map<String, String>();
+              localeTranslations.forEach((key, value) => translations[key] = (value??'').toString());
+
+              Get.clearTranslations();
+
+              Map<String, Map<String, String>> languageKeys = {
+                currentLocale: translations
+              };
+              var lang = currentLocale.split('_')[0];
+              var country = currentLocale.split('_')[1];
+              Get.addTranslations(languageKeys);
+              var locale = Locale(lang, country);
+              Get.updateLocale(locale);
+            }
+          } catch (e) {}
         });
         Future.delayed(const Duration(milliseconds: 1500), () {
           if (isAlreadyLoggedIn) {
@@ -47,7 +80,9 @@ class _HomeOnboardingScreen extends State<HomeOnboardingScreen> {
     return SafeArea(
         top: false,
         bottom: false,
-        child: Scaffold(
+        child: 
+        
+        Scaffold(
             backgroundColor: ColorConstant.deepOrangeA100,
             body: Container(
                 width: size.width,
@@ -100,14 +135,7 @@ class _HomeOnboardingScreen extends State<HomeOnboardingScreen> {
                                               width: getHorizontalSize(181.00),
                                               margin: getMargin(top: 1))
                                         ])),
-                                Container(
-                                    width: getHorizontalSize(267.00),
-                                    margin: getMargin(top: 28),
-                                    child: Text("msg_platform_to_create".tr,
-                                        maxLines: null,
-                                        textAlign: TextAlign.center,
-                                        style:
-                                            AppStyle.txtNunitoSansExtraBold24)),
+                               
                                 Container(
                                     width: getHorizontalSize(203.00),
                                     margin:
@@ -161,7 +189,15 @@ class _HomeOnboardingScreen extends State<HomeOnboardingScreen> {
                                                                         .txtNunitoSansBlack16))
                                                           ])))
                                               : Container()
-                                        ]))
+                                        ])),
+                                        Container(
+                                    width: getHorizontalSize(267.00),
+                                    margin: getMargin(top: 28),
+                                    child: Text("msg_platform_to_create".tr,
+                                        maxLines: null,
+                                        textAlign: TextAlign.center,
+                                        style:
+                                            AppStyle.txtNunitoSansExtraBold22)),
                               ]))
                     ]))));
   }

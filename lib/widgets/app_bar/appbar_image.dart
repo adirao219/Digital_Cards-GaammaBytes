@@ -6,6 +6,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:share_plus/share_plus.dart';
 
 import '../../core/environment/env_config.dart';
+import '../custom_bottom_widget.dart';
 
 // ignore: must_be_immutable
 class AppbarImage extends StatelessWidget {
@@ -206,7 +207,6 @@ class CommonMoreOptionMenu extends StatelessWidget {
     String youtubeURL = "youtube://www.youtube.com/watch?v=AhcIpebJIqc";
     String httpURL = "https://www.youtube.com/watch?v=AhcIpebJIqc";
 
-
     if (Platform.isIOS) {
       if (await canLaunch(youtubeURL)) {
         await launch(youtubeURL, forceSafariVC: false);
@@ -256,15 +256,26 @@ class ShareAndOpenMenu extends StatelessWidget {
   int cardId;
   @override
   Widget build(BuildContext context) {
-    return Stack(children: [
+    return 
       PopupMenuButton<int>(
-        padding: getPadding(right: 20, bottom: 15),
-        iconSize: 25,
-        icon: Icon(
-          Icons.more_vert,
-          // size: 20,
-          color: ColorConstant.pink900,
-        ),
+       
+        child:Padding(
+          padding: getPadding(right: 15,top: 5),
+          child:  Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Icon(
+                Icons.more_vert,
+                // size: 20,
+                color: ColorConstant.pink900,
+              ),
+             Text('More',
+              style: TextStyle(
+                  color: ColorConstant.pink900,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 10))
+          ],
+        )),
         onSelected: (item) {
           switch (item) {
             case 1:
@@ -326,15 +337,7 @@ class ShareAndOpenMenu extends StatelessWidget {
                 )
               ])),
         ],
-      ),
-      Container(
-          padding: getPadding(top: 27, right: 10),
-          child: Text('More',
-              style: TextStyle(
-                  color: ColorConstant.pink900,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 10)))
-    ]);
+      );
   }
 
   onPreview(BuildContext context) {

@@ -39,6 +39,13 @@ class GlobalVariables {
     isGoogleLoggedIn = value;
   }
 
+  static setCurrentLocale(String value) {
+    PrefUtils.sharedPreferences?.setString("currentLocale", value);
+  }
+
+   static setCurrentLocaleTranslations(String jsonValue) {
+    PrefUtils.sharedPreferences?.setString("currentLocaleTranslations", jsonValue);
+  }
   static setUserID(String value) {
     PrefUtils.sharedPreferences?.setString("userID", value);
     userID = value;

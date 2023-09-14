@@ -42,7 +42,7 @@ class Result {
 
   Result.fromJson(Map<String, dynamic> json) {
     disabled = json['Disabled'];
-    group = json['Group'];
+    group = json['Group'] ?? 'hi_IN';
     selected = json['Selected'];
     text = json['Text'];
     value = json['Value'];

@@ -266,12 +266,16 @@ class _BasicCardEntryScreen extends State<BasicCardEntryScreen> {
                                                     _card_name_Controller,
                                                 hintText: "lbl_card_name".tr,
                                                 margin: getMargin(top: 30),
+                                                onChanged: (tst){
+                                                  var s=1;
+                                                },
                                                 validator: (value) {
                                                   if (!isText(value)) {
                                                     return "Please enter valid text";
                                                   }
                                                   return null;
                                                 }),
+
                                             CustomTextFormField(
                                                 width: 326,
                                                 focusNode: FocusNode(),

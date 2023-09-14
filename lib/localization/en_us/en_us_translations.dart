@@ -3,6 +3,7 @@ final Map<String, String> enUs = {
   'msg_something_went_wrong': 'Something Went Wrong!',
   "lbl_note": "Note",
   "lbl_logout": "Logout",
+  "lbl_changelanguage": "Change Language",
   "lbl_picture2": "Picture:",
   "lbl_change_password2": "Change-Password",
   "lbl_oldest_first": "Oldest First",
@@ -64,7 +65,7 @@ final Map<String, String> enUs = {
   "msg_band_type_ex_icongroup": "\nBand Type - (Ex:IconGroup)",
   "lbl_response": "Response",
   "lbl_link_8": "Link 8",
-  "lbl_other_links": "Other Links",
+  "lbl_other_links": "Links",
   "lbl_credits": "Credits:",
   "lbl_card_color": "Card Color:",
   "lbl_icon_color": "Icon Color:",
@@ -228,6 +229,7 @@ final Map<String, String> enUs = {
   "lbl_heading": "Heading:",
   "msg_forgot_passwordtwo": "Forgot PasswordTwo",
   "msg_sign_in_to_gaamma_cards": "SIGN IN TO GAAMMA.CARDS",
+  "lbl_signin_in": "SIGNING IN ...",
   "msg_confirm_password": "Confirm Password *",
   "lbl_url": "URL:",
   "lbl_enter": "Enter",
@@ -376,5 +378,9 @@ final Map<String, String> enUs = {
   "msg_basic_card_entry2": "Basic-Card-Entry",
   "lbl_helpone": "HelpOne",
   "msg_card_type_ex_buisness": "Card Type - ",
-  "lbl_customization": "Customization"
+  "lbl_customization": "Customization",//--------------
+  "lbl_totalCards":"Total No. of Cards  ",
+  "lbl_totalGreetings":"Total No. of Greetings  ",
+  "lbl_available_credits":"Credits Available  ",
+
 };

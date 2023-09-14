@@ -54,7 +54,7 @@ class _FooterScreen extends State<FooterScreen> {
         "CardID": selectedCardID.toString()
       };
       CommonDropdownResp resp =
-          await api.fetchGetBandLinkList(queryParams: req,isProgress: isProgress);
+          await api.fetchGetBandLinkList(queryParams: req);
       if (resp.isSuccess ?? false) {
         setState(() {
           allLinks = resp.result ?? [];

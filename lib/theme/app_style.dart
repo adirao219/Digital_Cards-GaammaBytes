@@ -388,7 +388,14 @@ class AppStyle {
     fontFamily: 'Nunito Sans',
     fontWeight: FontWeight.w800,
   );
-
+static TextStyle txtNunitoSansExtraBold22 = TextStyle(
+    color: ColorConstant.gray900,
+    fontSize: getFontSize(
+      22,
+    ),
+    fontFamily: 'Nunito Sans',
+    fontWeight: FontWeight.w800,
+  );
   static TextStyle txtBalooBhaijaanRegular19 = TextStyle(
     color: ColorConstant.gray90004,
     fontSize: getFontSize(

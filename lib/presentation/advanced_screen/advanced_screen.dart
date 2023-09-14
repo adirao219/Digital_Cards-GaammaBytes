@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:digitalcardsgaammabytes/core/app_export.dart';
 import 'package:digitalcardsgaammabytes/data/apiClient/api_client.dart';
@@ -7,17 +8,22 @@ import 'package:digitalcardsgaammabytes/widgets/app_bar/appbar_image.dart';
 import 'package:digitalcardsgaammabytes/widgets/app_bar/appbar_title.dart';
 import 'package:digitalcardsgaammabytes/widgets/app_bar/custom_app_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 
-import 'package:path/path.dart' as path;
+import 'package:path/path.dart' as p;
+import 'package:path_provider/path_provider.dart';
+import '../../core/utils/progress_dialog_utils.dart';
 import '../../data/globals/globalvariables.dart';
 import '../../data/models/createCard/post_create_card_resp.dart';
 import '../../data/models/deleteGreeting/post_delete_greeting_resp.dart';
+import '../../data/models/driveImages/drive_file_images_resp.dart';
 import '../../data/models/filterGreetingTemplate/get_filter_greeting_template_resp.dart';
 import '../../data/models/getCreateCard/get_get_create_card_resp.dart';
 import '../../widgets/custom_button.dart';
 import '../../widgets/custom_text_form_field.dart';
+import '../my_e_greeting_cards_screen/widgets/uploaded_images_widget.dart';
 
 class AdvancedScreen extends StatefulWidget {
   const AdvancedScreen({super.key});
@@ -28,6 +34,8 @@ class AdvancedScreen extends StatefulWidget {
 }
 
 class _AdvancedScreen extends State<AdvancedScreen> {
+  
+  TextEditingController _searchController = new TextEditingController();
   ImagePicker _picker = new ImagePicker();
   var cardType = Get.arguments["cardType"] as int?;
   var selectedCardID = Get.arguments["SelectedCardID"] as int?;
@@ -61,8 +69,13 @@ class _AdvancedScreen extends State<AdvancedScreen> {
   String? logoImageBase64;
   String? logoImageFileName;
   int? logoExistingId;
+  
+  List<DriveFilesData> allUserImages = [];
+  List<DriveFilesData> userImages = [];
+
   @override
   void initState() {
+    getUserImages();
     getDropdownItems();
     super.initState();
   }
@@ -125,7 +138,7 @@ class _AdvancedScreen extends State<AdvancedScreen> {
         "RemoveFromGoogleSearch": removeFromgoogleSearch,
         "ThumbnailImage": logoImageBase64,
         "ThumbnailImageRef": logoImageFileName,
-        "ThumbnailImageOldId": "",
+        "ThumbnailImageOldId": logoExistingId,
         "HeaderData1": _card_description_Controller.text,
         "HeaderData2": _html_title_Controller.text,
         "HeaderData3": _meta_description_Controller.text
@@ -464,18 +477,68 @@ class _AdvancedScreen extends State<AdvancedScreen> {
                         icon: Icon(Icons.close)),
                   ],
                 ),
-                content: SingleChildScrollView(
+                content:SingleChildScrollView(
                     child: Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                      Text(
-                        "Please choose image from gallery or click a picture using camera",
-                        style: AppStyle.txtNunitoSansRegular14,
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
+                      // Text(
+                      //   "Please choose image from previously uploaded images, gallery or click a picture using camera",
+                      //   style: AppStyle.txtNunitoSansRegular14,
+                      // ),
+                      // SizedBox(
+                      //   height: 10,
+                      // ),
+                      TextFormField(
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
+                          controller: _searchController,
+                          onChanged: ((value) {
+                            setPopupState(() {
+                              var newUserImages = allUserImages!
+                                  .where((element) => element.fileName!
+                                      .toLowerCase()
+                                      .contains(value.toLowerCase()))
+                                  .toList();
+                              userImages = newUserImages;
+                            });
+                          }),
+                          decoration: InputDecoration(
+                            labelText: "lbl_search_details".tr,
+                            labelStyle: AppStyle.txtNunitoSansRegular12
+                                .copyWith(
+                                    height: getVerticalSize(1.10),
+                                    fontSize: 13),
+
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(15.0),
+                              borderSide: const BorderSide(
+                                color: Color.fromARGB(255, 183, 183, 183),
+                              ),
+                            ),
+                            suffixIcon: GestureDetector(
+                                onTap: () {
+                                  setPopupState(() {
+                                    userImages = allUserImages;
+                                    _searchController.text = "";
+                                  });
+                                },
+                                child: Icon(
+                                  Icons.cancel,
+                                  color: ColorConstant.pink900,
+                                )),
+                            focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(15.0),
+                                borderSide: const BorderSide(
+                                  color: Color.fromARGB(255, 183, 183, 183),
+                                )),
+                            // filled: true,
+                            contentPadding: EdgeInsets.all(15.0),
+                          )),
+                      Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children:
+                              getAllUserImages(context, UserImageType.logo))
                     ])),
                 actions: <Widget>[
                   CustomButton(
@@ -515,8 +578,92 @@ class _AdvancedScreen extends State<AdvancedScreen> {
         });
   }
 
+  getUserImages() async {
+    try {
+      var req = {"UserId": GlobalVariables.userID, "Anywhere": ""};
+      GetDriveFileImagesResp resp = await api.getUserImages(queryParams: req);
+      if (resp.isSuccess ?? false) {
+        setState(() {
+          allUserImages = userImages = resp.result ?? [];
+        });
+      } else {
+        Get.snackbar('Error', resp.errorMessage.toString(),
+            backgroundColor: Color.fromARGB(255, 255, 230, 230),
+            colorText: Colors.red[900],
+            icon: Icon(
+              Icons.error,
+              color: Colors.red[900],
+            ));
+      }
+    } catch (e) {}
+  }
+
+  List<Widget> getAllUserImages(
+      BuildContext context, UserImageType pictureType) {
+    List<Widget> allWidgets = [];
+
+    for (int i = 0; i < userImages.length; i++) {
+      if (i % 2 == 0) {
+        allWidgets.add(Row(
+          children: [
+            UploadedImageWidget(userImages[i], pictureType,
+                selectedImageforCard, cropSelectedImageForCard),
+            if ((i + 1) < userImages.length)
+              UploadedImageWidget(userImages[i + 1], pictureType,
+                  selectedImageforCard, cropSelectedImageForCard),
+          ],
+        ));
+      }
+    }
+    return allWidgets;
+  }
+
+
+  selectedImageforCard(DriveFilesData image, UserImageType pictureType) {
+    setState(() {
+      
+      isFirstImageSelected = true;
+      isServerStoredLogo=true;
+      logoExistingId = image.id;
+      logoImageBase64 = image.driveUrl;
+      logoImageFileName = null;
+    });
+    Navigator.pop(context);
+  }
+
+  cropSelectedImageForCard(DriveFilesData image, UserImageType pictureType) {
+    setState(() {
+      logoExistingId = null;
+      isFirstImageSelected = true;
+
+      ProgressDialogUtils.showProgressDialog();
+      getImageFromUrl(image.driveUrl ?? '', pictureType);
+    });
+    Navigator.pop(context);
+  }
+  
+  getImageFromUrl(String imageUrl, UserImageType pictureType) async {
+    try {
+      Uint8List bytes =
+          (await NetworkAssetBundle(Uri.parse(imageUrl)).load(imageUrl))
+              .buffer
+              .asUint8List();
+
+      writeToFile(bytes).then((file) {
+        gotoImageModify(file, pictureType);
+      });
+
+      ProgressDialogUtils.hideProgressDialog();
+    } catch (e) {
+      ProgressDialogUtils.hideProgressDialog();
+    }
+  }
+
   clickOrSelectImage(String type) async {
     Navigator.of(context).pop();
+    if (isServerStoredLogo) {
+        removeImage();
+      }
     if (type == "Gallery") {
       imageLogo = await _picker.pickImage(source: ImageSource.gallery);
     } else {
@@ -530,35 +677,50 @@ class _AdvancedScreen extends State<AdvancedScreen> {
 
     if (imageLogo!.path.isNotEmpty) imageFile = File(imageLogo!.path);
 
-    gotoImageModify(imageFile);
+    gotoImageModify(imageFile, UserImageType.logo);
   }
 
-  gotoImageModify(File imageFile) {
+  
+  Future<File> writeToFile(Uint8List data) async {
+    DateTime now = DateTime.now();
+    String formattedDate = DateFormat('yyyyMMdd-hhmmss').format(now);
+    Directory tempDir = await getTemporaryDirectory();
+    String tempPath = tempDir.path;
+    var filePath = tempPath +
+        '/existingFile' +
+        formattedDate +
+        '.png'; // file_01.tmp is dump file, can be anything
+    File(filePath).writeAsBytesSync(data);
+    return File(filePath);
+  }
+
+gotoImageModify(File imageFile, UserImageType pictureType) {
     Get.toNamed(AppRoutes.imageModifyScreen,
-        arguments: {"imageFile": imageFile, "pictureType": UserImageType.logo})?.then((value) {
+            arguments: {"imageFile": imageFile, "pictureType": pictureType})
+        ?.then((value) {
       double? width = value['width'];
       double? height = value['height'];
       bool? isSquare = value['isSquare'];
       String? imageFilePath = value["refinedImagePath"] as String?;
+      UserImageType pictureType = value["pictureType"] as UserImageType;
 
       try {
-        setState(() {
-          mainImageFile = imageFile = File(imageFilePath ?? '');
-          var base64val1 = "data:image/png;base64," +
-              base64Encode(imageFile.readAsBytesSync());
-          // print('base64:'+base64val1);
+        imageFile = File(imageFilePath ?? '');
+        var base64val1 = "data:image/png;base64," +
+            base64Encode(imageFile.readAsBytesSync());
+        // print('base64:'+base64val1);
 
-          logoImageBase64 = base64val1;
-          logoCroppedImage = imageFile;
-          isFirstImageSelected = true;
-          logoImageFileName = path.basename(imageFile.path);
-          logoExistingId = null;
-        });
+        logoImageBase64 = base64val1;
+        logoCroppedImage = imageFile;
+        isFirstImageSelected = true;
+        logoImageFileName = p.basename(imageFile.path);
+        logoExistingId = null;
       } catch (e) {
         var s = 1;
       }
     });
   }
+
 
   showAlertDialog(BuildContext context) {
     // set up the buttons
@@ -613,8 +775,8 @@ class _AdvancedScreen extends State<AdvancedScreen> {
     try {
       var req = {
         "RefID": (selectedCardID).toString(),
-        "RefTypeID": (7).toString(),
-        "SlNo": (1).toString(),
+        "RefTypeID": (9).toString(),
+        "SlNo": (9).toString(),
         "FileRef": logoImageBase64
       };
       APIBooleanResponse resp = await api.removeImage(queryParams: req);

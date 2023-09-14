@@ -357,7 +357,7 @@ class _MyEGreetingCardsScreen extends State<MyEGreetingCardsScreen> {
                                                           MainAxisAlignment.end,
                                                       children: [
                                                         Text(
-                                                          ('Total No. of Greetings  '),
+                                                          ('lbl_totalGreetings'.tr),
                                                           style: AppStyle
                                                               .txtNunitoSansBold14,
                                                         ),
@@ -464,7 +464,7 @@ class _MyEGreetingCardsScreen extends State<MyEGreetingCardsScreen> {
   }
 
   actionPerformed() async {
-    Navigator.pop(context);
+    // Navigator.pop(context);
     await getGreetingList();
     Navigator.pop(context);
   }

@@ -213,8 +213,9 @@ class GreetingItemWidget extends StatelessWidget {
       PostHideGreetingResp resp =
           await api.createHideGreeting(queryParams: req);
       if ((resp.isSuccess ?? false)) {
+        Navigator.pop(mainContext);
         Get.snackbar('Success',
-            "Greeting " + (isHidden ? "un-" : "") + "hidden successfully!",
+            "Greeting " + (isHidden ? "un" : "") + "hidden successfully!",
             backgroundColor: Color.fromARGB(255, 208, 245, 216),
             colorText: Colors.green[900],
             icon: Icon(
@@ -243,6 +244,7 @@ actionPerformed();
       APIBooleanResponse resp =
           await api.createDeleteGreeting(queryParams: req);
       if ((resp.isSuccess ?? false)) {
+        Navigator.pop(mainContext);
         Get.snackbar('Success', "Greeting deleted successfully!",
             backgroundColor: Color.fromARGB(255, 208, 245, 216),
             colorText: Colors.green[900],

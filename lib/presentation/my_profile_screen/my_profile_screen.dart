@@ -278,7 +278,7 @@ class _MyProfileScreen extends State<MyProfileScreen> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     Text(
-                      ('Credits Available  '),
+                      ('lbl_available_credits'.tr),
                       style: AppStyle.txtNunitoSansBold14,
                     ),
                     Container(
@@ -386,7 +386,7 @@ class _MyProfileScreen extends State<MyProfileScreen> {
                   margin: getMargin(
                     top: 10,
                   ),
-                  child: Text("Country:".tr,
+                  child: Text("lbl_country".tr,
                       style: AppStyle.txtNunitoSansBold14Pink900),
                 ),
                 DropdownButton<String>(
@@ -419,7 +419,7 @@ class _MyProfileScreen extends State<MyProfileScreen> {
                   margin: getMargin(
                     top: 10,
                   ),
-                  child: Text("Country Code:".tr,
+                  child: Text("lbl_country_code".tr,
                       style: AppStyle.txtNunitoSansBold14Pink900),
                 ),
                 DropdownButton<String>(
@@ -448,39 +448,39 @@ class _MyProfileScreen extends State<MyProfileScreen> {
                     //  getTemplate(newValue ?? "");
                   },
                 ),
-                Container(
-                  margin: getMargin(
-                    top: 10,
-                  ),
-                  child: Text("Language:".tr,
-                      style: AppStyle.txtNunitoSansBold14Pink900),
-                ),
-                DropdownButton<int>(
-                  isExpanded: true,
-                  // Initial Value
-                  value: selectedLanguage,
-                  icon: const Icon(Icons.keyboard_arrow_down),
-                  hint: Text(
-                    'Select Language',
-                    style: AppStyle.txtNunitoSansRegular14Gray70001,
-                  ),
-                  // Array list of items
-                  items: result.languageIdList!.map((items) {
-                    return DropdownMenuItem(
-                      value: int.parse(items.value ?? '0'),
-                      child: Text(
-                        items.text ?? '',
-                        style: AppStyle.txtNunitoSansRegular14Gray70001,
-                      ),
-                    );
-                  }).toList(),
-                  onChanged: (int? newValue) {
-                    setState(() {
-                      selectedLanguage = newValue;
-                    });
-                    //  getTemplate(newValue ?? "");
-                  },
-                ),
+                // Container(
+                //   margin: getMargin(
+                //     top: 10,
+                //   ),
+                //   child: Text("lbl_language".tr,
+                //       style: AppStyle.txtNunitoSansBold14Pink900),
+                // ),
+                // DropdownButton<int>(
+                //   isExpanded: true,
+                //   // Initial Value
+                //   value: selectedLanguage,
+                //   icon: const Icon(Icons.keyboard_arrow_down),
+                //   hint: Text(
+                //     'Select Language',
+                //     style: AppStyle.txtNunitoSansRegular14Gray70001,
+                //   ),
+                //   // Array list of items
+                //   items: result.languageIdList!.map((items) {
+                //     return DropdownMenuItem(
+                //       value: int.parse(items.value ?? '0'),
+                //       child: Text(
+                //         items.text ?? '',
+                //         style: AppStyle.txtNunitoSansRegular14Gray70001,
+                //       ),
+                //     );
+                //   }).toList(),
+                //   onChanged: (int? newValue) {
+                //     setState(() {
+                //       selectedLanguage = newValue;
+                //     });
+                //     //  getTemplate(newValue ?? "");
+                //   },
+                // ),
 
                 Container(
                   margin: getMargin(
@@ -562,7 +562,7 @@ class _MyProfileScreen extends State<MyProfileScreen> {
                     margin: getMargin(
                       top: 10,
                     ),
-                    child: Text("Registerd On:".tr,
+                    child: Text("lbl_registered_on".tr,
                         style: AppStyle.txtNunitoSansBold14Pink900),
                   ),
                   SizedBox(
@@ -655,7 +655,7 @@ class _MyProfileScreen extends State<MyProfileScreen> {
       var req = {
         "RefID": (mainId).toString(),
         "RefTypeID": (7).toString(),
-        "SlNo": (1).toString(),
+        "SlNo": (7).toString(),
         "FileRef": logoImageBase64
       };
       APIBooleanResponse resp = await api.removeImage(queryParams: req);
@@ -757,6 +757,9 @@ class _MyProfileScreen extends State<MyProfileScreen> {
 
   clickOrSelectImage(String type) async {
     Navigator.of(context).pop();
+    if (isServerStoredLogo) {
+      removeImage();
+    }
     if (type == "Gallery") {
       imageLogo = await _picker.pickImage(source: ImageSource.gallery);
     } else {
@@ -774,8 +777,10 @@ class _MyProfileScreen extends State<MyProfileScreen> {
   }
 
   gotoImageModify(File imageFile) {
-    Get.toNamed(AppRoutes.imageModifyScreen,
-        arguments: {"imageFile": imageFile, "pictureType":UserImageType.logo})?.then((value) {
+    Get.toNamed(AppRoutes.imageModifyScreen, arguments: {
+      "imageFile": imageFile,
+      "pictureType": UserImageType.logo
+    })?.then((value) {
       double? width = value['width'];
       double? height = value['height'];
       bool? isSquare = value['isSquare'];
@@ -825,7 +830,9 @@ class _MyProfileScreen extends State<MyProfileScreen> {
         onTap: () {
           Navigator.pop(context);
 
-          Navigator.of(context).pushNamed(AppRoutes.addstoragecredits).then((value) {
+          Navigator.of(context)
+              .pushNamed(AppRoutes.addstoragecredits)
+              .then((value) {
             getAvailableCredits();
             getAvailableStorage();
           });

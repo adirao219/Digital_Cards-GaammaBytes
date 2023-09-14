@@ -59,7 +59,7 @@ class _CardEntryoneScreen extends State<CardEntryoneScreen> {
   updateExistingData() {
     setState(() {
       _email_id4_Controller.text = mainResult?.emailId ?? '';
-      _eventDate_Controller.text = mainResult?.eventDateString ?? '';
+      _eventDate_Controller.text = (mainResult?.eventDateString ?? '') == ""? "":((mainResult?.eventDateString??'').replaceAll(" 00:00", ""));
       _website_Controller.text = mainResult?.website ?? '';
       _phone_number_Controller.text = mainResult?.phoneNum ?? '';
       _secondary_phone_number_Controller.text = mainResult?.phoneNum2 ?? '';

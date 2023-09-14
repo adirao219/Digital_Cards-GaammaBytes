@@ -353,7 +353,7 @@ class _MyDigitalCardsScreen extends State<MyDigitalCardsScreen> {
                                                           MainAxisAlignment.end,
                                                       children: [
                                                         Text(
-                                                          ('Total No. of Cards  '),
+                                                          ('lbl_totalCards'.tr),
                                                           style: AppStyle
                                                               .txtNunitoSansBold14,
                                                         ),
@@ -460,7 +460,6 @@ class _MyDigitalCardsScreen extends State<MyDigitalCardsScreen> {
   }
 
   actionPerformed() async {
-    Navigator.pop(context);
     await getDigitalCardList();
     Navigator.pop(context);
   }

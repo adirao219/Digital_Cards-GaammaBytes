@@ -75,7 +75,7 @@ class _CustomizationScreen extends State<CustomizationScreen> {
                                                   bottom: 13))
                                         ])),
                                 AppbarTitle(
-                                    text: "lbl_card_details".tr.toUpperCase(),
+                                    text: "lbl_greeting_details".tr.toUpperCase(),
                                     margin: getMargin(left:30, top: 0))
                               ])))
                     ])),

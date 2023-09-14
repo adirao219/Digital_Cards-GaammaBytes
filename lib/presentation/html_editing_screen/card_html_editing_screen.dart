@@ -137,6 +137,7 @@ class _CardHtmlEditorScreenState extends State<CardHtmlEditorScreen> {
                           ? Colors.white
                           : Colors.black),
                   buttonFillColor: Colors.white,
+                                  dropdownBackgroundColor: editorColor,
                   buttonColor:
                       checkIsLight(editorColor) ? Colors.white : Colors.black,
                   // buttonBorderColor: Colors.,

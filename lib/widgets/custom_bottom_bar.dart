@@ -60,8 +60,6 @@ class CustomBottomBar extends StatelessWidget {
             isPublished
                 ? BottomButtonData(
                     id: 'more',
-                    
-                    
                     isVisible: isPublishAvailable,
                     icon: Icons.remove_red_eye_rounded,
                     title: "lbl_share".tr,

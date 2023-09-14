@@ -144,7 +144,7 @@ class CardSubTypeWidget extends StatelessWidget {
       //     await api.createHideGreeting(queryParams: req);
       // if ((resp.isSuccess ?? false)) {
       //   Get.snackbar('Success',
-      //       "Greeting " + (isHidden ? "un-" : "") + "hidden successfully!",
+      //       "Greeting " + (isHidden ? "un" : "") + "hidden successfully!",
       //       backgroundColor: Color.fromARGB(255, 208, 245, 216),
       //       colorText: Colors.green[900],
       //       icon: Icon(

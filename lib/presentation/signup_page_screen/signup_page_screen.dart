@@ -40,6 +40,8 @@ class _SignupPageScreen extends State<SignupPageScreen> {
       // ],
       );
 
+  bool isSigningIn = false;
+
   String googleUseremail = "";
   String googleDiaplayName = "";
   String googleUserName = "";
@@ -276,7 +278,7 @@ class _SignupPageScreen extends State<SignupPageScreen> {
                       CustomButton(
                           height: 40,
                           width: 250,
-                          text: "lbl_sign_in2".tr,
+                          text: (isSigningIn ? "lbl_signin_in".tr : "lbl_sign_in2".tr),
                           margin: getMargin(top: 36),
                           fontStyle: ButtonFontStyle.InterSemiBold14,
                           onTap: onTapSignin,
@@ -324,12 +326,15 @@ class _SignupPageScreen extends State<SignupPageScreen> {
 
   googleAuthSignin() async {
     try {
+      setState(() {
+        isSigningIn = true;
+      });
       final authResult = await AuthService.instance.login();
       if (authResult.isAuthSuccess) {
         signInWithGoogleTokens(
             authResult.accessToken ?? '', authResult.idToken ?? '');
       } else {
-        Get.snackbar('Failed', "Authorization un-successfull",
+        Get.snackbar('Failed', "Authorization unsuccessfull",
             backgroundColor: Color.fromARGB(255, 255, 230, 230),
             colorText: Colors.red[900],
             icon: Icon(
@@ -339,6 +344,9 @@ class _SignupPageScreen extends State<SignupPageScreen> {
         // widget.setUnauthenticatedState();
       }
     } catch (er) {
+      setState(() {
+        isSigningIn = false;
+      });
       Get.snackbar('Error', er.toString(),
           backgroundColor: Color.fromARGB(255, 255, 230, 230),
           colorText: Colors.red[900],
@@ -444,6 +452,9 @@ class _SignupPageScreen extends State<SignupPageScreen> {
     };
     PostLoginResp resp = await api.createLogin(requestData: req);
     if (resp.isSuccess ?? false) {
+      setState(() {
+        isSigningIn = true;
+      });
       var res = resp.result;
       var userID = res['UserId'];
       var displayName = res['DisplayName'] ?? "";
@@ -456,16 +467,19 @@ class _SignupPageScreen extends State<SignupPageScreen> {
       GlobalVariables.setUserName(_phoneController.text);
       GlobalVariables.setUserPhotoUrl(userPhoto);
 
-            Get.snackbar('Success', "Welcome to Gaamma Cards",
-                backgroundColor: Color.fromARGB(255, 208, 245, 216),
-                colorText: Colors.green[900],
-                icon: Icon(
-                  Icons.done,
-                  color: Colors.green[900],
-                ));
+      Get.snackbar('Success', "Welcome to Gaamma Cards",
+          backgroundColor: Color.fromARGB(255, 208, 245, 216),
+          colorText: Colors.green[900],
+          icon: Icon(
+            Icons.done,
+            color: Colors.green[900],
+          ));
       Navigator.of(context).pushNamedAndRemoveUntil(
           AppRoutes.homePageScreen, (Route<dynamic> route) => false);
     } else {
+      setState(() {
+        isSigningIn = false;
+      });
       Get.snackbar('Error', resp.errorMessage.toString(),
           backgroundColor: Color.fromARGB(255, 255, 230, 230),
           colorText: Colors.red[900],
@@ -514,10 +528,16 @@ class _SignupPageScreen extends State<SignupPageScreen> {
               AppRoutes.homePageScreen, (Route<dynamic> route) => false);
         });
       } else {
+        setState(() {
+          isSigningIn = false;
+        });
         Navigator.of(context).pushNamed(AppRoutes.googlesigninOneScreen,
             arguments: {"userInfo": _user});
       }
     } catch (e) {
+      setState(() {
+        isSigningIn = false;
+      });
       Get.snackbar('Error', e.toString(),
           backgroundColor: Color.fromARGB(255, 255, 230, 230),
           colorText: Colors.red[900],

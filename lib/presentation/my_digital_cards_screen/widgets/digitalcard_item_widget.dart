@@ -368,7 +368,7 @@ class DigitalCardItemWidget extends StatelessWidget {
       child: Text("Yes"),
       onPressed: () {
         // Navigator.pop(context);
-        publishCard();
+        publishCard(context);
       },
     );
 
@@ -390,7 +390,7 @@ class DigitalCardItemWidget extends StatelessWidget {
     );
   }
 
-  publishCard() async {
+  publishCard(BuildContext maincontext) async {
     try {
       var req = {
         "UserId": GlobalVariables.userID,
@@ -398,6 +398,7 @@ class DigitalCardItemWidget extends StatelessWidget {
       };
       APIResponse resp = await api.fetchPublish(queryParams: req);
       if ((resp.isSuccess ?? false)) {
+        
         Get.snackbar('Success', "Card Published successfully!",
             backgroundColor: Color.fromARGB(255, 208, 245, 216),
             colorText: Colors.green[900],
@@ -406,6 +407,7 @@ class DigitalCardItemWidget extends StatelessWidget {
               color: Colors.green[900],
             ));
 
+    Navigator.pop(maincontext);
         actionPerformed();
       } else {
         Get.snackbar('Error', resp.errorMessage.toString(),
@@ -513,8 +515,9 @@ class DigitalCardItemWidget extends StatelessWidget {
       };
       GetHideCardResp resp = await api.fetchHideCard(queryParams: req);
       if ((resp.isSuccess ?? false)) {
+        Navigator.pop(mainContext);
         Get.snackbar('Success',
-            "Card " + (isHidden ? "un-" : "") + "hidden successfully!",
+            "Card " + (isHidden ? "un" : "") + "hidden successfully!",
             backgroundColor: Color.fromARGB(255, 208, 245, 216),
             colorText: Colors.green[900],
             icon: Icon(
@@ -542,6 +545,7 @@ class DigitalCardItemWidget extends StatelessWidget {
       };
       GetDeleteCardResp resp = await api.fetchDeleteCard(queryParams: req);
       if ((resp.isSuccess ?? false)) {
+        Navigator.pop(mainContext);
         Get.snackbar('Success', "Card deleted successfully!",
             backgroundColor: Color.fromARGB(255, 208, 245, 216),
             colorText: Colors.green[900],

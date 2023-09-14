@@ -340,6 +340,7 @@ class _HtmlEditorScreenState extends State<HtmlEditorScreen> {
                               color: checkIsLight(editorColor)
                                   ? Colors.white
                                   : Colors.black),
+                                  dropdownBackgroundColor: editorColor,
                           buttonFillColor: Colors.white,
                           buttonColor: checkIsLight(editorColor)
                               ? Colors.white
@@ -573,6 +574,7 @@ class _HtmlEditorScreenState extends State<HtmlEditorScreen> {
                               color: checkIsLight(editorColor)
                                   ? Colors.white
                                   : Colors.black),
+                                  dropdownBackgroundColor: editorColor,
                           buttonFillColor: Colors.white,
                           buttonColor: checkIsLight(editorColor)
                               ? Colors.white
@@ -795,6 +797,7 @@ class _HtmlEditorScreenState extends State<HtmlEditorScreen> {
                               color: checkIsLight(editorColor)
                                   ? Colors.white
                                   : Colors.black),
+                                  dropdownBackgroundColor: editorColor,
                           buttonFillColor: Colors.white,
                           buttonColor: checkIsLight(editorColor)
                               ? Colors.white

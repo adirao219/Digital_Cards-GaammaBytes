@@ -125,6 +125,9 @@ class _BasicCardEntryOneScreen extends State<BasicCardEntryOneScreen> {
 
   @override
   void initState() {
+    if (selectedCardID != 0) {
+      isPublishAvailable = true;
+    }
     getUserImages();
     getBackgroundTypes();
     super.initState();
@@ -149,9 +152,11 @@ class _BasicCardEntryOneScreen extends State<BasicCardEntryOneScreen> {
           cardSubTypeID = mainResult?.cardSubType;
           templateName = mainResult!.themeName ?? '';
           _card_name_Controller.text = cardnameForURL = mainResult!.name ?? '';
-          selectedBackgroundType = (mainResult!.backgroundType == 0)
-              ? null
-              : mainResult!.backgroundType.toString();
+          selectedBackgroundType = templateID == "-1"
+              ? ((mainResult!.backgroundType == 0)
+                  ? null
+                  : mainResult!.backgroundType.toString())
+              : null;
           if (selectedBackgroundType == "4") {
             isBackgroundColor = true;
           }
@@ -524,7 +529,7 @@ class _BasicCardEntryOneScreen extends State<BasicCardEntryOneScreen> {
                                           style: AppStyle.txtNunitoBold18))),
                               CustomTextFormField(
                                 width: 326,
-                                focusNode: FocusNode(),
+                                // focusNode: FocusNode(),
                                 controller: _card_name_Controller,
                                 hintText: "lbl_card_name".tr,
                                 margin: getMargin(top: 30),
@@ -1453,7 +1458,7 @@ class _BasicCardEntryOneScreen extends State<BasicCardEntryOneScreen> {
     })?.then((value) {
       var newhtmlContent = value['htmlContent'];
       setState(() {
-        htmlContent = newhtmlContent;
+        messageDefault = htmlContent = newhtmlContent;
       });
     });
     // Navigator.of(context).pushNamed(AppRoutes.htmlEditor).then((value) => null);
@@ -1482,7 +1487,9 @@ class _BasicCardEntryOneScreen extends State<BasicCardEntryOneScreen> {
       setState(() {
         templateName = value['selectedTemplateName'];
 
-        editorColorHex = value['editorColorHex'];
+        editorColorHex = value['editorColorHex'].toString().length > 6
+            ? value['editorColorHex']
+            : "#ffffff";
         htmlContent = messageDefault = value['messageDefault'];
 
         languageID = value['languageID'];
@@ -1932,8 +1939,18 @@ class _BasicCardEntryOneScreen extends State<BasicCardEntryOneScreen> {
     try {
       var req = {
         "RefID": (selectedCardID).toString(),
-        "RefTypeID": (pictureType == 1 ? 6 : 5).toString(), //tocheck
-        "SlNo": (pictureType == 1 ? 2 : 1).toString(), //tocheck
+        "RefTypeID": (pictureType == UserImageType.logo
+                ? 8
+                : (pictureType == UserImageType.background
+                    ? 1
+                    : (pictureType == UserImageType.header ? 10 : 11)))
+            .toString(), //tocheck
+        "SlNo": (pictureType == UserImageType.logo
+                ? 8
+                : (pictureType == UserImageType.background
+                    ? 1
+                    : (pictureType == UserImageType.header ? 10 : 11)))
+            .toString(), //tocheck
         "FileRef": getPictureTypeBase64ForDelete(pictureType),
       };
       APIBooleanResponse resp = await api.removeImage(queryParams: req);
@@ -2292,32 +2309,39 @@ class _BasicCardEntryOneScreen extends State<BasicCardEntryOneScreen> {
     if (type == "Gallery") {
       switch (pictureType) {
         case UserImageType.header:
+          if (isServerStoredHeader) removeImage(pictureType, true);
           imageHeader = await _picker.pickImage(source: ImageSource.gallery);
           break;
         case UserImageType.background:
+          if (isServerStoredBackground) removeImage(pictureType, true);
           imageSecond = await _picker.pickImage(source: ImageSource.gallery);
           break;
         case UserImageType.footer:
+          if (isServerStoredFooter) removeImage(pictureType, true);
           imageFooter = await _picker.pickImage(source: ImageSource.gallery);
           break;
         case UserImageType.logo:
+          if (isServerStoredLogo) removeImage(pictureType, true);
           imageFirst = await _picker.pickImage(source: ImageSource.gallery);
           break;
       }
     } else {
       switch (pictureType) {
         case UserImageType.header:
+          if (isServerStoredHeader) removeImage(pictureType, true);
           imageHeader = await _picker.pickImage(source: ImageSource.camera);
           break;
         case UserImageType.background:
+          if (isServerStoredBackground) removeImage(pictureType, true);
           imageSecond = await _picker.pickImage(source: ImageSource.camera);
           break;
         case UserImageType.footer:
+          if (isServerStoredFooter) removeImage(pictureType, true);
           imageFooter = await _picker.pickImage(source: ImageSource.camera);
           break;
         case UserImageType.logo:
+          if (isServerStoredLogo) removeImage(pictureType, true);
           imageFirst = await _picker.pickImage(source: ImageSource.camera);
-          break;
       }
     }
 

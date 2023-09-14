@@ -22,10 +22,11 @@ class ProgressDialogUtils {
         );
       }
       isProgressVisible = true;
+      
     } catch (ex) {}
   }
 
-  static void showSmallProgressDialog( BuildContext mainContext) {
+  static void showSmallProgressDialog(BuildContext mainContext) {
     try {
       if (!isProgressVisible) {
         Get.dialog(
