@@ -108,7 +108,7 @@ class _CardEntryoneScreen extends State<CardEntryoneScreen> {
         "UserId": GlobalVariables.userID,
         "CardID": selectedCardID.toString(),
       };
-      APIResponse resp = await api.fetchPublish(queryParams: req);
+      APIResponse resp = await api.fetchPublish(context,queryParams: req);
       if ((resp.isSuccess ?? false)) {
         setState(() {
           isPublished = true;
@@ -140,8 +140,9 @@ class _CardEntryoneScreen extends State<CardEntryoneScreen> {
         "CardID": selectedCardID.toString(),
         "CardType": "0",
         "CardSubType": "0",
+        "LanguageId":GlobalVariables.currentLanguage
       };
-      GetGetCreateCardResp resp = await api.fetchGetCreateCard(
+      GetGetCreateCardResp resp = await api.fetchGetCreateCard(context,
           queryParams: req, showProgress: showProgress);
       if (resp.isSuccess ?? false) {
         setState(() {
@@ -171,9 +172,10 @@ class _CardEntryoneScreen extends State<CardEntryoneScreen> {
         "PhoneNum": _phone_number_Controller.text,
         "PhoneNum2": _secondary_phone_number_Controller.text,
         "WhatsappNum": _whatsapp_Controller.text,
-        "WhatsappNum2": _secondary_whatsapp_Controller.text
+        "WhatsappNum2": _secondary_whatsapp_Controller.text,
+        "CaptionLanguageId":GlobalVariables.currentLanguage
       };
-      PostSaveResp resp = await api.saveCardDetails(requestData: req);
+      PostSaveResp resp = await api.saveCardDetails(context,requestData: req);
       if (resp.isSuccess ?? false) {
         selectedCardID = resp.result;
         Get.snackbar('Success', "Card Saved Successfully!",
@@ -344,7 +346,7 @@ class _CardEntryoneScreen extends State<CardEntryoneScreen> {
                                       _selectDate(context);
                                     },
                                   ),
-                                  visible: ((cardType ?? 0) == 2)),
+                                  visible: false),//((cardType ?? 0) == 2)),
                               Row(children: [
                                 CustomTextFormField(
                                     width: 282,

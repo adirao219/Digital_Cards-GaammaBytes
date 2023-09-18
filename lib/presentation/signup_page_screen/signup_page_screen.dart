@@ -8,6 +8,7 @@ import 'package:digitalcardsgaammabytes/widgets/custom_button.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+import 'package:digitalcardsgaammabytes/core/utils/progress_dialog_utils.dart';
 import 'package:firebase_core/firebase_core.dart';
 
 import 'package:google_sign_in/google_sign_in.dart';
@@ -39,9 +40,6 @@ class _SignupPageScreen extends State<SignupPageScreen> {
       //   'https://www.googleapis.com/auth/contacts.readonly',
       // ],
       );
-
-  bool isSigningIn = false;
-
   String googleUseremail = "";
   String googleDiaplayName = "";
   String googleUserName = "";
@@ -278,7 +276,7 @@ class _SignupPageScreen extends State<SignupPageScreen> {
                       CustomButton(
                           height: 40,
                           width: 250,
-                          text: (isSigningIn ? "lbl_signin_in".tr : "lbl_sign_in2".tr),
+                          text: ( "lbl_sign_in".tr),
                           margin: getMargin(top: 36),
                           fontStyle: ButtonFontStyle.InterSemiBold14,
                           onTap: onTapSignin,
@@ -326,14 +324,14 @@ class _SignupPageScreen extends State<SignupPageScreen> {
 
   googleAuthSignin() async {
     try {
-      setState(() {
-        isSigningIn = true;
-      });
+        ProgressDialogUtils.showProgressDialog(context);
       final authResult = await AuthService.instance.login();
       if (authResult.isAuthSuccess) {
         signInWithGoogleTokens(
             authResult.accessToken ?? '', authResult.idToken ?? '');
       } else {
+        
+        ProgressDialogUtils.hideProgressDialog(context);
         Get.snackbar('Failed', "Authorization unsuccessfull",
             backgroundColor: Color.fromARGB(255, 255, 230, 230),
             colorText: Colors.red[900],
@@ -345,7 +343,8 @@ class _SignupPageScreen extends State<SignupPageScreen> {
       }
     } catch (er) {
       setState(() {
-        isSigningIn = false;
+        
+        ProgressDialogUtils.hideProgressDialog(context);
       });
       Get.snackbar('Error', er.toString(),
           backgroundColor: Color.fromARGB(255, 255, 230, 230),
@@ -450,10 +449,10 @@ class _SignupPageScreen extends State<SignupPageScreen> {
       "Password": _passwordController.text,
       "RememberMe": false
     };
-    PostLoginResp resp = await api.createLogin(requestData: req);
+    PostLoginResp resp = await api.createLogin(context,requestData: req);
     if (resp.isSuccess ?? false) {
       setState(() {
-        isSigningIn = true;
+        ProgressDialogUtils.showProgressDialog(context);
       });
       var res = resp.result;
       var userID = res['UserId'];
@@ -478,7 +477,8 @@ class _SignupPageScreen extends State<SignupPageScreen> {
           AppRoutes.homePageScreen, (Route<dynamic> route) => false);
     } else {
       setState(() {
-        isSigningIn = false;
+        
+        ProgressDialogUtils.hideProgressDialog(context);
       });
       Get.snackbar('Error', resp.errorMessage.toString(),
           backgroundColor: Color.fromARGB(255, 255, 230, 230),
@@ -499,7 +499,7 @@ class _SignupPageScreen extends State<SignupPageScreen> {
         "Key": _user.providerData[0].uid,
       };
 //Call api and Check Already Registerd, if already registed, then excute below
-      PostLoginResp resp = await api.checkGoogleUser(queryParams: req);
+      PostLoginResp resp = await api.checkGoogleUser(context,queryParams: req);
       if (resp.isSuccess ?? false) {
         setState(() {
           userID = resp.result['UserId'];
@@ -529,14 +529,16 @@ class _SignupPageScreen extends State<SignupPageScreen> {
         });
       } else {
         setState(() {
-          isSigningIn = false;
+          
+        ProgressDialogUtils.hideProgressDialog(context);
         });
         Navigator.of(context).pushNamed(AppRoutes.googlesigninOneScreen,
             arguments: {"userInfo": _user});
       }
     } catch (e) {
       setState(() {
-        isSigningIn = false;
+        
+        ProgressDialogUtils.hideProgressDialog(context);
       });
       Get.snackbar('Error', e.toString(),
           backgroundColor: Color.fromARGB(255, 255, 230, 230),

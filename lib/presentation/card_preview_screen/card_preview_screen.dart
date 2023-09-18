@@ -91,7 +91,7 @@ class _CardPreviewScreen extends State<CardPreviewScreen> {
   late final WebViewController _webViewcontroller;
   @override
   void initState() {
-    ProgressDialogUtils.hideProgressDialog();
+    ProgressDialogUtils.hideProgressDialog(context);
     // if (isGreeting) getGreetingTemplates();
     getCardOrGreetingPreview();
     super.initState();
@@ -109,7 +109,7 @@ class _CardPreviewScreen extends State<CardPreviewScreen> {
     try {
       var req = {"ID": cardID.toString(), "IsDownloadImage": false.toString()};
       PostPreviewGreetingTemplateResp resp =
-          await api.createPreviewGreetingCard(queryParams: req);
+          await api.createPreviewGreetingCard(context,queryParams: req);
       if ((resp.isSuccess ?? false)) {
         setState(() {
           // htmlContent = resp.result!.htmldata ?? ''; //newhtml
@@ -123,22 +123,22 @@ class _CardPreviewScreen extends State<CardPreviewScreen> {
           isBackgroundImage = resp.result!.isBackgroundImage;
           customColor = (resp.result!.editorColorHex ?? '');
         });
-        ProgressDialogUtils.hideProgressDialog();
+        ProgressDialogUtils.hideProgressDialog(context);
       } else {
         Get.snackbar('Error', resp.errorMessage.toString());
 
-        ProgressDialogUtils.hideProgressDialog();
+        ProgressDialogUtils.hideProgressDialog(context);
       }
     } catch (e) {
       var s = 1;
-      ProgressDialogUtils.hideProgressDialog();
+      ProgressDialogUtils.hideProgressDialog(context);
     }
   }
 
   void getCardPreview() async {
     try {
       var req = {"UserId": GlobalVariables.userID, "CardId": cardID.toString()};
-      GetGetCreateCardResp resp = await api.previewCard(queryParams: req);
+      GetGetCreateCardResp resp = await api.previewCard(context,queryParams: req);
       if ((resp.isSuccess ?? false)) {
         setState(() {
           // htmlContent = resp.result!.htmlData ?? ''; //newhtml
@@ -147,15 +147,15 @@ class _CardPreviewScreen extends State<CardPreviewScreen> {
           isBackgroundImage = true; //resp.result!.isBackgroundImage;
           customColor = (resp.result!.backgroundColorHex ?? '');
         });
-        ProgressDialogUtils.hideProgressDialog();
+        ProgressDialogUtils.hideProgressDialog(context);
       } else {
         Get.snackbar('Error', resp.errorMessage.toString());
 
-        ProgressDialogUtils.hideProgressDialog();
+        ProgressDialogUtils.hideProgressDialog(context);
       }
     } catch (e) {
       var s = 1;
-      ProgressDialogUtils.hideProgressDialog();
+      ProgressDialogUtils.hideProgressDialog(context);
     }
   }
 
@@ -406,7 +406,7 @@ class _CardPreviewScreen extends State<CardPreviewScreen> {
   }
 
   onTapDownload({bool isShare = false}) async {
-    ProgressDialogUtils.showProgressDialog();
+    ProgressDialogUtils.showProgressDialog(context);
 
     // var bytes = await WebcontentConverter.contentToImage(content: htmlContent,);
     var bytes = await _controller.capture() ?? new Uint8List(0);
@@ -451,7 +451,7 @@ class _CardPreviewScreen extends State<CardPreviewScreen> {
             name: filename);
 
         if (result['isSuccess'] == true) {
-          ProgressDialogUtils.hideProgressDialog();
+          ProgressDialogUtils.hideProgressDialog(context);
           Get.snackbar("Success",
               "Image downloaded successfully. Please check your gallery",
               backgroundColor: Color.fromARGB(255, 208, 245, 216),
@@ -461,11 +461,11 @@ class _CardPreviewScreen extends State<CardPreviewScreen> {
                 color: Colors.green[900],
               ));
         } else {
-          ProgressDialogUtils.hideProgressDialog();
+          ProgressDialogUtils.hideProgressDialog(context);
         }
       }
     } catch (e) {
-      ProgressDialogUtils.hideProgressDialog();
+      ProgressDialogUtils.hideProgressDialog(context);
     }
   }
 

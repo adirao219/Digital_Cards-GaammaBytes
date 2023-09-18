@@ -98,6 +98,8 @@ class ThemeResult {
   int? logoPosition;
   dynamic logoPositionName;
   bool? userPicture;
+  String? logoCaptionName;
+  String? logoPositionCaptionName;
 
   ThemeResult(
       {this.themeID,
@@ -170,7 +172,10 @@ class ThemeResult {
       this.contentPosition,
       this.logoPosition,
       this.logoPositionName,
-      this.userPicture});
+      this.userPicture,
+      this.logoCaptionName,
+      this.logoPositionCaptionName
+      });
 
   ThemeResult.fromJson(Map<String, dynamic> json) {
     themeID = json['ThemeID'];
@@ -244,6 +249,8 @@ class ThemeResult {
     logoPosition = json['LogoPosition'];
     logoPositionName = json['LogoPositionName'];
     userPicture = json['UserPicture'];
+    logoCaptionName = json['Picture2Caption'];
+    logoPositionCaptionName = json['Picture2PositionCaption'];
   }
 
   Map<String, dynamic> toJson() {

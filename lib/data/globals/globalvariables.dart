@@ -1,5 +1,6 @@
 import 'dart:ffi';
 
+import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../core/utils/pref_utils.dart';
@@ -12,8 +13,8 @@ class GlobalVariables {
   static String userName = "";
   static String userPhotoUrl = "";
   static String currentLanguage = "1";
+  static BuildContext? appContext;
 
-  
   static String tempCaptionContent = "";
   static String tempMessageContent = "";
   static String tempSenderContent = "";
@@ -34,6 +35,10 @@ class GlobalVariables {
     isLoggedIn = value;
   }
 
+  static setBuildContext(BuildContext context) {
+    appContext = context;
+  }
+
   static setGoogleLoggedIn(bool value) {
     PrefUtils.sharedPreferences?.setBool("isGoogleLoggedIn", value);
     isGoogleLoggedIn = value;
@@ -42,10 +47,16 @@ class GlobalVariables {
   static setCurrentLocale(String value) {
     PrefUtils.sharedPreferences?.setString("currentLocale", value);
   }
-
-   static setCurrentLocaleTranslations(String jsonValue) {
-    PrefUtils.sharedPreferences?.setString("currentLocaleTranslations", jsonValue);
+static setCurrentLanguageID(String value) {
+  currentLanguage = value;
+    PrefUtils.sharedPreferences?.setString("currentLanguageID", value);
   }
+
+  static setCurrentLocaleTranslations(String jsonValue) {
+    PrefUtils.sharedPreferences
+        ?.setString("currentLocaleTranslations", jsonValue);
+  }
+
   static setUserID(String value) {
     PrefUtils.sharedPreferences?.setString("userID", value);
     userID = value;

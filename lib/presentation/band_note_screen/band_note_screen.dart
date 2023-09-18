@@ -49,16 +49,16 @@ var existingHtml="";
   @override
   void initState() {
     
-    getFontList();
+    getFontList(context);
     if (bandID != null && bandID != 0) {
-      getBandData();
+      getBandData(context);
     }
     super.initState();
   }
 
-  getFontList() async {
+  getFontList(BuildContext appcontext) async {
     try {
-      CommonDropdownResp resp = await api.getFontList(queryParams: {});
+      CommonDropdownResp resp = await api.getFontList(appcontext, queryParams: {});
       if ((resp.isSuccess ?? false)) {
         setState(() {
           fontList = resp.result ?? [];
@@ -74,14 +74,15 @@ var existingHtml="";
     } catch (e) {}
   }
 
-  getBandData() async {
+  getBandData(BuildContext appcontext) async {
     try {
       var req = {
         "UserId": GlobalVariables.userID,
         "CardID": selectedCardID.toString(),
-        "BandID": bandID.toString()
+        "BandID": bandID.toString(),
+        "LanguageId":GlobalVariables.currentLanguage
       };
-      GetGetBandDataResp resp = await api.fetchGetBandData(queryParams: req);
+      GetGetBandDataResp resp = await api.fetchGetBandData(appcontext, queryParams: req);
       if (resp.isSuccess ?? false) {
         setState(() {
           _heading_Controller.text = resp.result!.heading ?? '';
@@ -99,7 +100,7 @@ var existingHtml="";
     } catch (e) {}
   }
 
-  saveBandLinks() async {
+  saveBandLinks(BuildContext appcontext) async {
     try {
       var req = {
         "CardBandID": (bandID == null || bandID == 0) ? "0" : bandID.toString(),
@@ -117,9 +118,10 @@ var existingHtml="";
         "Link6": "",
         "Link7": "",
         "Link8": "",
-        "DataPosition": "0"
+        "DataPosition": "0",
+        "CaptionLanguageId":GlobalVariables.currentLanguage
       };
-      APIBooleanResponse resp = await api.createSaveBands(requestData: req);
+      APIBooleanResponse resp = await api.createSaveBands(appcontext, requestData: req);
       if (resp.isSuccess ?? false) {
         Get.snackbar('Success', "Band Created successfully!",
             backgroundColor: Color.fromARGB(255, 208, 245, 216),
@@ -513,6 +515,6 @@ var existingHtml="";
   }
 
   onTapSave() {
-    saveBandLinks();
+    saveBandLinks(context);
   }
 }

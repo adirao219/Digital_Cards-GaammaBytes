@@ -51,7 +51,7 @@ class _CardHtmlEditorScreenState extends State<CardHtmlEditorScreen> {
 
   getFontList() async {
     try {
-      CommonDropdownResp resp = await api.getFontList(queryParams: {});
+      CommonDropdownResp resp = await api.getFontList(context,queryParams: {});
       if ((resp.isSuccess ?? false)) {
         setState(() {
           fontList = resp.result ?? [];

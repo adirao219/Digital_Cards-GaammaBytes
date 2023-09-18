@@ -91,14 +91,15 @@ class _CardEntrytwoScreen extends State<CardEntrytwoScreen> {
         "CardID": selectedCardID.toString(),
         "CardType": "0",
         "CardSubType": "0",
+        "LanguageId":GlobalVariables.currentLanguage
       };
-      GetGetCreateCardResp resp = await api.fetchGetCreateCard(
+      GetGetCreateCardResp resp = await api.fetchGetCreateCard(context,
           queryParams: req, showProgress: showProgress);
       if (resp.isSuccess ?? false) {
         setState(() {
           mainResult = resp.result;
         });
-        ProgressDialogUtils.hideProgressDialog();
+        ProgressDialogUtils.hideProgressDialog(context);
       } else {
         Get.snackbar('Error', resp.errorMessage.toString(),
             backgroundColor: Color.fromARGB(255, 255, 230, 230),
@@ -215,7 +216,7 @@ class _CardEntrytwoScreen extends State<CardEntrytwoScreen> {
         "UserId": GlobalVariables.userID,
         "CardID": selectedCardID.toString(),
       };
-      APIResponse resp = await api.fetchPublish(queryParams: req);
+      APIResponse resp = await api.fetchPublish(context,queryParams: req);
       if ((resp.isSuccess ?? false)) {
         setState(() {
           isPublished = true;
@@ -248,9 +249,10 @@ class _CardEntrytwoScreen extends State<CardEntrytwoScreen> {
         "Name": cardName,
         "Latitude": double.tryParse(_latitude_Controller.text),
         "Longitude": double.tryParse(_longitude_Controller.text),
-        "CardColorInHex": hexColor ?? ''
+        "CardColorInHex": hexColor ?? '',
+        "CaptionLanguageId":GlobalVariables.currentLanguage
       };
-      PostSaveResp resp = await api.saveCardOtherData(requestData: req);
+      PostSaveResp resp = await api.saveCardOtherData(context,requestData: req);
       if (resp.isSuccess ?? false) {
         selectedCardID = resp.result;
         Get.snackbar('Success', "Card Saved Successfully!",

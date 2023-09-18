@@ -683,7 +683,7 @@ The use of this service is subject to the following terms of use:
           "coupon": _couponCodeController.text,
         };
         GetValidateCouponCodeResp resp =
-            await api.fetchValidateCouponCode(queryParams: req);
+            await api.fetchValidateCouponCode(context,queryParams: req);
         if ((resp.isSuccess ?? false)) {
           if (resp.result ?? false) {
             registerUser();
@@ -723,7 +723,7 @@ The use of this service is subject to the following terms of use:
         "CoupanCode": _couponCodeController.text
       };
       PostRegistrationResp resp =
-          await api.createRegistration(requestData: req);
+          await api.createRegistration(context,requestData: req);
       if (resp.isSuccess ?? false) {
         var res = resp.result;
         var userID = res!.userId;

@@ -211,7 +211,7 @@ class GreetingItemWidget extends StatelessWidget {
         "IsHidden": (isHidden ? false : true).toString(),
       };
       PostHideGreetingResp resp =
-          await api.createHideGreeting(queryParams: req);
+          await api.createHideGreeting(mainContext,queryParams: req);
       if ((resp.isSuccess ?? false)) {
         Navigator.pop(mainContext);
         Get.snackbar('Success',
@@ -242,7 +242,7 @@ actionPerformed();
         "GreetingID": modelobj.iD.toString(),
       };
       APIBooleanResponse resp =
-          await api.createDeleteGreeting(queryParams: req);
+          await api.createDeleteGreeting(mainContext,queryParams: req);
       if ((resp.isSuccess ?? false)) {
         Navigator.pop(mainContext);
         Get.snackbar('Success', "Greeting deleted successfully!",

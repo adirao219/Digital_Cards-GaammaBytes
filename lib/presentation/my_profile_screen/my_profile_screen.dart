@@ -69,8 +69,9 @@ class _MyProfileScreen extends State<MyProfileScreen> {
     try {
       var req = {
         "UserId": GlobalVariables.userID,
+        "LanguageId":GlobalVariables.currentLanguage
       };
-      GetMyProfileResp resp = await api.fetchMyProfile(queryParams: req);
+      GetMyProfileResp resp = await api.fetchMyProfile(context,queryParams: req);
       if (resp.isSuccess ?? false) {
         setState(() {
           result = resp.result ??
@@ -111,7 +112,7 @@ class _MyProfileScreen extends State<MyProfileScreen> {
       var query = {
         "UserId": GlobalVariables.userID,
       };
-      APIResponse resp = await api.getCreditsAvailable(queryParams: query);
+      APIResponse resp = await api.getCreditsAvailable(context, requestData: query);
       if (resp.isSuccess ?? false) {
         setState(() {
           creditsAvailable = resp.result;
@@ -133,7 +134,7 @@ class _MyProfileScreen extends State<MyProfileScreen> {
       var query = {
         "UserId": GlobalVariables.userID,
       };
-      StorageResponse resp = await api.getStorageAvailable(queryParams: query);
+      StorageResponse resp = await api.getStorageAvailable(context, queryParams: query);
       if (resp.isSuccess ?? false) {
         setState(() {
           totalSpace = resp.result!.totalSpace ?? '-';
@@ -167,9 +168,10 @@ class _MyProfileScreen extends State<MyProfileScreen> {
         "CountryCode": selectedContryCode,
         "LanguageId": selectedLanguage,
         "Logo": logoImageBase64,
-        "LogoRef": logoImageFileName
+        "LogoRef": logoImageFileName,
+        "CaptionLanguageId":GlobalVariables.currentLanguage
       };
-      PostMyProfileResp resp = await api.createMyProfile(requestData: req);
+      PostMyProfileResp resp = await api.createMyProfile(context,requestData: req);
       if (resp.isSuccess ?? false) {
         setState(() {
           Get.snackbar('Success', "Profile updated successfullly!",
@@ -519,7 +521,7 @@ class _MyProfileScreen extends State<MyProfileScreen> {
                         width: 130,
                         text: (isFirstImageSelected
                             ? "lbl_image_selected".tr
-                            : "lbl_select_image".tr),
+                            : "lbl_select_logo".tr),
                         variant: ButtonVariant.OutlineBlack9003f,
                         shape: ButtonShape.RoundedBorder5,
                         padding: ButtonPadding.PaddingT9,
@@ -658,7 +660,7 @@ class _MyProfileScreen extends State<MyProfileScreen> {
         "SlNo": (7).toString(),
         "FileRef": logoImageBase64
       };
-      APIBooleanResponse resp = await api.removeImage(queryParams: req);
+      APIBooleanResponse resp = await api.removeImage(context,queryParams: req);
       if (resp.isSuccess ?? false) {
         Get.snackbar('Success', "Logo removed successfully!",
             backgroundColor: Color.fromARGB(255, 208, 245, 216),
@@ -818,7 +820,7 @@ class _MyProfileScreen extends State<MyProfileScreen> {
       CustomButton(
         height: 40,
         width: 200,
-        text: ('   Increase Storage'),
+        text: ('   '+("lbl_increase_space").tr),
         prefixWidget: Icon(
           CupertinoIcons.tray_arrow_up,
           color: ColorConstant.pink900,
@@ -847,7 +849,7 @@ class _MyProfileScreen extends State<MyProfileScreen> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
-            "Storage",
+            "lbl_storage".tr,
             style: AppStyle.txtNunitoBold18,
           ),
           IconButton(
@@ -868,7 +870,7 @@ class _MyProfileScreen extends State<MyProfileScreen> {
                       children: [
                         Padding(
                             padding: getPadding(bottom: 0),
-                            child: Text("Total Size: ".tr,
+                            child: Text("lbl_total_space".tr,
                                 overflow: TextOverflow.ellipsis,
                                 textAlign: TextAlign.left,
                                 style: AppStyle.txtNunitoSansRegular16.copyWith(
@@ -898,7 +900,7 @@ class _MyProfileScreen extends State<MyProfileScreen> {
                       children: [
                         Padding(
                             padding: getPadding(bottom: 0),
-                            child: Text("Utilized: ".tr,
+                            child: Text("lbl_utilized".tr,
                                 overflow: TextOverflow.ellipsis,
                                 textAlign: TextAlign.left,
                                 style: AppStyle.txtNunitoSansRegular16.copyWith(
@@ -928,7 +930,7 @@ class _MyProfileScreen extends State<MyProfileScreen> {
                       children: [
                         Padding(
                             padding: getPadding(bottom: 0),
-                            child: Text("Available: ".tr,
+                            child: Text("lbl_available".tr,
                                 overflow: TextOverflow.ellipsis,
                                 textAlign: TextAlign.left,
                                 style: AppStyle.txtNunitoSansRegular16.copyWith(

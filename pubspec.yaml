@@ -87,6 +87,7 @@ dependencies:
   webview_flutter: ^3.0.4
   flutter_easyloading: ^3.0.5
   flutter_switch: ^0.3.2
+  loader_overlay: ^2.3.2
   # webview_flutter_android: ^3.5.0
   # webview_flutter_wkwebview: ^2.7.0
   

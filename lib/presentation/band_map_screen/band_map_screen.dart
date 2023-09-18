@@ -45,19 +45,20 @@ class _BandMapScreen extends State<BandMapScreen> {
   void initState() {
     getCurrentLocation();
     if (bandID != null && bandID != 0) {
-      getBandData();
+      getBandData(context);
     }
     super.initState();
   }
 
-  getBandData() async {
+  getBandData(BuildContext appcontext) async {
     try {
       var req = {
         "UserId": GlobalVariables.userID,
         "CardID": selectedCardID.toString(),
-        "BandID": bandID.toString()
+        "BandID": bandID.toString(),
+        "LanguageId":GlobalVariables.currentLanguage
       };
-      GetGetBandDataResp resp = await api.fetchGetBandData(queryParams: req);
+      GetGetBandDataResp resp = await api.fetchGetBandData(appcontext, queryParams: req);
       if (resp.isSuccess ?? false) {
         setState(() {
           _heading_Controller.text = resp.result!.heading ?? '';
@@ -79,7 +80,7 @@ class _BandMapScreen extends State<BandMapScreen> {
     } catch (e) {}
   }
 
-  saveBandLinks() async {
+  saveBandLinks(BuildContext appcontext) async {
     try {
       var req = {
         "CardBandID": (bandID == null || bandID == 0) ? "0" : bandID.toString(),
@@ -97,9 +98,10 @@ class _BandMapScreen extends State<BandMapScreen> {
         "Link6": "",
         "Link7": "",
         "Link8": "",
-        "DataPosition": "0"
+        "DataPosition": "0",
+        "CaptionLanguageId":GlobalVariables.currentLanguage
       };
-      APIBooleanResponse resp = await api.createSaveBands(requestData: req);
+      APIBooleanResponse resp = await api.createSaveBands(appcontext, requestData: req);
       if (resp.result ?? false) {
         Get.snackbar('Success', "Band Created successfully!",
             backgroundColor: Color.fromARGB(255, 208, 245, 216),
@@ -377,6 +379,6 @@ class _BandMapScreen extends State<BandMapScreen> {
   }
 
   onTapSave() {
-    saveBandLinks();
+    saveBandLinks(context);
   }
 }

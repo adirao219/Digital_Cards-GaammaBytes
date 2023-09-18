@@ -38,11 +38,11 @@ class _AddStorageCredits extends State<AddStorageCredits> {
 
   @override
   void initState() {
-    getAvailableCredits();
+    getAvailableCredits(context);
     super.initState();
   }
 
-  validateAndCalculateSpace(String credits) async {
+  validateAndCalculateSpace(BuildContext appcontext, String credits) async {
     if (int.tryParse(credits) != null && int.parse(credits) > 0) {
       if (int.parse(credits) > creditsAvailable) {
         return Get.snackbar(
@@ -58,7 +58,8 @@ class _AddStorageCredits extends State<AddStorageCredits> {
           var query = {
             "NoCredits": credits,
           };
-          APIResponse resp = await api.getCreditStorage(queryParams: query);
+          APIResponse resp =
+              await api.getCreditStorage(appcontext, queryParams: query);
           if (resp.isSuccess ?? false) {
             setState(() {
               _totalspace_Controller.text = resp.result.toString();
@@ -77,12 +78,13 @@ class _AddStorageCredits extends State<AddStorageCredits> {
     }
   }
 
-  getAvailableCredits({bool showProgress = true}) async {
+  getAvailableCredits(BuildContext appcontext,
+      {bool showProgress = true}) async {
     try {
       var query = {
         "UserId": GlobalVariables.userID,
       };
-      APIResponse resp = await api.getCreditsAvailable(
+      APIResponse resp = await api.getCreditsAvailable(appcontext,
           queryParams: query, showProgress: showProgress);
       if (resp.isSuccess ?? false) {
         setState(() {
@@ -100,13 +102,26 @@ class _AddStorageCredits extends State<AddStorageCredits> {
     } catch (e) {}
   }
 
-  addStorageDetails() async {
+  addStorageDetails(BuildContext appcontext) async {
     try {
+      if (int.parse(_noofcredits_Controller.text) <= 0) {
+        Get.snackbar('Warning', "Please enter valid credits!",
+            backgroundColor: Color.fromARGB(255, 255, 224, 156),
+            colorText: Color.fromARGB(255, 105, 73, 3),
+            icon: Icon(
+              Icons.warning,
+              color: Color.fromARGB(255, 105, 73, 3),
+            ));
+
+        return;
+      }
+
       var req = {
         "UserIdString": GlobalVariables.userID,
-        "NoCredits": _noofcredits_Controller.text
+        "NoCredits": _noofcredits_Controller.text,
+        "CaptionLanguageId":GlobalVariables.currentLanguage
       };
-      APIResponse resp = await api.addStorage(requestData: req);
+      APIResponse resp = await api.addStorage(appcontext, requestData: req);
       if (resp.isSuccess ?? false) {
         setState(() {
           Get.snackbar('Success', "Storage added successfully!",
@@ -117,7 +132,7 @@ class _AddStorageCredits extends State<AddStorageCredits> {
                 color: Colors.green[900],
               ));
         });
-        getAvailableCredits(showProgress: false);
+        getAvailableCredits(appcontext, showProgress: false);
       } else {
         Get.snackbar('Error', resp.errorMessage.toString(),
             backgroundColor: Color.fromARGB(255, 255, 230, 230),
@@ -181,7 +196,7 @@ class _AddStorageCredits extends State<AddStorageCredits> {
                                               bottom: 13))
                                     ])),
                             AppbarTitle(
-                                text: "Increase Storage".tr.toUpperCase(),
+                                text: "lbl_increase_space".tr.toUpperCase(),
                                 margin: getMargin(left: 25, top: 0))
                           ])))
                 ])),
@@ -215,7 +230,7 @@ class _AddStorageCredits extends State<AddStorageCredits> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     Text(
-                      ('Credits Available  '),
+                      ('lbl_available_credits'.tr),
                       style: AppStyle.txtNunitoSansBold14,
                     ),
                     Container(
@@ -237,20 +252,19 @@ class _AddStorageCredits extends State<AddStorageCredits> {
                   margin: getMargin(
                     top: 20,
                   ),
-                  child: Text("No. of Credits:".tr,
+                  child: Text("lbl_total_credits".tr,
                       style: AppStyle.txtNunitoSansBold14Pink900),
                 ),
                 CustomTextFormField(
                   width: 326,
                   textInputType: TextInputType.number,
-                  focusNode: FocusNode(),
                   controller: _noofcredits_Controller,
-                  hintText: "Enter the no. of credits to utilize for space",
+                  hintText: "lbl_credit_utilize_hint".tr,
                   margin: getMargin(
                     top: 15,
                   ),
                   onChanged: (value) {
-                    validateAndCalculateSpace(value);
+                    validateAndCalculateSpace(context, value);
                   },
                   validator: (value) {
                     if (!isText(value, isRequired: true)) {
@@ -263,15 +277,14 @@ class _AddStorageCredits extends State<AddStorageCredits> {
                   margin: getMargin(
                     top: 15,
                   ),
-                  child: Text("Total Space (MB):",
+                  child: Text("lbl_total_space_in_mb".tr,
                       style: AppStyle.txtNunitoSansBold14Pink900),
                 ),
                 CustomTextFormField(
                   width: 326,
                   isEnabled: false,
-                  focusNode: FocusNode(),
                   controller: _totalspace_Controller,
-                  hintText: "Total space will be calculated on credits entered",
+                  hintText: "lbl_total_space_calculation_hint".tr,
                   margin: getMargin(
                     top: 15,
                   ),
@@ -293,7 +306,7 @@ class _AddStorageCredits extends State<AddStorageCredits> {
                     bottom: 5,
                   ),
                   onTap: () {
-                    addStorageDetails();
+                    addStorageDetails(context);
                   },
                   alignment: Alignment.center,
                 ),

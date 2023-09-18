@@ -37,7 +37,7 @@ class _PurchaseCreditHistory extends State<PurchaseCreditHistory> {
       var query = {
         "UserId": GlobalVariables.userID,
       };
-      CreditResponse resp = await api.getCreditHistory(queryParams: query);
+      CreditResponse resp = await api.getCreditHistory(context, queryParams: query);
       if (resp.isSuccess ?? false) {
         setState(() {
           creditList = resp.result ?? [];
@@ -222,7 +222,7 @@ class _PurchaseCreditHistory extends State<PurchaseCreditHistory> {
                       children: [
                         Padding(
                             padding: getPadding(bottom: 0),
-                            child: Text("No. of Credits Purcahsed: ".tr,
+                            child: Text("lbl_credits_purchased".tr,
                                 overflow: TextOverflow.ellipsis,
                                 textAlign: TextAlign.left,
                                 style: AppStyle.txtNunitoSansRegular16.copyWith(
@@ -260,7 +260,7 @@ class _PurchaseCreditHistory extends State<PurchaseCreditHistory> {
                       children: [
                         Padding(
                             padding: getPadding(bottom: 0),
-                            child: Text("No. of Credits Utilized: ".tr,
+                            child: Text(("lbl_credits_utilized".tr),
                                 overflow: TextOverflow.ellipsis,
                                 textAlign: TextAlign.left,
                                 style: AppStyle.txtNunitoSansRegular16.copyWith(
@@ -298,7 +298,7 @@ class _PurchaseCreditHistory extends State<PurchaseCreditHistory> {
                       children: [
                         Padding(
                             padding: getPadding(bottom: 0),
-                            child: Text("No. of Credits Available: ".tr,
+                            child: Text("lbl_credits_available".tr,
                                 overflow: TextOverflow.ellipsis,
                                 textAlign: TextAlign.left,
                                 style: AppStyle.txtNunitoSansRegular16.copyWith(
@@ -336,7 +336,7 @@ class _PurchaseCreditHistory extends State<PurchaseCreditHistory> {
                       children: [
                         Padding(
                             padding: getPadding(bottom: 0),
-                            child: Text("No. of Credits Lapsed: ".tr,
+                            child: Text("lbl_credits_lapsed".tr,
                                 overflow: TextOverflow.ellipsis,
                                 textAlign: TextAlign.left,
                                 style: AppStyle.txtNunitoSansRegular16.copyWith(

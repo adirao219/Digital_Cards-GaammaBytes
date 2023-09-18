@@ -37,7 +37,7 @@ class _MakePaymentScreen extends State<MakePaymentScreen> {
   String currentOrderID = "";
   String currentPaymentID = "";
   String currentTransactiontID = "";
-  double amount= 0.0;
+  double amount = 0.0;
   @override
   void initState() {
     _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
@@ -52,8 +52,10 @@ class _MakePaymentScreen extends State<MakePaymentScreen> {
     try {
       var req = {
         "UserId": GlobalVariables.userID,
+        "LanguageId": GlobalVariables.currentLanguage
       };
-      GetMyProfileResp resp = await api.fetchMyProfile(queryParams: req);
+      GetMyProfileResp resp =
+          await api.fetchMyProfile(context, queryParams: req);
       if (resp.isSuccess ?? false) {
         setState(() {
           _name_Controller.text = resp.result!.displayName ?? '';
@@ -75,9 +77,10 @@ class _MakePaymentScreen extends State<MakePaymentScreen> {
   getRazorPayAPIKey() async {
     try {
       var req = {
-        "AuthKey":"jxXqsF2vOufdsBaApiffyA==",
+        "AuthKey": "jxXqsF2vOufdsBaApiffyA==",
       };
-      APIResponse resp = await api.fetchRazorPayAPIKey(queryParams: req);
+      APIResponse resp =
+          await api.fetchRazorPayAPIKey(context, queryParams: req);
       if (resp.isSuccess ?? false) {
         setState(() {
           razorPayAPIKey = resp.result['Key'];
@@ -111,7 +114,7 @@ class _MakePaymentScreen extends State<MakePaymentScreen> {
     try {
       setState(() {
         // currentPaymentID = response.paymentId??'';
-        updatePaymentFailure(response.message??'');
+        updatePaymentFailure(response.message ?? '');
       });
       print("Payment-Error:" + response.toString());
     } catch (e) {}
@@ -126,6 +129,17 @@ class _MakePaymentScreen extends State<MakePaymentScreen> {
 
   makePaymentInitiation() async {
     try {
+      if (int.parse(_credits_Controller.text) <= 0) {
+        Get.snackbar('Warning', "Please enter valid credits!",
+            backgroundColor: Color.fromARGB(255, 255, 224, 156),
+            colorText: Color.fromARGB(255, 105, 73, 3),
+            icon: Icon(
+              Icons.warning,
+              color: Color.fromARGB(255, 105, 73, 3),
+            ));
+
+        return;
+      }
       var req = {
         "UserIdString": GlobalVariables.userID,
         "Buyer_Name": _name_Controller.text,
@@ -137,14 +151,15 @@ class _MakePaymentScreen extends State<MakePaymentScreen> {
         "Purpose": "Digital Cards",
         "RequestId": "",
         "RequestDate": "",
-        "NoOfCredits": _credits_Controller.text
+        "NoOfCredits": _credits_Controller.text,
+        "CaptionLanguageId":GlobalVariables.currentLanguage
       };
       CommonGenericResp resp =
-          await api.makePaymentInitiation(requestData: req);
+          await api.makePaymentInitiation(context, requestData: req);
       if (resp.isSuccess ?? false) {
         setState(() {
-          currentOrderID=resp.result?['RequestId'];
-          currentPaymentID=(resp.result?['PayId']??0).toString();
+          currentOrderID = resp.result?['RequestId'];
+          currentPaymentID = (resp.result?['PayId'] ?? 0).toString();
           buildreq();
         });
       } else {
@@ -168,18 +183,23 @@ class _MakePaymentScreen extends State<MakePaymentScreen> {
         "PaymentId": currentTransactiontID,
         "Status": "Completed"
       };
-      APIResponse resp =
-          await api.updatePaymentSuccess(queryParams: req, requestData: {});
+      APIResponse resp = await api
+          .updatePaymentSuccess(context, queryParams: req, requestData: {});
       if (resp.isSuccess ?? false) {
         setState(() {
-         Get.snackbar('Success', _credits_Controller.text+" credit"+(int.parse(_credits_Controller.text)>1?"s":"") +" purchased successfully!",
-            backgroundColor: Color.fromARGB(255, 208, 245, 216),
-            colorText: Colors.green[900],
-            icon: Icon(
-              Icons.done,
-              color: Colors.green[900],
-            ));
-            Navigator.pop(context);
+          Get.snackbar(
+              'Success',
+              _credits_Controller.text +
+                  " credit" +
+                  (int.parse(_credits_Controller.text) > 1 ? "s" : "") +
+                  " purchased successfully!",
+              backgroundColor: Color.fromARGB(255, 208, 245, 216),
+              colorText: Colors.green[900],
+              icon: Icon(
+                Icons.done,
+                color: Colors.green[900],
+              ));
+          Navigator.pop(context);
         });
       } else {
         Get.snackbar('Error', resp.errorMessage.toString(),
@@ -192,7 +212,8 @@ class _MakePaymentScreen extends State<MakePaymentScreen> {
       }
     } catch (e) {}
   }
- updatePaymentFailure(String reason) async {
+
+  updatePaymentFailure(String reason) async {
     try {
       var req = {
         "UserId": GlobalVariables.userID,
@@ -201,17 +222,17 @@ class _MakePaymentScreen extends State<MakePaymentScreen> {
         "Status": "Failed",
         "Remarks": reason
       };
-      APIResponse resp =
-          await api.updatePaymentFailure(queryParams: req, requestData: {});
+      APIResponse resp = await api
+          .updatePaymentFailure(context, queryParams: req, requestData: {});
       if (resp.isSuccess ?? false) {
         setState(() {
-              Get.snackbar('Error', reason,
-            backgroundColor: Color.fromARGB(255, 255, 230, 230),
-            colorText: Colors.red[900],
-            icon: Icon(
-              Icons.error,
-              color: Colors.red[900],
-            ));
+          Get.snackbar('Error', reason,
+              backgroundColor: Color.fromARGB(255, 255, 230, 230),
+              colorText: Colors.red[900],
+              icon: Icon(
+                Icons.error,
+                color: Colors.red[900],
+              ));
         });
       } else {
         Get.snackbar('Error', resp.errorMessage.toString(),
@@ -226,7 +247,7 @@ class _MakePaymentScreen extends State<MakePaymentScreen> {
   }
 
   buildreq() async {
-    if (amount!=0) {
+    if (amount != 0) {
       var options = {
         'key': razorPayAPIKey,
         'amount': amount, //in the smallest currency sub-unit.
@@ -249,11 +270,11 @@ class _MakePaymentScreen extends State<MakePaymentScreen> {
       var query = {
         "NoCredits": _credits_Controller.text,
       };
-      APIResponse resp = await api.getCreditAmount(queryParams: query);
+      APIResponse resp = await api.getCreditAmount(context, queryParams: query);
       if (resp.isSuccess ?? false) {
         setState(() {
-          amount =double.parse(resp.result.toString());
-          _amount_Controller.text = resp.result.toString()+" INR";
+          amount = double.parse(resp.result.toString());
+          _amount_Controller.text = resp.result.toString() + " INR";
         });
       } else {
         Get.snackbar('Error', resp.errorMessage.toString(),
@@ -437,7 +458,7 @@ class _MakePaymentScreen extends State<MakePaymentScreen> {
                   width: 326,
                   textInputType: TextInputType.number,
                   controller: _credits_Controller,
-                  hintText: "Enter no. of credits you want to purchase".tr,
+                  hintText: "lbl_credit_purchase_hint".tr,
                   margin: getMargin(
                     top: 5,
                   ),

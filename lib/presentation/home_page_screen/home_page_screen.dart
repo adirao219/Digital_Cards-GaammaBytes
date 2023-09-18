@@ -38,7 +38,7 @@ class _HomePageScreen extends State<HomePageScreen> {
   void initState() {
     requestPermission();
 
-    getLanguages();
+    getLanguages(context);
     super.initState();
   }
 
@@ -53,9 +53,9 @@ class _HomePageScreen extends State<HomePageScreen> {
     final locationstatus = await location.request();
   }
 
-  getLanguages() async {
+  getLanguages(BuildContext appcontext) async {
     try {
-      CommonDropdownResp resp = await api.getLanguages(queryParams: {});
+      CommonDropdownResp resp = await api.getLanguages(appcontext, queryParams: {});
       if (resp.isSuccess ?? false) {
         setState(() {
           languages = resp.result;
@@ -73,10 +73,10 @@ class _HomePageScreen extends State<HomePageScreen> {
     } catch (e) {}
   }
 
-  getLanguageCaptionData(String languageID) async {
+  getLanguageCaptionData(BuildContext appcontext, String languageID) async {
     try {
       var req = {"LanguageId": languageID};
-      APIResponse resp = await api.getLanguageCaptionData(queryParams: req);
+      APIResponse resp = await api.getLanguageCaptionData(appcontext, queryParams: req);
       if (resp.isSuccess ?? false) {
         setState(() {
           languageCaptionResponse = resp;
@@ -675,7 +675,7 @@ class _HomePageScreen extends State<HomePageScreen> {
   }
 
   getLang(String value) async {
-    await getLanguageCaptionData(value);
+    await getLanguageCaptionData(context, value);
   }
 
   showLanguageDialog(BuildContext context) {
@@ -712,6 +712,8 @@ class _HomePageScreen extends State<HomePageScreen> {
                   onTap: () {
                     Navigator.pop(context);
                     setState(() async {
+                      
+GlobalVariables.setCurrentLanguageID(element.value ?? "1");
                       if (element.value == "1") {
                         Get.clearTranslations();
 
@@ -721,7 +723,6 @@ class _HomePageScreen extends State<HomePageScreen> {
                         Get.addTranslations(languageKeys);
                         var locale = Locale('en', 'US');
                         Get.updateLocale(locale);
-
                         GlobalVariables.setCurrentLocale("en_US");
                       } else {
                         await getLang(element.value ?? '');

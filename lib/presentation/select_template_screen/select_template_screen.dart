@@ -40,7 +40,9 @@ class _SelectTemplateScreen extends State<SelectTemplateScreen> {
   var messageDefault = "";
   var senderDefault = "";
   var backgroundImageURL = "";
-  var editorColorHex ="";
+  var editorColorHex = "";
+  var logoCaptionName = "";
+  var logoPositionCaptionName = "";
   var htmlContent = '''
 <html>
 <head>
@@ -171,7 +173,7 @@ class _SelectTemplateScreen extends State<SelectTemplateScreen> {
         "LogoPosition": logoPosition.toString()
       };
       PostPreviewGreetingTemplateResp resp =
-          await api.previewGreetingTemplate(queryParams: req);
+          await api.previewGreetingTemplate(context, queryParams: req);
       if ((resp.isSuccess ?? false)) {
         setState(() {
           previewResult = resp.result;
@@ -183,7 +185,7 @@ class _SelectTemplateScreen extends State<SelectTemplateScreen> {
             senderDefault = previewResult?.senderDefault ?? '';
             backgroundImageURL = previewResult?.background ?? '';
             isUserDefinedBackground = previewResult?.userPicture ?? false;
-          editorColorHex = resp.result?.editorColorHex??'';
+            editorColorHex = resp.result?.editorColorHex ?? '';
             // if (templateID == "-1") {
             //   // htmlContent=yourChoice;
             //   _webViewcontroller.loadHtmlString(yourChoice);
@@ -209,7 +211,7 @@ class _SelectTemplateScreen extends State<SelectTemplateScreen> {
         "LogoPosition": logoPosition.toString()
       };
       PostGetThemeDetailsResp resp =
-          await api.getThemeDetails(queryParams: req);
+          await api.getThemeDetails(context, queryParams: req);
       if ((resp.isSuccess ?? false)) {
         setState(() {
           // htmlContent = resp.result?.htmldata ?? '';
@@ -217,7 +219,9 @@ class _SelectTemplateScreen extends State<SelectTemplateScreen> {
           messageDefault = resp.result?.hTMLContent ?? '';
           backgroundImageURL = resp.result?.background ?? '';
           isUserDefinedBackground = resp.result?.userPicture ?? false;
-          editorColorHex = resp.result?.editorColorHex??'';
+          editorColorHex = resp.result?.editorColorHex ?? '';
+          logoCaptionName = resp.result?.logoCaptionName ?? '';
+          logoPositionCaptionName = resp.result?.logoPositionCaptionName ?? '';
           // if (templateID == "-1") {
           //   // htmlContent=yourChoice;
           //   _webViewcontroller.loadHtmlString(yourChoice);
@@ -240,15 +244,18 @@ class _SelectTemplateScreen extends State<SelectTemplateScreen> {
       var greetingreq = {
         "GreetingType": cardType.toString(),
         "LanguageId": selectedLanguage,
+        "CaptionLanguageId": GlobalVariables.currentLanguage
       };
       var cardreq = {
         "CardType": cardType.toString(),
         "CardSubType": cardSubType.toString(), //cardsubtype
         "LanguageId": selectedLanguage,
+        "CaptionLanguageId": GlobalVariables.currentLanguage
       };
       CommonDropdownResp resp = isGreeting
-          ? await api.fetchFilterGreetingTemplate(queryParams: greetingreq)
-          : await api.fetchFilterCardTheme(queryParams: cardreq);
+          ? await api.fetchFilterGreetingTemplate(context,
+              queryParams: greetingreq)
+          : await api.fetchFilterCardTheme(context, queryParams: cardreq);
       if (resp.isSuccess ?? false) {
         setState(() {
           alltemplates = templates = resp.result;
@@ -275,8 +282,8 @@ class _SelectTemplateScreen extends State<SelectTemplateScreen> {
   getLanguages() async {
     try {
       CommonDropdownResp resp = isGreeting
-          ? await api.getLanguages(queryParams: {})
-          : await api.fetchGetLanguages();
+          ? await api.getLanguages(context, queryParams: {})
+          : await api.fetchGetLanguages(context);
       if (resp.isSuccess ?? false) {
         setState(() {
           languages = resp.result;
@@ -966,7 +973,9 @@ class _SelectTemplateScreen extends State<SelectTemplateScreen> {
           .firstWhere((element) => element.value == selectedTemplate)
           .text,
       "isUserBackground": isUserDefinedBackground,
-      "editorColorHex":editorColorHex
+      "editorColorHex": editorColorHex,
+      "logoCaptionName": logoCaptionName,
+      "logoPositionCaptionName": logoPositionCaptionName
     });
   }
 

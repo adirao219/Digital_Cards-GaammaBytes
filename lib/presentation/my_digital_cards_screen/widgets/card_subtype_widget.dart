@@ -141,7 +141,7 @@ class CardSubTypeWidget extends StatelessWidget {
       //   "IsHidden": (isHidden ? false : true).toString(),
       // };
       // PostHideGreetingResp resp =
-      //     await api.createHideGreeting(queryParams: req);
+      //     await api.createHideGreeting(context,queryParams: req);
       // if ((resp.isSuccess ?? false)) {
       //   Get.snackbar('Success',
       //       "Greeting " + (isHidden ? "un" : "") + "hidden successfully!",
@@ -172,7 +172,7 @@ class CardSubTypeWidget extends StatelessWidget {
       //   "GreetingID": modelobj.iD.toString(),
       // };
       // PostDeleteGreetingResp resp =
-      //     await api.createDeleteGreeting(queryParams: req);
+      //     await api.createDeleteGreeting(context,queryParams: req);
       // if ((resp.isSuccess ?? false)) {
       //   Get.snackbar('Success', "Greeting deleted successfully!",
       //       backgroundColor: Color.fromARGB(255, 208, 245, 216),

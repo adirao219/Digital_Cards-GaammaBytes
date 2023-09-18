@@ -34,7 +34,7 @@ class _DigitalCardOptionsScreen extends State<DigitalCardOptionsScreen> {
 
   getDigitalCardTypes() async {
     try {
-      GetGetCardTypeResp resp = await api.fetchGetCardType();
+      GetGetCardTypeResp resp = await api.fetchGetCardType(context);
       if ((resp.isSuccess ?? false)) {
         setState(() {
           allDigitalCardTypes.addAll(resp.result!.toList());

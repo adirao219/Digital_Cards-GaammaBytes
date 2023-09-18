@@ -36,11 +36,12 @@ class _MyDigitalCardsScreen extends State<MyDigitalCardsScreen> {
   List<DigitalCardTypeResult> digitalCardTypes = [];
   String? sortbyOption = "latestcreated";
   bool isFirstTimeLoaded = false;
+  int? totalCount;
   bool? showHidden;
   @override
   void initState() {
     // Future.delayed(const Duration(milliseconds: 1000), () {
-      initialLoad();
+    initialLoad();
     // });
 
     super.initState();
@@ -58,7 +59,7 @@ class _MyDigitalCardsScreen extends State<MyDigitalCardsScreen> {
     try {
       var req = {
         "UserId": GlobalVariables.userID.toString(),
-        "DigitalCardType": (selectedDigitalCardTypeID ?? "").toString(),
+        "CardType": (selectedDigitalCardTypeID ?? "").toString(),
         "Hidden": (showHidden == null
             ? ""
             : (((showHidden ?? false) == false) ? "No" : "Yes")),
@@ -71,14 +72,17 @@ class _MyDigitalCardsScreen extends State<MyDigitalCardsScreen> {
                 sortbyOption == "latestcreated")
             ? "D"
             : "A",
-        "OnlyCardList": true.toString()
+        "OnlyCardList": true.toString(),
+        "LanguageId": GlobalVariables.currentLanguage
       };
-      GetCardDetailsResp resp = await api.fetchCardDetails(queryParams: req);
+      GetCardDetailsResp resp =
+          await api.fetchCardDetails(context, queryParams: req);
       if ((resp.isSuccess ?? false)) {
         setState(() {
+          totalCount = resp.result!.totalCount ?? 0;
           myDigitalCardsModelObj.value.digitalCardList =
               resp.result!.cardDetailsList ?? [];
-              isFirstTimeLoaded=true;
+          isFirstTimeLoaded = true;
         });
       } else {
         Get.snackbar('Error', resp.errorMessage.toString(),
@@ -94,7 +98,7 @@ class _MyDigitalCardsScreen extends State<MyDigitalCardsScreen> {
 
   getDigitalCardTypes() async {
     try {
-      GetGetCardTypeResp resp = await api.fetchGetCardType();
+      GetGetCardTypeResp resp = await api.fetchGetCardType(context);
       if ((resp.isSuccess ?? false)) {
         setState(() {
           digitalCardTypes.addAll(resp.result!.toList());
@@ -374,10 +378,7 @@ class _MyDigitalCardsScreen extends State<MyDigitalCardsScreen> {
                                                                           Radius.circular(
                                                                               50))),
                                                           child: Text(
-                                                            (myDigitalCardsModelObj
-                                                                .value
-                                                                .digitalCardList
-                                                                .length
+                                                            (totalCount
                                                                 .toString()),
                                                             style: AppStyle
                                                                 .txtNunitoSansBold14,
@@ -385,20 +386,21 @@ class _MyDigitalCardsScreen extends State<MyDigitalCardsScreen> {
                                                         )
                                                       ],
                                                     )),
-                                                     Visibility(
-                                                    visible:
-                                                        (myDigitalCardsModelObj
+                                                Visibility(
+                                                    visible: (myDigitalCardsModelObj
                                                                 .value
                                                                 .digitalCardList
                                                                 .length <=
-                                                            0) && isFirstTimeLoaded,
+                                                            0) &&
+                                                        isFirstTimeLoaded,
                                                     child: Column(
                                                       mainAxisAlignment:
                                                           MainAxisAlignment
                                                               .center,
                                                       children: [
-
-                                                        SizedBox(height: 20,),
+                                                        SizedBox(
+                                                          height: 20,
+                                                        ),
                                                         Text(
                                                           ('No Cards Found'),
                                                           style: AppStyle

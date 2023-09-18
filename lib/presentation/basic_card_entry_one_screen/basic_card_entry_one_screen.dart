@@ -56,7 +56,7 @@ class _BasicCardEntryOneScreen extends State<BasicCardEntryOneScreen> {
   TextEditingController _searchController = new TextEditingController();
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   bool isPublishAvailable = false;
-  String logoPositionName = " Select Logo Position";
+  String logoPositionName = " Select Position";
   bool? isUserDefinedBackground;
   bool mirrorHeaderImage = false;
   String templateID = "";
@@ -116,6 +116,8 @@ class _BasicCardEntryOneScreen extends State<BasicCardEntryOneScreen> {
   bool isServerStoredBackground = false;
   bool isServerStoredHeader = false;
   bool isServerStoredFooter = false;
+  var logoCaptionName = "";
+  var logoPositionCaptionName = "";
   String? hexColor;
   void changeColor(Color color) {
     setState(() {
@@ -129,19 +131,20 @@ class _BasicCardEntryOneScreen extends State<BasicCardEntryOneScreen> {
       isPublishAvailable = true;
     }
     getUserImages();
-    getBackgroundTypes();
+    getBackgroundTypes(context);
     super.initState();
   }
 
-  getCardData({bool showProgress = true}) async {
+  getCardData(BuildContext appcontext, {bool showProgress = true}) async {
     try {
       var req = {
         "UserIdString": GlobalVariables.userID,
         "CardID": selectedCardID.toString(),
         "CardType": "0",
         "CardSubType": "0",
+        "LanguageId": GlobalVariables.currentLanguage
       };
-      GetGetCreateCardResp resp = await api.fetchGetCreateCard(
+      GetGetCreateCardResp resp = await api.fetchGetCreateCard(appcontext,
           queryParams: req, showProgress: showProgress);
       if (resp.isSuccess ?? false) {
         setState(() {
@@ -224,6 +227,8 @@ class _BasicCardEntryOneScreen extends State<BasicCardEntryOneScreen> {
           var templogoPosition = (mainResult?.logoPosition ?? 0);
           setLogoPosition(templogoPosition, isClosePopup: false);
           messageDefault = htmlContent = mainResult?.hTMLContent ?? '';
+          logoCaptionName = mainResult?.logoCaptionName ?? '';
+          logoPositionCaptionName = mainResult?.logoPositionCaptionName ?? '';
         });
       } else {
         Get.snackbar('Error', resp.errorMessage.toString(),
@@ -237,7 +242,7 @@ class _BasicCardEntryOneScreen extends State<BasicCardEntryOneScreen> {
     } catch (e) {}
   }
 
-  saveCardMain() async {
+  saveCardMain(BuildContext appcontext) async {
     if (_card_name_Controller.text.isEmpty) {
       Get.snackbar('Warning', "Please enter card name!",
           backgroundColor: Color.fromARGB(255, 255, 224, 156),
@@ -288,9 +293,10 @@ class _BasicCardEntryOneScreen extends State<BasicCardEntryOneScreen> {
             ? "0.0"
             : _margin_right_Controller.text,
         "HTMLContent": messageUpdated,
+        "CaptionLanguageId": GlobalVariables.currentLanguage
         // "IsBackgroundImage": !(isBackgroundColor ?? false)
       };
-      PostSaveResp resp = await api.saveCardMain(requestData: req);
+      PostSaveResp resp = await api.saveCardMain(appcontext, requestData: req);
       if (resp.isSuccess ?? false) {
         selectedCardID = resp.result;
         Get.snackbar('Success', "Card Saved Successfully!",
@@ -316,7 +322,7 @@ class _BasicCardEntryOneScreen extends State<BasicCardEntryOneScreen> {
           "isPublished": isPublished,
           "publishedURL": publishedURL
         }).then((value) {
-          getCardData(showProgress: false);
+          getCardData(appcontext, showProgress: false);
         });
       } else {
         Get.snackbar('Error', resp.errorMessage.toString(),
@@ -330,10 +336,14 @@ class _BasicCardEntryOneScreen extends State<BasicCardEntryOneScreen> {
     } catch (e) {}
   }
 
-  getDigitalCardSubTypesTypes() async {
+  getDigitalCardSubTypesTypes(BuildContext appcontext) async {
     try {
-      var req = {"CardType": cardType.toString()};
-      GetCardSubTypeResp resp = await api.fetchGetCardSubType(queryParams: req);
+      var req = {
+        "CardType": cardType.toString(),
+        "LanguageId": GlobalVariables.currentLanguage
+      };
+      GetCardSubTypeResp resp =
+          await api.fetchGetCardSubType(appcontext, queryParams: req);
       if ((resp.isSuccess ?? false)) {
         setState(() {
           allcardSubTypes.addAll(resp.result!.toList());
@@ -345,7 +355,7 @@ class _BasicCardEntryOneScreen extends State<BasicCardEntryOneScreen> {
             isMultipleCardSubtype = true;
           }
           if (selectedCardID != 0) {
-            getCardData();
+            getCardData(appcontext);
           } else {
             _slice_num_Controller.text = "50";
           }
@@ -356,13 +366,15 @@ class _BasicCardEntryOneScreen extends State<BasicCardEntryOneScreen> {
     } catch (e) {}
   }
 
-  getBackgroundTypes() async {
+  getBackgroundTypes(BuildContext appcontext) async {
     try {
-      CommonDropdownResp resp = await api.getBackgroundType(queryParams: {});
+      var req = {"LanguageId": GlobalVariables.currentLanguage};
+      CommonDropdownResp resp =
+          await api.getBackgroundType(appcontext, queryParams: req);
       if ((resp.isSuccess ?? false)) {
         setState(() {
           backgroundTypeList = resp.result ?? [];
-          getDigitalCardSubTypesTypes();
+          getDigitalCardSubTypesTypes(appcontext);
         });
       } else {
         Get.snackbar('Error', resp.errorMessage.toString());
@@ -410,7 +422,7 @@ class _BasicCardEntryOneScreen extends State<BasicCardEntryOneScreen> {
         "UserId": GlobalVariables.userID,
         "CardID": selectedCardID.toString(),
       };
-      APIResponse resp = await api.fetchPublish(queryParams: req);
+      APIResponse resp = await api.fetchPublish(context, queryParams: req);
       if ((resp.isSuccess ?? false)) {
         setState(() {
           isPublished = true;
@@ -1205,13 +1217,14 @@ class _BasicCardEntryOneScreen extends State<BasicCardEntryOneScreen> {
 
                               Padding(
                                   padding: getPadding(left: 0),
-                                  child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      children: [
-                                        Padding(
-                                            padding: getPadding(bottom: 0),
-                                            child: Text("lbl_logo".tr,
+                                  child: Row(children: [
+                                    Expanded(
+                                        flex: 5,
+                                        child: Container(
+                                            child: Text(
+                                                (logoCaptionName == ""
+                                                    ? "lbl_logo".tr
+                                                    : logoCaptionName),
                                                 overflow: TextOverflow.ellipsis,
                                                 textAlign: TextAlign.left,
                                                 style: AppStyle
@@ -1221,11 +1234,10 @@ class _BasicCardEntryOneScreen extends State<BasicCardEntryOneScreen> {
                                                             getHorizontalSize(
                                                                 0.36),
                                                         height: getVerticalSize(
-                                                            1.26)))),
-                                        SizedBox(
-                                          width: 112,
-                                        ),
-                                        GestureDetector(
+                                                            1.26))))),
+                                    Expanded(
+                                        flex: 4,
+                                        child: GestureDetector(
                                           onLongPress: () {
                                             if (isServerStoredLogo) {
                                               var url = firstImageBase64;
@@ -1258,11 +1270,13 @@ class _BasicCardEntryOneScreen extends State<BasicCardEntryOneScreen> {
                                                   size: 15,
                                                 )),
                                           ),
-                                        ),
-                                        SizedBox(
-                                          width: 10,
-                                        ),
-                                        CustomButton(
+                                        )),
+                                    SizedBox(
+                                      width: 10,
+                                    ),
+                                    Expanded(
+                                        flex: 1,
+                                        child: CustomButton(
                                           height: 40,
                                           width: 20,
                                           // text: "Select Logo Position",
@@ -1281,8 +1295,8 @@ class _BasicCardEntryOneScreen extends State<BasicCardEntryOneScreen> {
                                             showAlertDialog(
                                                 context, UserImageType.logo);
                                           },
-                                        ),
-                                      ])),
+                                        )),
+                                  ])),
                               Container(
                                   height: getVerticalSize(1.00),
                                   width: getHorizontalSize(326.00),
@@ -1293,14 +1307,14 @@ class _BasicCardEntryOneScreen extends State<BasicCardEntryOneScreen> {
                                           getHorizontalSize(1.00)))),
                               Padding(
                                   padding: getPadding(left: 0),
-                                  child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      children: [
-                                        Padding(
-                                            padding: getPadding(bottom: 0),
+                                  child: Row(children: [
+                                    Expanded(
+                                        flex: 5,
+                                        child: Container(
                                             child: Text(
-                                                "lbl_picture_position".tr,
+                                                (logoPositionCaptionName == ""
+                                                    ? "lbl_picture_position".tr
+                                                    : logoPositionCaptionName),
                                                 overflow: TextOverflow.ellipsis,
                                                 textAlign: TextAlign.left,
                                                 style: AppStyle
@@ -1310,11 +1324,15 @@ class _BasicCardEntryOneScreen extends State<BasicCardEntryOneScreen> {
                                                             getHorizontalSize(
                                                                 0.36),
                                                         height: getVerticalSize(
-                                                            1.26)))),
-                                        SizedBox(
-                                          width: 20,
-                                        ),
-                                        CustomButton(
+                                                            1.26))))),
+                                    // Expanded(
+                                    //     flex: 1,
+                                    //     child: SizedBox(
+                                    //       width: 20,
+                                    //     )),
+                                    Expanded(
+                                        flex: 5,
+                                        child: CustomButton(
                                           height: 40,
                                           width: 200,
                                           text: logoPositionName,
@@ -1333,8 +1351,8 @@ class _BasicCardEntryOneScreen extends State<BasicCardEntryOneScreen> {
                                             showPostionSelectiontDialog(
                                                 context);
                                           },
-                                        ),
-                                      ])),
+                                        )),
+                                  ])),
                               Container(
                                   height: getVerticalSize(1.00),
                                   width: getHorizontalSize(326.00),
@@ -1486,7 +1504,8 @@ class _BasicCardEntryOneScreen extends State<BasicCardEntryOneScreen> {
       templateID = value['selectedTemplateID'];
       setState(() {
         templateName = value['selectedTemplateName'];
-
+        logoCaptionName = value['logoCaptionName'];
+        logoPositionCaptionName = value['logoPositionCaptionName'];
         editorColorHex = value['editorColorHex'].toString().length > 6
             ? value['editorColorHex']
             : "#ffffff";
@@ -1513,7 +1532,7 @@ class _BasicCardEntryOneScreen extends State<BasicCardEntryOneScreen> {
       logoPosition = position;
       switch (logoPosition) {
         case 0:
-          logoPositionName = " Select Picture Position";
+          logoPositionName = " Select Position";
           break;
 
         case 1:
@@ -1693,7 +1712,7 @@ class _BasicCardEntryOneScreen extends State<BasicCardEntryOneScreen> {
   }
 
   onTapNext() {
-    saveCardMain();
+    saveCardMain(context);
   }
 
   onTapEllipseFour() {
@@ -1903,7 +1922,8 @@ class _BasicCardEntryOneScreen extends State<BasicCardEntryOneScreen> {
   getUserImages() async {
     try {
       var req = {"UserId": GlobalVariables.userID, "Anywhere": ""};
-      GetDriveFileImagesResp resp = await api.getUserImages(queryParams: req);
+      GetDriveFileImagesResp resp =
+          await api.getUserImages(context, queryParams: req);
       if (resp.isSuccess ?? false) {
         setState(() {
           allUserImages = userImages = resp.result ?? [];
@@ -1953,7 +1973,8 @@ class _BasicCardEntryOneScreen extends State<BasicCardEntryOneScreen> {
             .toString(), //tocheck
         "FileRef": getPictureTypeBase64ForDelete(pictureType),
       };
-      APIBooleanResponse resp = await api.removeImage(queryParams: req);
+      APIBooleanResponse resp =
+          await api.removeImage(context, queryParams: req);
       if (resp.isSuccess ?? false) {
         if (!isToggledToCardColor) {
           Get.snackbar('Success',
@@ -2268,7 +2289,7 @@ class _BasicCardEntryOneScreen extends State<BasicCardEntryOneScreen> {
           isFirstImageSelected = true;
           break;
       }
-      ProgressDialogUtils.showProgressDialog();
+      ProgressDialogUtils.showProgressDialog(context);
       getImageFromUrl(image.driveUrl ?? '', pictureType);
     });
     Navigator.pop(context);
@@ -2285,9 +2306,9 @@ class _BasicCardEntryOneScreen extends State<BasicCardEntryOneScreen> {
         gotoImageModify(file, pictureType);
       });
 
-      ProgressDialogUtils.hideProgressDialog();
+      ProgressDialogUtils.hideProgressDialog(context);
     } catch (e) {
-      ProgressDialogUtils.hideProgressDialog();
+      ProgressDialogUtils.hideProgressDialog(context);
     }
   }
 

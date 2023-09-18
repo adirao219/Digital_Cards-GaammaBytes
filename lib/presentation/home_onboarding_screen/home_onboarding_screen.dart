@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:digitalcardsgaammabytes/core/app_export.dart';
 import 'package:digitalcardsgaammabytes/data/globals/globalvariables.dart';
 import 'package:flutter/material.dart';
+import 'package:loader_overlay/loader_overlay.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../localization/en_us/en_us_translations.dart';
@@ -19,7 +20,7 @@ class _HomeOnboardingScreen extends State<HomeOnboardingScreen> {
   var isAlreadyLoggedIn = false;
   @override
   void initState() {
-    //GlobalVariables.init();
+    GlobalVariables.setBuildContext(context);
     SharedPreferences.getInstance().then((value) {
       if (value.getBool("isLoggedIn") == true) {
         setState(() {
@@ -34,6 +35,10 @@ class _HomeOnboardingScreen extends State<HomeOnboardingScreen> {
           GlobalVariables.userPhotoUrl = value.getString("userPhotoUrl") ?? '';
           try {
             var currenntlanguage = (value.getString("currentLocale") ?? '');
+
+            var currentLanguageID =
+                (value.getString("currentLanguageID") ?? '1');
+            GlobalVariables.currentLanguage = currentLanguageID;
             if (currenntlanguage == "" || currenntlanguage == "en_US") {
               Get.clearTranslations();
               Map<String, Map<String, String>> languageKeys = {'en_US': enUs};
@@ -44,10 +49,11 @@ class _HomeOnboardingScreen extends State<HomeOnboardingScreen> {
               var currentLocale = (value.getString("currentLocale") ?? '');
               var currentLocaleTranslations =
                   (value.getString("currentLocaleTranslations") ?? '');
-               
+
               var localeTranslations = json.decode(currentLocaleTranslations);
-              Map<String, String> translations =Map<String, String>();
-              localeTranslations.forEach((key, value) => translations[key] = (value??'').toString());
+              Map<String, String> translations = Map<String, String>();
+              localeTranslations.forEach(
+                  (key, value) => translations[key] = (value ?? '').toString());
 
               Get.clearTranslations();
 
@@ -80,9 +86,7 @@ class _HomeOnboardingScreen extends State<HomeOnboardingScreen> {
     return SafeArea(
         top: false,
         bottom: false,
-        child: 
-        
-        Scaffold(
+        child: Scaffold(
             backgroundColor: ColorConstant.deepOrangeA100,
             body: Container(
                 width: size.width,
@@ -135,7 +139,6 @@ class _HomeOnboardingScreen extends State<HomeOnboardingScreen> {
                                               width: getHorizontalSize(181.00),
                                               margin: getMargin(top: 1))
                                         ])),
-                               
                                 Container(
                                     width: getHorizontalSize(203.00),
                                     margin:
@@ -190,7 +193,7 @@ class _HomeOnboardingScreen extends State<HomeOnboardingScreen> {
                                                           ])))
                                               : Container()
                                         ])),
-                                        Container(
+                                Container(
                                     width: getHorizontalSize(267.00),
                                     margin: getMargin(top: 28),
                                     child: Text("msg_platform_to_create".tr,

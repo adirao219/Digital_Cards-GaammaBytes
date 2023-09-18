@@ -24,7 +24,9 @@ import 'package:digitalcardsgaammabytes/data/models/previewGreetingTemplate/post
 import 'package:digitalcardsgaammabytes/data/models/publishGreeting/post_publish_greeting_resp.dart';
 import 'package:digitalcardsgaammabytes/data/models/registration/post_registration_resp.dart';
 import 'package:digitalcardsgaammabytes/data/models/validateCouponCode/get_validate_coupon_code_resp.dart';
+import 'package:flutter/material.dart';
 import '../../core/environment/env_config.dart';
+import '../globals/globalvariables.dart';
 import '../models/createCard/post_create_card_resp.dart';
 import '../models/deleteCard/get_delete_card_resp.dart';
 import '../models/driveImages/drive_file_images_resp.dart';
@@ -68,12 +70,12 @@ class ApiClient extends GetConnect {
     return response.isOk;
   }
 
-  Future<List<GetCommentsResp>> fetchComments() async {
-    ProgressDialogUtils.showProgressDialog();
+  Future<List<GetCommentsResp>> fetchComments(BuildContext appcontext) async {
+    ProgressDialogUtils.showProgressDialog(appcontext);
     try {
       await isNetworkConnected();
       Response response = await httpClient.get('$url/posts/1/comments');
-      ProgressDialogUtils.hideProgressDialog();
+      ProgressDialogUtils.hideProgressDialog(appcontext);
       if (_isSuccessCall(response)) {
         return (response.body as List)
             .map((e) => GetCommentsResp.fromJson(e))
@@ -84,20 +86,20 @@ class ApiClient extends GetConnect {
             : 'Something Went Wrong!';
       }
     } catch (error, stackTrace) {
-      ProgressDialogUtils.hideProgressDialog();
+      ProgressDialogUtils.hideProgressDialog(appcontext);
       Logger.log(error, stackTrace: stackTrace);
       rethrow;
     }
   }
 
-  Future<PostMyProfileResp> createMyProfile(
+  Future<PostMyProfileResp> createMyProfile(BuildContext appcontext,
       {Map requestData = const {}}) async {
-    ProgressDialogUtils.showProgressDialog();
+    ProgressDialogUtils.showProgressDialog(appcontext);
     try {
       await isNetworkConnected();
       Response response =
           await httpClient.post('$url/API/MyProfile', body: requestData);
-      ProgressDialogUtils.hideProgressDialog();
+      ProgressDialogUtils.hideProgressDialog(appcontext);
       if (_isSuccessCall(response)) {
         return PostMyProfileResp.fromJson(response.body);
       } else {
@@ -106,20 +108,20 @@ class ApiClient extends GetConnect {
             : 'Something Went Wrong!';
       }
     } catch (error, stackTrace) {
-      ProgressDialogUtils.hideProgressDialog();
+      ProgressDialogUtils.hideProgressDialog(appcontext);
       Logger.log(error, stackTrace: stackTrace);
       rethrow;
     }
   }
 
-  Future<GetMyProfileResp> fetchMyProfile(
+  Future<GetMyProfileResp> fetchMyProfile(BuildContext appcontext,
       {Map<String, dynamic> queryParams = const {}}) async {
-    ProgressDialogUtils.showProgressDialog();
+    ProgressDialogUtils.showProgressDialog(appcontext);
     try {
       await isNetworkConnected();
       Response response =
           await httpClient.get('$url/API/MyProfile', query: queryParams);
-      ProgressDialogUtils.hideProgressDialog();
+      ProgressDialogUtils.hideProgressDialog(appcontext);
       if (_isSuccessCall(response)) {
         return GetMyProfileResp.fromJson(response.body);
       } else {
@@ -128,20 +130,20 @@ class ApiClient extends GetConnect {
             : 'Something Went Wrong!';
       }
     } catch (error, stackTrace) {
-      ProgressDialogUtils.hideProgressDialog();
+      ProgressDialogUtils.hideProgressDialog(appcontext);
       Logger.log(error, stackTrace: stackTrace);
       rethrow;
     }
   }
 
-  Future<APIResponse> fetchRazorPayAPIKey(
+  Future<APIResponse> fetchRazorPayAPIKey(BuildContext appcontext,
       {Map<String, dynamic> queryParams = const {}}) async {
-    ProgressDialogUtils.showProgressDialog();
+    ProgressDialogUtils.showProgressDialog(appcontext);
     try {
       await isNetworkConnected();
       Response response =
           await httpClient.get('$url/API/GetRazorPayKey', query: queryParams);
-      ProgressDialogUtils.hideProgressDialog();
+      ProgressDialogUtils.hideProgressDialog(appcontext);
       if (_isSuccessCall(response)) {
         return APIResponse.fromJson(response.body);
       } else {
@@ -150,20 +152,20 @@ class ApiClient extends GetConnect {
             : 'Something Went Wrong!';
       }
     } catch (error, stackTrace) {
-      ProgressDialogUtils.hideProgressDialog();
+      ProgressDialogUtils.hideProgressDialog(appcontext);
       Logger.log(error, stackTrace: stackTrace);
       rethrow;
     }
   }
 
-  Future<CommonGenericResp> makePaymentInitiation(
+  Future<CommonGenericResp> makePaymentInitiation(BuildContext appcontext,
       {Map requestData = const {}}) async {
-    ProgressDialogUtils.showProgressDialog();
+    ProgressDialogUtils.showProgressDialog(appcontext);
     try {
       await isNetworkConnected();
       Response response =
           await httpClient.post('$url/API/MakePayment', body: requestData);
-      ProgressDialogUtils.hideProgressDialog();
+      ProgressDialogUtils.hideProgressDialog(appcontext);
       if (_isSuccessCall(response)) {
         return CommonGenericResp.fromJson(response.body);
       } else {
@@ -172,23 +174,23 @@ class ApiClient extends GetConnect {
             : 'Something Went Wrong!';
       }
     } catch (error, stackTrace) {
-      ProgressDialogUtils.hideProgressDialog();
+      ProgressDialogUtils.hideProgressDialog(appcontext);
       Logger.log(error, stackTrace: stackTrace);
       rethrow;
     }
   }
 
-  Future<APIResponse> updatePaymentSuccess(
+  Future<APIResponse> updatePaymentSuccess(BuildContext appcontext,
       {Map<String, dynamic> queryParams = const {},
       Map requestData = const {}}) async {
-    // ProgressDialogUtils.showProgressDialog();
+    // ProgressDialogUtils.showProgressDialog(appcontext);
     try {
       await isNetworkConnected();
 
       httpClient.timeout = Duration(seconds: 120);
       Response response = await httpClient.post('$url/API/SuccessCreateCredit',
           query: queryParams, body: requestData);
-      // ProgressDialogUtils.hideProgressDialog();
+      // ProgressDialogUtils.hideProgressDialog(appcontext);
       if (_isSuccessCall(response)) {
         return APIResponse.fromJson(response.body);
       } else {
@@ -197,23 +199,23 @@ class ApiClient extends GetConnect {
             : 'Something Went Wrong!';
       }
     } catch (error, stackTrace) {
-      // ProgressDialogUtils.hideProgressDialog();
+      // ProgressDialogUtils.hideProgressDialog(appcontext);
       Logger.log(error, stackTrace: stackTrace);
       rethrow;
     }
   }
 
-  Future<APIResponse> updatePaymentFailure(
+  Future<APIResponse> updatePaymentFailure(BuildContext appcontext,
       {Map<String, dynamic> queryParams = const {},
       Map requestData = const {}}) async {
-    ProgressDialogUtils.showProgressDialog();
+    ProgressDialogUtils.showProgressDialog(appcontext);
     try {
       await isNetworkConnected();
 
       httpClient.timeout = Duration(seconds: 120);
       Response response = await httpClient.post('$url/API/PaymentFailure',
           query: queryParams, body: requestData);
-      ProgressDialogUtils.hideProgressDialog();
+      ProgressDialogUtils.hideProgressDialog(appcontext);
       if (_isSuccessCall(response)) {
         return APIResponse.fromJson(response.body);
       } else {
@@ -222,20 +224,20 @@ class ApiClient extends GetConnect {
             : 'Something Went Wrong!';
       }
     } catch (error, stackTrace) {
-      ProgressDialogUtils.hideProgressDialog();
+      ProgressDialogUtils.hideProgressDialog(appcontext);
       Logger.log(error, stackTrace: stackTrace);
       rethrow;
     }
   }
 
-  Future<CommonGenericResp> createConfirmUser(
+  Future<CommonGenericResp> createConfirmUser(BuildContext appcontext,
       {Map requestData = const {}}) async {
-    ProgressDialogUtils.showProgressDialog();
+    ProgressDialogUtils.showProgressDialog(appcontext);
     try {
       await isNetworkConnected();
       Response response =
           await httpClient.post('$url/API/ConfirmUser', body: requestData);
-      ProgressDialogUtils.hideProgressDialog();
+      ProgressDialogUtils.hideProgressDialog(appcontext);
       if (_isSuccessCall(response)) {
         return CommonGenericResp.fromJson(response.body);
       } else {
@@ -244,19 +246,19 @@ class ApiClient extends GetConnect {
             : 'Something Went Wrong!';
       }
     } catch (error, stackTrace) {
-      ProgressDialogUtils.hideProgressDialog();
+      ProgressDialogUtils.hideProgressDialog(appcontext);
       Logger.log(error, stackTrace: stackTrace);
       rethrow;
     }
   }
 
-  Future<CommonGenericResp> changePassword({Map requestData = const {}}) async {
-    ProgressDialogUtils.showProgressDialog();
+  Future<CommonGenericResp> changePassword(BuildContext appcontext,{Map requestData = const {}}) async {
+    ProgressDialogUtils.showProgressDialog(appcontext);
     try {
       await isNetworkConnected();
       Response response =
           await httpClient.post('$url/API/ChangePassword', body: requestData);
-      ProgressDialogUtils.hideProgressDialog();
+      ProgressDialogUtils.hideProgressDialog(appcontext);
       if (_isSuccessCall(response)) {
         return CommonGenericResp.fromJson(response.body);
       } else {
@@ -265,19 +267,19 @@ class ApiClient extends GetConnect {
             : 'Something Went Wrong!';
       }
     } catch (error, stackTrace) {
-      ProgressDialogUtils.hideProgressDialog();
+      ProgressDialogUtils.hideProgressDialog(appcontext);
       Logger.log(error, stackTrace: stackTrace);
       rethrow;
     }
   }
 
-  Future<CommonGenericResp> forgotPassword({Map requestData = const {}}) async {
-    ProgressDialogUtils.showProgressDialog();
+  Future<CommonGenericResp> forgotPassword(BuildContext appcontext,{Map requestData = const {}}) async {
+    ProgressDialogUtils.showProgressDialog(appcontext);
     try {
       await isNetworkConnected();
       Response response =
           await httpClient.post('$url/API/ForgotPassword', body: requestData);
-      ProgressDialogUtils.hideProgressDialog();
+      ProgressDialogUtils.hideProgressDialog(appcontext);
       if (_isSuccessCall(response)) {
         return CommonGenericResp.fromJson(response.body);
       } else {
@@ -286,19 +288,19 @@ class ApiClient extends GetConnect {
             : 'Something Went Wrong!';
       }
     } catch (error, stackTrace) {
-      ProgressDialogUtils.hideProgressDialog();
+      ProgressDialogUtils.hideProgressDialog(appcontext);
       Logger.log(error, stackTrace: stackTrace);
       rethrow;
     }
   }
 
-  Future<CommonGenericResp> resetPassword({Map requestData = const {}}) async {
-    ProgressDialogUtils.showProgressDialog();
+  Future<CommonGenericResp> resetPassword(BuildContext appcontext,{Map requestData = const {}}) async {
+    ProgressDialogUtils.showProgressDialog(appcontext);
     try {
       await isNetworkConnected();
       Response response =
           await httpClient.post('$url/API/ResetPassword', body: requestData);
-      ProgressDialogUtils.hideProgressDialog();
+      ProgressDialogUtils.hideProgressDialog(appcontext);
       if (_isSuccessCall(response)) {
         return CommonGenericResp.fromJson(response.body);
       } else {
@@ -307,20 +309,20 @@ class ApiClient extends GetConnect {
             : 'Something Went Wrong!';
       }
     } catch (error, stackTrace) {
-      ProgressDialogUtils.hideProgressDialog();
+      ProgressDialogUtils.hideProgressDialog(appcontext);
       Logger.log(error, stackTrace: stackTrace);
       rethrow;
     }
   }
 
-  Future<PostRegistrationResp> createRegistration(
+  Future<PostRegistrationResp> createRegistration(BuildContext appcontext,
       {Map requestData = const {}}) async {
-    ProgressDialogUtils.showProgressDialog();
+    ProgressDialogUtils.showProgressDialog(appcontext);
     try {
       await isNetworkConnected();
       Response response =
           await httpClient.post('$url/API/Registration', body: requestData);
-      ProgressDialogUtils.hideProgressDialog();
+      ProgressDialogUtils.hideProgressDialog(appcontext);
       if (_isSuccessCall(response)) {
         return PostRegistrationResp.fromJson(response.body);
       } else {
@@ -329,20 +331,20 @@ class ApiClient extends GetConnect {
             : 'Something Went Wrong!';
       }
     } catch (error, stackTrace) {
-      ProgressDialogUtils.hideProgressDialog();
+      ProgressDialogUtils.hideProgressDialog(appcontext);
       Logger.log(error, stackTrace: stackTrace);
       rethrow;
     }
   }
 
-  Future<GetCheckDuplicatePhoneNoResp> fetchCheckDuplicatePhoneNo(
+  Future<GetCheckDuplicatePhoneNoResp> fetchCheckDuplicatePhoneNo(BuildContext appcontext,
       {Map<String, dynamic> queryParams = const {}}) async {
-    ProgressDialogUtils.showProgressDialog();
+    ProgressDialogUtils.showProgressDialog(appcontext);
     try {
       await isNetworkConnected();
       Response response = await httpClient.get('$url/API/CheckDuplicatePhoneNo',
           query: queryParams);
-      ProgressDialogUtils.hideProgressDialog();
+      ProgressDialogUtils.hideProgressDialog(appcontext);
       if (_isSuccessCall(response)) {
         return GetCheckDuplicatePhoneNoResp.fromJson(response.body);
       } else {
@@ -351,20 +353,20 @@ class ApiClient extends GetConnect {
             : 'Something Went Wrong!';
       }
     } catch (error, stackTrace) {
-      ProgressDialogUtils.hideProgressDialog();
+      ProgressDialogUtils.hideProgressDialog(appcontext);
       Logger.log(error, stackTrace: stackTrace);
       rethrow;
     }
   }
 
-  Future<GetCheckDuplicateEmailResp> fetchCheckDuplicateEmail(
+  Future<GetCheckDuplicateEmailResp> fetchCheckDuplicateEmail(BuildContext appcontext,
       {Map<String, dynamic> queryParams = const {}}) async {
-    ProgressDialogUtils.showProgressDialog();
+    ProgressDialogUtils.showProgressDialog(appcontext);
     try {
       await isNetworkConnected();
       Response response = await httpClient.get('$url/API/CheckDuplicateEmail',
           query: queryParams);
-      ProgressDialogUtils.hideProgressDialog();
+      ProgressDialogUtils.hideProgressDialog(appcontext);
       if (_isSuccessCall(response)) {
         return GetCheckDuplicateEmailResp.fromJson(response.body);
       } else {
@@ -373,19 +375,19 @@ class ApiClient extends GetConnect {
             : 'Something Went Wrong!';
       }
     } catch (error, stackTrace) {
-      ProgressDialogUtils.hideProgressDialog();
+      ProgressDialogUtils.hideProgressDialog(appcontext);
       Logger.log(error, stackTrace: stackTrace);
       rethrow;
     }
   }
 
-  Future<PostLoginResp> createLogin({Map requestData = const {}}) async {
-    ProgressDialogUtils.showProgressDialog();
+  Future<PostLoginResp> createLogin(BuildContext appcontext,{Map requestData = const {}}) async {
+    ProgressDialogUtils.showProgressDialog(appcontext);
     try {
       await isNetworkConnected();
       Response response =
           await httpClient.post('$url/API/Login', body: requestData);
-      ProgressDialogUtils.hideProgressDialog();
+      ProgressDialogUtils.hideProgressDialog(appcontext);
       if (_isSuccessCall(response)) {
         return PostLoginResp.fromJson(response.body);
       } else {
@@ -394,20 +396,20 @@ class ApiClient extends GetConnect {
             : 'Something Went Wrong!';
       }
     } catch (error, stackTrace) {
-      ProgressDialogUtils.hideProgressDialog();
+      ProgressDialogUtils.hideProgressDialog(appcontext);
       Logger.log(error, stackTrace: stackTrace);
       rethrow;
     }
   }
 
-  Future<PostLoginResp> checkGoogleUser(
+  Future<PostLoginResp> checkGoogleUser(BuildContext appcontext,
       {Map<String, dynamic> queryParams = const {}}) async {
-    ProgressDialogUtils.showProgressDialog();
+    ProgressDialogUtils.showProgressDialog(appcontext);
     try {
       await isNetworkConnected();
       Response response =
           await httpClient.get('$url/API/GetUserDataGmail', query: queryParams);
-      ProgressDialogUtils.hideProgressDialog();
+      ProgressDialogUtils.hideProgressDialog(appcontext);
       if (_isSuccessCall(response)) {
         return PostLoginResp.fromJson(response.body);
       } else {
@@ -416,20 +418,20 @@ class ApiClient extends GetConnect {
             : 'Something Went Wrong!';
       }
     } catch (error, stackTrace) {
-      ProgressDialogUtils.hideProgressDialog();
+      ProgressDialogUtils.hideProgressDialog(appcontext);
       Logger.log(error, stackTrace: stackTrace);
       rethrow;
     }
   }
 
-  Future<PostRegistrationResp> createGoogleUser(
+  Future<PostRegistrationResp> createGoogleUser(BuildContext appcontext,
       {Map requestData = const {}}) async {
-    ProgressDialogUtils.showProgressDialog();
+    ProgressDialogUtils.showProgressDialog(appcontext);
     try {
       await isNetworkConnected();
       Response response = await httpClient.post('$url/API/RegistrationGmail',
           body: requestData);
-      ProgressDialogUtils.hideProgressDialog();
+      ProgressDialogUtils.hideProgressDialog(appcontext);
       if (_isSuccessCall(response)) {
         return PostRegistrationResp.fromJson(response.body);
       } else {
@@ -438,20 +440,20 @@ class ApiClient extends GetConnect {
             : 'Something Went Wrong!';
       }
     } catch (error, stackTrace) {
-      ProgressDialogUtils.hideProgressDialog();
+      ProgressDialogUtils.hideProgressDialog(appcontext);
       Logger.log(error, stackTrace: stackTrace);
       rethrow;
     }
   }
 
-  Future<GetValidateCouponCodeResp> fetchValidateCouponCode(
+  Future<GetValidateCouponCodeResp> fetchValidateCouponCode(BuildContext appcontext,
       {Map<String, dynamic> queryParams = const {}}) async {
-    ProgressDialogUtils.showProgressDialog();
+    ProgressDialogUtils.showProgressDialog(appcontext);
     try {
       await isNetworkConnected();
       Response response = await httpClient.get('$url/API/ValidateCouponCode',
           query: queryParams);
-      ProgressDialogUtils.hideProgressDialog();
+      ProgressDialogUtils.hideProgressDialog(appcontext);
       if (_isSuccessCall(response)) {
         return GetValidateCouponCodeResp.fromJson(response.body);
       } else {
@@ -460,23 +462,23 @@ class ApiClient extends GetConnect {
             : 'Something Went Wrong!';
       }
     } catch (error, stackTrace) {
-      ProgressDialogUtils.hideProgressDialog();
+      ProgressDialogUtils.hideProgressDialog(appcontext);
       Logger.log(error, stackTrace: stackTrace);
       rethrow;
     }
   }
 
-  Future<PostPreviewGreetingTemplateResp> createPreviewGreetingCard(
+  Future<PostPreviewGreetingTemplateResp> createPreviewGreetingCard(BuildContext appcontext,
       {Map<String, dynamic> queryParams = const {},
       Map requestData = const {}}) async {
-    ProgressDialogUtils.showProgressDialog();
+    ProgressDialogUtils.showProgressDialog(appcontext);
     try {
       await isNetworkConnected();
 
       httpClient.timeout = Duration(seconds: 120);
       Response response = await httpClient.post('$url/APIG/PreviewGreetingCard',
           query: queryParams, body: requestData);
-      ProgressDialogUtils.hideProgressDialog();
+      ProgressDialogUtils.hideProgressDialog(appcontext);
       if (_isSuccessCall(response)) {
         return PostPreviewGreetingTemplateResp.fromJson(response.body);
       } else {
@@ -485,23 +487,23 @@ class ApiClient extends GetConnect {
             : 'Something Went Wrong!';
       }
     } catch (error, stackTrace) {
-      ProgressDialogUtils.hideProgressDialog();
+      ProgressDialogUtils.hideProgressDialog(appcontext);
       Logger.log(error, stackTrace: stackTrace);
       rethrow;
     }
   }
 
-  Future<PostPreviewGreetingTemplateResp> previewGreetingTemplate(
+  Future<PostPreviewGreetingTemplateResp> previewGreetingTemplate(BuildContext appcontext,
       {Map<String, dynamic> queryParams = const {},
       Map requestData = const {}}) async {
-    ProgressDialogUtils.showProgressDialog();
+    ProgressDialogUtils.showProgressDialog(appcontext);
     try {
       await isNetworkConnected();
       Response response = await httpClient.post(
           '$url/APIG/PreviewGreetingTemplate',
           query: queryParams,
           body: requestData);
-      ProgressDialogUtils.hideProgressDialog();
+      ProgressDialogUtils.hideProgressDialog(appcontext);
       if (_isSuccessCall(response)) {
         return PostPreviewGreetingTemplateResp.fromJson(response.body);
       } else {
@@ -510,21 +512,21 @@ class ApiClient extends GetConnect {
             : 'Something Went Wrong!';
       }
     } catch (error, stackTrace) {
-      ProgressDialogUtils.hideProgressDialog();
+      ProgressDialogUtils.hideProgressDialog(appcontext);
       Logger.log(error, stackTrace: stackTrace);
       rethrow;
     }
   }
 
-  Future<PostPublishGreetingResp> createPublishGreeting(
+  Future<PostPublishGreetingResp> createPublishGreeting(BuildContext appcontext,
       {Map<String, dynamic> queryParams = const {},
       Map requestData = const {}}) async {
-    ProgressDialogUtils.showProgressDialog();
+    ProgressDialogUtils.showProgressDialog(appcontext);
     try {
       await isNetworkConnected();
       Response response = await httpClient.post('$url/APIG/PublishGreeting',
           query: queryParams, body: requestData);
-      ProgressDialogUtils.hideProgressDialog();
+      ProgressDialogUtils.hideProgressDialog(appcontext);
       if (_isSuccessCall(response)) {
         return PostPublishGreetingResp.fromJson(response.body);
       } else {
@@ -533,21 +535,21 @@ class ApiClient extends GetConnect {
             : 'Something Went Wrong!';
       }
     } catch (error, stackTrace) {
-      ProgressDialogUtils.hideProgressDialog();
+      ProgressDialogUtils.hideProgressDialog(appcontext);
       Logger.log(error, stackTrace: stackTrace);
       rethrow;
     }
   }
 
-  Future<APIBooleanResponse> createDeleteGreeting(
+  Future<APIBooleanResponse> createDeleteGreeting(BuildContext appcontext,
       {Map<String, dynamic> queryParams = const {},
       Map requestData = const {}}) async {
-    ProgressDialogUtils.showProgressDialog();
+    ProgressDialogUtils.showProgressDialog(appcontext);
     try {
       await isNetworkConnected();
       Response response = await httpClient.post('$url/APIG/DeleteGreeting',
           query: queryParams, body: requestData);
-      ProgressDialogUtils.hideProgressDialog();
+      ProgressDialogUtils.hideProgressDialog(appcontext);
       if (_isSuccessCall(response)) {
         return APIBooleanResponse.fromJson(response.body);
       } else {
@@ -556,21 +558,21 @@ class ApiClient extends GetConnect {
             : 'Something Went Wrong!';
       }
     } catch (error, stackTrace) {
-      ProgressDialogUtils.hideProgressDialog();
+      ProgressDialogUtils.hideProgressDialog(appcontext);
       Logger.log(error, stackTrace: stackTrace);
       rethrow;
     }
   }
 
-  Future<PostHideGreetingResp> createHideGreeting(
+  Future<PostHideGreetingResp> createHideGreeting(BuildContext appcontext,
       {Map<String, dynamic> queryParams = const {},
       Map requestData = const {}}) async {
-    ProgressDialogUtils.showProgressDialog();
+    ProgressDialogUtils.showProgressDialog(appcontext);
     try {
       await isNetworkConnected();
       Response response = await httpClient.post('$url/APIG/HideGreeting',
           query: queryParams, body: requestData);
-      ProgressDialogUtils.hideProgressDialog();
+      ProgressDialogUtils.hideProgressDialog(appcontext);
       if (_isSuccessCall(response)) {
         return PostHideGreetingResp.fromJson(response.body);
       } else {
@@ -579,20 +581,20 @@ class ApiClient extends GetConnect {
             : 'Something Went Wrong!';
       }
     } catch (error, stackTrace) {
-      ProgressDialogUtils.hideProgressDialog();
+      ProgressDialogUtils.hideProgressDialog(appcontext);
       Logger.log(error, stackTrace: stackTrace);
       rethrow;
     }
   }
 
-  Future<CaptionMessageResult> getDefaultCaptionMessage(
+  Future<CaptionMessageResult> getDefaultCaptionMessage(BuildContext appcontext,
       {Map<String, dynamic> queryParams = const {}}) async {
-    ProgressDialogUtils.showProgressDialog();
+    ProgressDialogUtils.showProgressDialog(appcontext);
     try {
       await isNetworkConnected();
       Response response = await httpClient
           .get('$url/APIG/DefaultCaptionMessage', query: queryParams);
-      ProgressDialogUtils.hideProgressDialog();
+      ProgressDialogUtils.hideProgressDialog(appcontext);
       if (_isSuccessCall(response)) {
         return CaptionMessageResult.fromJson(response.body);
       } else {
@@ -601,20 +603,20 @@ class ApiClient extends GetConnect {
             : 'Something Went Wrong!';
       }
     } catch (error, stackTrace) {
-      ProgressDialogUtils.hideProgressDialog();
+      ProgressDialogUtils.hideProgressDialog(appcontext);
       Logger.log(error, stackTrace: stackTrace);
       rethrow;
     }
   }
 
-  Future<CommonDropdownResp> fetchFilterGreetingTemplate(
+  Future<CommonDropdownResp> fetchFilterGreetingTemplate(BuildContext appcontext,
       {Map<String, dynamic> queryParams = const {}}) async {
-    ProgressDialogUtils.showProgressDialog();
+    ProgressDialogUtils.showProgressDialog(appcontext);
     try {
       await isNetworkConnected();
       Response response = await httpClient
           .get('$url/APIG/FilterGreetingTemplate', query: queryParams);
-      ProgressDialogUtils.hideProgressDialog();
+      ProgressDialogUtils.hideProgressDialog(appcontext);
       if (_isSuccessCall(response)) {
         return CommonDropdownResp.fromJson(response.body);
       } else {
@@ -623,20 +625,20 @@ class ApiClient extends GetConnect {
             : 'Something Went Wrong!';
       }
     } catch (error, stackTrace) {
-      ProgressDialogUtils.hideProgressDialog();
+      ProgressDialogUtils.hideProgressDialog(appcontext);
       Logger.log(error, stackTrace: stackTrace);
       rethrow;
     }
   }
 
-  Future<CommonDropdownResp> getLanguages(
+  Future<CommonDropdownResp> getLanguages(BuildContext appcontext,
       {Map<String, dynamic> queryParams = const {}}) async {
-    ProgressDialogUtils.showProgressDialog();
+    ProgressDialogUtils.showProgressDialog(appcontext);
     try {
       await isNetworkConnected();
       Response response =
           await httpClient.get('$url/APIG/GetLanguages', query: queryParams);
-      ProgressDialogUtils.hideProgressDialog();
+      ProgressDialogUtils.hideProgressDialog(appcontext);
       if (_isSuccessCall(response)) {
         return CommonDropdownResp.fromJson(response.body);
       } else {
@@ -645,20 +647,20 @@ class ApiClient extends GetConnect {
             : 'Something Went Wrong!';
       }
     } catch (error, stackTrace) {
-      ProgressDialogUtils.hideProgressDialog();
+      ProgressDialogUtils.hideProgressDialog(appcontext);
       Logger.log(error, stackTrace: stackTrace);
       rethrow;
     }
   }
 
-  Future<APIResponse> getLanguageCaptionData(
+  Future<APIResponse> getLanguageCaptionData(BuildContext appcontext,
       {Map<String, dynamic> queryParams = const {}}) async {
-    ProgressDialogUtils.showProgressDialog();
+    ProgressDialogUtils.showProgressDialog(appcontext);
     try {
       await isNetworkConnected();
       Response response = await httpClient
           .get('$url/API/GetLanguageCaptionData', query: queryParams);
-      ProgressDialogUtils.hideProgressDialog();
+      ProgressDialogUtils.hideProgressDialog(appcontext);
       if (_isSuccessCall(response)) {
         return APIResponse.fromJson(response.body);
       } else {
@@ -667,20 +669,20 @@ class ApiClient extends GetConnect {
             : 'Something Went Wrong!';
       }
     } catch (error, stackTrace) {
-      ProgressDialogUtils.hideProgressDialog();
+      ProgressDialogUtils.hideProgressDialog(appcontext);
       Logger.log(error, stackTrace: stackTrace);
       rethrow;
     }
   }
 
-  Future<GetDriveFileImagesResp> getUserImages(
+  Future<GetDriveFileImagesResp> getUserImages(BuildContext appcontext,
       {Map<String, dynamic> queryParams = const {}}) async {
-    ProgressDialogUtils.showProgressDialog();
+    ProgressDialogUtils.showProgressDialog(appcontext);
     try {
       await isNetworkConnected();
       Response response =
           await httpClient.get('$url/APIG/GetUserImages', query: queryParams);
-      ProgressDialogUtils.hideProgressDialog();
+      ProgressDialogUtils.hideProgressDialog(appcontext);
       if (_isSuccessCall(response)) {
         return GetDriveFileImagesResp.fromJson(response.body);
       } else {
@@ -689,21 +691,21 @@ class ApiClient extends GetConnect {
             : 'Something Went Wrong!';
       }
     } catch (error, stackTrace) {
-      ProgressDialogUtils.hideProgressDialog();
+      ProgressDialogUtils.hideProgressDialog(appcontext);
       Logger.log(error, stackTrace: stackTrace);
       rethrow;
     }
   }
 
-  Future<PostCreateGreetingResp> createCreateGreeting(
+  Future<PostCreateGreetingResp> createCreateGreeting(BuildContext appcontext,
       {Map requestData = const {}}) async {
-    ProgressDialogUtils.showProgressDialog();
+    ProgressDialogUtils.showProgressDialog(appcontext);
     try {
       await isNetworkConnected();
       httpClient.timeout = Duration(seconds: 120);
       Response response =
           await httpClient.post('$url/APIG/CreateGreeting', body: requestData);
-      ProgressDialogUtils.hideProgressDialog();
+      ProgressDialogUtils.hideProgressDialog(appcontext);
       if (_isSuccessCall(response)) {
         return PostCreateGreetingResp.fromJson(response.body);
       } else {
@@ -712,22 +714,22 @@ class ApiClient extends GetConnect {
             : 'Something Went Wrong!';
       }
     } catch (error, stackTrace) {
-      ProgressDialogUtils.hideProgressDialog();
+      ProgressDialogUtils.hideProgressDialog(appcontext);
       Logger.log(error, stackTrace: stackTrace);
       rethrow;
     }
   }
 
-  Future<APIBooleanResponse> removeImage(
+  Future<APIBooleanResponse> removeImage(BuildContext appcontext,
       {Map<String, dynamic> queryParams = const {},
       Map requestData = const {}}) async {
-    ProgressDialogUtils.showProgressDialog();
+    ProgressDialogUtils.showProgressDialog(appcontext);
     try {
       await isNetworkConnected();
       httpClient.timeout = Duration(seconds: 120);
       Response response = await httpClient.post('$url/APIG/RemoveImage',
           body: requestData, query: queryParams);
-      ProgressDialogUtils.hideProgressDialog();
+      ProgressDialogUtils.hideProgressDialog(appcontext);
       if (_isSuccessCall(response)) {
         return APIBooleanResponse.fromJson(response.body);
       } else {
@@ -736,22 +738,22 @@ class ApiClient extends GetConnect {
             : 'Something Went Wrong!';
       }
     } catch (error, stackTrace) {
-      ProgressDialogUtils.hideProgressDialog();
+      ProgressDialogUtils.hideProgressDialog(appcontext);
       Logger.log(error, stackTrace: stackTrace);
       rethrow;
     }
   }
 
-  Future<GetGetCreateGreetingResp> fetchGetCreateGreeting(
+  Future<GetGetCreateGreetingResp> fetchGetCreateGreeting(BuildContext appcontext,
       {Map<String, dynamic> queryParams = const {}}) async {
-    ProgressDialogUtils.showProgressDialog();
+    ProgressDialogUtils.showProgressDialog(appcontext);
     try {
       await isNetworkConnected();
 
       httpClient.timeout = Duration(seconds: 120);
       Response response = await httpClient.get('$url/APIG/GetCreateGreeting',
           query: queryParams);
-      ProgressDialogUtils.hideProgressDialog();
+      ProgressDialogUtils.hideProgressDialog(appcontext);
       if (_isSuccessCall(response)) {
         return GetGetCreateGreetingResp.fromJson(response.body);
       } else {
@@ -760,20 +762,20 @@ class ApiClient extends GetConnect {
             : 'Something Went Wrong!';
       }
     } catch (error, stackTrace) {
-      ProgressDialogUtils.hideProgressDialog();
+      ProgressDialogUtils.hideProgressDialog(appcontext);
       Logger.log(error, stackTrace: stackTrace);
       rethrow;
     }
   }
 
-  Future<GetGreetingDetailsResp> fetchGreetingDetails(
+  Future<GetGreetingDetailsResp> fetchGreetingDetails(BuildContext appcontext,
       {Map<String, dynamic> queryParams = const {}}) async {
-    ProgressDialogUtils.showProgressDialog();
+    ProgressDialogUtils.showProgressDialog(appcontext);
     try {
       await isNetworkConnected();
       Response response =
           await httpClient.get('$url/APIG/GreetingDetails', query: queryParams);
-      ProgressDialogUtils.hideProgressDialog();
+      ProgressDialogUtils.hideProgressDialog(appcontext);
       if (_isSuccessCall(response)) {
         return GetGreetingDetailsResp.fromJson(response.body);
       } else {
@@ -782,18 +784,18 @@ class ApiClient extends GetConnect {
             : 'Something Went Wrong!';
       }
     } catch (error, stackTrace) {
-      ProgressDialogUtils.hideProgressDialog();
+      ProgressDialogUtils.hideProgressDialog(appcontext);
       Logger.log(error, stackTrace: stackTrace);
       rethrow;
     }
   }
 
-  Future<GetGetGreetingTypeResp> fetchGetGreetingType() async {
-    ProgressDialogUtils.showProgressDialog();
+  Future<GetGetGreetingTypeResp> fetchGetGreetingType(BuildContext appcontext) async {
+    ProgressDialogUtils.showProgressDialog(appcontext);
     try {
       await isNetworkConnected();
-      Response response = await httpClient.get('$url/APIG/GetGreetingType');
-      ProgressDialogUtils.hideProgressDialog();
+      Response response = await httpClient.get('$url/APIG/GetGreetingType?LanguageId='+GlobalVariables.currentLanguage);
+      ProgressDialogUtils.hideProgressDialog(appcontext);
       if (_isSuccessCall(response)) {
         return GetGetGreetingTypeResp.fromJson(response.body);
       } else {
@@ -802,41 +804,41 @@ class ApiClient extends GetConnect {
             : 'Something Went Wrong!';
       }
     } catch (error, stackTrace) {
-      ProgressDialogUtils.hideProgressDialog();
+      ProgressDialogUtils.hideProgressDialog(appcontext);
       Logger.log(error, stackTrace: stackTrace);
       rethrow;
     }
   }
 
-  Future<dynamic> getImageFile(String imageUrl) async {
-    ProgressDialogUtils.showProgressDialog();
+  Future<dynamic> getImageFile(String imageUrl,BuildContext appcontext) async {
+    ProgressDialogUtils.showProgressDialog(appcontext);
     try {
       await isNetworkConnected();
 
       httpClient.timeout = Duration(seconds: 120);
       Response response = await httpClient.get(imageUrl);
-      ProgressDialogUtils.hideProgressDialog();
+      ProgressDialogUtils.hideProgressDialog(appcontext);
       if (_isSuccessCall(response)) {
         return response.bodyBytes;
       } else {
         throw 'Something Went Wrong!';
       }
     } catch (error, stackTrace) {
-      ProgressDialogUtils.hideProgressDialog();
+      ProgressDialogUtils.hideProgressDialog(appcontext);
       Logger.log(error, stackTrace: stackTrace);
       rethrow;
     }
   }
 
-  Future<APIResponse> getCreditAmount(
+  Future<APIResponse> getCreditAmount(BuildContext appcontext,
       {Map<String, dynamic> queryParams = const {}}) async {
-    ProgressDialogUtils.showProgressDialog();
+    ProgressDialogUtils.showProgressDialog(appcontext);
     try {
       await isNetworkConnected();
       httpClient.timeout = Duration(seconds: 120);
       Response response =
           await httpClient.get('$url/API/GetCreditAmount', query: queryParams);
-      ProgressDialogUtils.hideProgressDialog();
+      ProgressDialogUtils.hideProgressDialog(appcontext);
       if (_isSuccessCall(response)) {
         return APIResponse.fromJson(response.body);
       } else {
@@ -845,21 +847,21 @@ class ApiClient extends GetConnect {
             : 'Something Went Wrong!';
       }
     } catch (error, stackTrace) {
-      ProgressDialogUtils.hideProgressDialog();
+      ProgressDialogUtils.hideProgressDialog(appcontext);
       Logger.log(error, stackTrace: stackTrace);
       rethrow;
     }
   }
 
-  Future<APIResponse> getCreditStorage(
+  Future<APIResponse> getCreditStorage(BuildContext appcontext,
       {Map<String, dynamic> queryParams = const {}}) async {
-    ProgressDialogUtils.showProgressDialog();
+    ProgressDialogUtils.showProgressDialog(appcontext);
     try {
       await isNetworkConnected();
       httpClient.timeout = Duration(seconds: 120);
       Response response = await httpClient.get('$url/API/GetCreditStorageSpace',
           query: queryParams);
-      ProgressDialogUtils.hideProgressDialog();
+      ProgressDialogUtils.hideProgressDialog(appcontext);
       if (_isSuccessCall(response)) {
         return APIResponse.fromJson(response.body);
       } else {
@@ -868,25 +870,25 @@ class ApiClient extends GetConnect {
             : 'Something Went Wrong!';
       }
     } catch (error, stackTrace) {
-      ProgressDialogUtils.hideProgressDialog();
+      ProgressDialogUtils.hideProgressDialog(appcontext);
       Logger.log(error, stackTrace: stackTrace);
       rethrow;
     }
   }
 
-  Future<APIResponse> getCreditsAvailable(
+  Future<APIResponse> getCreditsAvailable(BuildContext appcontext,
       {bool showProgress = true,
       Map<String, dynamic> queryParams = const {},
       Map requestData = const {}}) async {
     if (showProgress) {
-      ProgressDialogUtils.showProgressDialog();
+      ProgressDialogUtils.showProgressDialog(appcontext);
     }
     try {
       await isNetworkConnected();
       httpClient.timeout = Duration(seconds: 120);
       Response response = await httpClient.post('$url/API/GetCreditsAvailable',
           query: queryParams, body: requestData);
-      if (showProgress) ProgressDialogUtils.hideProgressDialog();
+      if (showProgress) ProgressDialogUtils.hideProgressDialog(appcontext);
       if (_isSuccessCall(response)) {
         return APIResponse.fromJson(response.body);
       } else {
@@ -895,22 +897,22 @@ class ApiClient extends GetConnect {
             : 'Something Went Wrong!';
       }
     } catch (error, stackTrace) {
-      if (showProgress) ProgressDialogUtils.hideProgressDialog();
+      if (showProgress) ProgressDialogUtils.hideProgressDialog(appcontext);
       Logger.log(error, stackTrace: stackTrace);
       rethrow;
     }
   }
 
-  Future<StorageResponse> getStorageAvailable(
+  Future<StorageResponse> getStorageAvailable(BuildContext appcontext,
       {Map<String, dynamic> queryParams = const {},
       Map requestData = const {}}) async {
-    ProgressDialogUtils.showProgressDialog();
+    ProgressDialogUtils.showProgressDialog(appcontext);
     try {
       await isNetworkConnected();
       httpClient.timeout = Duration(seconds: 120);
       Response response = await httpClient.post('$url/API/GetStorageAvailable',
           query: queryParams, body: requestData);
-      ProgressDialogUtils.hideProgressDialog();
+      ProgressDialogUtils.hideProgressDialog(appcontext);
       if (_isSuccessCall(response)) {
         return StorageResponse.fromJson(response.body);
       } else {
@@ -919,20 +921,20 @@ class ApiClient extends GetConnect {
             : 'Something Went Wrong!';
       }
     } catch (error, stackTrace) {
-      ProgressDialogUtils.hideProgressDialog();
+      ProgressDialogUtils.hideProgressDialog(appcontext);
       Logger.log(error, stackTrace: stackTrace);
       rethrow;
     }
   }
 
-  Future<APIResponse> addStorage({Map requestData = const {}}) async {
-    ProgressDialogUtils.showProgressDialog();
+  Future<APIResponse> addStorage(BuildContext appcontext,{Map requestData = const {}}) async {
+    ProgressDialogUtils.showProgressDialog(appcontext);
     try {
       await isNetworkConnected();
       httpClient.timeout = Duration(seconds: 120);
       Response response =
           await httpClient.post('$url/API/AddStorage', body: requestData);
-      ProgressDialogUtils.hideProgressDialog();
+      ProgressDialogUtils.hideProgressDialog(appcontext);
       if (_isSuccessCall(response)) {
         return APIResponse.fromJson(response.body);
       } else {
@@ -941,21 +943,21 @@ class ApiClient extends GetConnect {
             : 'Something Went Wrong!';
       }
     } catch (error, stackTrace) {
-      ProgressDialogUtils.hideProgressDialog();
+      ProgressDialogUtils.hideProgressDialog(appcontext);
       Logger.log(error, stackTrace: stackTrace);
       rethrow;
     }
   }
 
-  Future<CreditDetailsResponse> getCreditDetails(
+  Future<CreditDetailsResponse> getCreditDetails(BuildContext appcontext,
       {Map<String, dynamic> queryParams = const {}}) async {
-    ProgressDialogUtils.showProgressDialog();
+    ProgressDialogUtils.showProgressDialog(appcontext);
     try {
       await isNetworkConnected();
       httpClient.timeout = Duration(seconds: 120);
       Response response =
           await httpClient.get('$url/API/GetCreditDetails', query: queryParams);
-      ProgressDialogUtils.hideProgressDialog();
+      ProgressDialogUtils.hideProgressDialog(appcontext);
       if (_isSuccessCall(response)) {
         return CreditDetailsResponse.fromJson(response.body);
       } else {
@@ -964,21 +966,21 @@ class ApiClient extends GetConnect {
             : 'Something Went Wrong!';
       }
     } catch (error, stackTrace) {
-      ProgressDialogUtils.hideProgressDialog();
+      ProgressDialogUtils.hideProgressDialog(appcontext);
       Logger.log(error, stackTrace: stackTrace);
       rethrow;
     }
   }
 
-  Future<CreditResponse> getCreditHistory(
+  Future<CreditResponse> getCreditHistory(BuildContext appcontext,
       {Map<String, dynamic> queryParams = const {}}) async {
-    ProgressDialogUtils.showProgressDialog();
+    ProgressDialogUtils.showProgressDialog(appcontext);
     try {
       await isNetworkConnected();
       httpClient.timeout = Duration(seconds: 120);
       Response response =
           await httpClient.get('$url/API/GetCreditHistory', query: queryParams);
-      ProgressDialogUtils.hideProgressDialog();
+      ProgressDialogUtils.hideProgressDialog(appcontext);
       if (_isSuccessCall(response)) {
         return CreditResponse.fromJson(response.body);
       } else {
@@ -987,16 +989,16 @@ class ApiClient extends GetConnect {
             : 'Something Went Wrong!';
       }
     } catch (error, stackTrace) {
-      ProgressDialogUtils.hideProgressDialog();
+      ProgressDialogUtils.hideProgressDialog(appcontext);
       Logger.log(error, stackTrace: stackTrace);
       rethrow;
     }
   }
 
-  Future<dynamic> generateAuth(String baseURL,
+  Future<dynamic> generateAuth(BuildContext appcontext,String baseURL,
       {Map<String, dynamic> queryParams = const {},
       Map requestData = const {}}) async {
-    ProgressDialogUtils.showProgressDialog();
+    ProgressDialogUtils.showProgressDialog(appcontext);
     try {
       await isNetworkConnected();
 
@@ -1005,28 +1007,28 @@ class ApiClient extends GetConnect {
       // var token = base64Encode(bytes)
       Response response = await httpClient.post(baseURL,
           body: requestData, headers: {"Authorization": "Bearer "});
-      ProgressDialogUtils.hideProgressDialog();
+      ProgressDialogUtils.hideProgressDialog(appcontext);
       if (_isSuccessCall(response)) {
         return response.bodyBytes;
       } else {
         throw 'Something Went Wrong!';
       }
     } catch (error, stackTrace) {
-      ProgressDialogUtils.hideProgressDialog();
+      ProgressDialogUtils.hideProgressDialog(appcontext);
       Logger.log(error, stackTrace: stackTrace);
       rethrow;
     }
   }
 
-  Future<APIBooleanResponse> createSaveLinkDefinition(
+  Future<APIBooleanResponse> createSaveLinkDefinition(BuildContext appcontext,
       {Map requestData = const {}}) async {
-    ProgressDialogUtils.showProgressDialog();
+    ProgressDialogUtils.showProgressDialog(appcontext);
     try {
       await isNetworkConnected();
       httpClient.timeout = Duration(seconds: 120);
       Response response = await httpClient.post('$url/APID/SaveLinkDefinition',
           body: requestData);
-      ProgressDialogUtils.hideProgressDialog();
+      ProgressDialogUtils.hideProgressDialog(appcontext);
       if (_isSuccessCall(response)) {
         return APIBooleanResponse.fromJson(response.body);
       } else {
@@ -1035,20 +1037,20 @@ class ApiClient extends GetConnect {
             : 'Something Went Wrong!';
       }
     } catch (error, stackTrace) {
-      ProgressDialogUtils.hideProgressDialog();
+      ProgressDialogUtils.hideProgressDialog(appcontext);
       Logger.log(error, stackTrace: stackTrace);
       rethrow;
     }
   }
 
-  Future<GetGetLinkDefinitionResp> fetchGetLinkDefinition(
+  Future<GetGetLinkDefinitionResp> fetchGetLinkDefinition(BuildContext appcontext,
       {Map<String, dynamic> queryParams = const {}}) async {
-    ProgressDialogUtils.showProgressDialog();
+    ProgressDialogUtils.showProgressDialog(appcontext);
     try {
       await isNetworkConnected();
       Response response = await httpClient.get('$url/APID/GetLinkDefinition',
           query: queryParams);
-      ProgressDialogUtils.hideProgressDialog();
+      ProgressDialogUtils.hideProgressDialog(appcontext);
       if (_isSuccessCall(response)) {
         return GetGetLinkDefinitionResp.fromJson(response.body);
       } else {
@@ -1057,21 +1059,21 @@ class ApiClient extends GetConnect {
             : 'Something Went Wrong!';
       }
     } catch (error, stackTrace) {
-      ProgressDialogUtils.hideProgressDialog();
+      ProgressDialogUtils.hideProgressDialog(appcontext);
       Logger.log(error, stackTrace: stackTrace);
       rethrow;
     }
   }
 
-  Future<APIBooleanResponse> createMoveDown(
+  Future<APIBooleanResponse> createMoveDown(BuildContext appcontext,
       {Map<String, dynamic> queryParams = const {},
       Map requestData = const {}}) async {
-    ProgressDialogUtils.showProgressDialog();
+    ProgressDialogUtils.showProgressDialog(appcontext);
     try {
       await isNetworkConnected();
       Response response = await httpClient.post('$url/APID/MoveDown',
           query: queryParams, body: requestData);
-      ProgressDialogUtils.hideProgressDialog();
+      ProgressDialogUtils.hideProgressDialog(appcontext);
       if (_isSuccessCall(response)) {
         return APIBooleanResponse.fromJson(response.body);
       } else {
@@ -1080,21 +1082,21 @@ class ApiClient extends GetConnect {
             : 'Something Went Wrong!';
       }
     } catch (error, stackTrace) {
-      ProgressDialogUtils.hideProgressDialog();
+      ProgressDialogUtils.hideProgressDialog(appcontext);
       Logger.log(error, stackTrace: stackTrace);
       rethrow;
     }
   }
 
-  Future<APIBooleanResponse> createMoveUp(
+  Future<APIBooleanResponse> createMoveUp(BuildContext appcontext,
       {Map<String, dynamic> queryParams = const {},
       Map requestData = const {}}) async {
-    ProgressDialogUtils.showProgressDialog();
+    ProgressDialogUtils.showProgressDialog(appcontext);
     try {
       await isNetworkConnected();
       Response response = await httpClient.post('$url/APID/MoveUp',
           query: queryParams, body: requestData);
-      ProgressDialogUtils.hideProgressDialog();
+      ProgressDialogUtils.hideProgressDialog(appcontext);
       if (_isSuccessCall(response)) {
         return APIBooleanResponse.fromJson(response.body);
       } else {
@@ -1103,20 +1105,20 @@ class ApiClient extends GetConnect {
             : 'Something Went Wrong!';
       }
     } catch (error, stackTrace) {
-      ProgressDialogUtils.hideProgressDialog();
+      ProgressDialogUtils.hideProgressDialog(appcontext);
       Logger.log(error, stackTrace: stackTrace);
       rethrow;
     }
   }
 
-  Future<GetGetBandsResp> fetchGetBands(bool showProgress,
+  Future<GetGetBandsResp> fetchGetBands(BuildContext appcontext,bool showProgress,
       {Map<String, dynamic> queryParams = const {}}) async {
-    if (showProgress) ProgressDialogUtils.showProgressDialog();
+    if (showProgress) ProgressDialogUtils.showProgressDialog(appcontext);
     try {
       await isNetworkConnected();
       Response response =
           await httpClient.get('$url/APID/GetBandsList', query: queryParams);
-      if (showProgress) ProgressDialogUtils.hideProgressDialog();
+      if (showProgress) ProgressDialogUtils.hideProgressDialog(appcontext);
       if (_isSuccessCall(response)) {
         return GetGetBandsResp.fromJson(response.body);
       } else {
@@ -1125,20 +1127,20 @@ class ApiClient extends GetConnect {
             : 'Something Went Wrong!';
       }
     } catch (error, stackTrace) {
-      if (showProgress) ProgressDialogUtils.hideProgressDialog();
+      if (showProgress) ProgressDialogUtils.hideProgressDialog(appcontext);
       Logger.log(error, stackTrace: stackTrace);
       rethrow;
     }
   }
 
-  Future<APIBooleanResponse> createSaveFooter(
+  Future<APIBooleanResponse> createSaveFooter(BuildContext appcontext,
       {Map requestData = const {}}) async {
-    ProgressDialogUtils.showProgressDialog();
+    ProgressDialogUtils.showProgressDialog(appcontext);
     try {
       await isNetworkConnected();
       Response response =
           await httpClient.post('$url/APID/SaveFooter', body: requestData);
-      ProgressDialogUtils.hideProgressDialog();
+      ProgressDialogUtils.hideProgressDialog(appcontext);
       if (_isSuccessCall(response)) {
         return APIBooleanResponse.fromJson(response.body);
       } else {
@@ -1147,21 +1149,21 @@ class ApiClient extends GetConnect {
             : 'Something Went Wrong!';
       }
     } catch (error, stackTrace) {
-      ProgressDialogUtils.hideProgressDialog();
+      ProgressDialogUtils.hideProgressDialog(appcontext);
       Logger.log(error, stackTrace: stackTrace);
       rethrow;
     }
   }
 
-  Future<APIBooleanResponse> createSaveBands(
+  Future<APIBooleanResponse> createSaveBands(BuildContext appcontext,
       {Map requestData = const {}}) async {
-    ProgressDialogUtils.showProgressDialog();
+    ProgressDialogUtils.showProgressDialog(appcontext);
     try {
       await isNetworkConnected();
       httpClient.timeout = Duration(seconds: 120);
       Response response =
           await httpClient.post('$url/APID/SaveBand', body: requestData);
-      ProgressDialogUtils.hideProgressDialog();
+      ProgressDialogUtils.hideProgressDialog(appcontext);
       if (_isSuccessCall(response)) {
         return APIBooleanResponse.fromJson(response.body);
       } else {
@@ -1170,20 +1172,20 @@ class ApiClient extends GetConnect {
             : 'Something Went Wrong!';
       }
     } catch (error, stackTrace) {
-      ProgressDialogUtils.hideProgressDialog();
+      ProgressDialogUtils.hideProgressDialog(appcontext);
       Logger.log(error, stackTrace: stackTrace);
       rethrow;
     }
   }
 
-  Future<GetGetFooterResp> fetchGetFooter(
+  Future<GetGetFooterResp> fetchGetFooter(BuildContext appcontext,
       {Map<String, dynamic> queryParams = const {}}) async {
-    // ProgressDialogUtils.showProgressDialog();
+    // ProgressDialogUtils.showProgressDialog(appcontext);
     try {
       await isNetworkConnected();
       Response response =
           await httpClient.get('$url/APID/GetFooter', query: queryParams);
-      // ProgressDialogUtils.hideProgressDialog();
+      // ProgressDialogUtils.hideProgressDialog(appcontext);
       if (_isSuccessCall(response)) {
         return GetGetFooterResp.fromJson(response.body);
       } else {
@@ -1192,20 +1194,20 @@ class ApiClient extends GetConnect {
             : 'Something Went Wrong!';
       }
     } catch (error, stackTrace) {
-      ProgressDialogUtils.hideProgressDialog();
+      ProgressDialogUtils.hideProgressDialog(appcontext);
       Logger.log(error, stackTrace: stackTrace);
       rethrow;
     }
   }
 
-  Future<APIResponse> fetchPublish(
+  Future<APIResponse> fetchPublish(BuildContext appcontext,
       {Map<String, dynamic> queryParams = const {}}) async {
-    ProgressDialogUtils.showProgressDialog();
+    ProgressDialogUtils.showProgressDialog(appcontext);
     try {
       await isNetworkConnected();
       Response response =
           await httpClient.get('$url/APID/Publish', query: queryParams);
-      ProgressDialogUtils.hideProgressDialog();
+      ProgressDialogUtils.hideProgressDialog(appcontext);
       if (_isSuccessCall(response)) {
         return APIResponse.fromJson(response.body);
       } else {
@@ -1214,20 +1216,20 @@ class ApiClient extends GetConnect {
             : 'Something Went Wrong!';
       }
     } catch (error, stackTrace) {
-      ProgressDialogUtils.hideProgressDialog();
+      ProgressDialogUtils.hideProgressDialog(appcontext);
       Logger.log(error, stackTrace: stackTrace);
       rethrow;
     }
   }
 
-  Future<GetDeleteCardResp> fetchDeleteCard(
+  Future<GetDeleteCardResp> fetchDeleteCard(BuildContext appcontext,
       {Map<String, dynamic> queryParams = const {}}) async {
-    ProgressDialogUtils.showProgressDialog();
+    ProgressDialogUtils.showProgressDialog(appcontext);
     try {
       await isNetworkConnected();
       Response response =
           await httpClient.get('$url/APID/DeleteCard', query: queryParams);
-      ProgressDialogUtils.hideProgressDialog();
+      ProgressDialogUtils.hideProgressDialog(appcontext);
       if (_isSuccessCall(response)) {
         return GetDeleteCardResp.fromJson(response.body);
       } else {
@@ -1236,20 +1238,20 @@ class ApiClient extends GetConnect {
             : 'Something Went Wrong!';
       }
     } catch (error, stackTrace) {
-      ProgressDialogUtils.hideProgressDialog();
+      ProgressDialogUtils.hideProgressDialog(appcontext);
       Logger.log(error, stackTrace: stackTrace);
       rethrow;
     }
   }
 
-  Future<GetGetBandDataResp> fetchGetBandData(
+  Future<GetGetBandDataResp> fetchGetBandData(BuildContext appcontext,
       {Map<String, dynamic> queryParams = const {}}) async {
-    ProgressDialogUtils.showProgressDialog();
+    ProgressDialogUtils.showProgressDialog(appcontext);
     try {
       await isNetworkConnected();
       Response response =
           await httpClient.get('$url/APID/GetBandData', query: queryParams);
-      ProgressDialogUtils.hideProgressDialog();
+      ProgressDialogUtils.hideProgressDialog(appcontext);
       if (_isSuccessCall(response)) {
         return GetGetBandDataResp.fromJson(response.body);
       } else {
@@ -1258,20 +1260,20 @@ class ApiClient extends GetConnect {
             : 'Something Went Wrong!';
       }
     } catch (error, stackTrace) {
-      ProgressDialogUtils.hideProgressDialog();
+      ProgressDialogUtils.hideProgressDialog(appcontext);
       Logger.log(error, stackTrace: stackTrace);
       rethrow;
     }
   }
 
-  Future<GetDeleteCardResp> fetchDeleteBand(
+  Future<GetDeleteCardResp> fetchDeleteBand(BuildContext appcontext,
       {Map<String, dynamic> queryParams = const {}}) async {
-    ProgressDialogUtils.showProgressDialog();
+    ProgressDialogUtils.showProgressDialog(appcontext);
     try {
       await isNetworkConnected();
       Response response =
           await httpClient.post('$url/APID/DeleteBand', query: queryParams);
-      ProgressDialogUtils.hideProgressDialog();
+      ProgressDialogUtils.hideProgressDialog(appcontext);
       if (_isSuccessCall(response)) {
         return GetDeleteCardResp.fromJson(response.body);
       } else {
@@ -1280,20 +1282,20 @@ class ApiClient extends GetConnect {
             : 'Something Went Wrong!';
       }
     } catch (error, stackTrace) {
-      ProgressDialogUtils.hideProgressDialog();
+      ProgressDialogUtils.hideProgressDialog(appcontext);
       Logger.log(error, stackTrace: stackTrace);
       rethrow;
     }
   }
 
-  Future<GetHideCardResp> fetchHideCard(
+  Future<GetHideCardResp> fetchHideCard(BuildContext appcontext,
       {Map<String, dynamic> queryParams = const {}}) async {
-    ProgressDialogUtils.showProgressDialog();
+    ProgressDialogUtils.showProgressDialog(appcontext);
     try {
       await isNetworkConnected();
       Response response =
           await httpClient.get('$url/APID/HideCard', query: queryParams);
-      ProgressDialogUtils.hideProgressDialog();
+      ProgressDialogUtils.hideProgressDialog(appcontext);
       if (_isSuccessCall(response)) {
         return GetHideCardResp.fromJson(response.body);
       } else {
@@ -1302,21 +1304,21 @@ class ApiClient extends GetConnect {
             : 'Something Went Wrong!';
       }
     } catch (error, stackTrace) {
-      ProgressDialogUtils.hideProgressDialog();
+      ProgressDialogUtils.hideProgressDialog(appcontext);
       Logger.log(error, stackTrace: stackTrace);
       rethrow;
     }
   }
 
-  Future<PostGetThemeDetailsResp> getThemeDetails(
+  Future<PostGetThemeDetailsResp> getThemeDetails(BuildContext appcontext,
       {Map<String, dynamic> queryParams = const {},
       Map requestData = const {}}) async {
-    ProgressDialogUtils.showProgressDialog();
+    ProgressDialogUtils.showProgressDialog(appcontext);
     try {
       await isNetworkConnected();
       Response response = await httpClient.post('$url/APID/GetThemeDetails',
           query: queryParams, body: requestData);
-      ProgressDialogUtils.hideProgressDialog();
+      ProgressDialogUtils.hideProgressDialog(appcontext);
       if (_isSuccessCall(response)) {
         return PostGetThemeDetailsResp.fromJson(response.body);
       } else {
@@ -1325,20 +1327,20 @@ class ApiClient extends GetConnect {
             : 'Something Went Wrong!';
       }
     } catch (error, stackTrace) {
-      ProgressDialogUtils.hideProgressDialog();
+      ProgressDialogUtils.hideProgressDialog(appcontext);
       Logger.log(error, stackTrace: stackTrace);
       rethrow;
     }
   }
 
-  Future<PostSaveResp> saveCardMain({Map requestData = const {}}) async {
-    ProgressDialogUtils.showProgressDialog();
+  Future<PostSaveResp> saveCardMain(BuildContext appcontext,{Map requestData = const {}}) async {
+    ProgressDialogUtils.showProgressDialog(appcontext);
     try {
       await isNetworkConnected();
       httpClient.timeout = Duration(seconds: 120);
       Response response =
           await httpClient.post('$url/APID/SaveCardMain', body: requestData);
-      ProgressDialogUtils.hideProgressDialog();
+      ProgressDialogUtils.hideProgressDialog(appcontext);
       if (_isSuccessCall(response)) {
         return PostSaveResp.fromJson(response.body);
       } else {
@@ -1347,20 +1349,20 @@ class ApiClient extends GetConnect {
             : 'Something Went Wrong!';
       }
     } catch (error, stackTrace) {
-      ProgressDialogUtils.hideProgressDialog();
+      ProgressDialogUtils.hideProgressDialog(appcontext);
       Logger.log(error, stackTrace: stackTrace);
       rethrow;
     }
   }
 
-  Future<PostSaveResp> saveCardAdvance({Map requestData = const {}}) async {
-    ProgressDialogUtils.showProgressDialog();
+  Future<PostSaveResp> saveCardAdvance(BuildContext appcontext,{Map requestData = const {}}) async {
+    ProgressDialogUtils.showProgressDialog(appcontext);
     try {
       await isNetworkConnected();
       httpClient.timeout = Duration(seconds: 120);
       Response response = await httpClient.post('$url/APID/SaveCardAdvanced',
           body: requestData);
-      ProgressDialogUtils.hideProgressDialog();
+      ProgressDialogUtils.hideProgressDialog(appcontext);
       if (_isSuccessCall(response)) {
         return PostSaveResp.fromJson(response.body);
       } else {
@@ -1369,20 +1371,20 @@ class ApiClient extends GetConnect {
             : 'Something Went Wrong!';
       }
     } catch (error, stackTrace) {
-      ProgressDialogUtils.hideProgressDialog();
+      ProgressDialogUtils.hideProgressDialog(appcontext);
       Logger.log(error, stackTrace: stackTrace);
       rethrow;
     }
   }
 
-  Future<PostSaveResp> saveCardOtherData({Map requestData = const {}}) async {
-    ProgressDialogUtils.showProgressDialog();
+  Future<PostSaveResp> saveCardOtherData(BuildContext appcontext,{Map requestData = const {}}) async {
+    ProgressDialogUtils.showProgressDialog(appcontext);
     try {
       await isNetworkConnected();
       httpClient.timeout = Duration(seconds: 120);
       Response response = await httpClient.post('$url/APID/SaveCardOtherData',
           body: requestData);
-      ProgressDialogUtils.hideProgressDialog();
+      ProgressDialogUtils.hideProgressDialog(appcontext);
       if (_isSuccessCall(response)) {
         return PostSaveResp.fromJson(response.body);
       } else {
@@ -1391,20 +1393,20 @@ class ApiClient extends GetConnect {
             : 'Something Went Wrong!';
       }
     } catch (error, stackTrace) {
-      ProgressDialogUtils.hideProgressDialog();
+      ProgressDialogUtils.hideProgressDialog(appcontext);
       Logger.log(error, stackTrace: stackTrace);
       rethrow;
     }
   }
 
-  Future<PostSaveResp> saveCardDetails({Map requestData = const {}}) async {
-    ProgressDialogUtils.showProgressDialog();
+  Future<PostSaveResp> saveCardDetails(BuildContext appcontext,{Map requestData = const {}}) async {
+    ProgressDialogUtils.showProgressDialog(appcontext);
     try {
       await isNetworkConnected();
       httpClient.timeout = Duration(seconds: 120);
       Response response =
           await httpClient.post('$url/APID/SaveCardDetails', body: requestData);
-      ProgressDialogUtils.hideProgressDialog();
+      ProgressDialogUtils.hideProgressDialog(appcontext);
       if (_isSuccessCall(response)) {
         return PostSaveResp.fromJson(response.body);
       } else {
@@ -1413,17 +1415,18 @@ class ApiClient extends GetConnect {
             : 'Something Went Wrong!';
       }
     } catch (error, stackTrace) {
-      ProgressDialogUtils.hideProgressDialog();
+      ProgressDialogUtils.hideProgressDialog(appcontext);
       Logger.log(error, stackTrace: stackTrace);
       rethrow;
     }
   }
 
-  Future<GetGetCreateCardResp> fetchGetCreateCard(
+  Future<GetGetCreateCardResp> fetchGetCreateCard(BuildContext appcontext,
       {bool showProgress = true,
       Map<String, dynamic> queryParams = const {}}) async {
     if (showProgress) {
-      ProgressDialogUtils.showProgressDialog();
+      
+      ProgressDialogUtils.showProgressDialog(appcontext);
     }
     try {
       await isNetworkConnected();
@@ -1431,7 +1434,7 @@ class ApiClient extends GetConnect {
       Response response =
           await httpClient.get('$url/APID/GetCreateCard', query: queryParams);
       if (showProgress) {
-        ProgressDialogUtils.hideProgressDialog();
+        ProgressDialogUtils.hideProgressDialog(appcontext);
       }
       if (_isSuccessCall(response)) {
         return GetGetCreateCardResp.fromJson(response.body);
@@ -1441,22 +1444,22 @@ class ApiClient extends GetConnect {
             : 'Something Went Wrong!';
       }
     } catch (error, stackTrace) {
-      if (showProgress) ProgressDialogUtils.hideProgressDialog();
+      if (showProgress) ProgressDialogUtils.hideProgressDialog(appcontext);
       Logger.log(error, stackTrace: stackTrace);
       rethrow;
     }
   }
 
-  Future<CommonDropdownResp> getBackgroundType(
+  Future<CommonDropdownResp> getBackgroundType(BuildContext appcontext,
       {bool showProgress = true,
       Map<String, dynamic> queryParams = const {}}) async {
-    if (showProgress) ProgressDialogUtils.showProgressDialog();
+    if (showProgress) ProgressDialogUtils.showProgressDialog(appcontext);
     try {
       await isNetworkConnected();
       httpClient.timeout = Duration(seconds: 120);
       Response response = await httpClient.get('$url/APID/GetBackGroundType',
           query: queryParams);
-      if (showProgress) ProgressDialogUtils.hideProgressDialog();
+      if (showProgress) ProgressDialogUtils.hideProgressDialog(appcontext);
       if (_isSuccessCall(response)) {
         return CommonDropdownResp.fromJson(response.body);
       } else {
@@ -1465,22 +1468,22 @@ class ApiClient extends GetConnect {
             : 'Something Went Wrong!';
       }
     } catch (error, stackTrace) {
-      if (showProgress) ProgressDialogUtils.hideProgressDialog();
+      if (showProgress) ProgressDialogUtils.hideProgressDialog(appcontext);
       Logger.log(error, stackTrace: stackTrace);
       rethrow;
     }
   }
 
-  Future<CommonDropdownResp> getCreditType(
+  Future<CommonDropdownResp> getCreditType(BuildContext appcontext,
       {bool showProgress = true,
       Map<String, dynamic> queryParams = const {}}) async {
-    if (showProgress) ProgressDialogUtils.showProgressDialog();
+    if (showProgress) ProgressDialogUtils.showProgressDialog(appcontext);
     try {
       await isNetworkConnected();
       httpClient.timeout = Duration(seconds: 120);
       Response response =
           await httpClient.get('$url/API/GetCreditType', query: queryParams);
-      if (showProgress) ProgressDialogUtils.hideProgressDialog();
+      if (showProgress) ProgressDialogUtils.hideProgressDialog(appcontext);
       if (_isSuccessCall(response)) {
         return CommonDropdownResp.fromJson(response.body);
       } else {
@@ -1489,19 +1492,19 @@ class ApiClient extends GetConnect {
             : 'Something Went Wrong!';
       }
     } catch (error, stackTrace) {
-      if (showProgress) ProgressDialogUtils.hideProgressDialog();
+      if (showProgress) ProgressDialogUtils.hideProgressDialog(appcontext);
       Logger.log(error, stackTrace: stackTrace);
       rethrow;
     }
   }
 
-  Future<APIResponse> checkCardEditExpiry({Map requestData = const {}}) async {
-    ProgressDialogUtils.showProgressDialog();
+  Future<APIResponse> checkCardEditExpiry(BuildContext appcontext,{Map requestData = const {}}) async {
+    ProgressDialogUtils.showProgressDialog(appcontext);
     try {
       await isNetworkConnected();
       Response response = await httpClient.post('$url/API/CheckCardEditExpiry',
           body: requestData);
-      ProgressDialogUtils.hideProgressDialog();
+      ProgressDialogUtils.hideProgressDialog(appcontext);
       if (_isSuccessCall(response)) {
         return APIResponse.fromJson(response.body);
       } else {
@@ -1510,20 +1513,20 @@ class ApiClient extends GetConnect {
             : 'Something Went Wrong!';
       }
     } catch (error, stackTrace) {
-      ProgressDialogUtils.hideProgressDialog();
+      ProgressDialogUtils.hideProgressDialog(appcontext);
       Logger.log(error, stackTrace: stackTrace);
       rethrow;
     }
   }
 
-  Future<APIResponse> assignCardEditCredits(
+  Future<APIResponse> assignCardEditCredits(BuildContext appcontext,
       {Map requestData = const {}}) async {
-    // ProgressDialogUtils.showProgressDialog();
+    // ProgressDialogUtils.showProgressDialog(appcontext);
     try {
       await isNetworkConnected();
       Response response = await httpClient
           .post('$url/API/assignCardEditCredits', body: requestData);
-      // ProgressDialogUtils.hideProgressDialog();
+      // ProgressDialogUtils.hideProgressDialog(appcontext);
       if (_isSuccessCall(response)) {
         return APIResponse.fromJson(response.body);
       } else {
@@ -1532,22 +1535,22 @@ class ApiClient extends GetConnect {
             : 'Something Went Wrong!';
       }
     } catch (error, stackTrace) {
-      ProgressDialogUtils.hideProgressDialog();
+      ProgressDialogUtils.hideProgressDialog(appcontext);
       Logger.log(error, stackTrace: stackTrace);
       rethrow;
     }
   }
 
-  Future<CommonDropdownResp> getFontList(
+  Future<CommonDropdownResp> getFontList(BuildContext appcontext,
       {bool showProgress = true,
       Map<String, dynamic> queryParams = const {}}) async {
-    if (showProgress) ProgressDialogUtils.showProgressDialog();
+    if (showProgress) ProgressDialogUtils.showProgressDialog(appcontext);
     try {
       await isNetworkConnected();
       httpClient.timeout = Duration(seconds: 120);
       Response response =
           await httpClient.get('$url/API/GetFontList', query: queryParams);
-      if (showProgress) ProgressDialogUtils.hideProgressDialog();
+      if (showProgress) ProgressDialogUtils.hideProgressDialog(appcontext);
       if (_isSuccessCall(response)) {
         return CommonDropdownResp.fromJson(response.body);
       } else {
@@ -1556,21 +1559,21 @@ class ApiClient extends GetConnect {
             : 'Something Went Wrong!';
       }
     } catch (error, stackTrace) {
-      if (showProgress) ProgressDialogUtils.hideProgressDialog();
+      if (showProgress) ProgressDialogUtils.hideProgressDialog(appcontext);
       Logger.log(error, stackTrace: stackTrace);
       rethrow;
     }
   }
 
-  Future<GetGetCreateCardResp> previewCard(
+  Future<GetGetCreateCardResp> previewCard(BuildContext appcontext,
       {Map<String, dynamic> queryParams = const {}}) async {
-    ProgressDialogUtils.showProgressDialog();
+    ProgressDialogUtils.showProgressDialog(appcontext);
     try {
       await isNetworkConnected();
       httpClient.timeout = Duration(seconds: 120);
       Response response =
           await httpClient.get('$url/APID/PreviewCard', query: queryParams);
-      ProgressDialogUtils.hideProgressDialog();
+      ProgressDialogUtils.hideProgressDialog(appcontext);
       if (_isSuccessCall(response)) {
         return GetGetCreateCardResp.fromJson(response.body);
       } else {
@@ -1579,20 +1582,20 @@ class ApiClient extends GetConnect {
             : 'Something Went Wrong!';
       }
     } catch (error, stackTrace) {
-      ProgressDialogUtils.hideProgressDialog();
+      ProgressDialogUtils.hideProgressDialog(appcontext);
       Logger.log(error, stackTrace: stackTrace);
       rethrow;
     }
   }
 
-  Future<GetGetCardTemplateResp> fetchGetCardTemplate(
+  Future<GetGetCardTemplateResp> fetchGetCardTemplate(BuildContext appcontext,
       {Map<String, dynamic> queryParams = const {}}) async {
-    ProgressDialogUtils.showProgressDialog();
+    ProgressDialogUtils.showProgressDialog(appcontext);
     try {
       await isNetworkConnected();
       Response response =
           await httpClient.get('$url/APID/GetCardTemplate', query: queryParams);
-      ProgressDialogUtils.hideProgressDialog();
+      ProgressDialogUtils.hideProgressDialog(appcontext);
       if (_isSuccessCall(response)) {
         return GetGetCardTemplateResp.fromJson(response.body);
       } else {
@@ -1601,18 +1604,18 @@ class ApiClient extends GetConnect {
             : 'Something Went Wrong!';
       }
     } catch (error, stackTrace) {
-      ProgressDialogUtils.hideProgressDialog();
+      ProgressDialogUtils.hideProgressDialog(appcontext);
       Logger.log(error, stackTrace: stackTrace);
       rethrow;
     }
   }
 
-  Future<CommonDropdownResp> fetchGetLanguages() async {
-    ProgressDialogUtils.showProgressDialog();
+  Future<CommonDropdownResp> fetchGetLanguages(BuildContext appcontext) async {
+    ProgressDialogUtils.showProgressDialog(appcontext);
     try {
       await isNetworkConnected();
       Response response = await httpClient.get('$url/APID/GetLanguages');
-      ProgressDialogUtils.hideProgressDialog();
+      ProgressDialogUtils.hideProgressDialog(appcontext);
       if (_isSuccessCall(response)) {
         return CommonDropdownResp.fromJson(response.body);
       } else {
@@ -1621,20 +1624,20 @@ class ApiClient extends GetConnect {
             : 'Something Went Wrong!';
       }
     } catch (error, stackTrace) {
-      ProgressDialogUtils.hideProgressDialog();
+      ProgressDialogUtils.hideProgressDialog(appcontext);
       Logger.log(error, stackTrace: stackTrace);
       rethrow;
     }
   }
 
-  Future<CommonDropdownResp> fetchGetBandLinkList(
+  Future<CommonDropdownResp> fetchGetBandLinkList(BuildContext appcontext,
       {Map<String, dynamic> queryParams = const {}}) async {
-    // ProgressDialogUtils.showProgressDialog();
+    // ProgressDialogUtils.showProgressDialog(appcontext);
     try {
       await isNetworkConnected();
       Response response =
           await httpClient.get('$url/APID/GetBandLinkList', query: queryParams);
-      // ProgressDialogUtils.hideProgressDialog();
+      // ProgressDialogUtils.hideProgressDialog(appcontext);
       if (_isSuccessCall(response)) {
         return CommonDropdownResp.fromJson(response.body);
       } else {
@@ -1643,20 +1646,20 @@ class ApiClient extends GetConnect {
             : 'Something Went Wrong!';
       }
     } catch (error, stackTrace) {
-      // ProgressDialogUtils.hideProgressDialog();
+      // ProgressDialogUtils.hideProgressDialog(appcontext);
       Logger.log(error, stackTrace: stackTrace);
       rethrow;
     }
   }
 
-  Future<CommonDropdownResp> fetchAfterExpiryList(
+  Future<CommonDropdownResp> fetchAfterExpiryList(BuildContext appcontext,
       {Map<String, dynamic> queryParams = const {}}) async {
-    ProgressDialogUtils.showProgressDialog();
+    ProgressDialogUtils.showProgressDialog(appcontext);
     try {
       await isNetworkConnected();
       Response response = await httpClient.get('$url/APID/GetAfterExpiryList',
           query: queryParams);
-      ProgressDialogUtils.hideProgressDialog();
+      ProgressDialogUtils.hideProgressDialog(appcontext);
       if (_isSuccessCall(response)) {
         return CommonDropdownResp.fromJson(response.body);
       } else {
@@ -1665,20 +1668,20 @@ class ApiClient extends GetConnect {
             : 'Something Went Wrong!';
       }
     } catch (error, stackTrace) {
-      ProgressDialogUtils.hideProgressDialog();
+      ProgressDialogUtils.hideProgressDialog(appcontext);
       Logger.log(error, stackTrace: stackTrace);
       rethrow;
     }
   }
 
-  Future<CommonDropdownResp> fetchFilterCardTheme(
+  Future<CommonDropdownResp> fetchFilterCardTheme(BuildContext appcontext,
       {Map<String, dynamic> queryParams = const {}}) async {
-    ProgressDialogUtils.showProgressDialog();
+    ProgressDialogUtils.showProgressDialog(appcontext);
     try {
       await isNetworkConnected();
       Response response =
           await httpClient.get('$url/APID/FilterCardTheme', query: queryParams);
-      ProgressDialogUtils.hideProgressDialog();
+      ProgressDialogUtils.hideProgressDialog(appcontext);
       if (_isSuccessCall(response)) {
         return CommonDropdownResp.fromJson(response.body);
       } else {
@@ -1687,20 +1690,20 @@ class ApiClient extends GetConnect {
             : 'Something Went Wrong!';
       }
     } catch (error, stackTrace) {
-      ProgressDialogUtils.hideProgressDialog();
+      ProgressDialogUtils.hideProgressDialog(appcontext);
       Logger.log(error, stackTrace: stackTrace);
       rethrow;
     }
   }
 
-  Future<GetCardDetailsResp> fetchCardDetails(
+  Future<GetCardDetailsResp> fetchCardDetails(BuildContext appcontext,
       {Map<String, dynamic> queryParams = const {}}) async {
-    ProgressDialogUtils.showProgressDialog();
+    ProgressDialogUtils.showProgressDialog(appcontext);
     try {
       await isNetworkConnected();
       Response response =
           await httpClient.get('$url/APID/CardDetails', query: queryParams);
-      ProgressDialogUtils.hideProgressDialog();
+      ProgressDialogUtils.hideProgressDialog(appcontext);
       if (_isSuccessCall(response)) {
         return GetCardDetailsResp.fromJson(response.body);
       } else {
@@ -1709,20 +1712,20 @@ class ApiClient extends GetConnect {
             : 'Something Went Wrong!';
       }
     } catch (error, stackTrace) {
-      ProgressDialogUtils.hideProgressDialog();
+      ProgressDialogUtils.hideProgressDialog(appcontext);
       Logger.log(error, stackTrace: stackTrace);
       rethrow;
     }
   }
 
-  Future<GetCardSubTypeResp> fetchGetCardSubType(
+  Future<GetCardSubTypeResp> fetchGetCardSubType(BuildContext appcontext,
       {Map<String, dynamic> queryParams = const {}}) async {
-    ProgressDialogUtils.showProgressDialog();
+    ProgressDialogUtils.showProgressDialog(appcontext);
     try {
       await isNetworkConnected();
       Response response =
           await httpClient.get('$url/APID/GetCardSubType', query: queryParams);
-      ProgressDialogUtils.hideProgressDialog();
+      ProgressDialogUtils.hideProgressDialog(appcontext);
       if (_isSuccessCall(response)) {
         return GetCardSubTypeResp.fromJson(response.body);
       } else {
@@ -1731,18 +1734,18 @@ class ApiClient extends GetConnect {
             : 'Something Went Wrong!';
       }
     } catch (error, stackTrace) {
-      ProgressDialogUtils.hideProgressDialog();
+      ProgressDialogUtils.hideProgressDialog(appcontext);
       Logger.log(error, stackTrace: stackTrace);
       rethrow;
     }
   }
 
-  Future<GetGetCardTypeResp> fetchGetCardType() async {
-    ProgressDialogUtils.showProgressDialog();
+  Future<GetGetCardTypeResp> fetchGetCardType(BuildContext appcontext) async {
+    ProgressDialogUtils.showProgressDialog(appcontext);
     try {
       await isNetworkConnected();
-      Response response = await httpClient.get('$url/APID/GetCardType');
-      ProgressDialogUtils.hideProgressDialog();
+      Response response = await httpClient.get('$url/APID/GetCardType?LanguageId='+GlobalVariables.currentLanguage);
+      ProgressDialogUtils.hideProgressDialog(appcontext);
       if (_isSuccessCall(response)) {
         return GetGetCardTypeResp.fromJson(response.body);
       } else {
@@ -1751,7 +1754,7 @@ class ApiClient extends GetConnect {
             : 'Something Went Wrong!';
       }
     } catch (error, stackTrace) {
-      ProgressDialogUtils.hideProgressDialog();
+      ProgressDialogUtils.hideProgressDialog(appcontext);
       Logger.log(error, stackTrace: stackTrace);
       rethrow;
     }

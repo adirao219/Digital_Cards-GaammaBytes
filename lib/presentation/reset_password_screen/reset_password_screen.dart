@@ -314,7 +314,7 @@ class _ResetPasswordScreen extends State<ResetPasswordScreen> {
         "Password": _passwordController.text,
         "ConfirmPassword": _confirmpasswordController.text
       };
-      CommonGenericResp resp = await api.resetPassword(requestData: req);
+      CommonGenericResp resp = await api.resetPassword(context,requestData: req);
       if (resp.isSuccess ?? false) {
         // selectedCardID = resp.result;
         Get.snackbar('Success', "Password Reset Successful! Please login again with new password",

@@ -84,7 +84,8 @@ class GetCardResult {
   String? picture2Ref;
   int? picture2Size;
   dynamic picture2OldId;
-  String? picture2Caption;
+  String? logoCaptionName;
+  String? logoPositionCaptionName;
   dynamic location;
   dynamic latitude;
   dynamic longitude;
@@ -192,7 +193,8 @@ class GetCardResult {
     this.picture2Ref,
     this.picture2Size,
     this.picture2OldId,
-    this.picture2Caption,
+      this.logoCaptionName,
+      this.logoPositionCaptionName,
     this.location,
     this.latitude,
     this.longitude,
@@ -303,7 +305,8 @@ class GetCardResult {
     picture2Ref = json['Picture2Ref'];
     picture2Size = json['Picture2Size'];
     picture2OldId = json['Picture2OldId'];
-    picture2Caption = json['Picture2Caption'];
+    logoCaptionName = json['Picture2Caption'];
+    logoPositionCaptionName = json['Picture2PositionCaption'];
     location = json['Location'];
     latitude = json['Latitude'];
     longitude = json['Longitude'];
@@ -529,9 +532,6 @@ class GetCardResult {
     }
     if (this.picture2OldId != null) {
       data['Picture2OldId'] = this.picture2OldId;
-    }
-    if (this.picture2Caption != null) {
-      data['Picture2Caption'] = this.picture2Caption;
     }
     if (this.location != null) {
       data['Location'] = this.location;

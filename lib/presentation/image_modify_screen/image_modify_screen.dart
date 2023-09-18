@@ -366,7 +366,7 @@ class _ImageModifyoneScreen extends State<ImageModifyScreen> {
   }
 
   resizeImage() {
-    // ProgressDialogUtils.showProgressDialog();
+    // ProgressDialogUtils.showProgressDialog(context);
     if (pictureType!=UserImageType.background) {
       if (double.parse(_size_x_controller.text) > 250 ||
           double.parse(_size_y_controller.text) > 250) {
@@ -409,7 +409,7 @@ class _ImageModifyoneScreen extends State<ImageModifyScreen> {
       });
       imageEditingDone(value.path);
 
-      // ProgressDialogUtils.hideProgressDialog();
+      // ProgressDialogUtils.hideProgressDialog(context);
     });
     
     }catch(e)

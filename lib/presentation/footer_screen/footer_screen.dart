@@ -51,10 +51,11 @@ class _FooterScreen extends State<FooterScreen> {
     try {
       var req = {
         "UserId": GlobalVariables.userID,
-        "CardID": selectedCardID.toString()
+        "CardID": selectedCardID.toString(),
+        "LanguageId":GlobalVariables.currentLanguage
       };
       CommonDropdownResp resp =
-          await api.fetchGetBandLinkList(queryParams: req);
+          await api.fetchGetBandLinkList(context,queryParams: req);
       if (resp.isSuccess ?? false) {
         setState(() {
           allLinks = resp.result ?? [];
@@ -76,9 +77,10 @@ class _FooterScreen extends State<FooterScreen> {
     try {
       var req = {
         "UserId": GlobalVariables.userID,
-        "CardID": selectedCardID.toString()
+        "CardID": selectedCardID.toString(),
+        "LanguageId":GlobalVariables.currentLanguage
       };
-      GetGetFooterResp resp = await api.fetchGetFooter(queryParams: req);
+      GetGetFooterResp resp = await api.fetchGetFooter(context,queryParams: req);
       if (resp.isSuccess ?? false) {
         setState(() {
           link1Value = resp.result!.footerData!.link1 == null
@@ -120,9 +122,10 @@ class _FooterScreen extends State<FooterScreen> {
         "Link5": link5Value ?? '',
         "Link6": "",
         "Link7": "",
-        "Link8": ""
+        "Link8": "",
+        "CaptionLanguageId":GlobalVariables.currentLanguage
       };
-      APIBooleanResponse resp = await api.createSaveFooter(requestData: req);
+      APIBooleanResponse resp = await api.createSaveFooter(context,requestData: req);
       if ((resp.isSuccess ?? false) && (resp.result ?? false)) {
         Get.snackbar('Success', "Links updated successfully!",
             backgroundColor: Color.fromARGB(255, 208, 245, 216),

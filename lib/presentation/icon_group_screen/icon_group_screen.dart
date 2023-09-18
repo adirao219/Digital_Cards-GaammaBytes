@@ -58,9 +58,11 @@ class _IconGroupScreen extends State<IconGroupScreen> {
       var req = {
         "UserId": GlobalVariables.userID,
         "CardID": selectedCardID.toString(),
-        "BandID": bandID.toString()
+        "BandID": bandID.toString(),
+        "LanguageId": GlobalVariables.currentLanguage
       };
-      GetGetBandDataResp resp = await api.fetchGetBandData(queryParams: req);
+      GetGetBandDataResp resp =
+          await api.fetchGetBandData(context, queryParams: req);
       if (resp.isSuccess ?? false) {
         setState(() {
           _name2_Controller.text = resp.result!.heading ?? '';
@@ -101,11 +103,15 @@ class _IconGroupScreen extends State<IconGroupScreen> {
     } catch (e) {}
   }
 
-  getBandLinks({bool isProgress=true}) async {
+  getBandLinks({bool isProgress = true}) async {
     try {
-      var req = {"UserId": GlobalVariables.userID, "CardID": selectedCardID.toString()};
+      var req = {
+        "UserId": GlobalVariables.userID,
+        "CardID": selectedCardID.toString(),
+        "LanguageId": GlobalVariables.currentLanguage
+      };
       CommonDropdownResp resp =
-          await api.fetchGetBandLinkList(queryParams: req);
+          await api.fetchGetBandLinkList(context, queryParams: req);
       if (resp.isSuccess ?? false) {
         setState(() {
           allLinks = resp.result ?? [];
@@ -143,9 +149,11 @@ class _IconGroupScreen extends State<IconGroupScreen> {
         "Link6": link6Value ?? '',
         "Link7": link7Value ?? '',
         "Link8": link8Value ?? '',
-        "DataPosition": "0"
+        "DataPosition": "0",
+        "CaptionLanguageId":GlobalVariables.currentLanguage
       };
-      APIBooleanResponse resp = await api.createSaveBands(requestData: req);
+      APIBooleanResponse resp =
+          await api.createSaveBands(context, requestData: req);
       if (resp.result ?? false) {
         Get.snackbar('Success', "Band Created successfully!",
             backgroundColor: Color.fromARGB(255, 208, 245, 216),
@@ -564,38 +572,38 @@ class _IconGroupScreen extends State<IconGroupScreen> {
                             },
                           ),
                           Column(
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  CustomButton(
+                                      height: 40,
+                                      width: 148,
+                                      text: "lbl_other_links".tr,
+                                      padding: ButtonPadding.PaddingT9,
+                                      prefixWidget: Container(
+                                          margin: getMargin(right: 10),
+                                          child: CustomImageView(
+                                              svgPath: ImageConstant
+                                                  .imgSearchWhiteA700)),
+                                      onTap: onTapOtherlinks),
+                                ],
+                              ),
                               CustomButton(
                                   height: 40,
                                   width: 148,
-                                  text: "lbl_other_links".tr,
+                                  text: "lbl_save".tr,
                                   padding: ButtonPadding.PaddingT9,
-                                  prefixWidget: Container(
-                                      margin: getMargin(right: 10),
-                                      child: CustomImageView(
-                                          svgPath: ImageConstant
-                                              .imgSearchWhiteA700)),
-                                  onTap: onTapOtherlinks),
+                                  onTap: onTapTxtBtnConfirm),
                             ],
-                          ),
-                          CustomButton(
-                              height: 40,
-                              width: 148,
-                              text: "lbl_save".tr,
-                              padding: ButtonPadding.PaddingT9,
-                              onTap: onTapTxtBtnConfirm),
-                        ],
-                      )
+                          )
                         ])))));
   }
 
   onTapTxtBtnConfirm() {
     saveBandLinks();
   }
-  
+
   onTapOtherlinks() {
     Navigator.of(context).pushNamed(AppRoutes.linkScreen, arguments: {
       "cardType": cardType,

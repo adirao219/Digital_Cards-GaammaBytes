@@ -34,7 +34,6 @@ class AdvancedScreen extends StatefulWidget {
 }
 
 class _AdvancedScreen extends State<AdvancedScreen> {
-  
   TextEditingController _searchController = new TextEditingController();
   ImagePicker _picker = new ImagePicker();
   var cardType = Get.arguments["cardType"] as int?;
@@ -69,7 +68,7 @@ class _AdvancedScreen extends State<AdvancedScreen> {
   String? logoImageBase64;
   String? logoImageFileName;
   int? logoExistingId;
-  
+
   List<DriveFilesData> allUserImages = [];
   List<DriveFilesData> userImages = [];
 
@@ -105,8 +104,8 @@ class _AdvancedScreen extends State<AdvancedScreen> {
 
   getDropdownItems() async {
     try {
-      // var req = {"UserId": GlobalVariables.userID, "CardID": "0"};
-      CommonDropdownResp resp = await api.fetchAfterExpiryList();
+      var req = {"LanguageId": GlobalVariables.currentLanguage};
+      CommonDropdownResp resp = await api.fetchAfterExpiryList(context,queryParams: req);
       if (resp.isSuccess ?? false) {
         setState(() {
           allItems = resp.result ?? [];
@@ -141,9 +140,10 @@ class _AdvancedScreen extends State<AdvancedScreen> {
         "ThumbnailImageOldId": logoExistingId,
         "HeaderData1": _card_description_Controller.text,
         "HeaderData2": _html_title_Controller.text,
-        "HeaderData3": _meta_description_Controller.text
+        "HeaderData3": _meta_description_Controller.text,
+        "CaptionLanguageId":GlobalVariables.currentLanguage
       };
-      PostSaveResp resp = await api.saveCardAdvance(requestData: req);
+      PostSaveResp resp = await api.saveCardAdvance(context, requestData: req);
       if (resp.isSuccess ?? false) {
         selectedCardID = resp.result;
         Get.snackbar('Success', "Card Saved Successfully!",
@@ -477,7 +477,7 @@ class _AdvancedScreen extends State<AdvancedScreen> {
                         icon: Icon(Icons.close)),
                   ],
                 ),
-                content:SingleChildScrollView(
+                content: SingleChildScrollView(
                     child: Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -581,7 +581,8 @@ class _AdvancedScreen extends State<AdvancedScreen> {
   getUserImages() async {
     try {
       var req = {"UserId": GlobalVariables.userID, "Anywhere": ""};
-      GetDriveFileImagesResp resp = await api.getUserImages(queryParams: req);
+      GetDriveFileImagesResp resp =
+          await api.getUserImages(context, queryParams: req);
       if (resp.isSuccess ?? false) {
         setState(() {
           allUserImages = userImages = resp.result ?? [];
@@ -618,12 +619,10 @@ class _AdvancedScreen extends State<AdvancedScreen> {
     return allWidgets;
   }
 
-
   selectedImageforCard(DriveFilesData image, UserImageType pictureType) {
     setState(() {
-      
       isFirstImageSelected = true;
-      isServerStoredLogo=true;
+      isServerStoredLogo = true;
       logoExistingId = image.id;
       logoImageBase64 = image.driveUrl;
       logoImageFileName = null;
@@ -636,12 +635,12 @@ class _AdvancedScreen extends State<AdvancedScreen> {
       logoExistingId = null;
       isFirstImageSelected = true;
 
-      ProgressDialogUtils.showProgressDialog();
+      ProgressDialogUtils.showProgressDialog(context);
       getImageFromUrl(image.driveUrl ?? '', pictureType);
     });
     Navigator.pop(context);
   }
-  
+
   getImageFromUrl(String imageUrl, UserImageType pictureType) async {
     try {
       Uint8List bytes =
@@ -653,17 +652,17 @@ class _AdvancedScreen extends State<AdvancedScreen> {
         gotoImageModify(file, pictureType);
       });
 
-      ProgressDialogUtils.hideProgressDialog();
+      ProgressDialogUtils.hideProgressDialog(context);
     } catch (e) {
-      ProgressDialogUtils.hideProgressDialog();
+      ProgressDialogUtils.hideProgressDialog(context);
     }
   }
 
   clickOrSelectImage(String type) async {
     Navigator.of(context).pop();
     if (isServerStoredLogo) {
-        removeImage();
-      }
+      removeImage();
+    }
     if (type == "Gallery") {
       imageLogo = await _picker.pickImage(source: ImageSource.gallery);
     } else {
@@ -680,7 +679,6 @@ class _AdvancedScreen extends State<AdvancedScreen> {
     gotoImageModify(imageFile, UserImageType.logo);
   }
 
-  
   Future<File> writeToFile(Uint8List data) async {
     DateTime now = DateTime.now();
     String formattedDate = DateFormat('yyyyMMdd-hhmmss').format(now);
@@ -694,7 +692,7 @@ class _AdvancedScreen extends State<AdvancedScreen> {
     return File(filePath);
   }
 
-gotoImageModify(File imageFile, UserImageType pictureType) {
+  gotoImageModify(File imageFile, UserImageType pictureType) {
     Get.toNamed(AppRoutes.imageModifyScreen,
             arguments: {"imageFile": imageFile, "pictureType": pictureType})
         ?.then((value) {
@@ -720,7 +718,6 @@ gotoImageModify(File imageFile, UserImageType pictureType) {
       }
     });
   }
-
 
   showAlertDialog(BuildContext context) {
     // set up the buttons
@@ -779,7 +776,8 @@ gotoImageModify(File imageFile, UserImageType pictureType) {
         "SlNo": (9).toString(),
         "FileRef": logoImageBase64
       };
-      APIBooleanResponse resp = await api.removeImage(queryParams: req);
+      APIBooleanResponse resp =
+          await api.removeImage(context, queryParams: req);
       if (resp.isSuccess ?? false) {
         Get.snackbar('Success', "Logo removed successfully!",
             backgroundColor: Color.fromARGB(255, 208, 245, 216),

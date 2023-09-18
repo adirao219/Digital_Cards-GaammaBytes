@@ -38,6 +38,7 @@ class _MyEGreetingCardsScreen extends State<MyEGreetingCardsScreen> {
   List<Result> greetingTypes = [];
   String? sortbyOption = "latestcreated";
   bool? showHidden;
+  int? totalCount;
   @override
   void initState() {
     Future.delayed(const Duration(milliseconds: 1000), () {
@@ -72,16 +73,18 @@ class _MyEGreetingCardsScreen extends State<MyEGreetingCardsScreen> {
                 sortbyOption == "latestcreated")
             ? "D"
             : "A",
-        "OnlyGreetingList": true.toString()
+        "OnlyGreetingList": true.toString(),
+        "LanguageId": GlobalVariables.currentLanguage
       };
       GetGreetingDetailsResp resp =
-          await api.fetchGreetingDetails(queryParams: req);
+          await api.fetchGreetingDetails(context, queryParams: req);
       if ((resp.isSuccess ?? false)) {
         setState(() {
+          totalCount = resp.result!.totalCount ?? 0;
           myEGreetingCardsModelObj.value.gridchristmasthumbnailItemList =
               resp.result?.greetingDetailsList ?? [];
-              
-              isFirstTimeLoaded=true;
+
+          isFirstTimeLoaded = true;
         });
       } else {
         Get.snackbar('Error', resp.errorMessage.toString(),
@@ -97,7 +100,7 @@ class _MyEGreetingCardsScreen extends State<MyEGreetingCardsScreen> {
 
   getGreetingTypes() async {
     try {
-      GetGetGreetingTypeResp resp = await api.fetchGetGreetingType();
+      GetGetGreetingTypeResp resp = await api.fetchGetGreetingType(context);
       if ((resp.isSuccess ?? false)) {
         setState(() {
           greetingTypes.addAll(resp.result!.toList());
@@ -357,7 +360,8 @@ class _MyEGreetingCardsScreen extends State<MyEGreetingCardsScreen> {
                                                           MainAxisAlignment.end,
                                                       children: [
                                                         Text(
-                                                          ('lbl_totalGreetings'.tr),
+                                                          ('lbl_totalGreetings'
+                                                              .tr),
                                                           style: AppStyle
                                                               .txtNunitoSansBold14,
                                                         ),
@@ -378,10 +382,7 @@ class _MyEGreetingCardsScreen extends State<MyEGreetingCardsScreen> {
                                                                           Radius.circular(
                                                                               50))),
                                                           child: Text(
-                                                            (myEGreetingCardsModelObj
-                                                                .value
-                                                                .gridchristmasthumbnailItemList
-                                                                .length
+                                                            (totalCount
                                                                 .toString()),
                                                             style: AppStyle
                                                                 .txtNunitoSansBold14,
@@ -392,17 +393,19 @@ class _MyEGreetingCardsScreen extends State<MyEGreetingCardsScreen> {
                                                 Visibility(
                                                     visible:
                                                         (myEGreetingCardsModelObj
-                                                                .value
-                                                                .gridchristmasthumbnailItemList
-                                                                .length <=
-                                                            0) && isFirstTimeLoaded,
+                                                                    .value
+                                                                    .gridchristmasthumbnailItemList
+                                                                    .length <=
+                                                                0) &&
+                                                            isFirstTimeLoaded,
                                                     child: Column(
                                                       mainAxisAlignment:
                                                           MainAxisAlignment
                                                               .center,
                                                       children: [
-
-                                                        SizedBox(height: 20,),
+                                                        SizedBox(
+                                                          height: 20,
+                                                        ),
                                                         Text(
                                                           ('No Greetings Found'),
                                                           style: AppStyle

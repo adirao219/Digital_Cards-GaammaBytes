@@ -146,6 +146,15 @@ final Map<String, String> enUs = {
   "lbl_pinterest": "Pinterest",
   "lbl_regiter_page": "Regiter-Page",
   "lbl_get_started": "Get Started",
+  "lbl_total_credits":"No. of Credits:",
+  "lbl_credits_purchased":"No. of Credits Purchased: ",
+  "lbl_credits_utilized":"No. of Credits Utilised: ",
+  "lbl_credits_available":"No. of Credits Available: ",
+  "lbl_credits_lapsed":"No. of Credits Lapsed: ",
+  "lbl_credit_purchase_hint":"Enter no. of credits you want to purchase",
+  "lbl_credit_utilize_hint":"Enter the no. of credits to utilize for space",
+  "lbl_total_space":"Total Space: ",
+  "lbl_increase_space":"Increase Space",
   "lbl_card_preview2": "Card Preview",
   "lbl_preview": "Preview",
   "lbl_icon_groups": "Icon Groups",
@@ -382,5 +391,11 @@ final Map<String, String> enUs = {
   "lbl_totalCards":"Total No. of Cards  ",
   "lbl_totalGreetings":"Total No. of Greetings  ",
   "lbl_available_credits":"Credits Available  ",
+  //-----------------
+"lbl_storage":"Storage",
+"lbl_available":"Available: ",
+"lbl_total_space_in_mb":"Total Space (MB):",
+"lbl_total_space_calculation_hint":"Total space will be calculated on credits entered",
+  "lbl_utilized":"Utilised: ",
 
 };

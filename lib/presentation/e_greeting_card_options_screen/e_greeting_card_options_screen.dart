@@ -33,7 +33,8 @@ class _EGreetingCardOptionsScreen extends State<EGreetingCardOptionsScreen> {
 
   getGreetingTypes() async {
     try {
-      GetGetGreetingTypeResp resp = await api.fetchGetGreetingType();
+      
+      GetGetGreetingTypeResp resp = await api.fetchGetGreetingType(context);
       if ((resp.isSuccess ?? false)) {
         setState(() {
           allgreetingTypes.addAll(resp.result!.toList());

@@ -9,6 +9,7 @@ import 'package:digitalcardsgaammabytes/widgets/app_bar/appbar_title.dart';
 import 'package:digitalcardsgaammabytes/widgets/app_bar/custom_app_bar.dart';
 import 'package:digitalcardsgaammabytes/widgets/custom_text_form_field.dart';
 import 'package:dotted_border/dotted_border.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
@@ -86,7 +87,7 @@ class _LinkScreen extends State<LinkScreen> {
         "CardID": selectedCardID.toString()
       };
       GetGetLinkDefinitionResp resp =
-          await api.fetchGetLinkDefinition(queryParams: req);
+          await api.fetchGetLinkDefinition(context, queryParams: req);
       if (resp.isSuccess ?? false) {
         setState(() {
           _blog_Controller.text = resp.result!.linkDefinitionData!.blog ?? '';
@@ -159,10 +160,11 @@ class _LinkScreen extends State<LinkScreen> {
         "OtherURL2": _other2_Controller.text,
         "PaymentQRCode": logoImageBase64,
         "PaymentQRCodeRef": logoImageFileName,
-        "PaymentQRCodeOldId": logoExistingId ?? ''
+        "PaymentQRCodeOldId": logoExistingId ?? '',
+        "CaptionLanguageId":GlobalVariables.currentLanguage
       };
       APIBooleanResponse resp =
-          await api.createSaveLinkDefinition(requestData: req);
+          await api.createSaveLinkDefinition(context, requestData: req);
       if ((resp.isSuccess ?? false) && (resp.result ?? false)) {
         Get.snackbar('Success', "Links updated successfully!",
             backgroundColor: Color.fromARGB(255, 208, 245, 216),
@@ -728,7 +730,8 @@ class _LinkScreen extends State<LinkScreen> {
   getUserImages() async {
     try {
       var req = {"UserId": GlobalVariables.userID, "Anywhere": ""};
-      GetDriveFileImagesResp resp = await api.getUserImages(queryParams: req);
+      GetDriveFileImagesResp resp =
+          await api.getUserImages(context, queryParams: req);
       if (resp.isSuccess ?? false) {
         setState(() {
           allUserImages = userImages = resp.result ?? [];
@@ -780,7 +783,7 @@ class _LinkScreen extends State<LinkScreen> {
       logoExistingId = null;
       isFirstImageSelected = true;
 
-      ProgressDialogUtils.showProgressDialog();
+      ProgressDialogUtils.showProgressDialog(context);
       getImageFromUrl(image.driveUrl ?? '', pictureType);
     });
     Navigator.pop(context);
@@ -810,9 +813,9 @@ class _LinkScreen extends State<LinkScreen> {
         gotoImageModify(file, pictureType);
       });
 
-      ProgressDialogUtils.hideProgressDialog();
+      ProgressDialogUtils.hideProgressDialog(context);
     } catch (e) {
-      ProgressDialogUtils.hideProgressDialog();
+      ProgressDialogUtils.hideProgressDialog(context);
     }
   }
 
@@ -827,7 +830,9 @@ class _LinkScreen extends State<LinkScreen> {
       UserImageType pictureType = value["pictureType"] as UserImageType;
 
       try {
-        imageFile = File(imageFilePath ?? '');
+        setState(() {
+          mainImageFile = imageFile = File(imageFilePath ?? '');
+        });
         var base64val1 = "data:image/png;base64," +
             base64Encode(imageFile.readAsBytesSync());
         // print('base64:'+base64val1);
@@ -863,15 +868,16 @@ class _LinkScreen extends State<LinkScreen> {
         mainImageFile = imageFile = File(imageLogo!.path);
       }
 
-      var base64val1 =
-          "data:image/png;base64," + base64Encode(imageFile.readAsBytesSync());
-      // print('base64:'+base64val1);
-      isServerStoredLogo = false;
-      logoImageBase64 = base64val1;
-      logoCroppedImage = imageFile;
-      isFirstImageSelected = true;
-      logoImageFileName = p.basename(imageFile.path);
-      logoExistingId = null;
+      gotoImageModify(mainImageFile, UserImageType.logo);
+      // var base64val1 =
+      //     "data:image/png;base64," + base64Encode(imageFile.readAsBytesSync());
+      // // print('base64:'+base64val1);
+      // isServerStoredLogo = false;
+      // logoImageBase64 = base64val1;
+      // logoCroppedImage = imageFile;
+      // isFirstImageSelected = true;
+      // logoImageFileName = p.basename(imageFile.path);
+      // logoExistingId = null;
     });
   }
 
@@ -932,7 +938,8 @@ class _LinkScreen extends State<LinkScreen> {
         "SlNo": (4).toString(),
         "FileRef": logoImageBase64
       };
-      APIBooleanResponse resp = await api.removeImage(queryParams: req);
+      APIBooleanResponse resp =
+          await api.removeImage(context, queryParams: req);
       if (resp.isSuccess ?? false) {
         Get.snackbar('Success', "Image removed successfully!",
             backgroundColor: Color.fromARGB(255, 208, 245, 216),

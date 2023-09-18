@@ -44,7 +44,7 @@ class _PurchaseCreditHistoryDetails
         "CreditId": creditHistoryID.toString()
       };
       CreditDetailsResponse resp =
-          await api.getCreditDetails(queryParams: query);
+          await api.getCreditDetails(context, queryParams: query);
       if (resp.isSuccess ?? false) {
         setState(() {
           creditDetails = resp.result ?? [];

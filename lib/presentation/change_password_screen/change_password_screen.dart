@@ -383,7 +383,7 @@ class _ChangePasswordScreen extends State<ChangePasswordScreen> {
         "NewPassword": _passwordController.text,
         "ConfirmPassword": _confirmpasswordController.text
       };
-      CommonGenericResp resp = await api.changePassword(requestData: req);
+      CommonGenericResp resp = await api.changePassword(context,requestData: req);
       if (resp.isSuccess ?? false) {
         // selectedCardID = resp.result;
         Get.snackbar('Success', "Password Changed Successfully!",

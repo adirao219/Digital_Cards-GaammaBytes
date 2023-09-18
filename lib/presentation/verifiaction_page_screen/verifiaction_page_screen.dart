@@ -160,7 +160,7 @@ class _VerifiactionPageScreen extends State<VerifiactionPageScreen> {
           "PhoneNumber": phonenumber,
           "VerificationCode": otpValue
         };
-        CommonGenericResp resp = await api.createConfirmUser(requestData: req);
+        CommonGenericResp resp = await api.createConfirmUser(context,requestData: req);
         if ((resp.isSuccess ?? false)) {
           if (isResetPassword ?? false) {
             // GlobalVariables.setUserID("");

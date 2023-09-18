@@ -396,7 +396,7 @@ class DigitalCardItemWidget extends StatelessWidget {
         "UserId": GlobalVariables.userID,
         "CardID": this.modelobj.cardID.toString(),
       };
-      APIResponse resp = await api.fetchPublish(queryParams: req);
+      APIResponse resp = await api.fetchPublish(maincontext,queryParams: req);
       if ((resp.isSuccess ?? false)) {
         
         Get.snackbar('Success', "Card Published successfully!",
@@ -427,7 +427,7 @@ class DigitalCardItemWidget extends StatelessWidget {
         "CardType": this.modelobj.cardType.toString(),
         "CardId": this.modelobj.cardID.toString(),
       };
-      APIResponse resp = await api.checkCardEditExpiry(requestData: req);
+      APIResponse resp = await api.checkCardEditExpiry(mainContext,requestData: req);
       if ((resp.isSuccess ?? false)) {
         Navigator.of(mainContext)
             .pushNamed(AppRoutes.basicCardEntryOneScreen, arguments: {
@@ -450,15 +450,19 @@ class DigitalCardItemWidget extends StatelessWidget {
               Icons.error,
               color: Colors.red[900],
             ));
-        await getCreditTypes();
+        await getCreditTypes(mainContext);
         showCreditTypeDialog(mainContext);
       }
     } catch (e) {}
   }
 
-  getCreditTypes() async {
+  getCreditTypes( BuildContext mainContext) async {
     try {
-      CommonDropdownResp resp = await api.getCreditType(queryParams: {});
+
+      var req = {
+        "LanguageId":GlobalVariables.currentLanguage
+      };
+      CommonDropdownResp resp = await api.getCreditType(mainContext,queryParams: req);
       if ((resp.isSuccess ?? false)) {
         creditTypes = resp.result ?? [];
       } else {
@@ -479,9 +483,10 @@ class DigitalCardItemWidget extends StatelessWidget {
         "UserId": GlobalVariables.userID,
         "CardType": this.modelobj.cardType.toString(),
         "CardId": this.modelobj.cardID.toString(),
-        "NumCredits": value
+        "NumCredits": value,
+        "CaptionLanguageId":GlobalVariables.currentLanguage
       };
-      APIResponse resp = await api.assignCardEditCredits(requestData: req);
+      APIResponse resp = await api.assignCardEditCredits(mainContext,requestData: req);
       if ((resp.isSuccess ?? false)) {
         Get.snackbar(
             'Success', "Validity of edit option upgraded successfully!",
@@ -513,7 +518,7 @@ class DigitalCardItemWidget extends StatelessWidget {
         "CardId": modelobj.cardID.toString(),
         "IsHidden": (isHidden ? false : true).toString(),
       };
-      GetHideCardResp resp = await api.fetchHideCard(queryParams: req);
+      GetHideCardResp resp = await api.fetchHideCard(mainContext,queryParams: req);
       if ((resp.isSuccess ?? false)) {
         Navigator.pop(mainContext);
         Get.snackbar('Success',
@@ -543,7 +548,7 @@ class DigitalCardItemWidget extends StatelessWidget {
         "UserId": GlobalVariables.userID.toString(),
         "CardId": modelobj.cardID.toString(),
       };
-      GetDeleteCardResp resp = await api.fetchDeleteCard(queryParams: req);
+      GetDeleteCardResp resp = await api.fetchDeleteCard(mainContext,queryParams: req);
       if ((resp.isSuccess ?? false)) {
         Navigator.pop(mainContext);
         Get.snackbar('Success', "Card deleted successfully!",

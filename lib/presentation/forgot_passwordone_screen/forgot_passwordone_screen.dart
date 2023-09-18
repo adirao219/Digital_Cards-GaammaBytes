@@ -129,7 +129,7 @@ class _ForgotPasswordoneScreen extends State<ForgotPasswordoneScreen> {
         "Email": (isEmail ? _usernameController.text : ""),
         "PhoneNumber": (isEmail ? "" : _usernameController.text)
       };
-      CommonGenericResp resp = await api.forgotPassword(requestData: req);
+      CommonGenericResp resp = await api.forgotPassword(context,requestData: req);
       if (resp.isSuccess ?? false) {
         // selectedCardID = resp.result;
         Get.snackbar('Success', "Username validated successfully!",

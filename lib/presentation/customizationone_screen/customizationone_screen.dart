@@ -423,7 +423,7 @@ class _CustomizationoneScreen extends State<CustomizationoneScreen> {
         "UserId": GlobalVariables.userID,
         "CardID": selectedCardID.toString(),
       };
-      APIResponse resp = await api.fetchPublish(queryParams: req);
+      APIResponse resp = await api.fetchPublish(context,queryParams: req);
       if ((resp.isSuccess ?? false)) {
         setState(() {
           isPublished = true;
@@ -455,9 +455,10 @@ class _CustomizationoneScreen extends State<CustomizationoneScreen> {
         "CardID": selectedCardID.toString(),
         "CardType": "0",
         "CardSubType": "0",
+        "LanguageId":GlobalVariables.currentLanguage
       };
       GetGetCreateCardResp resp =
-          await api.fetchGetCreateCard(queryParams: req,showProgress: showProgress);
+          await api.fetchGetCreateCard(context, queryParams: req,showProgress: showProgress);
       if (resp.isSuccess ?? false) {
         setState(() {
           mainResult = resp.result;

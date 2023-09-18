@@ -93,7 +93,7 @@ class _HtmlEditorScreenState extends State<HtmlEditorScreen> {
 
   getFontList() async {
     try {
-      CommonDropdownResp resp = await api.getFontList(queryParams: {});
+      CommonDropdownResp resp = await api.getFontList(context,queryParams: {});
       if ((resp.isSuccess ?? false)) {
         setState(() {
           fontList = resp.result ?? [];
@@ -114,7 +114,7 @@ class _HtmlEditorScreenState extends State<HtmlEditorScreen> {
 
   getLanguages() async {
     try {
-      CommonDropdownResp resp = await api.getLanguages(queryParams: {});
+      CommonDropdownResp resp = await api.getLanguages(context,queryParams: {});
       if (resp.isSuccess ?? false) {
         setState(() {
           languages = resp.result;
@@ -1365,7 +1365,7 @@ class _HtmlEditorScreenState extends State<HtmlEditorScreen> {
           "Anywhere": ""
         };
         CaptionMessageResult resp =
-            await api.getDefaultCaptionMessage(queryParams: req);
+            await api.getDefaultCaptionMessage(context,queryParams: req);
         if (resp.isSuccess ?? false) {
           setState(() {
             allDefaultCaptions = defaultCaptions = resp.result;

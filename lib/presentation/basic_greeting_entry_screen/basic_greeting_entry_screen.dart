@@ -94,10 +94,10 @@ class _BasicGreetingEntryScreen extends State<BasicGreetingEntryScreen> {
   List<DriveFilesData> userImages = [];
   String logoPositionName = " Select Logo Position";
   String? senderDefault = "";
-  bool? isUserDefinedBackground;
+  bool? isUserDefinedBackground = false;
   String templateID = "";
   String? languageID = "";
-  int? logoPosition;
+  int? logoPosition=0;
   bool isBackgroundColor = false;
   @override
   void initState() {
@@ -685,7 +685,7 @@ class _BasicGreetingEntryScreen extends State<BasicGreetingEntryScreen> {
                                               ),
                                             ),
                                           ])),
-                                  visible: templateID == "-1"),
+                                  visible: templateID == "-1" && currentindex==0),
                               Container(
                                   height: getVerticalSize(1.00),
                                   width: getHorizontalSize(326.00),
@@ -978,7 +978,7 @@ class _BasicGreetingEntryScreen extends State<BasicGreetingEntryScreen> {
   getUserImages() async {
     try {
       var req = {"UserId": GlobalVariables.userID, "Anywhere": ""};
-      GetDriveFileImagesResp resp = await api.getUserImages(queryParams: req);
+      GetDriveFileImagesResp resp = await api.getUserImages(context, queryParams: req);
       if (resp.isSuccess ?? false) {
         setState(() {
           allUserImages = userImages = resp.result ?? [];
@@ -1177,7 +1177,7 @@ class _BasicGreetingEntryScreen extends State<BasicGreetingEntryScreen> {
         pictureExistingId = null;
         isSecondImageSelected = true;
       }
-      ProgressDialogUtils.showProgressDialog();
+      ProgressDialogUtils.showProgressDialog(context);
       getImageFromUrl(image.driveUrl ?? '', pictureType);
     });
     Navigator.pop(context);
@@ -1194,9 +1194,9 @@ class _BasicGreetingEntryScreen extends State<BasicGreetingEntryScreen> {
         gotoImageModify(file, pictureType);
       });
 
-      ProgressDialogUtils.hideProgressDialog();
+      ProgressDialogUtils.hideProgressDialog(context);
     } catch (e) {
-      ProgressDialogUtils.hideProgressDialog();
+      ProgressDialogUtils.hideProgressDialog(context);
     }
   }
 
@@ -1322,7 +1322,7 @@ class _BasicGreetingEntryScreen extends State<BasicGreetingEntryScreen> {
         "SlNo": (pictureType == UserImageType.logo ? 6 : 5).toString(),
         "FileRef": pictureType.value == 1 ? firstImageBase64 : secondImageBase64
       };
-      APIBooleanResponse resp = await api.removeImage(queryParams: req);
+      APIBooleanResponse resp = await api.removeImage(context,queryParams: req);
       if (resp.isSuccess ?? false) {
         if (!isToggledToCardColor) {
           Get.snackbar(
@@ -1471,10 +1471,11 @@ class _BasicGreetingEntryScreen extends State<BasicGreetingEntryScreen> {
         "Picture": secondImageBase64 ?? '',
         "LogoOldId": logoExistingId ?? '',
         "PictureOldId": pictureExistingId ?? '',
+        "CaptionLanguageId":GlobalVariables.currentLanguage
       };
 
       PostCreateGreetingResp resp =
-          await api.createCreateGreeting(requestData: req);
+          await api.createCreateGreeting(context,requestData: req);
       if (resp.isSuccess ?? false) {
         selectedCardID = resp.result;
         Get.snackbar('Success', "Greeting Created Successfully!",
@@ -1504,16 +1505,17 @@ class _BasicGreetingEntryScreen extends State<BasicGreetingEntryScreen> {
   }
 
   getCardDetails() async {
-    ProgressDialogUtils.showProgressDialog();
+    ProgressDialogUtils.showProgressDialog(context);
     try {
       var req = {
         "UserId": GlobalVariables.userID,
         "GreetingID": selectedCardID.toString(),
         "GreetingType": greetingType.toString(),
+        "LanguageId":GlobalVariables.currentLanguage
       };
       GetGetCreateGreetingResp resp =
-          await api.fetchGetCreateGreeting(queryParams: req);
-      ProgressDialogUtils.hideProgressDialog();
+          await api.fetchGetCreateGreeting(context,queryParams: req);
+      ProgressDialogUtils.hideProgressDialog(context);
       if (resp.isSuccess ?? false) {
         setState(() {
           captionDefault = resp.result?.greetingDetailsData?.caption;
@@ -1584,7 +1586,7 @@ class _BasicGreetingEntryScreen extends State<BasicGreetingEntryScreen> {
         Get.snackbar('Error', resp.errorMessage.toString());
       }
     } catch (e) {
-      ProgressDialogUtils.hideProgressDialog();
+      ProgressDialogUtils.hideProgressDialog(context);
     }
   }
 

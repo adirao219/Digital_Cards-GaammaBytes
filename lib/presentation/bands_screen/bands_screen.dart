@@ -35,18 +35,19 @@ class _BandsScreen extends State<BandsScreen> {
   List<BandsList> bandList = [];
   @override
   void initState() {
-    getBands(true);
+    getBands(context, true);
     super.initState();
   }
 
-  getBands(bool showProgress) async {
+  getBands(BuildContext appcontext,bool showProgress) async {
     try {
       var req = {
         "UserId": GlobalVariables.userID,
-        "CardID": selectedCardID.toString()
+        "CardID": selectedCardID.toString(),
+        "LanguageId":GlobalVariables.currentLanguage
       };
       GetGetBandsResp resp =
-          await api.fetchGetBands(showProgress, queryParams: req);
+          await api.fetchGetBands(appcontext, showProgress, queryParams: req);
       if (resp.isSuccess ?? false) {
         setState(() {
           bandList = resp.result?.bandsList ?? [];
@@ -63,7 +64,7 @@ class _BandsScreen extends State<BandsScreen> {
               color: Colors.red[900],
             ));
       }
-      ProgressDialogUtils.hideProgressDialog();
+      ProgressDialogUtils.hideProgressDialog(context);
     } catch (e) {
       var s = 1;
     }
@@ -393,7 +394,7 @@ class _BandsScreen extends State<BandsScreen> {
       var req = {
         "BandId": bandId.toString(),
       };
-      GetDeleteCardResp resp = await api.fetchDeleteBand(queryParams: req);
+      GetDeleteCardResp resp = await api.fetchDeleteBand(context, queryParams: req);
       if ((resp.isSuccess ?? false) && (resp.result ?? false)) {
         Get.snackbar('Success', "Band Deleted successfully!",
             backgroundColor: Color.fromARGB(255, 208, 245, 216),
@@ -402,7 +403,7 @@ class _BandsScreen extends State<BandsScreen> {
               Icons.done,
               color: Colors.green[900],
             ));
-        getBands(false);
+        getBands(context, false);
       } else {
         Get.snackbar('Error', resp.errorMessage.toString(),
             backgroundColor: Color.fromARGB(255, 255, 230, 230),
@@ -423,7 +424,7 @@ class _BandsScreen extends State<BandsScreen> {
         "BandId": bandId.toString(),
         "DataPosition": dataPosition.toString()
       };
-      APIBooleanResponse resp = await api.createMoveUp(queryParams: req);
+      APIBooleanResponse resp = await api.createMoveUp(context, queryParams: req);
       if ((resp.isSuccess ?? false) && (resp.result ?? false)) {
         Get.snackbar('Success', "Band Moved Up!",
             backgroundColor: Color.fromARGB(255, 208, 245, 216),
@@ -432,7 +433,7 @@ class _BandsScreen extends State<BandsScreen> {
               Icons.done,
               color: Colors.green[900],
             ));
-        getBands(false);
+        getBands(context, false);
       } else {
         Get.snackbar('Error', resp.errorMessage.toString(),
             backgroundColor: Color.fromARGB(255, 255, 230, 230),
@@ -453,7 +454,7 @@ class _BandsScreen extends State<BandsScreen> {
         "BandId": bandId.toString(),
         "DataPosition": dataPosition.toString()
       };
-      APIBooleanResponse resp = await api.createMoveDown(queryParams: req);
+      APIBooleanResponse resp = await api.createMoveDown(context, queryParams: req);
       if ((resp.isSuccess ?? false) && (resp.result ?? false)) {
         Get.snackbar('Success', "Band Moved Down!",
             backgroundColor: Color.fromARGB(255, 208, 245, 216),
@@ -462,7 +463,7 @@ class _BandsScreen extends State<BandsScreen> {
               Icons.done,
               color: Colors.green[900],
             ));
-        getBands(false);
+        getBands(context, false);
       } else {
         Get.snackbar('Error', resp.errorMessage.toString(),
             backgroundColor: Color.fromARGB(255, 255, 230, 230),
@@ -490,7 +491,7 @@ class _BandsScreen extends State<BandsScreen> {
       "BandId": bandId,
       "cardName": cardName
     }).then((value) {
-      getBands(false);
+      getBands(context, false);
     });
   }
 
@@ -507,7 +508,7 @@ class _BandsScreen extends State<BandsScreen> {
       "BandId": bandId,
       "cardName": cardName
     }).then((value) {
-      getBands(false);
+      getBands(context, false);
     });
   }
 
@@ -524,7 +525,7 @@ class _BandsScreen extends State<BandsScreen> {
       "BandId": bandId,
       "cardName": cardName
     }).then((value) {
-      getBands(false);
+      getBands(context, false);
     });
   }
 }
