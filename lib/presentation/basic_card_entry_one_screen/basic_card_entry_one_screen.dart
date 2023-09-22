@@ -56,7 +56,7 @@ class _BasicCardEntryOneScreen extends State<BasicCardEntryOneScreen> {
   TextEditingController _searchController = new TextEditingController();
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   bool isPublishAvailable = false;
-  String logoPositionName = " Select Position";
+  String logoPositionName = "lbl_position".tr;
   bool? isUserDefinedBackground;
   bool mirrorHeaderImage = false;
   String templateID = "";
@@ -152,6 +152,8 @@ class _BasicCardEntryOneScreen extends State<BasicCardEntryOneScreen> {
           templateID = mainResult?.themeID == null
               ? ""
               : mainResult?.themeID.toString() ?? '';
+              cardTypeName = mainResult?.cardTypeName??'';
+              cardSubTypeName = mainResult?.cardSubTypeName??'';
           cardSubTypeID = mainResult?.cardSubType;
           templateName = mainResult!.themeName ?? '';
           _card_name_Controller.text = cardnameForURL = mainResult!.name ?? '';
@@ -1532,7 +1534,7 @@ class _BasicCardEntryOneScreen extends State<BasicCardEntryOneScreen> {
       logoPosition = position;
       switch (logoPosition) {
         case 0:
-          logoPositionName = " Select Position";
+          logoPositionName = "lbl_position".tr;
           break;
 
         case 1:
@@ -1572,7 +1574,7 @@ class _BasicCardEntryOneScreen extends State<BasicCardEntryOneScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    "Select " + (cardTypeName ?? '') + " Type",
+                    ("lbl_select".tr +" " + (cardTypeName ?? '') +" "+"lbl_type".tr),
                     style: AppStyle.txtNunitoBold18,
                   ),
                   IconButton(

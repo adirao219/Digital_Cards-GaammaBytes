@@ -387,7 +387,7 @@ final Map<String, String> enUs = {
   //-----------------
   "lbl_totalCards":"Total No. of Cards  ",
   "lbl_totalGreetings":"Total No. of Greetings  ",
-  "lbl_available_credits":"Credits Available  ",
+  "lbl_available_credits":"Credit(s) Available  ",
 "lbl_storage":"Storage",
 "lbl_available":"Available: ",
 "lbl_amount_cal_hint": "Amount will be calculated based on credits entered",
@@ -465,6 +465,8 @@ final Map<String, String> enUs = {
   "lbl_caption_html": "  Caption  ",
   "lbl_message_html": "  Message  ",
   "lbl_sender_html": "  Sender  ",
+  "lbl_message_option": "message",
+  "lbl_caption_option": "caption",
   "lbl_image": "Image",
   "lbl_color": "Color",
   "lbl_download": "Download",
@@ -479,5 +481,14 @@ final Map<String, String> enUs = {
   "lbl_overall_usage":"Show Overall Usage",
   "lbl_purchase_on":"Purchased On - ",
   "lbl_expiry_on":"Expiry On - ",
-  "lbl_choose_language":"Choose your Language"
+  "lbl_choose_language":"Choose your Language",
+  //--------------------------------
+  "lbl_add": "Add",
+  "lbl_credits_warning":"Please enter valid credits!",
+  "lbl_credit_check":"Please enter credits less than available credits!",
+  "lbl_invalid":"Invalid",
+  "lbl_choose_message":"Choose the message",
+  "lbl_choose_caption":"Choose the caption",
+  "lbl_position":" Select Position",
+  "lbl_band_delete":"Band Deleted successfully!"
 };

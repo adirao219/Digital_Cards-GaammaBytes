@@ -48,7 +48,7 @@ class DigitalCardItemWidget extends StatelessWidget {
               openCard(context);
             }),
         CustomFocusedMenuItem(
-            title: Text("lbl_preview"),
+            title: Text("lbl_preview".tr),
             trailingIcon: Icon(Icons.remove_red_eye),
             onPressed: () {
               openCardPreview(context);

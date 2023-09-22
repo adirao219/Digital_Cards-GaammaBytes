@@ -9,10 +9,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
-
+import 'package:file_picker/file_picker.dart';
+import 'package:html_editor_enhanced/html_editor.dart';
 import '../../core/utils/osm_map.dart';
 import '../../data/globals/globalvariables.dart';
 import '../../data/models/deleteGreeting/post_delete_greeting_resp.dart';
+import '../../data/models/filterGreetingTemplate/get_filter_greeting_template_resp.dart';
 import '../../data/models/getBands/get_band_data_resp.dart';
 
 class BandMapScreen extends StatefulWidget {
@@ -24,6 +26,8 @@ class BandMapScreen extends StatefulWidget {
 }
 
 class _BandMapScreen extends State<BandMapScreen> {
+  String htmlContent = "";
+  final HtmlEditorController _htmlcontroller = HtmlEditorController();
   TextEditingController _heading_Controller = new TextEditingController();
   TextEditingController _latitude_Controller = new TextEditingController();
   TextEditingController _longitude_Controller = new TextEditingController();
@@ -40,14 +44,39 @@ class _BandMapScreen extends State<BandMapScreen> {
   var isPublishAvailable = Get.arguments["isPublishAvailable"] as bool?;
   var bandID = Get.arguments["BandId"] as int?;
   var cardName = Get.arguments["cardName"] as String?;
+
+  var existingHtml = "";
+  bool isToolBarVisible = true;
+  List<Result> fontList = [];
+  String? changedFont;
   ApiClient api = new ApiClient();
   @override
   void initState() {
+    getFontList(context);
     getCurrentLocation();
     if (bandID != null && bandID != 0) {
       getBandData(context);
     }
     super.initState();
+  }
+
+  getFontList(BuildContext appcontext) async {
+    try {
+      CommonDropdownResp resp =
+          await api.getFontList(appcontext, queryParams: {});
+      if ((resp.isSuccess ?? false)) {
+        setState(() {
+          fontList = resp.result ?? [];
+          if (fontList.isNotEmpty) {
+            // changedFont = fontList.first.text;
+            var currentFont = fontList.first.value;
+            _htmlcontroller.execCommand('fontName', argument: currentFont);
+          }
+        });
+      } else {
+        Get.snackbar("lbl_error".tr, resp.errorMessage.toString());
+      }
+    } catch (e) {}
   }
 
   getBandData(BuildContext appcontext) async {
@@ -56,14 +85,17 @@ class _BandMapScreen extends State<BandMapScreen> {
         "UserId": GlobalVariables.userID,
         "CardID": selectedCardID.toString(),
         "BandID": bandID.toString(),
-        "LanguageId":GlobalVariables.currentLanguage
+        "LanguageId": GlobalVariables.currentLanguage
       };
-      GetGetBandDataResp resp = await api.fetchGetBandData(appcontext, queryParams: req);
+      GetGetBandDataResp resp =
+          await api.fetchGetBandData(appcontext, queryParams: req);
       if (resp.isSuccess ?? false) {
         setState(() {
           _heading_Controller.text = resp.result!.heading ?? '';
-              finalLocation =
-            LatLng( resp.result?.latitude ?? 0.0,  resp.result?.longitude ?? 0.0);
+
+          existingHtml = resp.result!.cBContent ?? '';
+          finalLocation = LatLng(
+              resp.result?.latitude ?? 0.0, resp.result?.longitude ?? 0.0);
           _latitude_Controller.text = resp.result!.latitude!.toString();
           _longitude_Controller.text = resp.result!.longitude!.toString();
           locationSelected = true;
@@ -87,7 +119,7 @@ class _BandMapScreen extends State<BandMapScreen> {
         "CardID": selectedCardID.toString(),
         "BandType": "3",
         "Heading": _heading_Controller.text,
-        "CBContent": "",
+        "CBContent": htmlContent,
         "Latitude": _latitude_Controller.text,
         "Longitude": _longitude_Controller.text,
         "Link1": "",
@@ -99,9 +131,10 @@ class _BandMapScreen extends State<BandMapScreen> {
         "Link7": "",
         "Link8": "",
         "DataPosition": "0",
-        "CaptionLanguageId":GlobalVariables.currentLanguage
+        "CaptionLanguageId": GlobalVariables.currentLanguage
       };
-      APIBooleanResponse resp = await api.createSaveBands(appcontext, requestData: req);
+      APIBooleanResponse resp =
+          await api.createSaveBands(appcontext, requestData: req);
       if (resp.result ?? false) {
         Get.snackbar("lbl_success".tr, "lbl_band_saved".tr,
             backgroundColor: Color.fromARGB(255, 208, 245, 216),
@@ -110,7 +143,7 @@ class _BandMapScreen extends State<BandMapScreen> {
               Icons.done,
               color: Colors.green[900],
             ));
-            Navigator.pop(context);
+        Navigator.pop(context);
       } else {
         Get.snackbar("lbl_error".tr, resp.errorMessage.toString(),
             backgroundColor: Color.fromARGB(255, 255, 230, 230),
@@ -265,7 +298,39 @@ class _BandMapScreen extends State<BandMapScreen> {
                           controller: _heading_Controller,
                           hintText: "lbl_heading".tr,
                           margin: getMargin(top: 35)),
-
+                      Align(
+                          alignment: Alignment.centerLeft,
+                          child: Padding(
+                              padding: getPadding(left: 5, top: 22),
+                              child: Text("lbl_content".tr,
+                                  overflow: TextOverflow.ellipsis,
+                                  textAlign: TextAlign.left,
+                                  style: AppStyle.txtNunitoSansRegular14
+                                      .copyWith(
+                                          letterSpacing:
+                                              getHorizontalSize(0.36))))),
+                      CustomButton(
+                          height: 50,
+                          width: 350,
+                          text: "  " +
+                              (htmlContent.isEmpty
+                                  ? "lbl_click_enter".tr
+                                  : "lbl_click_update".tr),
+                          margin: getMargin(top: 19, right: 6),
+                          variant: ButtonVariant.OutlineBlack9003f_1,
+                          shape: ButtonShape.RoundedBorder15,
+                          fontStyle: ButtonFontStyle.NunitoSansBold14,
+                          alignment: Alignment.center,
+                          prefixWidget: Icon(
+                            Icons.edit,
+                            color: ColorConstant.pink900,
+                          ),
+                          onTap: () {
+                            setState(() {
+                              isToolBarVisible = true;
+                            });
+                            showAlertDialog(context);
+                          }),
                       Align(
                           alignment: Alignment.centerLeft,
                           child: Padding(
@@ -357,6 +422,229 @@ class _BandMapScreen extends State<BandMapScreen> {
                           fontStyle: ButtonFontStyle.NunitoSansBlack16,
                           onTap: onTapSave)
                     ]))));
+  }
+
+  updateHtmlContent() {
+    setState(() {
+      _htmlcontroller.getText().then((value) {
+        htmlContent = value;
+      });
+    });
+  }
+
+  showAlertDialog(BuildContext context) {
+    // set up the buttons
+    Widget cancelButton = TextButton(
+      child: Text("lbl_cancel".tr),
+      onPressed: () {
+        Navigator.pop(context);
+      },
+    );
+    Widget continueButton = TextButton(
+      child: Text("lbl_okay".tr),
+      onPressed: () {
+        updateHtmlContent();
+        Navigator.pop(context);
+        // removeSelectedImage();
+      },
+    );
+
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (context) {
+        return StatefulBuilder(builder: (context, setPopState) {
+          return AlertDialog(
+            title: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text("lbl_enter_note".tr),
+                  IconButton(
+                      icon: Icon(
+                        isToolBarVisible
+                            ? Icons.arrow_drop_down
+                            : Icons.arrow_drop_up,
+                        size: 35,
+                      ),
+                      onPressed: () {
+                        setPopState(() {
+                          isToolBarVisible = !isToolBarVisible;
+                        });
+                      }),
+                ]),
+            content: HtmlEditor(
+              controller: _htmlcontroller,
+              htmlEditorOptions: HtmlEditorOptions(
+                  filePath: "assets/summernote.html",
+                  hint: "lbl_your_text".tr,
+                  shouldEnsureVisible: true,
+                  initialText: htmlContent),
+              htmlToolbarOptions: HtmlToolbarOptions(
+                defaultToolbarButtons: !isToolBarVisible
+                    ? []
+                    : [
+                        FontSettingButtons(
+                            fontName: false, fontSizeUnit: false),
+                        FontButtons(
+                            subscript: false,
+                            superscript: false,
+                            clearAll: false),
+                        ColorButtons(),
+                        ParagraphButtons(
+                            alignCenter: true,
+                            alignJustify: true,
+                            alignLeft: true,
+                            alignRight: true,
+                            lineHeight: true,
+                            caseConverter: false,
+                            decreaseIndent: true,
+                            increaseIndent: true,
+                            textDirection: false),
+                      ],
+                customToolbarButtons: !isToolBarVisible
+                    ? []
+                    : [
+                        Container(
+                          padding: const EdgeInsets.only(left: 8.0),
+                          height: kMinInteractiveDimension,
+                          decoration: BoxDecoration(
+                              color: Theme.of(context).scaffoldBackgroundColor,
+                              border: Border.all(
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .onSurface
+                                      .withOpacity(0.12))),
+                          child: CustomDropdownButtonHideUnderline(
+                            child: CustomDropdownButton<String>(
+                              hint: Text(
+                                ("lbl_select_font".tr),
+                                style: AppStyle.txtNunitoSansRegular14Gray70001,
+                              ),
+                              menuMaxHeight:
+                                  MediaQuery.of(context).size.height / 4,
+                              menuDirection: DropdownMenuDirection.down,
+                              items: fontList.map((e) {
+                                return CustomDropdownMenuItem(
+                                  value: e.text,
+                                  child: Text(e.text ?? '',
+                                      style: TextStyle(fontFamily: e.value)),
+                                );
+                              }).toList(),
+                              value: changedFont,
+                              onChanged: (String? changed) {
+                                if (changed != null) {
+                                  var currentfont = fontList
+                                      .firstWhere(
+                                          (element) => element.text == changed)
+                                      .value;
+                                  setPopState(() {
+                                    changedFont = changed;
+                                    _htmlcontroller.execCommand('fontName',
+                                        argument: currentfont);
+                                  });
+                                }
+                              },
+                            ),
+                          ),
+                        )
+                        // add the other widgets here!!
+                      ],
+                toolbarPosition: ToolbarPosition.aboveEditor, //by default
+                toolbarType: ToolbarType.nativeGrid, //by default
+                onButtonPressed:
+                    (ButtonType type, bool? status, Function? updateStatus) {
+                  // print(
+                  //     "button '${describeEnum(type)}' pressed, the current selected status is $status");
+                  return true;
+                },
+                onDropdownChanged: (DropdownType type, dynamic changed,
+                    Function(dynamic)? updateSelectedItem) {
+                  // print("dropdown '${describeEnum(type)}' changed to $changed");
+                  return true;
+                },
+                mediaLinkInsertInterceptor: (String url, InsertFileType type) {
+                  print(url);
+                  return true;
+                },
+                mediaUploadInterceptor:
+                    (PlatformFile file, InsertFileType type) async {
+                  print(file.name); //filename
+                  print(file.size); //size in bytes
+                  print(file.extension); //file extension (eg jpeg or mp4)
+                  return true;
+                },
+              ),
+              otherOptions: OtherOptions(height: 600),
+              callbacks: Callbacks(onBeforeCommand: (String? currentHtml) {
+                print('html before change is $currentHtml');
+              }, onChangeContent: (String? changed) {
+                print('content changed to $changed');
+              }, onChangeCodeview: (String? changed) {
+                print('code changed to $changed');
+              }, onChangeSelection: (EditorSettings settings) {
+                print('parent element is ${settings.parentElement}');
+                print('font name is ${settings.fontName}');
+              }, onDialogShown: () {
+                print('dialog shown');
+              }, onEnter: () {
+                print('enter/return pressed');
+              }, onFocus: () {
+                print('editor focused');
+              }, onBlur: () {
+                print('editor unfocused');
+              }, onBlurCodeview: () {
+                print('codeview either focused or unfocused');
+              }, onInit: () {
+                _htmlcontroller.setText(existingHtml);
+                print('init');
+              }, onImageUploadError:
+                  (FileUpload? file, String? base64Str, UploadError error) {
+                // print(describeEnum(error));
+                print(base64Str ?? '');
+                if (file != null) {
+                  print(file.name);
+                  print(file.size);
+                  print(file.type);
+                }
+              }, onKeyDown: (int? keyCode) {
+                print('$keyCode key downed');
+                // print('current character count: ${_htmlcontroller.characterCount}');
+              }, onKeyUp: (int? keyCode) {
+                print('$keyCode key released');
+              }, onMouseDown: () {
+                print('mouse downed');
+              }, onMouseUp: () {
+                print('mouse released');
+              }, onNavigationRequestMobile: (String url) {
+                print(url);
+                return NavigationActionPolicy.ALLOW;
+              }, onPaste: () {
+                print('pasted into editor');
+              }, onScroll: () {
+                print('editor scrolled');
+              }),
+              plugins: [
+                SummernoteAtMention(
+                    getSuggestionsMobile: (String value) {
+                      var mentions = <String>['test1', 'test2', 'test3'];
+                      return mentions
+                          .where((element) => element.contains(value))
+                          .toList();
+                    },
+                    mentionsWeb: ['test1', 'test2', 'test3'],
+                    onSelect: (String value) {
+                      print(value);
+                    }),
+              ],
+            ),
+            actions: [
+              cancelButton,
+              continueButton,
+            ],
+          );
+        });
+      },
+    );
   }
 
   goToLocationPage() {

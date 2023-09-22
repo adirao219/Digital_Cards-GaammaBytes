@@ -130,7 +130,7 @@ class _MakePaymentScreen extends State<MakePaymentScreen> {
   makePaymentInitiation() async {
     try {
       if (int.parse(_credits_Controller.text) <= 0) {
-        Get.snackbar("lbl_warning".tr, "Please enter valid credits!",
+        Get.snackbar("lbl_warning".tr, "lbl_credits_warning".tr,
             backgroundColor: Color.fromARGB(255, 255, 224, 156),
             colorText: Color.fromARGB(255, 105, 73, 3),
             icon: Icon(

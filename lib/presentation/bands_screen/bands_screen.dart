@@ -394,7 +394,7 @@ class _BandsScreen extends State<BandsScreen> {
       };
       GetDeleteCardResp resp = await api.fetchDeleteBand(context, queryParams: req);
       if ((resp.isSuccess ?? false) && (resp.result ?? false)) {
-        Get.snackbar("lbl_success".tr, "Band Deleted successfully!",
+        Get.snackbar("lbl_success".tr, "lbl_band_delete".tr,
             backgroundColor: Color.fromARGB(255, 208, 245, 216),
             colorText: Colors.green[900],
             icon: Icon(

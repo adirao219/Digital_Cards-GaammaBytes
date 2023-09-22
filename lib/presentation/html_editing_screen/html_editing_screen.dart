@@ -1166,7 +1166,7 @@ class _HtmlEditorScreenState extends State<HtmlEditorScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  "Choose the " + (currentIndex == 1 ? "message" : "caption"),
+                 (currentIndex == 1 ? "lbl_choose_message".tr : "lbl_choose_caption"),
                   style: AppStyle.txtNunitoSansBold16Pink900,
                 ),
                 IconButton(

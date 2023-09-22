@@ -46,7 +46,7 @@ class _AddStorageCredits extends State<AddStorageCredits> {
     if (int.tryParse(credits) != null && int.parse(credits) > 0) {
       if (int.parse(credits) > creditsAvailable) {
         return Get.snackbar(
-            'Invalid', "Please enter credits less than available credits!",
+            "lbl_invalid", "lbl_credit_check".tr,
             backgroundColor: Color.fromARGB(255, 238, 218, 204),
             colorText: Color.fromARGB(255, 94, 54, 27),
             icon: Icon(
@@ -105,7 +105,7 @@ class _AddStorageCredits extends State<AddStorageCredits> {
   addStorageDetails(BuildContext appcontext) async {
     try {
       if (int.parse(_noofcredits_Controller.text) <= 0) {
-        Get.snackbar("lbl_warning".tr, "Please enter valid credits!",
+        Get.snackbar("lbl_warning".tr, "lbl_credits_warning".tr,
             backgroundColor: Color.fromARGB(255, 255, 224, 156),
             colorText: Color.fromARGB(255, 105, 73, 3),
             icon: Icon(
@@ -300,7 +300,7 @@ class _AddStorageCredits extends State<AddStorageCredits> {
                 CustomButton(
                   height: 40,
                   width: 250,
-                  text: "Add".tr,
+                  text: "lbl_add".tr,
                   margin: getMargin(
                     top: 20,
                     bottom: 5,
