@@ -33,7 +33,7 @@ class _EGreetingCardOptionsScreen extends State<EGreetingCardOptionsScreen> {
 
   getGreetingTypes() async {
     try {
-      
+
       GetGetGreetingTypeResp resp = await api.fetchGetGreetingType(context);
       if ((resp.isSuccess ?? false)) {
         setState(() {
@@ -41,7 +41,7 @@ class _EGreetingCardOptionsScreen extends State<EGreetingCardOptionsScreen> {
           greetingTypes = allgreetingTypes;
         });
       } else {
-        Get.snackbar('Error', resp.errorMessage.toString());
+        Get.snackbar("lbl_error".tr, resp.errorMessage.toString());
       }
     } catch (e) {}
   }
@@ -100,7 +100,7 @@ class _EGreetingCardOptionsScreen extends State<EGreetingCardOptionsScreen> {
                                                 bottom: 13))
                                       ])),
                               AppbarTitle(
-                                  text: "msg_greeting_type".tr.toUpperCase(),
+                                  text: ("msg_greeting_type".tr),
                                   margin: getMargin(left: 40, top: 0))
                             ])))
                   ])),
@@ -322,7 +322,7 @@ class _EGreetingCardOptionsScreen extends State<EGreetingCardOptionsScreen> {
                     children: [
                       Container(
                         child: Text(
-                          'Clear Filters',
+                          "lbl_clear_filters".tr,
                           style: TextStyle(
                             decoration: TextDecoration.underline,
                           ),

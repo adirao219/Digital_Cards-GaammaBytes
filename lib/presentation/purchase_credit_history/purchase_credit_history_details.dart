@@ -50,7 +50,7 @@ class _PurchaseCreditHistoryDetails
           creditDetails = resp.result ?? [];
         });
       } else {
-        Get.snackbar('Error', resp.errorMessage.toString(),
+        Get.snackbar("lbl_error".tr, resp.errorMessage.toString(),
             backgroundColor: Color.fromARGB(255, 255, 230, 230),
             colorText: Colors.red[900],
             icon: Icon(
@@ -208,7 +208,7 @@ class _PurchaseCreditHistoryDetails
             children: [
               Padding(
                   padding: getPadding(left: 0, top: 3, bottom: 3),
-                  child: Text("Card Name:".tr,
+                  child: Text("lbl_card_name".tr,
                       overflow: TextOverflow.ellipsis,
                       textAlign: TextAlign.left,
                       style: AppStyle.txtNunitoSansBoldPink15.copyWith(
@@ -224,7 +224,7 @@ class _PurchaseCreditHistoryDetails
                           height: getVerticalSize(1.26)))),
               Padding(
                   padding: getPadding(left: 0, top: 5, bottom: 3),
-                  child: Text("Type:".tr,
+                  child: Text("lbl_type".tr+":",
                       overflow: TextOverflow.ellipsis,
                       textAlign: TextAlign.left,
                       style: AppStyle.txtNunitoSansBoldPink15.copyWith(

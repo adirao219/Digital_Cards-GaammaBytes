@@ -62,7 +62,7 @@ class _CardHtmlEditorScreenState extends State<CardHtmlEditorScreen> {
           }
         });
       } else {
-        Get.snackbar('Error', resp.errorMessage.toString());
+        Get.snackbar("lbl_error".tr, resp.errorMessage.toString());
       }
     } catch (e) {}
   }
@@ -90,7 +90,7 @@ class _CardHtmlEditorScreenState extends State<CardHtmlEditorScreen> {
         appBar: AppBar(
           backgroundColor: Colors.deepOrange[50],
           foregroundColor: Color.fromARGB(255, 97, 8, 8),
-          title: Text("Edit your HTML"),
+          title: Text("lbl_edit_your_html".tr),
           elevation: 0,
           actions: [
             IconButton(
@@ -128,7 +128,7 @@ class _CardHtmlEditorScreenState extends State<CardHtmlEditorScreen> {
                 controller: _htmlcontroller,
                 htmlEditorOptions: HtmlEditorOptions(
                     filePath: "assets/summernote.html",
-                    hint: 'Your text here...',
+                    hint: "lbl_your_text".tr,
                     shouldEnsureVisible: true,
                     initialText: htmlContent),
                 htmlToolbarOptions: HtmlToolbarOptions(
@@ -188,7 +188,7 @@ class _CardHtmlEditorScreenState extends State<CardHtmlEditorScreen> {
                             child: CustomDropdownButtonHideUnderline(
                               child: CustomDropdownButton<String>(
                                 hint: Text(
-                                  ('Select Font'.tr),
+                                  ("lbl_select_font".tr),
                                   style:
                                       AppStyle.txtNunitoSansRegular14Gray70001,
                                 ),

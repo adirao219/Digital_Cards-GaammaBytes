@@ -103,7 +103,7 @@ class _ImageModifyoneScreen extends State<ImageModifyScreen> {
                                               bottom: 13))
                                     ])),
                             AppbarTitle(
-                                text: "lbl_select_image".tr.toUpperCase(),
+                                text: ("lbl_select_image".tr).toUpperCase(),
                                 margin: getMargin(left: 30, top: 5))
                           ]))
                     ])),
@@ -361,7 +361,7 @@ class _ImageModifyoneScreen extends State<ImageModifyScreen> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           CustomButton(
-                              height: 62, width: 326, text: "lbl_ok".tr)
+                              height: 62, width: 326, text: ("lbl_ok".tr))
                         ])))));
   }
 
@@ -370,13 +370,13 @@ class _ImageModifyoneScreen extends State<ImageModifyScreen> {
     if (pictureType!=UserImageType.background) {
       if (double.parse(_size_x_controller.text) > 250 ||
           double.parse(_size_y_controller.text) > 250) {
-        Get.snackbar('Warning', "Logo size cant be more than 250 * 250");
+        Get.snackbar("lbl_warning".tr, "Logo size cant be more than 250 * 250");
         return;
       }
     } else {
       if (double.parse(_size_x_controller.text) > 1000 ||
           double.parse(_size_y_controller.text) > 1000) {
-        Get.snackbar('Warning', "Logo size cant be more than 600 * 600");
+        Get.snackbar("lbl_warning".tr, "Logo size cant be more than 600 * 600");
         return;
       }
     }
@@ -413,7 +413,7 @@ class _ImageModifyoneScreen extends State<ImageModifyScreen> {
     });
     
     }catch(e)
-    {    Get.snackbar('Error', e.toString(),
+    {    Get.snackbar("lbl_error".tr, e.toString(),
             backgroundColor: Color.fromARGB(255, 255, 230, 230),
             colorText: Colors.red[900],
             icon: Icon(

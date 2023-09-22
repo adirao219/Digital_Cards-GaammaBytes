@@ -166,7 +166,7 @@ class _VerifiactionPageScreen extends State<VerifiactionPageScreen> {
             // GlobalVariables.setUserID("");
             Navigator.of(context).pushNamed(AppRoutes.resetPasswordScreen);
 
-            Get.snackbar('Success', "OTP verified successfully",
+            Get.snackbar("lbl_success".tr, "OTP verified successfully",
                 backgroundColor: Color.fromARGB(255, 208, 245, 216),
                 colorText: Colors.green[900],
                 icon: Icon(
@@ -188,7 +188,7 @@ class _VerifiactionPageScreen extends State<VerifiactionPageScreen> {
                 ));
           }
         } else {
-          Get.snackbar('Error', resp.errorMessage.toString(),
+          Get.snackbar("lbl_error".tr, resp.errorMessage.toString(),
               backgroundColor: Color.fromARGB(255, 255, 230, 230),
               colorText: Colors.red[900],
               icon: Icon(
@@ -198,7 +198,7 @@ class _VerifiactionPageScreen extends State<VerifiactionPageScreen> {
         }
       } catch (ex) {}
     } else {
-      Get.snackbar('Error', "Please enter valid OTP",
+      Get.snackbar("lbl_error".tr, "Please enter valid OTP",
           backgroundColor: Color.fromARGB(255, 255, 230, 230),
           colorText: Colors.red[900],
           icon: Icon(

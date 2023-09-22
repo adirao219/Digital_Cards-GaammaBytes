@@ -43,7 +43,7 @@ class _PurchaseCreditHistory extends State<PurchaseCreditHistory> {
           creditList = resp.result ?? [];
         });
       } else {
-        Get.snackbar('Error', resp.errorMessage.toString(),
+        Get.snackbar("lbl_error".tr, resp.errorMessage.toString(),
             backgroundColor: Color.fromARGB(255, 255, 230, 230),
             colorText: Colors.red[900],
             icon: Icon(
@@ -132,7 +132,7 @@ class _PurchaseCreditHistory extends State<PurchaseCreditHistory> {
                     CustomButton(
                       height: 40,
                       width: 200,
-                      text: (' Show Overall Usage'),
+                      text: ("lbl_overall_usage".tr),
                       prefixWidget: Icon(
                         Icons.data_usage_rounded,
                         color: ColorConstant.pink900,
@@ -195,10 +195,10 @@ class _PurchaseCreditHistory extends State<PurchaseCreditHistory> {
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [ Text(
-                            'Purchased On - ' + (element.billDate ?? ''),
+                            "lbl_purchase_on".tr + (element.billDate ?? ''),
                             style: AppStyle.txtNunitoSansBold14white),
                             Text(
-                            'Expiry On - ' + (element.expiresOn ?? ''),
+                            "lbl_expiry_on".tr + (element.expiresOn ?? ''),
                             style: AppStyle.txtNunitoSansBold12white)]),
                         content: purchasehistoryItem(context, element),
                       );
@@ -407,7 +407,7 @@ class _PurchaseCreditHistory extends State<PurchaseCreditHistory> {
                         Row(children: [
                           Padding(
                               padding: getPadding(bottom: 0),
-                              child: Text("Remarks: ".tr,
+                              child: Text("lbl_remarks".tr,
                                   overflow: TextOverflow.ellipsis,
                                   textAlign: TextAlign.left,
                                   style: TextStyle(

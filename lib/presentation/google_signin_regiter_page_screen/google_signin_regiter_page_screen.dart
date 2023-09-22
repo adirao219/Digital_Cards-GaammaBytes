@@ -125,7 +125,7 @@ class _GoogleSigninRegiterPageScreen
 
                           controller: _nameController,
                           decoration: InputDecoration(
-                            labelText: "Enter your Name".tr,
+                            labelText: "lbl_enter_name".tr.tr,
                             labelStyle: AppStyle.txtNunitoSansRegular12
                                 .copyWith(
                                     height: getVerticalSize(1.10),
@@ -180,7 +180,7 @@ class _GoogleSigninRegiterPageScreen
                                 controller: _emailController,
                                 readOnly: true,
                                 decoration: InputDecoration(
-                                  // labelText: "Enter your Email ID".tr,
+                                  // labelText: "lbl_enter_email".tr.tr,
                                   labelStyle: AppStyle.txtNunitoSansRegular12
                                       .copyWith(
                                           height: getVerticalSize(1.10),
@@ -361,7 +361,7 @@ class _GoogleSigninRegiterPageScreen
                                                 fontWeight: FontWeight.w600,
                                                 height: getVerticalSize(1.22))),
                                         TextSpan(
-                                            text: "Sign-In".tr,
+                                            text: "Sign in".tr,
                                             style: TextStyle(
                                                 color: ColorConstant
                                                     .deepOrangeA100,
@@ -386,7 +386,7 @@ class _GoogleSigninRegiterPageScreen
           if (resp.result ?? false) {
             registerUser();
           } else {
-            Get.snackbar('Error', resp.errorMessage.toString(),
+            Get.snackbar("lbl_error".tr, resp.errorMessage.toString(),
                 backgroundColor: Color.fromARGB(255, 255, 230, 230),
                 colorText: Colors.red[900],
                 icon: Icon(
@@ -395,7 +395,7 @@ class _GoogleSigninRegiterPageScreen
                 ));
           }
         } else {
-          Get.snackbar('Error', resp.errorMessage.toString(),
+          Get.snackbar("lbl_error".tr, resp.errorMessage.toString(),
               backgroundColor: Color.fromARGB(255, 255, 230, 230),
               colorText: Colors.red[900],
               icon: Icon(
@@ -412,7 +412,7 @@ class _GoogleSigninRegiterPageScreen
   showTermsAlertDialog(BuildContext context) {
     // set up the buttons
     Widget okayButton = TextButton(
-      child: Text("Okay",style:AppStyle.txtNunitoSansRegular14Pink900 ,),
+      child: Text("lbl_okay".tr,style:AppStyle.txtNunitoSansRegular14Pink900 ,),
       onPressed: () {
         Navigator.pop(context);
       },
@@ -498,7 +498,7 @@ The use of this service is subject to the following terms of use:
 
         GlobalVariables.setUserPhotoUrl(googleUserPhotoURL);
 
-        Get.snackbar('Success', "Welcome to Gaamma Cards",
+        Get.snackbar("lbl_success".tr, "Welcome to Gaamma Cards",
             backgroundColor: Color.fromARGB(255, 208, 245, 216),
             colorText: Colors.green[900],
             icon: Icon(
@@ -508,7 +508,7 @@ The use of this service is subject to the following terms of use:
         Navigator.of(context).pushNamedAndRemoveUntil(
             AppRoutes.homePageScreen, (Route<dynamic> route) => false);
       } else {
-        Get.snackbar('Error', resp.errorMessage.toString(),
+        Get.snackbar("lbl_error".tr, resp.errorMessage.toString(),
             backgroundColor: Color.fromARGB(255, 255, 230, 230),
             colorText: Colors.red[900],
             icon: Icon(

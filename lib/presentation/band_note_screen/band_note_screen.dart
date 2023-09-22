@@ -69,7 +69,7 @@ var existingHtml="";
           }
         });
       } else {
-        Get.snackbar('Error', resp.errorMessage.toString());
+        Get.snackbar("lbl_error".tr, resp.errorMessage.toString());
       }
     } catch (e) {}
   }
@@ -89,7 +89,7 @@ var existingHtml="";
           existingHtml=resp.result!.cBContent ?? '';
         });
       } else {
-        Get.snackbar('Error', resp.errorMessage.toString(),
+        Get.snackbar("lbl_error".tr, resp.errorMessage.toString(),
             backgroundColor: Color.fromARGB(255, 255, 230, 230),
             colorText: Colors.red[900],
             icon: Icon(
@@ -123,7 +123,7 @@ var existingHtml="";
       };
       APIBooleanResponse resp = await api.createSaveBands(appcontext, requestData: req);
       if (resp.isSuccess ?? false) {
-        Get.snackbar('Success', "Band Created successfully!",
+        Get.snackbar("lbl_success".tr, "lbl_band_saved".tr,
             backgroundColor: Color.fromARGB(255, 208, 245, 216),
             colorText: Colors.green[900],
             icon: Icon(
@@ -132,7 +132,7 @@ var existingHtml="";
             ));
             Navigator.pop(context);
       } else {
-        Get.snackbar('Error', resp.errorMessage.toString(),
+        Get.snackbar("lbl_error".tr, resp.errorMessage.toString(),
             backgroundColor: Color.fromARGB(255, 255, 230, 230),
             colorText: Colors.red[900],
             icon: Icon(
@@ -249,7 +249,7 @@ var existingHtml="";
                           width: 326,
                           focusNode: FocusNode(),
                           controller: _heading_Controller,
-                          hintText: "Enter your heading here..".tr,
+                          hintText: "lbl_enter_heading".tr,
                           margin: getMargin(left: 1, top: 10)),
                       SizedBox(
                         height: 10,
@@ -264,9 +264,8 @@ var existingHtml="";
                       CustomButton(
                           height: 50,
                           width: 350,
-                          text: "  Click here to " +
-                              (htmlContent.isEmpty ? "enter" : "update") +
-                              " your Content".tr,
+                          text: "  "+ 
+                              (htmlContent.isEmpty ? "lbl_click_enter".tr : "lbl_click_update".tr) ,
                           margin: getMargin(top: 19, right: 6),
                           variant: ButtonVariant.OutlineBlack9003f_1,
                           shape: ButtonShape.RoundedBorder15,
@@ -297,13 +296,13 @@ var existingHtml="";
   showAlertDialog(BuildContext context) {
     // set up the buttons
     Widget cancelButton = TextButton(
-      child: Text("Cancel"),
+      child: Text("lbl_cancel".tr),
       onPressed: () {
         Navigator.pop(context);
       },
     );
     Widget continueButton = TextButton(
-      child: Text("Okay"),
+      child: Text("lbl_okay".tr),
       onPressed: () {
         updateHtmlContent();
         Navigator.pop(context);
@@ -320,7 +319,7 @@ var existingHtml="";
         return AlertDialog(
       title: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [Text("Enter your Note content"),IconButton(
+        children: [Text("lbl_enter_note".tr),IconButton(
                 icon: Icon(
                   isToolBarVisible
                       ? Icons.arrow_drop_down
@@ -337,7 +336,7 @@ var existingHtml="";
         htmlEditorOptions: HtmlEditorOptions(
           
                     filePath: "assets/summernote.html",
-            hint: 'Your text here...',
+            hint: "lbl_your_text".tr,
             shouldEnsureVisible: true,
             initialText: htmlContent),
         htmlToolbarOptions: HtmlToolbarOptions(
@@ -375,7 +374,7 @@ var existingHtml="";
                             child: CustomDropdownButtonHideUnderline(
                               child: CustomDropdownButton<String>(
                                 hint: Text(
-                                  ('Select Font'.tr),
+                                  ("lbl_select_font".tr),
                                   style:
                                       AppStyle.txtNunitoSansRegular14Gray70001,
                                 ),

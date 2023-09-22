@@ -107,14 +107,14 @@ class _SelectTemplateScreen extends State<SelectTemplateScreen> {
   bool isGreeting = Get.arguments["isGreeting"] as bool;
   String? selectedTemplate;
   int logoPosition = 0;
-  String logoPositionName = " Select Logo Position";
+  String logoPositionName = "lbl_select_logo_position".tr;
   String? selectedLanguage;
   bool showSearchOption = false;
   @override
   void initState() {
     getLanguages();
     if (!isGreeting) {
-      logoPositionName = "Select Picture Position";
+      logoPositionName = "lbl_select_picture_position".tr;
     }
 
     super.initState();
@@ -125,31 +125,30 @@ class _SelectTemplateScreen extends State<SelectTemplateScreen> {
       logoPosition = position;
       switch (logoPosition) {
         case 0:
-          logoPositionName =
-              " Select " + (isGreeting ? "Logo" : "Picture") + " Position";
+          logoPositionName = (isGreeting? "lbl_select_logo_position".tr:"lbl_select_picture_position".tr);
           break;
 
         case 1:
-          logoPositionName = " Top Left";
+          logoPositionName = "lbl_top_left".tr;
           break;
 
         case 2:
-          logoPositionName = " Top Center";
+          logoPositionName = "lbl_top_center".tr;
           break;
 
         case 3:
-          logoPositionName = " Top Right";
+          logoPositionName = "lbl_top_right".tr;
           break;
 
         case 7:
-          logoPositionName = " Bottom Left";
+          logoPositionName = "lbl_bottom_left".tr;
           break;
 
         case 8:
-          logoPositionName = " Bottom Center";
+          logoPositionName = "lbl_bottom_center".tr;
           break;
         case 9:
-          logoPositionName = " Bottom Right";
+          logoPositionName = "lbl_bottom_right".tr;
           break;
       }
 
@@ -193,7 +192,7 @@ class _SelectTemplateScreen extends State<SelectTemplateScreen> {
           });
         });
       } else {
-        Get.snackbar('Error', resp.errorMessage.toString(),
+        Get.snackbar("lbl_error".tr, resp.errorMessage.toString(),
             backgroundColor: Color.fromARGB(255, 255, 230, 230),
             colorText: Colors.red[900],
             icon: Icon(
@@ -228,7 +227,7 @@ class _SelectTemplateScreen extends State<SelectTemplateScreen> {
           // }
         });
       } else {
-        Get.snackbar('Error', resp.errorMessage.toString(),
+        Get.snackbar("lbl_error".tr, resp.errorMessage.toString(),
             backgroundColor: Color.fromARGB(255, 255, 230, 230),
             colorText: Colors.red[900],
             icon: Icon(
@@ -268,7 +267,7 @@ class _SelectTemplateScreen extends State<SelectTemplateScreen> {
           getThemeOrTemplate(selectedTemplate ?? '');
         }
       } else {
-        Get.snackbar('Error', resp.errorMessage.toString(),
+        Get.snackbar("lbl_error".tr, resp.errorMessage.toString(),
             backgroundColor: Color.fromARGB(255, 255, 230, 230),
             colorText: Colors.red[900],
             icon: Icon(
@@ -292,7 +291,7 @@ class _SelectTemplateScreen extends State<SelectTemplateScreen> {
         if (selectedLanguage != null && selectedLanguage!.isNotEmpty)
           getAllTemplates();
       } else {
-        Get.snackbar('Error', resp.errorMessage.toString(),
+        Get.snackbar("lbl_error".tr, resp.errorMessage.toString(),
             backgroundColor: Color.fromARGB(255, 255, 230, 230),
             colorText: Colors.red[900],
             icon: Icon(
@@ -374,7 +373,7 @@ class _SelectTemplateScreen extends State<SelectTemplateScreen> {
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        Text('Select Language',
+                                        Text("lbl_select_language".tr,
                                             style: AppStyle
                                                 .txtNunitoSansBold14Pink900),
                                         DropdownButton<String>(
@@ -418,7 +417,7 @@ class _SelectTemplateScreen extends State<SelectTemplateScreen> {
                                           CrossAxisAlignment.start,
                                       children: [
                                         Row(children: [
-                                          Text('Select Template',
+                                          Text('lbl_select_template'.tr,
                                               style: AppStyle
                                                   .txtNunitoSansBold14Pink900),
                                           CustomImageView(
@@ -519,7 +518,7 @@ class _SelectTemplateScreen extends State<SelectTemplateScreen> {
                                                     }),
                                                     decoration: InputDecoration(
                                                       labelText:
-                                                          "Search Templates".tr,
+                                                          "lbl_search_teamplates".tr,
                                                       labelStyle: AppStyle
                                                           .txtNunitoSansRegular12
                                                           .copyWith(
@@ -772,7 +771,7 @@ class _SelectTemplateScreen extends State<SelectTemplateScreen> {
     // set up the buttons
     Widget cancelButton = TextButton(
       child: Text(
-        "Cancel",
+        "lbl_cancel".tr,
         style: AppStyle.txtNunitoSansBold14Pink900,
       ),
       onPressed: () {
@@ -781,7 +780,7 @@ class _SelectTemplateScreen extends State<SelectTemplateScreen> {
     );
     Widget clearPosition = TextButton(
       child: Text(
-        "Clear",
+        "lbl_clear".tr,
         style: AppStyle.txtNunitoSansBold14Pink900,
       ),
       onPressed: () {
@@ -792,7 +791,7 @@ class _SelectTemplateScreen extends State<SelectTemplateScreen> {
     // set up the AlertDialog
     AlertDialog alert = AlertDialog(
       title: Text(
-        "Select Logo Position",
+        "lbl_select_logo_position".tr,
         style: AppStyle.txtNunitoSansBold14Pink900,
       ),
       content: Container(
@@ -954,7 +953,7 @@ class _SelectTemplateScreen extends State<SelectTemplateScreen> {
 
   onTapSelect() {
     if (selectedTemplate == null) {
-      return Get.snackbar('Warning', "Please select template",
+      return Get.snackbar("lbl_warning".tr, "lbl_please_select_template".tr,
           backgroundColor: Color.fromARGB(255, 255, 230, 230),
           colorText: Colors.red[900],
           icon: Icon(

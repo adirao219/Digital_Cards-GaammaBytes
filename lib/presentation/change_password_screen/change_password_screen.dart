@@ -386,7 +386,7 @@ class _ChangePasswordScreen extends State<ChangePasswordScreen> {
       CommonGenericResp resp = await api.changePassword(context,requestData: req);
       if (resp.isSuccess ?? false) {
         // selectedCardID = resp.result;
-        Get.snackbar('Success', "Password Changed Successfully!",
+        Get.snackbar("lbl_success".tr, "Password Changed Successfully!",
             backgroundColor: Color.fromARGB(255, 208, 245, 216),
             colorText: Colors.green[900],
             icon: Icon(
@@ -396,7 +396,7 @@ class _ChangePasswordScreen extends State<ChangePasswordScreen> {
 
         Navigator.of(context).pop();
       } else {
-        Get.snackbar('Error', resp.errorMessage.toString(),
+        Get.snackbar("lbl_error".tr, resp.errorMessage.toString(),
             backgroundColor: Color.fromARGB(255, 255, 230, 230),
             colorText: Colors.red[900],
             icon: Icon(
@@ -405,7 +405,7 @@ class _ChangePasswordScreen extends State<ChangePasswordScreen> {
             ));
       }
     } catch (e) {
-      Get.snackbar('Error', e.toString(),
+      Get.snackbar("lbl_error".tr, e.toString(),
           backgroundColor: Color.fromARGB(255, 255, 230, 230),
           colorText: Colors.red[900],
           icon: Icon(

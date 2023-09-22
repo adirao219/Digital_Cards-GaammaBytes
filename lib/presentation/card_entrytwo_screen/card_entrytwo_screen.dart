@@ -101,7 +101,7 @@ class _CardEntrytwoScreen extends State<CardEntrytwoScreen> {
         });
         ProgressDialogUtils.hideProgressDialog(context);
       } else {
-        Get.snackbar('Error', resp.errorMessage.toString(),
+        Get.snackbar("lbl_error".tr, resp.errorMessage.toString(),
             backgroundColor: Color.fromARGB(255, 255, 230, 230),
             colorText: Colors.red[900],
             icon: Icon(
@@ -179,13 +179,13 @@ class _CardEntrytwoScreen extends State<CardEntrytwoScreen> {
   showPublishAlertDialog(BuildContext context) {
     // set up the buttons
     Widget cancelButton = TextButton(
-      child: Text("No"),
+      child: Text("lbl_no".tr),
       onPressed: () {
         Navigator.pop(context);
       },
     );
     Widget continueButton = TextButton(
-      child: Text("Yes"),
+      child: Text("lbl_yes".tr),
       onPressed: () {
         Navigator.pop(context);
         publishCard();
@@ -194,8 +194,8 @@ class _CardEntrytwoScreen extends State<CardEntrytwoScreen> {
 
     // set up the AlertDialog
     AlertDialog alert = AlertDialog(
-      title: Text("Confirmation"),
-      content: Text("Are you sure you want to publish the card?"),
+      title: Text("lbl_confirmation".tr),
+      content: Text("lbl_publish_confirmation".tr),
       actions: [
         cancelButton,
         continueButton,
@@ -222,7 +222,7 @@ class _CardEntrytwoScreen extends State<CardEntrytwoScreen> {
           isPublished = true;
           publishedURL = resp.result.toString();
         });
-        Get.snackbar('Success', "Card Published successfully!",
+        Get.snackbar("lbl_success".tr, "Card Published successfully!",
             backgroundColor: Color.fromARGB(255, 208, 245, 216),
             colorText: Colors.green[900],
             icon: Icon(
@@ -230,7 +230,7 @@ class _CardEntrytwoScreen extends State<CardEntrytwoScreen> {
               color: Colors.green[900],
             ));
       } else {
-        Get.snackbar('Error', resp.errorMessage.toString(),
+        Get.snackbar("lbl_error".tr, resp.errorMessage.toString(),
             backgroundColor: Color.fromARGB(255, 255, 230, 230),
             colorText: Colors.red[900],
             icon: Icon(
@@ -255,7 +255,7 @@ class _CardEntrytwoScreen extends State<CardEntrytwoScreen> {
       PostSaveResp resp = await api.saveCardOtherData(context,requestData: req);
       if (resp.isSuccess ?? false) {
         selectedCardID = resp.result;
-        Get.snackbar('Success', "Card Saved Successfully!",
+        Get.snackbar("lbl_success".tr, "lbl_card_saved".tr,
             backgroundColor: Color.fromARGB(255, 208, 245, 216),
             colorText: Colors.green[900],
             icon: Icon(
@@ -280,7 +280,7 @@ class _CardEntrytwoScreen extends State<CardEntrytwoScreen> {
           getCardData(showProgress: false);
         });
       } else {
-        Get.snackbar('Error', resp.errorMessage.toString(),
+        Get.snackbar("lbl_error".tr, resp.errorMessage.toString(),
             backgroundColor: Color.fromARGB(255, 255, 230, 230),
             colorText: Colors.red[900],
             icon: Icon(
@@ -484,8 +484,8 @@ class _CardEntrytwoScreen extends State<CardEntrytwoScreen> {
                                           showDialog(
                                               context: context,
                                               builder: (ctx) => AlertDialog(
-                                                      title: const Text(
-                                                          'Pick a color!'),
+                                                      title:  Text(
+                                                          "lbl_pick_color".tr),
                                                       content:
                                                           SingleChildScrollView(
                                                         child: ColorPicker(
@@ -497,8 +497,8 @@ class _CardEntrytwoScreen extends State<CardEntrytwoScreen> {
                                                       ),
                                                       actions: <Widget>[
                                                         ElevatedButton(
-                                                          child: const Text(
-                                                              'Select'),
+                                                          child: Text(
+                                                              "lbl_select".tr),
                                                           onPressed: () {
                                                             setState(() =>
                                                                 currentColor =

@@ -346,7 +346,7 @@ class _SignupPageScreen extends State<SignupPageScreen> {
         
         ProgressDialogUtils.hideProgressDialog(context);
       });
-      Get.snackbar('Error', er.toString(),
+      Get.snackbar("lbl_error".tr, er.toString(),
           backgroundColor: Color.fromARGB(255, 255, 230, 230),
           colorText: Colors.red[900],
           icon: Icon(
@@ -374,7 +374,7 @@ class _SignupPageScreen extends State<SignupPageScreen> {
       // model.state =ViewState.Idle;
       checkGoogleSigninRegistered(_user);
     } catch (ex) {
-      Get.snackbar('Error', ex.toString(),
+      Get.snackbar("lbl_error".tr, ex.toString(),
           backgroundColor: Color.fromARGB(255, 255, 230, 230),
           colorText: Colors.red[900],
           icon: Icon(
@@ -421,7 +421,7 @@ class _SignupPageScreen extends State<SignupPageScreen> {
       print("User Name: ${_user!.displayName}");
       print("User Email ${_user.email}");
     } catch (ex) {
-      Get.snackbar('Error', ex.toString(),
+      Get.snackbar("lbl_error".tr, ex.toString(),
           backgroundColor: Color.fromARGB(255, 255, 230, 230),
           colorText: Colors.red[900],
           icon: Icon(
@@ -466,7 +466,7 @@ class _SignupPageScreen extends State<SignupPageScreen> {
       GlobalVariables.setUserName(_phoneController.text);
       GlobalVariables.setUserPhotoUrl(userPhoto);
 
-      Get.snackbar('Success', "Welcome to Gaamma Cards",
+      Get.snackbar("lbl_success".tr, "Welcome to Gaamma Cards",
           backgroundColor: Color.fromARGB(255, 208, 245, 216),
           colorText: Colors.green[900],
           icon: Icon(
@@ -480,7 +480,7 @@ class _SignupPageScreen extends State<SignupPageScreen> {
         
         ProgressDialogUtils.hideProgressDialog(context);
       });
-      Get.snackbar('Error', resp.errorMessage.toString(),
+      Get.snackbar("lbl_error".tr, resp.errorMessage.toString(),
           backgroundColor: Color.fromARGB(255, 255, 230, 230),
           colorText: Colors.red[900],
           icon: Icon(
@@ -517,7 +517,7 @@ class _SignupPageScreen extends State<SignupPageScreen> {
           GlobalVariables.setUserName(googleUseremail);
 
           GlobalVariables.setUserPhotoUrl(googleUserPhotoURL);
-          Get.snackbar('Success', "Welcome to Gaamma Cards",
+          Get.snackbar("lbl_success".tr, "Welcome to Gaamma Cards",
               backgroundColor: Color.fromARGB(255, 208, 245, 216),
               colorText: Colors.green[900],
               icon: Icon(
@@ -540,7 +540,7 @@ class _SignupPageScreen extends State<SignupPageScreen> {
         
         ProgressDialogUtils.hideProgressDialog(context);
       });
-      Get.snackbar('Error', e.toString(),
+      Get.snackbar("lbl_error".tr, e.toString(),
           backgroundColor: Color.fromARGB(255, 255, 230, 230),
           colorText: Colors.red[900],
           icon: Icon(

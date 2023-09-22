@@ -84,7 +84,7 @@ class _BandBankaCdetailsScreen extends State<BandBankaCdetailsScreen> {
                                                   bottom: 13))
                                         ])),
                                 AppbarTitle(
-                                    text: "lbl_bands2".tr.toUpperCase(),
+                                    text: "lbl_bands2".tr,
                                     margin: getMargin(left: 76, top: 16))
                               ])))
                     ])),

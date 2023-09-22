@@ -1498,7 +1498,7 @@ class ApiClient extends GetConnect {
     }
   }
 
-  Future<APIResponse> checkCardEditExpiry(BuildContext appcontext,{Map requestData = const {}}) async {
+  Future<APIBooleanResponse> checkCardEditExpiry(BuildContext appcontext,{Map requestData = const {}}) async {
     ProgressDialogUtils.showProgressDialog(appcontext);
     try {
       await isNetworkConnected();
@@ -1506,10 +1506,10 @@ class ApiClient extends GetConnect {
           body: requestData);
       ProgressDialogUtils.hideProgressDialog(appcontext);
       if (_isSuccessCall(response)) {
-        return APIResponse.fromJson(response.body);
+        return APIBooleanResponse.fromJson(response.body);
       } else {
         throw response.body != null
-            ? APIResponse.fromJson(response.body)
+            ? APIBooleanResponse.fromJson(response.body)
             : 'Something Went Wrong!';
       }
     } catch (error, stackTrace) {

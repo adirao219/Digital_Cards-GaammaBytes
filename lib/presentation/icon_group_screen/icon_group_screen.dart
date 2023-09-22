@@ -92,7 +92,7 @@ class _IconGroupScreen extends State<IconGroupScreen> {
               : resp.result!.link8!.toString();
         });
       } else {
-        Get.snackbar('Error', resp.errorMessage.toString(),
+        Get.snackbar("lbl_error".tr, resp.errorMessage.toString(),
             backgroundColor: Color.fromARGB(255, 255, 230, 230),
             colorText: Colors.red[900],
             icon: Icon(
@@ -120,7 +120,7 @@ class _IconGroupScreen extends State<IconGroupScreen> {
           }
         });
       } else {
-        Get.snackbar('Error', resp.errorMessage.toString(),
+        Get.snackbar("lbl_error".tr, resp.errorMessage.toString(),
             backgroundColor: Color.fromARGB(255, 255, 230, 230),
             colorText: Colors.red[900],
             icon: Icon(
@@ -155,7 +155,7 @@ class _IconGroupScreen extends State<IconGroupScreen> {
       APIBooleanResponse resp =
           await api.createSaveBands(context, requestData: req);
       if (resp.result ?? false) {
-        Get.snackbar('Success', "Band Created successfully!",
+        Get.snackbar("lbl_success".tr, "lbl_band_saved".tr,
             backgroundColor: Color.fromARGB(255, 208, 245, 216),
             colorText: Colors.green[900],
             icon: Icon(
@@ -164,7 +164,7 @@ class _IconGroupScreen extends State<IconGroupScreen> {
             ));
         Navigator.pop(context);
       } else {
-        Get.snackbar('Error', resp.errorMessage.toString(),
+        Get.snackbar("lbl_error".tr, resp.errorMessage.toString(),
             backgroundColor: Color.fromARGB(255, 255, 230, 230),
             colorText: Colors.red[900],
             icon: Icon(

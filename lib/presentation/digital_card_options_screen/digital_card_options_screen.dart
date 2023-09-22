@@ -41,7 +41,7 @@ class _DigitalCardOptionsScreen extends State<DigitalCardOptionsScreen> {
           digitalCardTypes = allDigitalCardTypes;
         });
       } else {
-        Get.snackbar('Error', resp.errorMessage.toString());
+        Get.snackbar("lbl_error".tr, resp.errorMessage.toString());
       }
     } catch (e) {}
   }
@@ -327,7 +327,7 @@ class _DigitalCardOptionsScreen extends State<DigitalCardOptionsScreen> {
                     children: [
                       Container(
                         child: Text(
-                          'Clear Filters',
+                          "lbl_clear_filters".tr,
                           style: TextStyle(
                             decoration: TextDecoration.underline,
                           ),

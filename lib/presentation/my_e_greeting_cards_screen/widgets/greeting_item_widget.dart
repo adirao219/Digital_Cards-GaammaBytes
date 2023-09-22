@@ -35,19 +35,19 @@ class GreetingItemWidget extends StatelessWidget {
       openWithTap: true,
       menuItems: <FocusedMenuItem>[
         FocusedMenuItem(
-            title: Text("Edit"),
+            title: Text("lbl_edit".tr),
             trailingIcon: Icon(Icons.edit),
             onPressed: () {
               openGreeting(context);
             }),
             FocusedMenuItem(
-            title: Text("Preview"),
+            title: Text("lbl_preview".tr),
             trailingIcon: Icon(Icons.remove_red_eye),
             onPressed: () {
               openCardPreview(context);
             }),
         FocusedMenuItem(
-            title: Text((isHidden ? "Unhide" : "Hide")),
+            title: Text((isHidden ? ("lbl_unhide".tr) : ("lbl_hide".tr))),
             trailingIcon:
                 Icon(isHidden ? Icons.unarchive : Icons.remove_circle),
             onPressed: () {
@@ -56,7 +56,7 @@ class GreetingItemWidget extends StatelessWidget {
         
         FocusedMenuItem(
             title: Text(
-              "Delete",
+              "lbl_delete".tr,
               style: TextStyle(color: Colors.redAccent),
             ),
             trailingIcon: Icon(
@@ -145,13 +145,13 @@ class GreetingItemWidget extends StatelessWidget {
   showAlertDialog(BuildContext context, bool isHide) {
     // set up the buttons
     Widget cancelButton = TextButton(
-      child: Text("Cancel"),
+      child: Text("lbl_cancel".tr),
       onPressed: () {
         Navigator.pop(context);
       },
     );
     Widget continueButton = TextButton(
-      child: Text("Continue"),
+      child: Text("lbl_continue".tr),
       onPressed: () {
         if (isHide)
           hideGreeting(context);
@@ -162,9 +162,9 @@ class GreetingItemWidget extends StatelessWidget {
 
     // set up the AlertDialog
     AlertDialog alert = AlertDialog(
-      title: Text("Confirmation"),
-      content: Text("Are you sure you want to " +
-          (isHide ? (isHidden ? "Unhide" : "hide") : "delete") +
+      title: Text("lbl_confirmation".tr),
+      content: Text("lbl_partial_confirm".tr +
+          (isHide ? (isHidden ? ("lbl_unhide".tr) : ("lbl_hide".tr)) : "delete") +
           " the card?"),
       actions: [
         cancelButton,
@@ -214,7 +214,7 @@ class GreetingItemWidget extends StatelessWidget {
           await api.createHideGreeting(mainContext,queryParams: req);
       if ((resp.isSuccess ?? false)) {
         Navigator.pop(mainContext);
-        Get.snackbar('Success',
+        Get.snackbar("lbl_success".tr,
             "Greeting " + (isHidden ? "un" : "") + "hidden successfully!",
             backgroundColor: Color.fromARGB(255, 208, 245, 216),
             colorText: Colors.green[900],
@@ -224,7 +224,7 @@ class GreetingItemWidget extends StatelessWidget {
             ));
 actionPerformed();
       } else {
-        Get.snackbar('Error', resp.errorMessage.toString(),
+        Get.snackbar("lbl_error".tr, resp.errorMessage.toString(),
             backgroundColor: Color.fromARGB(255, 255, 230, 230),
             colorText: Colors.red[900],
             icon: Icon(
@@ -245,7 +245,7 @@ actionPerformed();
           await api.createDeleteGreeting(mainContext,queryParams: req);
       if ((resp.isSuccess ?? false)) {
         Navigator.pop(mainContext);
-        Get.snackbar('Success', "Greeting deleted successfully!",
+        Get.snackbar("lbl_success".tr, "Greeting deleted successfully!",
             backgroundColor: Color.fromARGB(255, 208, 245, 216),
             colorText: Colors.green[900],
             icon: Icon(
@@ -254,7 +254,7 @@ actionPerformed();
             ));
 actionPerformed();
       } else {
-        Get.snackbar('Error', resp.errorMessage.toString(),
+        Get.snackbar("lbl_error".tr, resp.errorMessage.toString(),
             backgroundColor: Color.fromARGB(255, 255, 230, 230),
             colorText: Colors.red[900],
             icon: Icon(

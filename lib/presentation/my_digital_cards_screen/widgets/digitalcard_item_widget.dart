@@ -42,19 +42,19 @@ class DigitalCardItemWidget extends StatelessWidget {
       openWithTap: true,
       menuItems: <CustomFocusedMenuItem>[
         CustomFocusedMenuItem(
-            title: Text("Edit"),
+            title: Text("lbl_edit".tr),
             trailingIcon: Icon(Icons.edit),
             onPressed: () {
               openCard(context);
             }),
         CustomFocusedMenuItem(
-            title: Text("Preview"),
+            title: Text("lbl_preview"),
             trailingIcon: Icon(Icons.remove_red_eye),
             onPressed: () {
               openCardPreview(context);
             }),
         CustomFocusedMenuItem(
-            title: Text("Publish"),
+            title: Text("lbl_publish".tr),
             trailingIcon: Icon(Icons.cloud_upload_rounded),
             onPressed: () {
               publishCardAction(context);
@@ -64,13 +64,13 @@ class DigitalCardItemWidget extends StatelessWidget {
                     (modelobj.cardStatus ?? 0) == 7)
                 ? true
                 : false,
-            title: Text("Open Published Card"),
+            title: Text("lbl_open_published_card".tr),
             trailingIcon: Icon(Icons.open_in_new),
             onPressed: () {
               openPublishedCard(context);
             }),
         CustomFocusedMenuItem(
-            title: Text("Share"),
+            title: Text("lbl_share".tr),
             isVisible: ((modelobj.cardStatus ?? 0) == 2 ||
                     (modelobj.cardStatus ?? 0) == 7)
                 ? true
@@ -80,7 +80,7 @@ class DigitalCardItemWidget extends StatelessWidget {
               shareCard(context);
             }),
         CustomFocusedMenuItem(
-            title: Text((isHidden ? "Unhide" : "Hide")),
+            title: Text((isHidden ? ("lbl_unhide".tr) : ("lbl_hide".tr))),
             trailingIcon:
                 Icon(isHidden ? Icons.unarchive : Icons.remove_circle),
             onPressed: () {
@@ -88,7 +88,7 @@ class DigitalCardItemWidget extends StatelessWidget {
             }),
         CustomFocusedMenuItem(
             title: Text(
-              "Delete",
+              "lbl_delete".tr,
               style: TextStyle(color: Colors.redAccent),
             ),
             trailingIcon: Icon(
@@ -187,13 +187,13 @@ class DigitalCardItemWidget extends StatelessWidget {
   showAlertDialog(BuildContext context, bool isHide) {
     // set up the buttons
     Widget cancelButton = TextButton(
-      child: Text("Cancel"),
+      child: Text("lbl_cancel".tr),
       onPressed: () {
         Navigator.pop(context);
       },
     );
     Widget continueButton = TextButton(
-      child: Text("Continue"),
+      child: Text("lbl_continue".tr),
       onPressed: () {
         if (isHide)
           hideGreeting(context);
@@ -204,10 +204,10 @@ class DigitalCardItemWidget extends StatelessWidget {
 
     // set up the AlertDialog
     AlertDialog alert = AlertDialog(
-      title: Text("Confirmation"),
-      content: Text("Are you sure you want to " +
-          (isHide ? (isHidden ? "Unhide" : "hide") : "delete") +
-          " the card?"),
+      title: Text("lbl_confirmation".tr),
+      content: Text("lbl_partial_confirm".tr +
+          (isHide ? (isHidden ? ("lbl_unhide".tr) : ("lbl_hide".tr)) : "lbl_delete_con".tr) +
+          "lbl_partial_confirm2".tr),
       actions: [
         cancelButton,
         continueButton,
@@ -226,7 +226,7 @@ class DigitalCardItemWidget extends StatelessWidget {
   showCreditTypeDialog(BuildContext context) {
     // set up the buttons
     Widget cancelButton = TextButton(
-      child: Text("Cancel"),
+      child: Text("lbl_cancel".tr),
       onPressed: () {
         Navigator.pop(context);
         Navigator.pop(context);
@@ -318,7 +318,7 @@ class DigitalCardItemWidget extends StatelessWidget {
     String cardURL =
         this.modelobj.publishedURL ?? ''; // this.modelobj.picture1??'';
     if (cardURL.isEmpty) {
-      Get.snackbar('Warning', "Card needs to be published!",
+      Get.snackbar("lbl_warning".tr, "Card needs to be published!",
           backgroundColor: Color.fromARGB(255, 255, 224, 156),
           colorText: Color.fromARGB(255, 105, 73, 3),
           icon: Icon(
@@ -340,7 +340,7 @@ class DigitalCardItemWidget extends StatelessWidget {
     String cardURL =
         this.modelobj.publishedURL ?? ''; // this.modelobj.picture1??'';
     if (cardURL.isEmpty) {
-      Get.snackbar('Warning', "Card needs to be published!",
+      Get.snackbar("lbl_warning".tr, "Card needs to be published!",
           backgroundColor: Color.fromARGB(255, 255, 224, 156),
           colorText: Color.fromARGB(255, 105, 73, 3),
           icon: Icon(
@@ -359,13 +359,13 @@ class DigitalCardItemWidget extends StatelessWidget {
   showPublishAlertDialog(BuildContext context) {
     // set up the buttons
     Widget cancelButton = TextButton(
-      child: Text("No"),
+      child: Text("lbl_no".tr),
       onPressed: () {
         Navigator.pop(context);
       },
     );
     Widget continueButton = TextButton(
-      child: Text("Yes"),
+      child: Text("lbl_yes".tr),
       onPressed: () {
         // Navigator.pop(context);
         publishCard(context);
@@ -374,8 +374,8 @@ class DigitalCardItemWidget extends StatelessWidget {
 
     // set up the AlertDialog
     AlertDialog alert = AlertDialog(
-      title: Text("Confirmation"),
-      content: Text("Are you sure you want to publish the card?"),
+      title: Text("lbl_confirmation".tr),
+      content: Text("lbl_publish_confirmation".tr),
       actions: [
         cancelButton,
         continueButton,
@@ -399,7 +399,7 @@ class DigitalCardItemWidget extends StatelessWidget {
       APIResponse resp = await api.fetchPublish(maincontext,queryParams: req);
       if ((resp.isSuccess ?? false)) {
         
-        Get.snackbar('Success', "Card Published successfully!",
+        Get.snackbar("lbl_success".tr, "Card Published successfully!",
             backgroundColor: Color.fromARGB(255, 208, 245, 216),
             colorText: Colors.green[900],
             icon: Icon(
@@ -410,7 +410,7 @@ class DigitalCardItemWidget extends StatelessWidget {
     Navigator.pop(maincontext);
         actionPerformed();
       } else {
-        Get.snackbar('Error', resp.errorMessage.toString(),
+        Get.snackbar("lbl_error".tr, resp.errorMessage.toString(),
             backgroundColor: Color.fromARGB(255, 255, 230, 230),
             colorText: Colors.red[900],
             icon: Icon(
@@ -427,8 +427,8 @@ class DigitalCardItemWidget extends StatelessWidget {
         "CardType": this.modelobj.cardType.toString(),
         "CardId": this.modelobj.cardID.toString(),
       };
-      APIResponse resp = await api.checkCardEditExpiry(mainContext,requestData: req);
-      if ((resp.isSuccess ?? false)) {
+      APIBooleanResponse resp = await api.checkCardEditExpiry(mainContext,requestData: req);
+      if ((resp.result ?? false)) {
         Navigator.of(mainContext)
             .pushNamed(AppRoutes.basicCardEntryOneScreen, arguments: {
           "Type": this.modelobj.cardType,
@@ -441,7 +441,7 @@ class DigitalCardItemWidget extends StatelessWidget {
         });
       } else {
         Get.snackbar(
-            'Error',
+            "lbl_error".tr,
             "Edit option validity is expired. Please use the credits to extend the validity of editing a card"
                 .toString(),
             backgroundColor: Color.fromARGB(255, 255, 230, 230),
@@ -466,7 +466,7 @@ class DigitalCardItemWidget extends StatelessWidget {
       if ((resp.isSuccess ?? false)) {
         creditTypes = resp.result ?? [];
       } else {
-        Get.snackbar('Error', resp.errorMessage.toString(),
+        Get.snackbar("lbl_error".tr, resp.errorMessage.toString(),
             backgroundColor: Color.fromARGB(255, 255, 230, 230),
             colorText: Colors.red[900],
             icon: Icon(
@@ -489,7 +489,7 @@ class DigitalCardItemWidget extends StatelessWidget {
       APIResponse resp = await api.assignCardEditCredits(mainContext,requestData: req);
       if ((resp.isSuccess ?? false)) {
         Get.snackbar(
-            'Success', "Validity of edit option upgraded successfully!",
+            "lbl_success".tr, "Validity of edit option upgraded successfully!",
             backgroundColor: Color.fromARGB(255, 208, 245, 216),
             colorText: Colors.green[900],
             icon: Icon(
@@ -500,7 +500,7 @@ class DigitalCardItemWidget extends StatelessWidget {
         Navigator.pop(mainContext);
         actionPerformed();
       } else {
-        Get.snackbar('Error', resp.errorMessage.toString(),
+        Get.snackbar("lbl_error".tr, resp.errorMessage.toString(),
             backgroundColor: Color.fromARGB(255, 255, 230, 230),
             colorText: Colors.red[900],
             icon: Icon(
@@ -521,7 +521,7 @@ class DigitalCardItemWidget extends StatelessWidget {
       GetHideCardResp resp = await api.fetchHideCard(mainContext,queryParams: req);
       if ((resp.isSuccess ?? false)) {
         Navigator.pop(mainContext);
-        Get.snackbar('Success',
+        Get.snackbar("lbl_success".tr,
             "Card " + (isHidden ? "un" : "") + "hidden successfully!",
             backgroundColor: Color.fromARGB(255, 208, 245, 216),
             colorText: Colors.green[900],
@@ -531,7 +531,7 @@ class DigitalCardItemWidget extends StatelessWidget {
             ));
         actionPerformed();
       } else {
-        Get.snackbar('Error', resp.errorMessage.toString(),
+        Get.snackbar("lbl_error".tr, resp.errorMessage.toString(),
             backgroundColor: Color.fromARGB(255, 255, 230, 230),
             colorText: Colors.red[900],
             icon: Icon(
@@ -551,7 +551,7 @@ class DigitalCardItemWidget extends StatelessWidget {
       GetDeleteCardResp resp = await api.fetchDeleteCard(mainContext,queryParams: req);
       if ((resp.isSuccess ?? false)) {
         Navigator.pop(mainContext);
-        Get.snackbar('Success', "Card deleted successfully!",
+        Get.snackbar("lbl_success".tr, "Card deleted successfully!",
             backgroundColor: Color.fromARGB(255, 208, 245, 216),
             colorText: Colors.green[900],
             icon: Icon(
@@ -560,7 +560,7 @@ class DigitalCardItemWidget extends StatelessWidget {
             ));
         actionPerformed();
       } else {
-        Get.snackbar('Error', resp.errorMessage.toString(),
+        Get.snackbar("lbl_error".tr, resp.errorMessage.toString(),
             backgroundColor: Color.fromARGB(255, 255, 230, 230),
             colorText: Colors.red[900],
             icon: Icon(

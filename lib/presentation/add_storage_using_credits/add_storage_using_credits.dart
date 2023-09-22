@@ -65,7 +65,7 @@ class _AddStorageCredits extends State<AddStorageCredits> {
               _totalspace_Controller.text = resp.result.toString();
             });
           } else {
-            Get.snackbar('Error', resp.errorMessage.toString(),
+            Get.snackbar("lbl_error".tr, resp.errorMessage.toString(),
                 backgroundColor: Color.fromARGB(255, 255, 230, 230),
                 colorText: Colors.red[900],
                 icon: Icon(
@@ -91,7 +91,7 @@ class _AddStorageCredits extends State<AddStorageCredits> {
           creditsAvailable = resp.result;
         });
       } else {
-        Get.snackbar('Error', resp.errorMessage.toString(),
+        Get.snackbar("lbl_error".tr, resp.errorMessage.toString(),
             backgroundColor: Color.fromARGB(255, 255, 230, 230),
             colorText: Colors.red[900],
             icon: Icon(
@@ -105,7 +105,7 @@ class _AddStorageCredits extends State<AddStorageCredits> {
   addStorageDetails(BuildContext appcontext) async {
     try {
       if (int.parse(_noofcredits_Controller.text) <= 0) {
-        Get.snackbar('Warning', "Please enter valid credits!",
+        Get.snackbar("lbl_warning".tr, "Please enter valid credits!",
             backgroundColor: Color.fromARGB(255, 255, 224, 156),
             colorText: Color.fromARGB(255, 105, 73, 3),
             icon: Icon(
@@ -124,7 +124,7 @@ class _AddStorageCredits extends State<AddStorageCredits> {
       APIResponse resp = await api.addStorage(appcontext, requestData: req);
       if (resp.isSuccess ?? false) {
         setState(() {
-          Get.snackbar('Success', "Storage added successfully!",
+          Get.snackbar("lbl_success".tr, "Storage added successfully!",
               backgroundColor: Color.fromARGB(255, 208, 245, 216),
               colorText: Colors.green[900],
               icon: Icon(
@@ -134,7 +134,7 @@ class _AddStorageCredits extends State<AddStorageCredits> {
         });
         getAvailableCredits(appcontext, showProgress: false);
       } else {
-        Get.snackbar('Error', resp.errorMessage.toString(),
+        Get.snackbar("lbl_error".tr, resp.errorMessage.toString(),
             backgroundColor: Color.fromARGB(255, 255, 230, 230),
             colorText: Colors.red[900],
             icon: Icon(
@@ -196,7 +196,7 @@ class _AddStorageCredits extends State<AddStorageCredits> {
                                               bottom: 13))
                                     ])),
                             AppbarTitle(
-                                text: "lbl_increase_space".tr.toUpperCase(),
+                                text: ("lbl_increase_space".tr),
                                 margin: getMargin(left: 25, top: 0))
                           ])))
                 ])),
@@ -230,7 +230,7 @@ class _AddStorageCredits extends State<AddStorageCredits> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     Text(
-                      ('lbl_available_credits'.tr),
+                      ("lbl_available_credits".tr),
                       style: AppStyle.txtNunitoSansBold14,
                     ),
                     Container(

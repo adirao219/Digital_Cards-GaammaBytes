@@ -62,7 +62,7 @@ class _HomePageScreen extends State<HomePageScreen> {
           selectedLanguage = languages?.first.value;
         });
       } else {
-        Get.snackbar('Error', resp.errorMessage.toString(),
+        Get.snackbar("lbl_error".tr, resp.errorMessage.toString(),
             backgroundColor: Color.fromARGB(255, 255, 230, 230),
             colorText: Colors.red[900],
             icon: Icon(
@@ -85,7 +85,7 @@ class _HomePageScreen extends State<HomePageScreen> {
               .forEach((key, value) => captionMap[key] = value.toString());
         });
       } else {
-        Get.snackbar('Error', resp.errorMessage.toString(),
+        Get.snackbar("lbl_error".tr, resp.errorMessage.toString(),
             backgroundColor: Color.fromARGB(255, 255, 230, 230),
             colorText: Colors.red[900],
             icon: Icon(
@@ -683,7 +683,7 @@ class _HomePageScreen extends State<HomePageScreen> {
 
     // set up the AlertDialog
     AlertDialog alert = AlertDialog(
-      title: Text("Choose your Language"),
+      title: Text("lbl_choose_language".tr),
       content: Container(
           child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -761,19 +761,19 @@ GlobalVariables.setCurrentLanguageID(element.value ?? "1");
   showAlertDialog(BuildContext context) {
     // set up the button
     Widget okButton = TextButton(
-      child: Text("Yes"),
+      child: Text("lbl_yes".tr),
       onPressed: onTapLogout,
     );
     Widget cancelButtonn = TextButton(
-      child: Text("Cancel"),
+      child: Text("lbl_cancel".tr),
       onPressed: () {
         Navigator.pop(context);
       },
     );
     // set up the AlertDialog
     AlertDialog alert = AlertDialog(
-      title: Text("Logout"),
-      content: Text("Are you sure you want to logout?"),
+      title: Text("lbl_logout".tr),
+      content: Text("lbl_loguout_confirm".tr),
       actions: [okButton, cancelButtonn],
     );
     // show the dialog
@@ -814,7 +814,7 @@ GlobalVariables.setCurrentLanguageID(element.value ?? "1");
     GlobalVariables.setGoogleLoggedIn(false);
     GlobalVariables.setUserPhotoUrl("");
     // Navigator.of(context).pushAndRemoveUntil(AppRoutes.signupPageScreen);
-    Get.snackbar('Success', "Logged out successfully!",
+    Get.snackbar("lbl_success".tr, "Logged out successfully!",
         backgroundColor: Color.fromARGB(255, 208, 245, 216),
         colorText: Colors.green[900],
         icon: Icon(

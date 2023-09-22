@@ -92,7 +92,7 @@ class _BasicGreetingEntryScreen extends State<BasicGreetingEntryScreen> {
 
   List<DriveFilesData> allUserImages = [];
   List<DriveFilesData> userImages = [];
-  String logoPositionName = " Select Logo Position";
+  String logoPositionName = "lbl_select_logo_position".tr;
   String? senderDefault = "";
   bool? isUserDefinedBackground = false;
   String templateID = "";
@@ -105,9 +105,9 @@ class _BasicGreetingEntryScreen extends State<BasicGreetingEntryScreen> {
       getCardDetails();
     }
     getUserImages();
-    _message_Controller.text = "Click here to update the content";
-    _caption_Controller.text = "Click here to update the content";
-    _sender_Controller.text = "Click here to update the content";
+    _message_Controller.text = "lbl_click_update".tr;
+    _caption_Controller.text = "lbl_click_update".tr;
+    _sender_Controller.text = "lbl_click_update".tr;
     super.initState();
   }
 
@@ -206,7 +206,7 @@ class _BasicGreetingEntryScreen extends State<BasicGreetingEntryScreen> {
                                   width: 250,
                                   text: templateName.isEmpty
                                       ? "lbl_select_template".tr
-                                      : "Template : " + templateName,
+                                      : "lbl_template".tr + templateName,
                                   margin: getMargin(top: 22),
                                   variant: ButtonVariant.OutlineBlack9003f_1,
                                   shape: ButtonShape.RoundedBorder15,
@@ -372,9 +372,9 @@ class _BasicGreetingEntryScreen extends State<BasicGreetingEntryScreen> {
                                           totalSwitches: 2,
                                           labels: [
                                             (!(isUserDefinedBackground ?? false)
-                                                ? 'Image'
-                                                : 'Image'),
-                                            'Color'
+                                                ? "lbl_image".tr
+                                                : "lbl_image".tr),
+                                            "lbl_color".tr
                                           ],
                                           icons: [
                                             Icons.image,
@@ -517,8 +517,8 @@ class _BasicGreetingEntryScreen extends State<BasicGreetingEntryScreen> {
                                                     context: context,
                                                     builder: (ctx) =>
                                                         AlertDialog(
-                                                            title: const Text(
-                                                                'Pick a color!'),
+                                                            title: Text(
+                                                                "lbl_pick_color".tr),
                                                             content:
                                                                 SingleChildScrollView(
                                                               child:
@@ -544,8 +544,8 @@ class _BasicGreetingEntryScreen extends State<BasicGreetingEntryScreen> {
                                                                 },
                                                               ),
                                                               ElevatedButton(
-                                                                child: const Text(
-                                                                    'Select'),
+                                                                child:Text(
+                                                              "lbl_select".tr),
                                                                 onPressed: () {
                                                                   setState(() =>
                                                                       currentColor =
@@ -984,7 +984,7 @@ class _BasicGreetingEntryScreen extends State<BasicGreetingEntryScreen> {
           allUserImages = userImages = resp.result ?? [];
         });
       } else {
-        Get.snackbar('Error', resp.errorMessage.toString(),
+        Get.snackbar("lbl_error".tr, resp.errorMessage.toString(),
             backgroundColor: Color.fromARGB(255, 255, 230, 230),
             colorText: Colors.red[900],
             icon: Icon(
@@ -1005,7 +1005,7 @@ class _BasicGreetingEntryScreen extends State<BasicGreetingEntryScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      "Select Image!",
+                      "lbl_select_image".tr,
                       style: AppStyle.txtNunitoBold18,
                     ),
                     IconButton(
@@ -1097,7 +1097,7 @@ class _BasicGreetingEntryScreen extends State<BasicGreetingEntryScreen> {
                   CustomButton(
                     height: 40,
                     width: 110,
-                    text: (' Camera'),
+                    text: ("lbl_camera".tr),
                     prefixWidget: Icon(
                       Icons.camera_alt_rounded,
                       color: ColorConstant.pink900,
@@ -1113,7 +1113,7 @@ class _BasicGreetingEntryScreen extends State<BasicGreetingEntryScreen> {
                   CustomButton(
                     height: 40,
                     width: 110,
-                    text: (' Gallery'),
+                    text: ("lbl_gallery".tr),
                     prefixWidget: Icon(
                       Icons.image_search_rounded,
                       color: ColorConstant.pink900,
@@ -1326,7 +1326,7 @@ class _BasicGreetingEntryScreen extends State<BasicGreetingEntryScreen> {
       if (resp.isSuccess ?? false) {
         if (!isToggledToCardColor) {
           Get.snackbar(
-              'Success',
+              "lbl_success".tr,
               (pictureType.value == 1 ? "Logo" : "Background") +
                   " image removed successfully!",
               backgroundColor: Color.fromARGB(255, 208, 245, 216),
@@ -1337,7 +1337,7 @@ class _BasicGreetingEntryScreen extends State<BasicGreetingEntryScreen> {
               ));
         }
       } else {
-        Get.snackbar('Error', resp.errorMessage.toString(),
+        Get.snackbar("lbl_error".tr, resp.errorMessage.toString(),
             backgroundColor: Color.fromARGB(255, 255, 230, 230),
             colorText: Colors.red[900],
             icon: Icon(
@@ -1375,13 +1375,13 @@ class _BasicGreetingEntryScreen extends State<BasicGreetingEntryScreen> {
   showAlertDialog(BuildContext context, UserImageType pictureType) {
     // set up the buttons
     Widget cancelButton = TextButton(
-      child: Text("Cancel"),
+      child: Text("lbl_cancel".tr),
       onPressed: () {
         Navigator.pop(context);
       },
     );
     Widget continueButton = TextButton(
-      child: Text("Continue"),
+      child: Text("lbl_continue".tr),
       onPressed: () {
         Navigator.pop(context);
         removeSelectedImage(pictureType, false);
@@ -1390,7 +1390,7 @@ class _BasicGreetingEntryScreen extends State<BasicGreetingEntryScreen> {
 
     // set up the AlertDialog
     AlertDialog alert = AlertDialog(
-      title: Text("Confirmation"),
+      title: Text("lbl_confirmation".tr),
       content: Text("Are you sure you want to delete the image?"),
       actions: [
         cancelButton,
@@ -1478,7 +1478,7 @@ class _BasicGreetingEntryScreen extends State<BasicGreetingEntryScreen> {
           await api.createCreateGreeting(context,requestData: req);
       if (resp.isSuccess ?? false) {
         selectedCardID = resp.result;
-        Get.snackbar('Success', "Greeting Created Successfully!",
+        Get.snackbar("lbl_success".tr,"lbl_greeting_saved".tr,
             backgroundColor: Color.fromARGB(255, 208, 245, 216),
             colorText: Colors.green[900],
             icon: Icon(
@@ -1497,10 +1497,10 @@ class _BasicGreetingEntryScreen extends State<BasicGreetingEntryScreen> {
           }
         });
       } else {
-        Get.snackbar('Error', resp.errorMessage.toString());
+        Get.snackbar("lbl_error".tr, resp.errorMessage.toString());
       }
     } catch (e) {
-      Get.snackbar('Error', e.toString());
+      Get.snackbar("lbl_error".tr, e.toString());
     }
   }
 
@@ -1583,7 +1583,7 @@ class _BasicGreetingEntryScreen extends State<BasicGreetingEntryScreen> {
               '');
         });
       } else {
-        Get.snackbar('Error', resp.errorMessage.toString());
+        Get.snackbar("lbl_error".tr, resp.errorMessage.toString());
       }
     } catch (e) {
       ProgressDialogUtils.hideProgressDialog(context);
@@ -1595,30 +1595,30 @@ class _BasicGreetingEntryScreen extends State<BasicGreetingEntryScreen> {
       logoPosition = position;
       switch (logoPosition) {
         case 0:
-          logoPositionName = " Select Logo Position";
+          logoPositionName = "lbl_select_logo_position".tr;
           break;
 
         case 1:
-          logoPositionName = " Top Left";
+          logoPositionName = "lbl_top_left".tr;
           break;
 
         case 2:
-          logoPositionName = " Top Center";
+          logoPositionName = "lbl_top_center".tr;
           break;
 
         case 3:
-          logoPositionName = " Top Right";
+          logoPositionName = "lbl_top_right".tr;
           break;
 
         case 7:
-          logoPositionName = " Bottom Left";
+          logoPositionName = "lbl_bottom_left".tr;
           break;
 
         case 8:
-          logoPositionName = " Bottom Center";
+          logoPositionName = "lbl_bottom_center".tr;
           break;
         case 9:
-          logoPositionName = " Bottom Right";
+          logoPositionName = "lbl_bottom_right".tr;
           break;
       }
       if (isClosePopup) Navigator.pop(context);
@@ -1629,7 +1629,7 @@ class _BasicGreetingEntryScreen extends State<BasicGreetingEntryScreen> {
     // set up the buttons
     Widget cancelButton = TextButton(
       child: Text(
-        "Cancel",
+        "lbl_cancel".tr,
         style: AppStyle.txtNunitoSansBold14Pink900,
       ),
       onPressed: () {
@@ -1638,7 +1638,7 @@ class _BasicGreetingEntryScreen extends State<BasicGreetingEntryScreen> {
     );
     Widget clearPosition = TextButton(
       child: Text(
-        "Clear",
+        "lbl_clear".tr,
         style: AppStyle.txtNunitoSansBold14Pink900,
       ),
       onPressed: () {
@@ -1649,7 +1649,7 @@ class _BasicGreetingEntryScreen extends State<BasicGreetingEntryScreen> {
     // set up the AlertDialog
     AlertDialog alert = AlertDialog(
       title: Text(
-        "Select Logo Position",
+        "lbl_select_logo_position".tr,
         style: AppStyle.txtNunitoSansBold14Pink900,
       ),
       content: Container(

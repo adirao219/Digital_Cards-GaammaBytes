@@ -62,7 +62,7 @@ class _FooterScreen extends State<FooterScreen> {
           getFooterData();
         });
       } else {
-        Get.snackbar('Error', resp.errorMessage.toString(),
+        Get.snackbar("lbl_error".tr, resp.errorMessage.toString(),
             backgroundColor: Color.fromARGB(255, 255, 230, 230),
             colorText: Colors.red[900],
             icon: Icon(
@@ -100,7 +100,7 @@ class _FooterScreen extends State<FooterScreen> {
               : resp.result!.footerData!.link5!.toString();
         });
       } else {
-        Get.snackbar('Error', resp.errorMessage.toString(),
+        Get.snackbar("lbl_error".tr, resp.errorMessage.toString(),
             backgroundColor: Color.fromARGB(255, 255, 230, 230),
             colorText: Colors.red[900],
             icon: Icon(
@@ -127,7 +127,7 @@ class _FooterScreen extends State<FooterScreen> {
       };
       APIBooleanResponse resp = await api.createSaveFooter(context,requestData: req);
       if ((resp.isSuccess ?? false) && (resp.result ?? false)) {
-        Get.snackbar('Success', "Links updated successfully!",
+        Get.snackbar("lbl_success".tr, "lbl_links_updated".tr,
             backgroundColor: Color.fromARGB(255, 208, 245, 216),
             colorText: Colors.green[900],
             icon: Icon(
@@ -136,7 +136,7 @@ class _FooterScreen extends State<FooterScreen> {
             ));
         Navigator.pop(context);
       } else {
-        Get.snackbar('Error', resp.errorMessage.toString(),
+        Get.snackbar("lbl_error".tr, resp.errorMessage.toString(),
             backgroundColor: Color.fromARGB(255, 255, 230, 230),
             colorText: Colors.red[900],
             icon: Icon(
@@ -202,7 +202,7 @@ class _FooterScreen extends State<FooterScreen> {
                                                   bottom: 13))
                                         ])),
                                 AppbarTitle(
-                                    text: "lbl_footer2".tr.toUpperCase(),
+                                    text: ("lbl_footer".tr).toUpperCase(),
                                     margin: getMargin(left: 71, top: 0))
                               ])))
                     ])),
@@ -247,7 +247,7 @@ class _FooterScreen extends State<FooterScreen> {
                                 },
                               ),
                         hint: Text(
-                          'Select ' + ('lbl_link_1'.tr),
+                          ("lbl_select".tr)+" " + ('lbl_link_1'.tr),
                           style: AppStyle.txtNunitoSansRegular14Gray70001,
                         ),
                         // Array list of items
@@ -289,7 +289,7 @@ class _FooterScreen extends State<FooterScreen> {
                                 },
                               ),
                         hint: Text(
-                          'Select ' + ('lbl_link_2'.tr),
+                          ("lbl_select".tr)+" " + ('lbl_link_2'.tr),
                           style: AppStyle.txtNunitoSansRegular14Gray70001,
                         ),
                         // Array list of items
@@ -331,7 +331,7 @@ class _FooterScreen extends State<FooterScreen> {
                                 },
                               ),
                         hint: Text(
-                          'Select ' + ('lbl_link_3'.tr),
+                          ("lbl_select".tr)+" " + ('lbl_link_3'.tr),
                           style: AppStyle.txtNunitoSansRegular14Gray70001,
                         ),
                         // Array list of items
@@ -373,7 +373,7 @@ class _FooterScreen extends State<FooterScreen> {
                                 },
                               ),
                         hint: Text(
-                          'Select ' + ('lbl_link_4'.tr),
+                          ("lbl_select".tr)+" " + ('lbl_link_4'.tr),
                           style: AppStyle.txtNunitoSansRegular14Gray70001,
                         ),
                         // Array list of items
@@ -415,7 +415,7 @@ class _FooterScreen extends State<FooterScreen> {
                                 },
                               ),
                         hint: Text(
-                          'Select ' + ('lbl_link_5'.tr),
+                          ("lbl_select".tr)+" " + ('lbl_link_5'.tr),
                           style: AppStyle.txtNunitoSansRegular14Gray70001,
                         ),
                         // Array list of items

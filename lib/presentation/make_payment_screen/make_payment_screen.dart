@@ -63,7 +63,7 @@ class _MakePaymentScreen extends State<MakePaymentScreen> {
           _phone_number_Controller.text = resp.result!.phoneNumber ?? '';
         });
       } else {
-        Get.snackbar('Error', resp.errorMessage.toString(),
+        Get.snackbar("lbl_error".tr, resp.errorMessage.toString(),
             backgroundColor: Color.fromARGB(255, 255, 230, 230),
             colorText: Colors.red[900],
             icon: Icon(
@@ -87,7 +87,7 @@ class _MakePaymentScreen extends State<MakePaymentScreen> {
           razorPayAPISecret = resp.result['Secret'];
         });
       } else {
-        Get.snackbar('Error', resp.errorMessage.toString(),
+        Get.snackbar("lbl_error".tr, resp.errorMessage.toString(),
             backgroundColor: Color.fromARGB(255, 255, 230, 230),
             colorText: Colors.red[900],
             icon: Icon(
@@ -130,7 +130,7 @@ class _MakePaymentScreen extends State<MakePaymentScreen> {
   makePaymentInitiation() async {
     try {
       if (int.parse(_credits_Controller.text) <= 0) {
-        Get.snackbar('Warning', "Please enter valid credits!",
+        Get.snackbar("lbl_warning".tr, "Please enter valid credits!",
             backgroundColor: Color.fromARGB(255, 255, 224, 156),
             colorText: Color.fromARGB(255, 105, 73, 3),
             icon: Icon(
@@ -163,7 +163,7 @@ class _MakePaymentScreen extends State<MakePaymentScreen> {
           buildreq();
         });
       } else {
-        Get.snackbar('Error', resp.errorMessage.toString(),
+        Get.snackbar("lbl_error".tr, resp.errorMessage.toString(),
             backgroundColor: Color.fromARGB(255, 255, 230, 230),
             colorText: Colors.red[900],
             icon: Icon(
@@ -188,7 +188,7 @@ class _MakePaymentScreen extends State<MakePaymentScreen> {
       if (resp.isSuccess ?? false) {
         setState(() {
           Get.snackbar(
-              'Success',
+              "lbl_success".tr,
               _credits_Controller.text +
                   " credit" +
                   (int.parse(_credits_Controller.text) > 1 ? "s" : "") +
@@ -202,7 +202,7 @@ class _MakePaymentScreen extends State<MakePaymentScreen> {
           Navigator.pop(context);
         });
       } else {
-        Get.snackbar('Error', resp.errorMessage.toString(),
+        Get.snackbar("lbl_error".tr, resp.errorMessage.toString(),
             backgroundColor: Color.fromARGB(255, 255, 230, 230),
             colorText: Colors.red[900],
             icon: Icon(
@@ -226,7 +226,7 @@ class _MakePaymentScreen extends State<MakePaymentScreen> {
           .updatePaymentFailure(context, queryParams: req, requestData: {});
       if (resp.isSuccess ?? false) {
         setState(() {
-          Get.snackbar('Error', reason,
+          Get.snackbar("lbl_error".tr, reason,
               backgroundColor: Color.fromARGB(255, 255, 230, 230),
               colorText: Colors.red[900],
               icon: Icon(
@@ -235,7 +235,7 @@ class _MakePaymentScreen extends State<MakePaymentScreen> {
               ));
         });
       } else {
-        Get.snackbar('Error', resp.errorMessage.toString(),
+        Get.snackbar("lbl_error".tr, resp.errorMessage.toString(),
             backgroundColor: Color.fromARGB(255, 255, 230, 230),
             colorText: Colors.red[900],
             icon: Icon(
@@ -277,7 +277,7 @@ class _MakePaymentScreen extends State<MakePaymentScreen> {
           _amount_Controller.text = resp.result.toString() + " INR";
         });
       } else {
-        Get.snackbar('Error', resp.errorMessage.toString(),
+        Get.snackbar("lbl_error".tr, resp.errorMessage.toString(),
             backgroundColor: Color.fromARGB(255, 255, 230, 230),
             colorText: Colors.red[900],
             icon: Icon(
@@ -373,7 +373,7 @@ class _MakePaymentScreen extends State<MakePaymentScreen> {
                   width: 326,
                   focusNode: FocusNode(),
                   controller: _name_Controller,
-                  hintText: "Enter your name",
+                  hintText: "lbl_enter_name".tr,
                   margin: getMargin(
                     top: 5,
                   ),
@@ -394,7 +394,7 @@ class _MakePaymentScreen extends State<MakePaymentScreen> {
                 CustomTextFormField(
                   width: 326,
                   controller: _email_id4_Controller,
-                  hintText: "Enter your email".tr,
+                  hintText: "lbl_enter_email".tr.tr,
                   margin: getMargin(
                     top: 5,
                   ),
@@ -417,7 +417,7 @@ class _MakePaymentScreen extends State<MakePaymentScreen> {
                 CustomTextFormField(
                   width: 326,
                   controller: _phone_number_Controller,
-                  hintText: "Enter your phone number".tr,
+                  hintText: "lbl_enter_phone".tr,
                   margin: getMargin(
                     top: 5,
                   ),
@@ -439,7 +439,7 @@ class _MakePaymentScreen extends State<MakePaymentScreen> {
                 CustomTextFormField(
                   width: 326,
                   controller: _gstin_Controller,
-                  hintText: "Enter your GSTIN Number".tr,
+                  hintText:"lbl_enter_gstin".tr,
                   margin: getMargin(
                     top: 5,
                   ),
@@ -475,7 +475,7 @@ class _MakePaymentScreen extends State<MakePaymentScreen> {
                   isEnabled: false,
                   controller: _amount_Controller,
                   hintText:
-                      "Amount will be calculated based on credits entered".tr,
+                     "lbl_amount_cal_hint".tr,
                   margin: getMargin(
                     top: 5,
                   ),

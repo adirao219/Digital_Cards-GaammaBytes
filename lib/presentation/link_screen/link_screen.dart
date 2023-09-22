@@ -127,7 +127,7 @@ class _LinkScreen extends State<LinkScreen> {
           }
         });
       } else {
-        Get.snackbar('Error', resp.errorMessage.toString(),
+        Get.snackbar("lbl_error".tr, resp.errorMessage.toString(),
             backgroundColor: Color.fromARGB(255, 255, 230, 230),
             colorText: Colors.red[900],
             icon: Icon(
@@ -166,7 +166,7 @@ class _LinkScreen extends State<LinkScreen> {
       APIBooleanResponse resp =
           await api.createSaveLinkDefinition(context, requestData: req);
       if ((resp.isSuccess ?? false) && (resp.result ?? false)) {
-        Get.snackbar('Success', "Links updated successfully!",
+        Get.snackbar("lbl_success".tr, "lbl_links_updated".tr,
             backgroundColor: Color.fromARGB(255, 208, 245, 216),
             colorText: Colors.green[900],
             icon: Icon(
@@ -175,7 +175,7 @@ class _LinkScreen extends State<LinkScreen> {
             ));
         Navigator.pop(context);
       } else {
-        Get.snackbar('Error', resp.errorMessage.toString(),
+        Get.snackbar("lbl_error".tr, resp.errorMessage.toString(),
             backgroundColor: Color.fromARGB(255, 255, 230, 230),
             colorText: Colors.red[900],
             icon: Icon(
@@ -184,7 +184,7 @@ class _LinkScreen extends State<LinkScreen> {
             ));
       }
     } catch (e) {
-      Get.snackbar('Error', e.toString(),
+      Get.snackbar("lbl_error".tr, e.toString(),
           backgroundColor: Color.fromARGB(255, 255, 230, 230),
           colorText: Colors.red[900],
           icon: Icon(
@@ -616,7 +616,7 @@ class _LinkScreen extends State<LinkScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      "Select Image!",
+                      "lbl_select_image".tr,
                       style: AppStyle.txtNunitoBold18,
                     ),
                     IconButton(
@@ -693,7 +693,7 @@ class _LinkScreen extends State<LinkScreen> {
                   CustomButton(
                     height: 40,
                     width: 110,
-                    text: (' Camera'),
+                    text: ("lbl_camera".tr),
                     prefixWidget: Icon(
                       Icons.camera_alt_rounded,
                       color: ColorConstant.pink900,
@@ -709,7 +709,7 @@ class _LinkScreen extends State<LinkScreen> {
                   CustomButton(
                     height: 40,
                     width: 110,
-                    text: (' Gallery'),
+                    text: ("lbl_gallery".tr),
                     prefixWidget: Icon(
                       Icons.image_search_rounded,
                       color: ColorConstant.pink900,
@@ -737,7 +737,7 @@ class _LinkScreen extends State<LinkScreen> {
           allUserImages = userImages = resp.result ?? [];
         });
       } else {
-        Get.snackbar('Error', resp.errorMessage.toString(),
+        Get.snackbar("lbl_error".tr, resp.errorMessage.toString(),
             backgroundColor: Color.fromARGB(255, 255, 230, 230),
             colorText: Colors.red[900],
             icon: Icon(
@@ -884,13 +884,13 @@ class _LinkScreen extends State<LinkScreen> {
   showAlertDialog(BuildContext context) {
     // set up the buttons
     Widget cancelButton = TextButton(
-      child: Text("Cancel"),
+      child: Text("lbl_cancel".tr),
       onPressed: () {
         Navigator.pop(context);
       },
     );
     Widget continueButton = TextButton(
-      child: Text("Continue"),
+      child: Text("lbl_continue".tr),
       onPressed: () {
         Navigator.pop(context);
         removeSelectedImage();
@@ -899,7 +899,7 @@ class _LinkScreen extends State<LinkScreen> {
 
     // set up the AlertDialog
     AlertDialog alert = AlertDialog(
-      title: Text("Confirmation"),
+      title: Text("lbl_confirmation".tr),
       content: Text("Are you sure you want to delete the image?"),
       actions: [
         cancelButton,
@@ -941,7 +941,7 @@ class _LinkScreen extends State<LinkScreen> {
       APIBooleanResponse resp =
           await api.removeImage(context, queryParams: req);
       if (resp.isSuccess ?? false) {
-        Get.snackbar('Success', "Image removed successfully!",
+        Get.snackbar("lbl_success".tr, "Image removed successfully!",
             backgroundColor: Color.fromARGB(255, 208, 245, 216),
             colorText: Colors.green[900],
             icon: Icon(
@@ -954,7 +954,7 @@ class _LinkScreen extends State<LinkScreen> {
           isServerStoredLogo = false;
         });
       } else {
-        Get.snackbar('Error', resp.errorMessage.toString(),
+        Get.snackbar("lbl_error".tr, resp.errorMessage.toString(),
             backgroundColor: Color.fromARGB(255, 255, 230, 230),
             colorText: Colors.red[900],
             icon: Icon(

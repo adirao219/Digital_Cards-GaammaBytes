@@ -70,13 +70,13 @@ class CardSubTypeWidget extends StatelessWidget {
   showAlertDialog(BuildContext context, bool isHide) {
     // set up the buttons
     Widget cancelButton = TextButton(
-      child: Text("Cancel"),
+      child: Text("lbl_cancel".tr),
       onPressed: () {
         Navigator.pop(context);
       },
     );
     Widget continueButton = TextButton(
-      child: Text("Continue"),
+      child: Text("lbl_continue".tr),
       onPressed: () {
         if (isHide)
           hideGreeting(context);
@@ -87,8 +87,8 @@ class CardSubTypeWidget extends StatelessWidget {
 
     // set up the AlertDialog
     AlertDialog alert = AlertDialog(
-      title: Text("Confirmation"),
-      content: Text("Are you sure you want to " + ("delete") + " the card?"),
+      title: Text("lbl_confirmation".tr),
+      content: Text("lbl_partial_confirm".tr + ("delete") + " the card?"),
       actions: [
         cancelButton,
         continueButton,
@@ -143,7 +143,7 @@ class CardSubTypeWidget extends StatelessWidget {
       // PostHideGreetingResp resp =
       //     await api.createHideGreeting(context,queryParams: req);
       // if ((resp.isSuccess ?? false)) {
-      //   Get.snackbar('Success',
+      //   Get.snackbar("lbl_success".tr,
       //       "Greeting " + (isHidden ? "un" : "") + "hidden successfully!",
       //       backgroundColor: Color.fromARGB(255, 208, 245, 216),
       //       colorText: Colors.green[900],
@@ -154,7 +154,7 @@ class CardSubTypeWidget extends StatelessWidget {
 
       //   Navigator.of(mainContext).pushNamed(AppRoutes.myEGreetingCardsScreen);
       // } else {
-      //   Get.snackbar('Error', resp.errorMessage.toString(),
+      //   Get.snackbar("lbl_error".tr, resp.errorMessage.toString(),
       //       backgroundColor: Color.fromARGB(255, 255, 230, 230),
       //       colorText: Colors.red[900],
       //       icon: Icon(
@@ -174,7 +174,7 @@ class CardSubTypeWidget extends StatelessWidget {
       // PostDeleteGreetingResp resp =
       //     await api.createDeleteGreeting(context,queryParams: req);
       // if ((resp.isSuccess ?? false)) {
-      //   Get.snackbar('Success', "Greeting deleted successfully!",
+      //   Get.snackbar("lbl_success".tr, "Greeting deleted successfully!",
       //       backgroundColor: Color.fromARGB(255, 208, 245, 216),
       //       colorText: Colors.green[900],
       //       icon: Icon(
@@ -184,7 +184,7 @@ class CardSubTypeWidget extends StatelessWidget {
 
       //   Navigator.of(mainContext).pushNamed(AppRoutes.myEGreetingCardsScreen);
       // } else {
-      //   Get.snackbar('Error', resp.errorMessage.toString(),
+      //   Get.snackbar("lbl_error".tr, resp.errorMessage.toString(),
       //       backgroundColor: Color.fromARGB(255, 255, 230, 230),
       //       colorText: Colors.red[900],
       //       icon: Icon(

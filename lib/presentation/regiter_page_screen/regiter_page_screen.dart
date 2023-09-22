@@ -114,7 +114,7 @@ class _RegiterPageScreen extends State<RegiterPageScreen> {
 
                           controller: _nameController,
                           decoration: InputDecoration(
-                            labelText: "Enter your Name".tr,
+                            labelText: "lbl_enter_name".tr.tr,
                             labelStyle: AppStyle.txtNunitoSansRegular12
                                 .copyWith(
                                     height: getVerticalSize(1.10),
@@ -246,7 +246,7 @@ class _RegiterPageScreen extends State<RegiterPageScreen> {
                                       keyboardType: TextInputType.emailAddress,
                                       controller: _emailController,
                                       decoration: InputDecoration(
-                                        labelText: "Enter your Email ID".tr,
+                                        labelText: "lbl_enter_email".tr.tr,
                                         labelStyle: AppStyle
                                             .txtNunitoSansRegular12
                                             .copyWith(
@@ -305,7 +305,7 @@ class _RegiterPageScreen extends State<RegiterPageScreen> {
                                       keyboardType: TextInputType.emailAddress,
                                       controller: _emailController,
                                       decoration: InputDecoration(
-                                        labelText: "Enter your Email ID".tr,
+                                        labelText: "lbl_enter_email".tr.tr,
                                         labelStyle: AppStyle
                                             .txtNunitoSansRegular12
                                             .copyWith(
@@ -602,7 +602,7 @@ class _RegiterPageScreen extends State<RegiterPageScreen> {
                                                 fontWeight: FontWeight.w600,
                                                 height: getVerticalSize(1.22))),
                                         TextSpan(
-                                            text: "Sign-In".tr,
+                                            text: "Sign in".tr,
                                             style: TextStyle(
                                                 color: ColorConstant
                                                     .deepOrangeA100,
@@ -622,7 +622,7 @@ class _RegiterPageScreen extends State<RegiterPageScreen> {
   showTermsAlertDialog(BuildContext context) {
     // set up the buttons
     Widget okayButton = TextButton(
-      child: Text("Okay",style:AppStyle.txtNunitoSansRegular14Pink900 ,),
+      child: Text("lbl_okay".tr,style:AppStyle.txtNunitoSansRegular14Pink900 ,),
       onPressed: () {
         Navigator.pop(context);
       },
@@ -688,7 +688,7 @@ The use of this service is subject to the following terms of use:
           if (resp.result ?? false) {
             registerUser();
           } else {
-            Get.snackbar('Error', resp.errorMessage.toString(),
+            Get.snackbar("lbl_error".tr, resp.errorMessage.toString(),
                 backgroundColor: Color.fromARGB(255, 255, 230, 230),
                 colorText: Colors.red[900],
                 icon: Icon(
@@ -697,7 +697,7 @@ The use of this service is subject to the following terms of use:
                 ));
           }
         } else {
-          Get.snackbar('Error', resp.errorMessage.toString(),
+          Get.snackbar("lbl_error".tr, resp.errorMessage.toString(),
               backgroundColor: Color.fromARGB(255, 255, 230, 230),
               colorText: Colors.red[900],
               icon: Icon(
@@ -739,7 +739,7 @@ The use of this service is subject to the following terms of use:
           "isResetPassword": false
         });
       } else {
-        Get.snackbar('Error', resp.errorMessage.toString(),
+        Get.snackbar("lbl_error".tr, resp.errorMessage.toString(),
             backgroundColor: Color.fromARGB(255, 255, 230, 230),
             colorText: Colors.red[900],
             icon: Icon(

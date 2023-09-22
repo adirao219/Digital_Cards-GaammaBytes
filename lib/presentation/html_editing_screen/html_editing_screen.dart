@@ -107,7 +107,7 @@ class _HtmlEditorScreenState extends State<HtmlEditorScreen> {
           }
         });
       } else {
-        Get.snackbar('Error', resp.errorMessage.toString());
+        Get.snackbar("lbl_error".tr, resp.errorMessage.toString());
       }
     } catch (e) {}
   }
@@ -124,7 +124,7 @@ class _HtmlEditorScreenState extends State<HtmlEditorScreen> {
           }
         });
       } else {
-        Get.snackbar('Error', resp.errorMessage.toString(),
+        Get.snackbar("lbl_error".tr, resp.errorMessage.toString(),
             backgroundColor: Color.fromARGB(255, 255, 230, 230),
             colorText: Colors.red[900],
             icon: Icon(
@@ -222,7 +222,7 @@ class _HtmlEditorScreenState extends State<HtmlEditorScreen> {
         appBar: AppBar(
           backgroundColor: Colors.deepOrange[50],
           foregroundColor: Color.fromARGB(255, 97, 8, 8),
-          title: Text("Edit your HTML"),
+          title: Text("lbl_edit_your_html".tr),
           elevation: 0,
           actions: [
             IconButton(
@@ -310,15 +310,15 @@ class _HtmlEditorScreenState extends State<HtmlEditorScreen> {
                   tabs: [
                     Tab(
                       icon: Icon(Icons.closed_caption),
-                      text: "  Caption  ",
+                      text: "lbl_caption_html".tr,
                     ),
                     Tab(
                       icon: Icon(Icons.message),
-                      text: "  Message  ",
+                      text: "lbl_message_html".tr,
                     ),
                     Tab(
                       icon: Icon(Icons.person),
-                      text: "  Sender  ",
+                      text: "lbl_sender_html".tr,
                     ),
                   ],
                 ),
@@ -330,7 +330,7 @@ class _HtmlEditorScreenState extends State<HtmlEditorScreen> {
                         controller: _captioncontroller,
                         htmlEditorOptions: HtmlEditorOptions(
                           filePath: "assets/summernote.html",
-                          hint: 'Your text here...',
+                          hint: "lbl_your_text".tr,
                           shouldEnsureVisible: true,
                           initialText: captionContent,
                           // autoAdjustHeight: true
@@ -395,7 +395,7 @@ class _HtmlEditorScreenState extends State<HtmlEditorScreen> {
                                             MediaQuery.of(context).size.height /
                                                 3,
                                         hint: Text(
-                                          ('Select Font'.tr),
+                                          ("lbl_select_font".tr),
                                           style: AppStyle
                                               .txtNunitoSansRegular14Gray70001,
                                         ),
@@ -565,7 +565,7 @@ class _HtmlEditorScreenState extends State<HtmlEditorScreen> {
                         controller: _messagecontroller,
                         htmlEditorOptions: HtmlEditorOptions(
                           filePath: "assets/summernote.html",
-                          hint: 'Your text here...',
+                          hint: "lbl_your_text".tr,
                           shouldEnsureVisible: true,
                           initialText: messageContent,
                         ),
@@ -628,7 +628,7 @@ class _HtmlEditorScreenState extends State<HtmlEditorScreen> {
                                             MediaQuery.of(context).size.height /
                                                 3,
                                         hint: Text(
-                                          ('Select Font'.tr),
+                                          ("lbl_select_font".tr),
                                           style: AppStyle
                                               .txtNunitoSansRegular14Gray70001,
                                         ),
@@ -788,7 +788,7 @@ class _HtmlEditorScreenState extends State<HtmlEditorScreen> {
                         controller: _sendercontroller,
                         htmlEditorOptions: HtmlEditorOptions(
                           filePath: "assets/summernote.html",
-                          hint: 'Your text here...',
+                          hint: "lbl_your_text".tr,
                           shouldEnsureVisible: true,
                           initialText: senderContent,
                         ),
@@ -851,7 +851,7 @@ class _HtmlEditorScreenState extends State<HtmlEditorScreen> {
                                             MediaQuery.of(context).size.height /
                                                 3,
                                         hint: Text(
-                                          ('Select Font'.tr),
+                                          ("lbl_select_font".tr),
                                           style: AppStyle
                                               .txtNunitoSansRegular14Gray70001,
                                         ),
@@ -1152,7 +1152,7 @@ class _HtmlEditorScreenState extends State<HtmlEditorScreen> {
     // set up the buttons
     Widget cancelButton = TextButton(
       child: Text(
-        "Cancel",
+        "lbl_cancel".tr,
         style: AppStyle.txtNunitoSansBold14Pink900,
       ),
       onPressed: () {},
@@ -1183,7 +1183,7 @@ class _HtmlEditorScreenState extends State<HtmlEditorScreen> {
               child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('Select Language',
+                    Text("lbl_select_language".tr,
                         style: AppStyle.txtNunitoSansBold12),
                     DropdownButtonFormField<String>(
                       // Initial Value
@@ -1311,7 +1311,7 @@ class _HtmlEditorScreenState extends State<HtmlEditorScreen> {
                                     text: (defaultCaptions![index].details ??
                                         "")));
                                 Get.snackbar(
-                                    'Success',
+                                    "lbl_success".tr,
                                     ((currentIndex == 0
                                             ? "Caption"
                                             : "Message") +
@@ -1371,7 +1371,7 @@ class _HtmlEditorScreenState extends State<HtmlEditorScreen> {
             allDefaultCaptions = defaultCaptions = resp.result;
           });
         } else {
-          Get.snackbar('Error', resp.errorMessage.toString(),
+          Get.snackbar("lbl_error".tr, resp.errorMessage.toString(),
               backgroundColor: Color.fromARGB(255, 255, 230, 230),
               colorText: Colors.red[900],
               icon: Icon(

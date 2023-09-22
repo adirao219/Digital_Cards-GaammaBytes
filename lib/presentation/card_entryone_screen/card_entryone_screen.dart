@@ -71,13 +71,13 @@ class _CardEntryoneScreen extends State<CardEntryoneScreen> {
   showPublishAlertDialog(BuildContext context) {
     // set up the buttons
     Widget cancelButton = TextButton(
-      child: Text("No"),
+      child: Text("lbl_no".tr),
       onPressed: () {
         Navigator.pop(context);
       },
     );
     Widget continueButton = TextButton(
-      child: Text("Yes"),
+      child: Text("lbl_yes".tr),
       onPressed: () {
         Navigator.pop(context);
         publishCard();
@@ -86,8 +86,8 @@ class _CardEntryoneScreen extends State<CardEntryoneScreen> {
 
     // set up the AlertDialog
     AlertDialog alert = AlertDialog(
-      title: Text("Confirmation"),
-      content: Text("Are you sure you want to publish the card?"),
+      title: Text("lbl_confirmation".tr),
+      content: Text("lbl_publish_confirmation".tr),
       actions: [
         cancelButton,
         continueButton,
@@ -114,7 +114,7 @@ class _CardEntryoneScreen extends State<CardEntryoneScreen> {
           isPublished = true;
           publishedURL = resp.result.toString();
         });
-        Get.snackbar('Success', "Card Published successfully!",
+        Get.snackbar("lbl_success".tr, "Card Published successfully!",
             backgroundColor: Color.fromARGB(255, 208, 245, 216),
             colorText: Colors.green[900],
             icon: Icon(
@@ -122,7 +122,7 @@ class _CardEntryoneScreen extends State<CardEntryoneScreen> {
               color: Colors.green[900],
             ));
       } else {
-        Get.snackbar('Error', resp.errorMessage.toString(),
+        Get.snackbar("lbl_error".tr, resp.errorMessage.toString(),
             backgroundColor: Color.fromARGB(255, 255, 230, 230),
             colorText: Colors.red[900],
             icon: Icon(
@@ -149,7 +149,7 @@ class _CardEntryoneScreen extends State<CardEntryoneScreen> {
           mainResult = resp.result;
         });
       } else {
-        Get.snackbar('Error', resp.errorMessage.toString(),
+        Get.snackbar("lbl_error".tr, resp.errorMessage.toString(),
             backgroundColor: Color.fromARGB(255, 255, 230, 230),
             colorText: Colors.red[900],
             icon: Icon(
@@ -178,7 +178,7 @@ class _CardEntryoneScreen extends State<CardEntryoneScreen> {
       PostSaveResp resp = await api.saveCardDetails(context,requestData: req);
       if (resp.isSuccess ?? false) {
         selectedCardID = resp.result;
-        Get.snackbar('Success', "Card Saved Successfully!",
+        Get.snackbar("lbl_success".tr, "lbl_card_saved".tr,
             backgroundColor: Color.fromARGB(255, 208, 245, 216),
             colorText: Colors.green[900],
             icon: Icon(
@@ -203,7 +203,7 @@ class _CardEntryoneScreen extends State<CardEntryoneScreen> {
           getCardData(showProgress: false);
         });
       } else {
-        Get.snackbar('Error', resp.errorMessage.toString(),
+        Get.snackbar("lbl_error".tr, resp.errorMessage.toString(),
             backgroundColor: Color.fromARGB(255, 255, 230, 230),
             colorText: Colors.red[900],
             icon: Icon(

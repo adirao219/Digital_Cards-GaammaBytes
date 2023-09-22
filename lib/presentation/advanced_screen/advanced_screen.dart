@@ -114,7 +114,7 @@ class _AdvancedScreen extends State<AdvancedScreen> {
           updateExistingData();
         }
       } else {
-        Get.snackbar('Error', resp.errorMessage.toString(),
+        Get.snackbar("lbl_error".tr, resp.errorMessage.toString(),
             backgroundColor: Color.fromARGB(255, 255, 230, 230),
             colorText: Colors.red[900],
             icon: Icon(
@@ -146,7 +146,7 @@ class _AdvancedScreen extends State<AdvancedScreen> {
       PostSaveResp resp = await api.saveCardAdvance(context, requestData: req);
       if (resp.isSuccess ?? false) {
         selectedCardID = resp.result;
-        Get.snackbar('Success', "Card Saved Successfully!",
+        Get.snackbar("lbl_success".tr, "lbl_card_saved".tr,
             backgroundColor: Color.fromARGB(255, 208, 245, 216),
             colorText: Colors.green[900],
             icon: Icon(
@@ -155,7 +155,7 @@ class _AdvancedScreen extends State<AdvancedScreen> {
             ));
         Navigator.pop(context);
       } else {
-        Get.snackbar('Error', resp.errorMessage.toString(),
+        Get.snackbar("lbl_error".tr, resp.errorMessage.toString(),
             backgroundColor: Color.fromARGB(255, 255, 230, 230),
             colorText: Colors.red[900],
             icon: Icon(
@@ -221,7 +221,7 @@ class _AdvancedScreen extends State<AdvancedScreen> {
                                                   bottom: 13))
                                         ])),
                                 AppbarTitle(
-                                    text: "lbl_advanced".tr.toUpperCase(),
+                                    text: "lbl_advanced".tr,
                                     margin: getMargin(left: 56, top: 15))
                               ])))
                     ])),
@@ -467,7 +467,7 @@ class _AdvancedScreen extends State<AdvancedScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      "Select Image!",
+                      "lbl_select_image".tr,
                       style: AppStyle.txtNunitoBold18,
                     ),
                     IconButton(
@@ -544,7 +544,7 @@ class _AdvancedScreen extends State<AdvancedScreen> {
                   CustomButton(
                     height: 40,
                     width: 110,
-                    text: (' Camera'),
+                    text: ("lbl_camera".tr),
                     prefixWidget: Icon(
                       Icons.camera_alt_rounded,
                       color: ColorConstant.pink900,
@@ -560,7 +560,7 @@ class _AdvancedScreen extends State<AdvancedScreen> {
                   CustomButton(
                     height: 40,
                     width: 110,
-                    text: (' Gallery'),
+                    text: ("lbl_gallery".tr),
                     prefixWidget: Icon(
                       Icons.image_search_rounded,
                       color: ColorConstant.pink900,
@@ -588,7 +588,7 @@ class _AdvancedScreen extends State<AdvancedScreen> {
           allUserImages = userImages = resp.result ?? [];
         });
       } else {
-        Get.snackbar('Error', resp.errorMessage.toString(),
+        Get.snackbar("lbl_error".tr, resp.errorMessage.toString(),
             backgroundColor: Color.fromARGB(255, 255, 230, 230),
             colorText: Colors.red[900],
             icon: Icon(
@@ -722,13 +722,13 @@ class _AdvancedScreen extends State<AdvancedScreen> {
   showAlertDialog(BuildContext context) {
     // set up the buttons
     Widget cancelButton = TextButton(
-      child: Text("Cancel"),
+      child: Text("lbl_cancel".tr),
       onPressed: () {
         Navigator.pop(context);
       },
     );
     Widget continueButton = TextButton(
-      child: Text("Continue"),
+      child: Text("lbl_continue".tr),
       onPressed: () {
         Navigator.pop(context);
         removeSelectedImage();
@@ -737,7 +737,7 @@ class _AdvancedScreen extends State<AdvancedScreen> {
 
     // set up the AlertDialog
     AlertDialog alert = AlertDialog(
-      title: Text("Confirmation"),
+      title: Text("lbl_confirmation".tr),
       content: Text("Are you sure you want to delete the image?"),
       actions: [
         cancelButton,
@@ -779,7 +779,7 @@ class _AdvancedScreen extends State<AdvancedScreen> {
       APIBooleanResponse resp =
           await api.removeImage(context, queryParams: req);
       if (resp.isSuccess ?? false) {
-        Get.snackbar('Success', "Logo removed successfully!",
+        Get.snackbar("lbl_success".tr, "Logo removed successfully!",
             backgroundColor: Color.fromARGB(255, 208, 245, 216),
             colorText: Colors.green[900],
             icon: Icon(
@@ -792,7 +792,7 @@ class _AdvancedScreen extends State<AdvancedScreen> {
           isServerStoredLogo = false;
         });
       } else {
-        Get.snackbar('Error', resp.errorMessage.toString(),
+        Get.snackbar("lbl_error".tr, resp.errorMessage.toString(),
             backgroundColor: Color.fromARGB(255, 255, 230, 230),
             colorText: Colors.red[900],
             icon: Icon(

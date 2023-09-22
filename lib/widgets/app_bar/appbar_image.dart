@@ -81,7 +81,7 @@ class MoreOptionMenu extends StatelessWidget {
                 color: ColorConstant.pink900,
                 size: 20,
               ),
-              Text(' Help')
+              Text(" "+"lbl_help".tr)
             ])),
         PopupMenuItem<int>(
             value: 2,
@@ -91,7 +91,7 @@ class MoreOptionMenu extends StatelessWidget {
                 color: ColorConstant.pink900,
                 size: 20,
               ),
-              Text(' Watch Video')
+              Text('lbl_watch_video'.tr)
             ])),
       ],
     );
@@ -167,7 +167,7 @@ class CommonMoreOptionMenu extends StatelessWidget {
                 color: ColorConstant.pink900,
                 size: 20,
               ),
-              Text(' Help')
+              Text(" "+"lbl_help".tr)
             ])),
         PopupMenuItem<int>(
             value: 2,
@@ -177,7 +177,7 @@ class CommonMoreOptionMenu extends StatelessWidget {
                 color: ColorConstant.pink900,
                 size: 20,
               ),
-              Text(' Watch Digital Card Video')
+              Text('lbl_watch_card_video'.tr)
             ])),
         PopupMenuItem<int>(
             value: 2,
@@ -187,7 +187,7 @@ class CommonMoreOptionMenu extends StatelessWidget {
                 color: ColorConstant.pink900,
                 size: 20,
               ),
-              Text(' Watch E-Greeting Video')
+              Text('lbl_watch_greeting_video'.tr)
             ])),
       ],
     );
@@ -269,7 +269,7 @@ class ShareAndOpenMenu extends StatelessWidget {
                 // size: 20,
                 color: ColorConstant.pink900,
               ),
-             Text('More',
+             Text("lbl_more".tr,
               style: TextStyle(
                   color: ColorConstant.pink900,
                   fontWeight: FontWeight.bold,
@@ -298,7 +298,7 @@ class ShareAndOpenMenu extends StatelessWidget {
                   color: ColorConstant.pink900,
                   size: 18,
                 ),
-                Text('   Open Published Card',
+                Text('   '+"lbl_open_published_card".tr,
                     style: TextStyle(
                         color: ColorConstant.pink900,
                         fontWeight: FontWeight.bold,
@@ -313,7 +313,7 @@ class ShareAndOpenMenu extends StatelessWidget {
                   size: 18,
                 ),
                 Text(
-                  '   Share',
+                  '   '+"lbl_share".tr,
                   style: TextStyle(
                       color: ColorConstant.pink900,
                       fontWeight: FontWeight.bold,
@@ -329,7 +329,7 @@ class ShareAndOpenMenu extends StatelessWidget {
                   size: 18,
                 ),
                 Text(
-                  '   Preview',
+                  '   '+"lbl_preview".tr,
                   style: TextStyle(
                       color: ColorConstant.pink900,
                       fontWeight: FontWeight.bold,

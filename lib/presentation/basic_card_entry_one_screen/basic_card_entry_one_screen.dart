@@ -63,7 +63,7 @@ class _BasicCardEntryOneScreen extends State<BasicCardEntryOneScreen> {
   String templateName = "";
   String editorColorHex = "#ffffff";
   String? languageID = "";
-  int? logoPosition;
+  int? logoPosition=0;
   bool isBackgroundColor = false;
   ApiClient api = new ApiClient();
   List<Result> backgroundTypeList = [];
@@ -79,7 +79,7 @@ class _BasicCardEntryOneScreen extends State<BasicCardEntryOneScreen> {
   String htmlContent = "";
   List<DriveFilesData> allUserImages = [];
   List<DriveFilesData> userImages = [];
-  int? cardSubTypeID;
+  int? cardSubTypeID=0;
   bool isMultipleCardSubtype = false;
   String messageDefault = "";
   Color? currentColor;
@@ -231,7 +231,7 @@ class _BasicCardEntryOneScreen extends State<BasicCardEntryOneScreen> {
           logoPositionCaptionName = mainResult?.logoPositionCaptionName ?? '';
         });
       } else {
-        Get.snackbar('Error', resp.errorMessage.toString(),
+        Get.snackbar("lbl_error".tr, resp.errorMessage.toString(),
             backgroundColor: Color.fromARGB(255, 255, 230, 230),
             colorText: Colors.red[900],
             icon: Icon(
@@ -244,7 +244,7 @@ class _BasicCardEntryOneScreen extends State<BasicCardEntryOneScreen> {
 
   saveCardMain(BuildContext appcontext) async {
     if (_card_name_Controller.text.isEmpty) {
-      Get.snackbar('Warning', "Please enter card name!",
+      Get.snackbar("lbl_warning".tr, "lbl_enter_card_name".tr,
           backgroundColor: Color.fromARGB(255, 255, 224, 156),
           colorText: Color.fromARGB(255, 105, 73, 3),
           icon: Icon(
@@ -299,7 +299,7 @@ class _BasicCardEntryOneScreen extends State<BasicCardEntryOneScreen> {
       PostSaveResp resp = await api.saveCardMain(appcontext, requestData: req);
       if (resp.isSuccess ?? false) {
         selectedCardID = resp.result;
-        Get.snackbar('Success', "Card Saved Successfully!",
+        Get.snackbar("lbl_success".tr, "lbl_card_saved".tr,
             backgroundColor: Color.fromARGB(255, 208, 245, 216),
             colorText: Colors.green[900],
             icon: Icon(
@@ -325,7 +325,7 @@ class _BasicCardEntryOneScreen extends State<BasicCardEntryOneScreen> {
           getCardData(appcontext, showProgress: false);
         });
       } else {
-        Get.snackbar('Error', resp.errorMessage.toString(),
+        Get.snackbar("lbl_error".tr, resp.errorMessage.toString(),
             backgroundColor: Color.fromARGB(255, 255, 230, 230),
             colorText: Colors.red[900],
             icon: Icon(
@@ -361,7 +361,7 @@ class _BasicCardEntryOneScreen extends State<BasicCardEntryOneScreen> {
           }
         });
       } else {
-        Get.snackbar('Error', resp.errorMessage.toString());
+        Get.snackbar("lbl_error".tr, resp.errorMessage.toString());
       }
     } catch (e) {}
   }
@@ -377,7 +377,7 @@ class _BasicCardEntryOneScreen extends State<BasicCardEntryOneScreen> {
           getDigitalCardSubTypesTypes(appcontext);
         });
       } else {
-        Get.snackbar('Error', resp.errorMessage.toString());
+        Get.snackbar("lbl_error".tr, resp.errorMessage.toString());
       }
     } catch (e) {}
   }
@@ -385,13 +385,13 @@ class _BasicCardEntryOneScreen extends State<BasicCardEntryOneScreen> {
   showPublishAlertDialog(BuildContext context) {
     // set up the buttons
     Widget cancelButton = TextButton(
-      child: Text("No"),
+      child: Text("lbl_no".tr),
       onPressed: () {
         Navigator.pop(context);
       },
     );
     Widget continueButton = TextButton(
-      child: Text("Yes"),
+      child: Text("lbl_yes".tr),
       onPressed: () {
         Navigator.pop(context);
         publishCard();
@@ -400,8 +400,8 @@ class _BasicCardEntryOneScreen extends State<BasicCardEntryOneScreen> {
 
     // set up the AlertDialog
     AlertDialog alert = AlertDialog(
-      title: Text("Confirmation"),
-      content: Text("Are you sure you want to publish the card?"),
+      title: Text("lbl_confirmation".tr),
+      content: Text("lbl_publish_confirmation".tr),
       actions: [
         cancelButton,
         continueButton,
@@ -428,7 +428,7 @@ class _BasicCardEntryOneScreen extends State<BasicCardEntryOneScreen> {
           isPublished = true;
           publishedURL = resp.result.toString();
         });
-        Get.snackbar('Success', "Card Published successfully!",
+        Get.snackbar("lbl_success".tr, "Card Published successfully!",
             backgroundColor: Color.fromARGB(255, 208, 245, 216),
             colorText: Colors.green[900],
             icon: Icon(
@@ -436,7 +436,7 @@ class _BasicCardEntryOneScreen extends State<BasicCardEntryOneScreen> {
               color: Colors.green[900],
             ));
       } else {
-        Get.snackbar('Error', resp.errorMessage.toString(),
+        Get.snackbar("lbl_error".tr, resp.errorMessage.toString(),
             backgroundColor: Color.fromARGB(255, 255, 230, 230),
             colorText: Colors.red[900],
             icon: Icon(
@@ -507,7 +507,7 @@ class _BasicCardEntryOneScreen extends State<BasicCardEntryOneScreen> {
                                                   bottom: 13))
                                         ])),
                                 AppbarTitle(
-                                    text: "lbl_card_details".tr.toUpperCase(),
+                                    text: "lbl_card_details".tr,
                                     margin: getMargin(left: 54, top: 10))
                               ])))
                     ])),
@@ -563,12 +563,12 @@ class _BasicCardEntryOneScreen extends State<BasicCardEntryOneScreen> {
                                       height: 40,
                                       width: 250,
                                       text: cardSubTypeName.isEmpty
-                                          ? ("Select " +
+                                          ? ("lbl_select".tr +" "+
                                               (cardTypeName ?? '') +
-                                              " Type")
+                                              " "+"lbl_type".tr)
                                           : ("" +
                                               (cardTypeName ?? "") +
-                                              " Type : " +
+                                              " "+"lbl_type".tr+" : " +
                                               cardSubTypeName),
                                       margin: getMargin(top: 10),
                                       variant:
@@ -583,7 +583,7 @@ class _BasicCardEntryOneScreen extends State<BasicCardEntryOneScreen> {
                                   width: 250,
                                   text: templateName.isEmpty
                                       ? "lbl_select_template".tr
-                                      : "Template : " + templateName,
+                                      : "lbl_template".tr + templateName,
                                   margin: getMargin(top: 10),
                                   variant: ButtonVariant.OutlineBlack9003f_1,
                                   shape: ButtonShape.RoundedBorder15,
@@ -944,8 +944,8 @@ class _BasicCardEntryOneScreen extends State<BasicCardEntryOneScreen> {
                                                         context: context,
                                                         builder: (ctx) =>
                                                             AlertDialog(
-                                                                title: const Text(
-                                                                    'Pick a color!'),
+                                                                title: Text(
+                                                                    "lbl_pick_color".tr),
                                                                 content:
                                                                     SingleChildScrollView(
                                                                   child:
@@ -973,8 +973,8 @@ class _BasicCardEntryOneScreen extends State<BasicCardEntryOneScreen> {
                                                                     },
                                                                   ),
                                                                   ElevatedButton(
-                                                                    child: const Text(
-                                                                        'Select'),
+                                                                    child: Text(
+                                                              "lbl_select".tr),
                                                                     onPressed:
                                                                         () {
                                                                       setState(() =>
@@ -1041,8 +1041,8 @@ class _BasicCardEntryOneScreen extends State<BasicCardEntryOneScreen> {
                                           FlutterSwitch(
                                             value: mirrorHeaderImage,
 
-                                            activeText: "Yes",
-                                            inactiveText: "No",
+                                            activeText: ("lbl_yes".tr),
+                                            inactiveText: ("lbl_no".tr),
                                             showOnOff: true,
                                             valueFontSize: 12,
                                             activeColor: ColorConstant.pink900,
@@ -1379,7 +1379,7 @@ class _BasicCardEntryOneScreen extends State<BasicCardEntryOneScreen> {
                                               focusNode: FocusNode(),
                                               // controller: _caption_Controller,
                                               hintText:
-                                                  "lbl_edit_card_content".tr,
+                                                  "lbl_click_update".tr,
                                               textInputType: TextInputType.text,
                                               textCapitalization:
                                                   TextCapitalization.words,
@@ -1484,7 +1484,7 @@ class _BasicCardEntryOneScreen extends State<BasicCardEntryOneScreen> {
 
   onTapSelecttemplateOne() {
     if (cardSubTypeID == null) {
-      Get.snackbar('Warning', "Please select " + (cardTypeName ?? '') + " Type",
+      Get.snackbar("lbl_warning".tr, "lbl_select_event_type".tr,
           backgroundColor: Color.fromARGB(255, 255, 224, 156),
           colorText: Color.fromARGB(255, 105, 73, 3),
           icon: Icon(
@@ -1536,26 +1536,26 @@ class _BasicCardEntryOneScreen extends State<BasicCardEntryOneScreen> {
           break;
 
         case 1:
-          logoPositionName = " Top Left";
+          logoPositionName = "lbl_top_left".tr;
           break;
 
         case 2:
-          logoPositionName = " Top Center";
+          logoPositionName = "lbl_top_center".tr;
           break;
 
         case 3:
-          logoPositionName = " Top Right";
+          logoPositionName = "lbl_top_right".tr;
           break;
 
         case 7:
-          logoPositionName = " Bottom Left";
+          logoPositionName = "lbl_bottom_left".tr;
           break;
 
         case 8:
-          logoPositionName = " Bottom Center";
+          logoPositionName = "lbl_bottom_center".tr;
           break;
         case 9:
-          logoPositionName = " Bottom Right";
+          logoPositionName = "lbl_bottom_right".tr;
           break;
       }
       if (isClosePopup) Navigator.pop(context);
@@ -1731,7 +1731,7 @@ class _BasicCardEntryOneScreen extends State<BasicCardEntryOneScreen> {
     // set up the buttons
     Widget cancelButton = TextButton(
       child: Text(
-        "Cancel",
+        "lbl_cancel".tr,
         style: AppStyle.txtNunitoSansBold14Pink900,
       ),
       onPressed: () {
@@ -1740,7 +1740,7 @@ class _BasicCardEntryOneScreen extends State<BasicCardEntryOneScreen> {
     );
     Widget clearPosition = TextButton(
       child: Text(
-        "Clear",
+        "lbl_clear".tr,
         style: AppStyle.txtNunitoSansBold14Pink900,
       ),
       onPressed: () {
@@ -1751,7 +1751,7 @@ class _BasicCardEntryOneScreen extends State<BasicCardEntryOneScreen> {
     // set up the AlertDialog
     AlertDialog alert = AlertDialog(
       title: Text(
-        "Select Logo Position",
+        "lbl_select_logo_position".tr,
         style: AppStyle.txtNunitoSansBold14Pink900,
       ),
       content: Container(
@@ -1929,7 +1929,7 @@ class _BasicCardEntryOneScreen extends State<BasicCardEntryOneScreen> {
           allUserImages = userImages = resp.result ?? [];
         });
       } else {
-        Get.snackbar('Error', resp.errorMessage.toString(),
+        Get.snackbar("lbl_error".tr, resp.errorMessage.toString(),
             backgroundColor: Color.fromARGB(255, 255, 230, 230),
             colorText: Colors.red[900],
             icon: Icon(
@@ -1977,7 +1977,7 @@ class _BasicCardEntryOneScreen extends State<BasicCardEntryOneScreen> {
           await api.removeImage(context, queryParams: req);
       if (resp.isSuccess ?? false) {
         if (!isToggledToCardColor) {
-          Get.snackbar('Success',
+          Get.snackbar("lbl_success".tr,
               getImageTypeName(pictureType) + " image removed successfully!",
               backgroundColor: Color.fromARGB(255, 208, 245, 216),
               colorText: Colors.green[900],
@@ -1987,7 +1987,7 @@ class _BasicCardEntryOneScreen extends State<BasicCardEntryOneScreen> {
               ));
         }
       } else {
-        Get.snackbar('Error', resp.errorMessage.toString(),
+        Get.snackbar("lbl_error".tr, resp.errorMessage.toString(),
             backgroundColor: Color.fromARGB(255, 255, 230, 230),
             colorText: Colors.red[900],
             icon: Icon(
@@ -2003,13 +2003,13 @@ class _BasicCardEntryOneScreen extends State<BasicCardEntryOneScreen> {
   String getImageTypeName(UserImageType type) {
     switch (type) {
       case UserImageType.logo:
-        return "Logo";
+        return "lbl_logo_nw".tr;
       case UserImageType.background:
-        return "Background";
+        return "lbl_background_nw".tr;
       case UserImageType.header:
-        return "Header";
+        return "lbl_header_nw".tr;
       case UserImageType.footer:
-        return "Footer";
+        return "lbl_footer_nw".tr;
       default:
         return "";
     }
@@ -2060,13 +2060,13 @@ class _BasicCardEntryOneScreen extends State<BasicCardEntryOneScreen> {
   showAlertDialog(BuildContext context, UserImageType pictureType) {
     // set up the buttons
     Widget cancelButton = TextButton(
-      child: Text("Cancel"),
+      child: Text("lbl_cancel".tr),
       onPressed: () {
         Navigator.pop(context);
       },
     );
     Widget continueButton = TextButton(
-      child: Text("Continue"),
+      child: Text("lbl_continue".tr),
       onPressed: () {
         Navigator.pop(context);
         removeSelectedImage(pictureType, false);
@@ -2075,7 +2075,7 @@ class _BasicCardEntryOneScreen extends State<BasicCardEntryOneScreen> {
 
     // set up the AlertDialog
     AlertDialog alert = AlertDialog(
-      title: Text("Confirmation"),
+      title: Text("lbl_confirmation".tr),
       content: Text("Are you sure you want to delete the image?"),
       actions: [
         cancelButton,
@@ -2101,7 +2101,7 @@ class _BasicCardEntryOneScreen extends State<BasicCardEntryOneScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      "Select Image!",
+                      "lbl_select_image".tr,
                       style: AppStyle.txtNunitoBold18,
                     ),
                     IconButton(
@@ -2177,7 +2177,7 @@ class _BasicCardEntryOneScreen extends State<BasicCardEntryOneScreen> {
                   CustomButton(
                     height: 40,
                     width: 110,
-                    text: (' Camera'),
+                    text: ("lbl_camera".tr),
                     prefixWidget: Icon(
                       Icons.camera_alt_rounded,
                       color: ColorConstant.pink900,
@@ -2193,7 +2193,7 @@ class _BasicCardEntryOneScreen extends State<BasicCardEntryOneScreen> {
                   CustomButton(
                     height: 40,
                     width: 110,
-                    text: (' Gallery'),
+                    text: ("lbl_gallery".tr),
                     prefixWidget: Icon(
                       Icons.image_search_rounded,
                       color: ColorConstant.pink900,

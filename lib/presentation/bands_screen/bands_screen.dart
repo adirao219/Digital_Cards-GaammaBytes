@@ -56,7 +56,7 @@ class _BandsScreen extends State<BandsScreen> {
           // var s = 2;
         });
       } else {
-        Get.snackbar('Error', resp.errorMessage.toString(),
+        Get.snackbar("lbl_error".tr, resp.errorMessage.toString(),
             backgroundColor: Color.fromARGB(255, 255, 230, 230),
             colorText: Colors.red[900],
             icon: Icon(
@@ -152,7 +152,7 @@ class _BandsScreen extends State<BandsScreen> {
                           child: CustomButton(
                               height: 50,
                               width: 275,
-                              text: "  Create New " + "lbl_note".tr + " Band",
+                              text: "lbl_create_note_band".tr,
                               margin: getMargin(top: 10, right: 6),
                               variant: ButtonVariant.OutlineBlack9003f_1,
                               shape: ButtonShape.RoundedBorder15,
@@ -169,7 +169,7 @@ class _BandsScreen extends State<BandsScreen> {
                           child: CustomButton(
                               height: 50,
                               width: 275,
-                              text: "  Create New " + "lbl_map".tr + " Band",
+                              text: "lbl_create_map_band".tr,
                               margin: getMargin(top: 10, right: 6),
                               variant: ButtonVariant.OutlineBlack9003f_1,
                               shape: ButtonShape.RoundedBorder15,
@@ -186,9 +186,7 @@ class _BandsScreen extends State<BandsScreen> {
                           child: CustomButton(
                               height: 50,
                               width: 275,
-                              text: "  Create New " +
-                                  "lbl_icon_group".tr +
-                                  " Band",
+                              text: "lbl_createicon_groups".tr,
                               margin: getMargin(top: 10, bottom: 10, right: 6),
                               variant: ButtonVariant.OutlineBlack9003f_1,
                               shape: ButtonShape.RoundedBorder15,
@@ -358,13 +356,13 @@ class _BandsScreen extends State<BandsScreen> {
   showAlertDialog(BuildContext context, int bandId, int bandTypeeID) {
     // set up the buttons
     Widget cancelButton = TextButton(
-      child: Text("Cancel"),
+      child: Text("lbl_cancel".tr),
       onPressed: () {
         Navigator.pop(context);
       },
     );
     Widget continueButton = TextButton(
-      child: Text("Continue"),
+      child: Text("lbl_continue".tr),
       onPressed: () {
         Navigator.pop(context);
         deleteBandId(bandId, bandTypeeID);
@@ -373,8 +371,8 @@ class _BandsScreen extends State<BandsScreen> {
 
     // set up the AlertDialog
     AlertDialog alert = AlertDialog(
-      title: Text("Confirmation"),
-      content: Text("Are you sure you want to delete the band?"),
+      title: Text("lbl_confirmation".tr),
+      content: Text("lbl_delete_band".tr),
       actions: [
         cancelButton,
         continueButton,
@@ -396,7 +394,7 @@ class _BandsScreen extends State<BandsScreen> {
       };
       GetDeleteCardResp resp = await api.fetchDeleteBand(context, queryParams: req);
       if ((resp.isSuccess ?? false) && (resp.result ?? false)) {
-        Get.snackbar('Success', "Band Deleted successfully!",
+        Get.snackbar("lbl_success".tr, "Band Deleted successfully!",
             backgroundColor: Color.fromARGB(255, 208, 245, 216),
             colorText: Colors.green[900],
             icon: Icon(
@@ -405,7 +403,7 @@ class _BandsScreen extends State<BandsScreen> {
             ));
         getBands(context, false);
       } else {
-        Get.snackbar('Error', resp.errorMessage.toString(),
+        Get.snackbar("lbl_error".tr, resp.errorMessage.toString(),
             backgroundColor: Color.fromARGB(255, 255, 230, 230),
             colorText: Colors.red[900],
             icon: Icon(
@@ -426,7 +424,7 @@ class _BandsScreen extends State<BandsScreen> {
       };
       APIBooleanResponse resp = await api.createMoveUp(context, queryParams: req);
       if ((resp.isSuccess ?? false) && (resp.result ?? false)) {
-        Get.snackbar('Success', "Band Moved Up!",
+        Get.snackbar("lbl_success".tr, "lbl_band_moved_up".tr,
             backgroundColor: Color.fromARGB(255, 208, 245, 216),
             colorText: Colors.green[900],
             icon: Icon(
@@ -435,7 +433,7 @@ class _BandsScreen extends State<BandsScreen> {
             ));
         getBands(context, false);
       } else {
-        Get.snackbar('Error', resp.errorMessage.toString(),
+        Get.snackbar("lbl_error".tr, resp.errorMessage.toString(),
             backgroundColor: Color.fromARGB(255, 255, 230, 230),
             colorText: Colors.red[900],
             icon: Icon(
@@ -456,7 +454,7 @@ class _BandsScreen extends State<BandsScreen> {
       };
       APIBooleanResponse resp = await api.createMoveDown(context, queryParams: req);
       if ((resp.isSuccess ?? false) && (resp.result ?? false)) {
-        Get.snackbar('Success', "Band Moved Down!",
+        Get.snackbar("lbl_success".tr, "lbl_band_moved_down".tr,
             backgroundColor: Color.fromARGB(255, 208, 245, 216),
             colorText: Colors.green[900],
             icon: Icon(
@@ -465,7 +463,7 @@ class _BandsScreen extends State<BandsScreen> {
             ));
         getBands(context, false);
       } else {
-        Get.snackbar('Error', resp.errorMessage.toString(),
+        Get.snackbar("lbl_error".tr, resp.errorMessage.toString(),
             backgroundColor: Color.fromARGB(255, 255, 230, 230),
             colorText: Colors.red[900],
             icon: Icon(

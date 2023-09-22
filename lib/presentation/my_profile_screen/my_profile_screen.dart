@@ -96,7 +96,7 @@ class _MyProfileScreen extends State<MyProfileScreen> {
           }
         });
       } else {
-        Get.snackbar('Error', resp.errorMessage.toString(),
+        Get.snackbar("lbl_error".tr, resp.errorMessage.toString(),
             backgroundColor: Color.fromARGB(255, 255, 230, 230),
             colorText: Colors.red[900],
             icon: Icon(
@@ -118,7 +118,7 @@ class _MyProfileScreen extends State<MyProfileScreen> {
           creditsAvailable = resp.result;
         });
       } else {
-        Get.snackbar('Error', resp.errorMessage.toString(),
+        Get.snackbar("lbl_error".tr, resp.errorMessage.toString(),
             backgroundColor: Color.fromARGB(255, 255, 230, 230),
             colorText: Colors.red[900],
             icon: Icon(
@@ -142,7 +142,7 @@ class _MyProfileScreen extends State<MyProfileScreen> {
           remainingSpace = resp.result!.remaningSapce ?? '-';
         });
       } else {
-        Get.snackbar('Error', resp.errorMessage.toString(),
+        Get.snackbar("lbl_error".tr, resp.errorMessage.toString(),
             backgroundColor: Color.fromARGB(255, 255, 230, 230),
             colorText: Colors.red[900],
             icon: Icon(
@@ -174,7 +174,7 @@ class _MyProfileScreen extends State<MyProfileScreen> {
       PostMyProfileResp resp = await api.createMyProfile(context,requestData: req);
       if (resp.isSuccess ?? false) {
         setState(() {
-          Get.snackbar('Success', "Profile updated successfullly!",
+          Get.snackbar("lbl_success".tr, "lbl_profile_saved".tr,
               backgroundColor: Color.fromARGB(255, 208, 245, 216),
               colorText: Colors.green[900],
               icon: Icon(
@@ -185,7 +185,7 @@ class _MyProfileScreen extends State<MyProfileScreen> {
           Navigator.of(context).pop();
         });
       } else {
-        Get.snackbar('Error', resp.errorMessage.toString(),
+        Get.snackbar("lbl_error".tr, resp.errorMessage.toString(),
             backgroundColor: Color.fromARGB(255, 255, 230, 230),
             colorText: Colors.red[900],
             icon: Icon(
@@ -280,7 +280,7 @@ class _MyProfileScreen extends State<MyProfileScreen> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     Text(
-                      ('lbl_available_credits'.tr),
+                      ("lbl_available_credits".tr),
                       style: AppStyle.txtNunitoSansBold14,
                     ),
                     Container(
@@ -309,7 +309,7 @@ class _MyProfileScreen extends State<MyProfileScreen> {
                   width: 326,
                   focusNode: FocusNode(),
                   controller: _name_Controller,
-                  hintText: "Enter your name here".tr,
+                  hintText: "lbl_enter_name".tr.tr,
                   margin: getMargin(
                     top: 10,
                   ),
@@ -331,7 +331,7 @@ class _MyProfileScreen extends State<MyProfileScreen> {
                   width: 326,
                   focusNode: FocusNode(),
                   controller: _email_id4_Controller,
-                  hintText: "Enter your email ID here".tr,
+                  hintText: "lbl_enter_email".tr.tr,
                   margin: getMargin(
                     top: 10,
                   ),
@@ -355,7 +355,7 @@ class _MyProfileScreen extends State<MyProfileScreen> {
                   width: 326,
                   focusNode: FocusNode(),
                   controller: _phone_number_Controller,
-                  hintText: "Enter your phone number here".tr,
+                  hintText: "lbl_enter_phone".tr,
                   margin: getMargin(
                     top: 10,
                   ),
@@ -378,7 +378,7 @@ class _MyProfileScreen extends State<MyProfileScreen> {
                 //   width: 326,
                 //   focusNode: FocusNode(),
                 //   controller: _place_Controller,
-                //   hintText: "Enter your place here".tr,
+                //   hintText: "Enter your place".tr,
                 //   margin: getMargin(
                 //     top:10,
                 //   ),
@@ -463,7 +463,7 @@ class _MyProfileScreen extends State<MyProfileScreen> {
                 //   value: selectedLanguage,
                 //   icon: const Icon(Icons.keyboard_arrow_down),
                 //   hint: Text(
-                //     'Select Language',
+                //     "lbl_select_language".tr,
                 //     style: AppStyle.txtNunitoSansRegular14Gray70001,
                 //   ),
                 //   // Array list of items
@@ -606,13 +606,13 @@ class _MyProfileScreen extends State<MyProfileScreen> {
   showAlertDialog(BuildContext context) {
     // set up the buttons
     Widget cancelButton = TextButton(
-      child: Text("Cancel"),
+      child: Text("lbl_cancel".tr),
       onPressed: () {
         Navigator.pop(context);
       },
     );
     Widget continueButton = TextButton(
-      child: Text("Continue"),
+      child: Text("lbl_continue".tr),
       onPressed: () {
         Navigator.pop(context);
         removeSelectedImage();
@@ -621,7 +621,7 @@ class _MyProfileScreen extends State<MyProfileScreen> {
 
     // set up the AlertDialog
     AlertDialog alert = AlertDialog(
-      title: Text("Confirmation"),
+      title: Text("lbl_confirmation".tr),
       content: Text("Are you sure you want to delete the image?"),
       actions: [
         cancelButton,
@@ -662,7 +662,7 @@ class _MyProfileScreen extends State<MyProfileScreen> {
       };
       APIBooleanResponse resp = await api.removeImage(context,queryParams: req);
       if (resp.isSuccess ?? false) {
-        Get.snackbar('Success', "Logo removed successfully!",
+        Get.snackbar("lbl_success".tr, "Logo removed successfully!",
             backgroundColor: Color.fromARGB(255, 208, 245, 216),
             colorText: Colors.green[900],
             icon: Icon(
@@ -675,7 +675,7 @@ class _MyProfileScreen extends State<MyProfileScreen> {
           isServerStoredLogo = false;
         });
       } else {
-        Get.snackbar('Error', resp.errorMessage.toString(),
+        Get.snackbar("lbl_error".tr, resp.errorMessage.toString(),
             backgroundColor: Color.fromARGB(255, 255, 230, 230),
             colorText: Colors.red[900],
             icon: Icon(
@@ -696,7 +696,7 @@ class _MyProfileScreen extends State<MyProfileScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      "Select Image!",
+                      "lbl_select_image".tr,
                       style: AppStyle.txtNunitoBold18,
                     ),
                     IconButton(
@@ -712,7 +712,7 @@ class _MyProfileScreen extends State<MyProfileScreen> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                       Text(
-                        "Please choose image from gallery or click a picture using camera",
+                        "lbl_choose_image".tr,
                         style: AppStyle.txtNunitoSansRegular14,
                       ),
                       SizedBox(
@@ -723,7 +723,7 @@ class _MyProfileScreen extends State<MyProfileScreen> {
                   CustomButton(
                     height: 40,
                     width: 110,
-                    text: (' Camera'),
+                    text: ("lbl_camera".tr),
                     prefixWidget: Icon(
                       Icons.camera_alt_rounded,
                       color: ColorConstant.pink900,
@@ -739,7 +739,7 @@ class _MyProfileScreen extends State<MyProfileScreen> {
                   CustomButton(
                     height: 40,
                     width: 110,
-                    text: (' Gallery'),
+                    text: ("lbl_gallery".tr),
                     prefixWidget: Icon(
                       Icons.image_search_rounded,
                       color: ColorConstant.pink900,
@@ -810,7 +810,7 @@ class _MyProfileScreen extends State<MyProfileScreen> {
   showIncreaseStorageDialog(BuildContext context) {
     // set up the buttons
     Widget cancelButton = TextButton(
-      child: Text("Cancel"),
+      child: Text("lbl_cancel".tr),
       onPressed: () {
         Navigator.pop(context);
       },

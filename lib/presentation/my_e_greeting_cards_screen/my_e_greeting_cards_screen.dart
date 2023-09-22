@@ -87,7 +87,7 @@ class _MyEGreetingCardsScreen extends State<MyEGreetingCardsScreen> {
           isFirstTimeLoaded = true;
         });
       } else {
-        Get.snackbar('Error', resp.errorMessage.toString(),
+        Get.snackbar("lbl_error".tr, resp.errorMessage.toString(),
             backgroundColor: Color.fromARGB(255, 255, 230, 230),
             colorText: Colors.red[900],
             icon: Icon(
@@ -106,7 +106,7 @@ class _MyEGreetingCardsScreen extends State<MyEGreetingCardsScreen> {
           greetingTypes.addAll(resp.result!.toList());
         });
       } else {
-        Get.snackbar('Error', resp.errorMessage.toString(),
+        Get.snackbar("lbl_error".tr, resp.errorMessage.toString(),
             backgroundColor: Color.fromARGB(255, 255, 230, 230),
             colorText: Colors.red[900],
             icon: Icon(
@@ -407,7 +407,7 @@ class _MyEGreetingCardsScreen extends State<MyEGreetingCardsScreen> {
                                                           height: 20,
                                                         ),
                                                         Text(
-                                                          ('No Greetings Found'),
+                                                          ("lbl_no_greetings_found".tr),
                                                           style: AppStyle
                                                               .txtNunitoSansRegular14,
                                                         ),
@@ -495,7 +495,7 @@ class _MyEGreetingCardsScreen extends State<MyEGreetingCardsScreen> {
                     children: [
                       Container(
                         child: Text(
-                          'Clear Filters',
+                          "lbl_clear_filters".tr,
                           style: TextStyle(
                             decoration: TextDecoration.underline,
                           ),
@@ -568,7 +568,7 @@ class _MyEGreetingCardsScreen extends State<MyEGreetingCardsScreen> {
                   value: selectedGreetingTypeID,
                   icon: const Icon(Icons.keyboard_arrow_down),
                   hint: Text(
-                    'Select Type',
+                    "lbl_select_type".tr,
                     style: AppStyle.txtNunitoSansRegular14Gray70001,
                   ),
                   // Array list of items

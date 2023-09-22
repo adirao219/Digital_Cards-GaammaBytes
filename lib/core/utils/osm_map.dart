@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:get/get_utils/get_utils.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:http/http.dart' as http;
 import 'package:digitalcardsgaammabytes/core/utils/wide_button.dart';
@@ -227,7 +228,7 @@ class _OpenStreetMapSearchAndPickState extends State<OpenStreetMap> {
                           onPressed: _searchController.clear,
                           icon: const Icon(Icons.clear),
                         ),
-                        hintText: 'Search Location',
+                        hintText: ("lbl_search_location".tr),
                         border: inputBorder,
                         focusedBorder: inputFocusBorder,
                       ),

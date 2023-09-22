@@ -125,7 +125,7 @@ class _CardPreviewScreen extends State<CardPreviewScreen> {
         });
         ProgressDialogUtils.hideProgressDialog(context);
       } else {
-        Get.snackbar('Error', resp.errorMessage.toString());
+        Get.snackbar("lbl_error".tr, resp.errorMessage.toString());
 
         ProgressDialogUtils.hideProgressDialog(context);
       }
@@ -149,7 +149,7 @@ class _CardPreviewScreen extends State<CardPreviewScreen> {
         });
         ProgressDialogUtils.hideProgressDialog(context);
       } else {
-        Get.snackbar('Error', resp.errorMessage.toString());
+        Get.snackbar("lbl_error".tr, resp.errorMessage.toString());
 
         ProgressDialogUtils.hideProgressDialog(context);
       }
@@ -394,7 +394,7 @@ class _CardPreviewScreen extends State<CardPreviewScreen> {
                       Visibility(
                           child: Container(
                               child: Text(
-                            "Note: Few icons will work only after publishing card",
+                            "lbl_icon_note".tr,
                             style: AppStyle.txtNunitoSansBold12,
                           )),
                           visible: isDigitalCard),

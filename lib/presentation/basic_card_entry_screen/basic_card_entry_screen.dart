@@ -93,8 +93,7 @@ class _BasicCardEntryScreen extends State<BasicCardEntryScreen> {
                                                 ])),
                                         title: AppbarTitle(
                                             text: "lbl_card_details"
-                                                .tr
-                                                .toUpperCase(),
+                                                .tr,
                                             margin: getMargin(
                                                 left: 54, top: 58, bottom: 21)),
                                         actions: [
