@@ -430,7 +430,7 @@ class _BasicCardEntryOneScreen extends State<BasicCardEntryOneScreen> {
           isPublished = true;
           publishedURL = resp.result.toString();
         });
-        Get.snackbar("lbl_success".tr, "Card Published successfully!",
+        Get.snackbar("lbl_success".tr, "lbl_card_publish".tr,
             backgroundColor: Color.fromARGB(255, 208, 245, 216),
             colorText: Colors.green[900],
             icon: Icon(
@@ -965,8 +965,8 @@ class _BasicCardEntryOneScreen extends State<BasicCardEntryOneScreen> {
                                                                 actions: <
                                                                     Widget>[
                                                                   ElevatedButton(
-                                                                    child: const Text(
-                                                                        'Cancel'),
+                                                                    child:  Text(
+                                                                        "lbl_cancel".tr),
                                                                     onPressed:
                                                                         () {
                                                                       Navigator.of(
@@ -2078,7 +2078,7 @@ class _BasicCardEntryOneScreen extends State<BasicCardEntryOneScreen> {
     // set up the AlertDialog
     AlertDialog alert = AlertDialog(
       title: Text("lbl_confirmation".tr),
-      content: Text("Are you sure you want to delete the image?"),
+      content: Text("lbl_delete_image".tr),
       actions: [
         cancelButton,
         continueButton,

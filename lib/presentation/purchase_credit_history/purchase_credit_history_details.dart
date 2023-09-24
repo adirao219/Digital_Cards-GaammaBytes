@@ -41,7 +41,8 @@ class _PurchaseCreditHistoryDetails
     try {
       var query = {
         "UserId": GlobalVariables.userID,
-        "CreditId": creditHistoryID.toString()
+        "CreditId": creditHistoryID.toString(),
+        "LanguageId":GlobalVariables.currentLanguage
       };
       CreditDetailsResponse resp =
           await api.getCreditDetails(context, queryParams: query);

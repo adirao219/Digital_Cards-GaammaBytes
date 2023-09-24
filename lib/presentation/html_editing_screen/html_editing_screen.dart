@@ -1166,7 +1166,7 @@ class _HtmlEditorScreenState extends State<HtmlEditorScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                 (currentIndex == 1 ? "lbl_choose_message".tr : "lbl_choose_caption"),
+                 (currentIndex == 1 ? "lbl_choose_message".tr : "lbl_choose_caption".tr),
                   style: AppStyle.txtNunitoSansBold16Pink900,
                 ),
                 IconButton(
@@ -1312,10 +1312,9 @@ class _HtmlEditorScreenState extends State<HtmlEditorScreen> {
                                         "")));
                                 Get.snackbar(
                                     "lbl_success".tr,
-                                    ((currentIndex == 0
-                                            ? "Caption"
-                                            : "Message") +
-                                        " copied to clipboard!"),
+                                    (currentIndex == 0
+                                            ? "lbl_caption_copy".tr
+                                            : "lbl_message_copy".tr),
                                     backgroundColor:
                                         Color.fromARGB(255, 208, 245, 216),
                                     colorText: Colors.green[900],

@@ -46,7 +46,7 @@ class _AddStorageCredits extends State<AddStorageCredits> {
     if (int.tryParse(credits) != null && int.parse(credits) > 0) {
       if (int.parse(credits) > creditsAvailable) {
         return Get.snackbar(
-            "lbl_invalid", "lbl_credit_check".tr,
+            "lbl_invalid".tr, "lbl_credit_check".tr,
             backgroundColor: Color.fromARGB(255, 238, 218, 204),
             colorText: Color.fromARGB(255, 94, 54, 27),
             icon: Icon(

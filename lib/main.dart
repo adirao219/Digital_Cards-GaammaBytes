@@ -13,7 +13,7 @@ void main() {
     DeviceOrientation.portraitUp,
   ]).then((value) {
     EnvConfig.initConfig(
-        environment: (true ? Environment.prod : Environment.dev));
+        environment: (kReleaseMode ? Environment.prod : Environment.dev));
     Logger.init(kReleaseMode ? LogMode.live : LogMode.debug);
 
     Firebase.initializeApp().then((val) {
@@ -39,9 +39,10 @@ class MyApp extends StatelessWidget {
       overlayOpacity: 1.8,
         child: GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        visualDensity: VisualDensity.standard,
-      ),
+      // theme: ThemeData(
+
+      //   visualDensity: VisualDensity.standard,
+      // ),
 
       translations: AppLocalization(),
       locale: Get.deviceLocale, //for setting localization strings

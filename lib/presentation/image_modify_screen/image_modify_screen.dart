@@ -35,7 +35,6 @@ class _ImageModifyoneScreen extends State<ImageModifyScreen> {
   TextEditingController _size_x_controller = new TextEditingController();
   TextEditingController _size_y_controller = new TextEditingController();
   CroppedFile? croppedFile;
-  bool isProcessing = false;
   @override
   void initState() {
     if (pictureType == UserImageType.logo ||pictureType == UserImageType.footer||pictureType == UserImageType.header) {
@@ -343,17 +342,7 @@ class _ImageModifyoneScreen extends State<ImageModifyScreen> {
                                   ])),
                         
                         ]))),
-            bottomNavigationBar:isProcessing? Padding(
-                    padding: getPadding(left: 25, right: 25, top: 25,bottom: 58),
-                    child: Padding(
-                    padding: getPadding(top: 25,bottom: 25),
-                    child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                              new CircularProgressIndicator(color: ColorConstant.pink900,),
-                              SizedBox(width: 10,),
-                              Text("Processing",style: AppStyle.txtNunitoSansBold14Pink900,),
-                            ]))):InkWell(
+            bottomNavigationBar:InkWell(
                 onTap: resizeImage,
                 child: Padding(
                     padding: getPadding(left: 25, right: 24, bottom: 58),
@@ -381,7 +370,7 @@ class _ImageModifyoneScreen extends State<ImageModifyScreen> {
       }
     }
     setState(() {
-      isProcessing = true;
+      ProgressDialogUtils.showProgressDialog(context);
       Future.delayed(const Duration(milliseconds: 500), () {
         writeFinalData();
       });
@@ -405,7 +394,7 @@ class _ImageModifyoneScreen extends State<ImageModifyScreen> {
         height: int.parse(_size_y_controller.text));
     writeToFile(Uint8List.fromList(IMG.encodePng(thumbnail))).then((value) {
       setState(() {
-        isProcessing = false;
+      ProgressDialogUtils.hideProgressDialog(context);
       });
       imageEditingDone(value.path);
 

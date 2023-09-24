@@ -163,9 +163,7 @@ class GreetingItemWidget extends StatelessWidget {
     // set up the AlertDialog
     AlertDialog alert = AlertDialog(
       title: Text("lbl_confirmation".tr),
-      content: Text("lbl_partial_confirm".tr +
-          (isHide ? (isHidden ? ("lbl_unhide".tr) : ("lbl_hide".tr)) : "delete") +
-          " the card?"),
+      content: Text((isHide ? (isHidden ? ("lbl_unhide_confirm".tr) : ("lbl_hide_confirm".tr)) : "lbl_delete_card_confirm".tr)),
       actions: [
         cancelButton,
         continueButton,
@@ -214,8 +212,7 @@ class GreetingItemWidget extends StatelessWidget {
           await api.createHideGreeting(mainContext,queryParams: req);
       if ((resp.isSuccess ?? false)) {
         Navigator.pop(mainContext);
-        Get.snackbar("lbl_success".tr,
-            "Greeting " + (isHidden ? "un" : "") + "hidden successfully!",
+        Get.snackbar("lbl_success".tr, (isHidden ? "lbl_greeting_unhidden_success".tr : "lbl_greeting_hidden_success".tr),
             backgroundColor: Color.fromARGB(255, 208, 245, 216),
             colorText: Colors.green[900],
             icon: Icon(
@@ -245,7 +242,7 @@ actionPerformed();
           await api.createDeleteGreeting(mainContext,queryParams: req);
       if ((resp.isSuccess ?? false)) {
         Navigator.pop(mainContext);
-        Get.snackbar("lbl_success".tr, "Greeting deleted successfully!",
+        Get.snackbar("lbl_success".tr, "lbl_greeting_deleted".tr,
             backgroundColor: Color.fromARGB(255, 208, 245, 216),
             colorText: Colors.green[900],
             icon: Icon(

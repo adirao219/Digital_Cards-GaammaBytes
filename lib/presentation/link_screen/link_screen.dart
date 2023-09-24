@@ -900,7 +900,7 @@ class _LinkScreen extends State<LinkScreen> {
     // set up the AlertDialog
     AlertDialog alert = AlertDialog(
       title: Text("lbl_confirmation".tr),
-      content: Text("Are you sure you want to delete the image?"),
+      content: Text("lbl_delete_image".tr),
       actions: [
         cancelButton,
         continueButton,

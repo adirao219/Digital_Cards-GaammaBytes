@@ -429,7 +429,7 @@ class _CustomizationoneScreen extends State<CustomizationoneScreen> {
           isPublished = true;
           publishedURL = resp.result;
         });
-        Get.snackbar("lbl_success".tr, "Card Published successfully!",
+        Get.snackbar("lbl_success".tr, "lbl_card_publish".tr,
             backgroundColor: Color.fromARGB(255, 208, 245, 216),
             colorText: Colors.green[900],
             icon: Icon(

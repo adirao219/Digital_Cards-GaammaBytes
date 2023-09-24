@@ -535,8 +535,8 @@ class _BasicGreetingEntryScreen extends State<BasicGreetingEntryScreen> {
                                                             ),
                                                             actions: <Widget>[
                                                               ElevatedButton(
-                                                                child: const Text(
-                                                                    'Cancel'),
+                                                                child: Text(
+                                                                    "lbl_cancel".tr),
                                                                 onPressed: () {
                                                                   Navigator.of(
                                                                           context)
@@ -623,7 +623,7 @@ class _BasicGreetingEntryScreen extends State<BasicGreetingEntryScreen> {
                                                 });
                                               },
                                               width: 75,
-                                              text: ("Top"),
+                                              text: ("lbl_top".tr),
                                               variant: contentPosition == 1
                                                   ? ButtonVariant
                                                       .OutlineBlack9003f
@@ -658,7 +658,7 @@ class _BasicGreetingEntryScreen extends State<BasicGreetingEntryScreen> {
                                                 });
                                               },
                                               width: 90,
-                                              text: ("Bottom"),
+                                              text: ("lbl_bottom".tr),
                                               variant: contentPosition == 2
                                                   ? ButtonVariant
                                                       .OutlineBlack9003f
@@ -1327,8 +1327,8 @@ class _BasicGreetingEntryScreen extends State<BasicGreetingEntryScreen> {
         if (!isToggledToCardColor) {
           Get.snackbar(
               "lbl_success".tr,
-              (pictureType.value == 1 ? "Logo" : "Background") +
-                  " image removed successfully!",
+              (pictureType.value == 1 ? "lbl_logo_nw".tr : "lbl_background_nw".tr) +
+                  "lbl_image_removed".tr,
               backgroundColor: Color.fromARGB(255, 208, 245, 216),
               colorText: Colors.green[900],
               icon: Icon(
@@ -1391,7 +1391,7 @@ class _BasicGreetingEntryScreen extends State<BasicGreetingEntryScreen> {
     // set up the AlertDialog
     AlertDialog alert = AlertDialog(
       title: Text("lbl_confirmation".tr),
-      content: Text("Are you sure you want to delete the image?"),
+      content: Text("lbl_delete_image".tr),
       actions: [
         cancelButton,
         continueButton,

@@ -88,7 +88,8 @@ class CardSubTypeWidget extends StatelessWidget {
     // set up the AlertDialog
     AlertDialog alert = AlertDialog(
       title: Text("lbl_confirmation".tr),
-      content: Text("lbl_partial_confirm".tr + ("delete") + " the card?"),
+      content: Text(
+        (isHide ? ("lbl_hide_confirm".tr) : "lbl_delete_card_confirm".tr)),
       actions: [
         cancelButton,
         continueButton,
@@ -174,7 +175,7 @@ class CardSubTypeWidget extends StatelessWidget {
       // PostDeleteGreetingResp resp =
       //     await api.createDeleteGreeting(context,queryParams: req);
       // if ((resp.isSuccess ?? false)) {
-      //   Get.snackbar("lbl_success".tr, "Greeting deleted successfully!",
+      //   Get.snackbar("lbl_success".tr, "lbl_greeting_deleted".tr,
       //       backgroundColor: Color.fromARGB(255, 208, 245, 216),
       //       colorText: Colors.green[900],
       //       icon: Icon(

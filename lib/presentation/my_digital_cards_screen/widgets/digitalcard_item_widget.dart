@@ -205,9 +205,8 @@ class DigitalCardItemWidget extends StatelessWidget {
     // set up the AlertDialog
     AlertDialog alert = AlertDialog(
       title: Text("lbl_confirmation".tr),
-      content: Text("lbl_partial_confirm".tr +
-          (isHide ? (isHidden ? ("lbl_unhide".tr) : ("lbl_hide".tr)) : "lbl_delete_con".tr) +
-          "lbl_partial_confirm2".tr),
+      content: Text(
+          (isHide ? (isHidden ? ("lbl_unhide_confirm".tr) : ("lbl_hide_confirm".tr)) : "lbl_delete_card_confirm".tr)),
       actions: [
         cancelButton,
         continueButton,
@@ -237,11 +236,14 @@ class DigitalCardItemWidget extends StatelessWidget {
     AlertDialog alert = AlertDialog(
       title: Column(children: [
         Text(
-          "Your editing validity is expired.",
+          "lbl_editing_validity_title".tr,
           style: AppStyle.txtNunitoSansBold12Pink900,
         ),
         Text(
-          "\nPlease select a credit type to upgrade edit expiry!",
+          "\n"
+        ),
+        Text(
+          "lbl_credit_upgrade_msg".tr,
           style: AppStyle.txtNunitoSansBold14Pink900,
         )
       ]),
@@ -399,7 +401,7 @@ class DigitalCardItemWidget extends StatelessWidget {
       APIResponse resp = await api.fetchPublish(maincontext,queryParams: req);
       if ((resp.isSuccess ?? false)) {
         
-        Get.snackbar("lbl_success".tr, "Card Published successfully!",
+        Get.snackbar("lbl_success".tr, "lbl_card_publish".tr,
             backgroundColor: Color.fromARGB(255, 208, 245, 216),
             colorText: Colors.green[900],
             icon: Icon(
@@ -442,7 +444,7 @@ class DigitalCardItemWidget extends StatelessWidget {
       } else {
         Get.snackbar(
             "lbl_error".tr,
-            "Edit option validity is expired. Please use the credits to extend the validity of editing a card"
+            "lbl_credit_expired_error".tr
                 .toString(),
             backgroundColor: Color.fromARGB(255, 255, 230, 230),
             colorText: Colors.red[900],
@@ -489,7 +491,7 @@ class DigitalCardItemWidget extends StatelessWidget {
       APIResponse resp = await api.assignCardEditCredits(mainContext,requestData: req);
       if ((resp.isSuccess ?? false)) {
         Get.snackbar(
-            "lbl_success".tr, "Validity of edit option upgraded successfully!",
+            "lbl_success".tr,"lbl_validity_upgrade_success".tr,
             backgroundColor: Color.fromARGB(255, 208, 245, 216),
             colorText: Colors.green[900],
             icon: Icon(
@@ -521,8 +523,7 @@ class DigitalCardItemWidget extends StatelessWidget {
       GetHideCardResp resp = await api.fetchHideCard(mainContext,queryParams: req);
       if ((resp.isSuccess ?? false)) {
         Navigator.pop(mainContext);
-        Get.snackbar("lbl_success".tr,
-            "Card " + (isHidden ? "un" : "") + "hidden successfully!",
+        Get.snackbar("lbl_success".tr, (isHidden ? "lbl_card_unhidden_success".tr : "lbl_card_hidden_success".tr),
             backgroundColor: Color.fromARGB(255, 208, 245, 216),
             colorText: Colors.green[900],
             icon: Icon(
@@ -551,7 +552,7 @@ class DigitalCardItemWidget extends StatelessWidget {
       GetDeleteCardResp resp = await api.fetchDeleteCard(mainContext,queryParams: req);
       if ((resp.isSuccess ?? false)) {
         Navigator.pop(mainContext);
-        Get.snackbar("lbl_success".tr, "Card deleted successfully!",
+        Get.snackbar("lbl_success".tr, "lbl_card_deleted".tr,
             backgroundColor: Color.fromARGB(255, 208, 245, 216),
             colorText: Colors.green[900],
             icon: Icon(
