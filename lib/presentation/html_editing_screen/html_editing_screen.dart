@@ -225,7 +225,37 @@ class _HtmlEditorScreenState extends State<HtmlEditorScreen> {
           title: Text("lbl_edit_your_html".tr),
           elevation: 0,
           actions: [
-            IconButton(
+            Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+                   GestureDetector(
+                      onTap: () {
+                        setState(() {
+                    switch (currentIndex) {
+                      case 0:
+                        isCaptionToolBarVisible = !isCaptionToolBarVisible;
+                        break;
+
+                      case 1:
+                        isMessageToolBarVisible = !isMessageToolBarVisible;
+                        break;
+
+                      case 2:
+                        isSenderToolBarVisible = !isSenderToolBarVisible;
+                        break;
+                    }
+                  });
+                      },
+                      child: Text(
+                        " " +
+                            ((currentIndex == 0
+                          ? isCaptionToolBarVisible
+                          : (currentIndex == 1
+                              ? isMessageToolBarVisible
+                              : isSenderToolBarVisible)) ? "Hide" : "Show") +
+                            "\nToolbar",
+                        style: TextStyle(fontSize: 10),
+                      ),
+                    ),
+                     IconButton(
                 icon: Icon(
                   (currentIndex == 0
                           ? isCaptionToolBarVisible
@@ -253,6 +283,8 @@ class _HtmlEditorScreenState extends State<HtmlEditorScreen> {
                     }
                   });
                 }),
+                  ]),
+           
             IconButton(
                 icon: Icon(Icons.done_all),
                 onPressed: () async {
@@ -292,6 +324,7 @@ class _HtmlEditorScreenState extends State<HtmlEditorScreen> {
                     setState(() {
                       previousIndex = currentIndex;
                       currentIndex = index;
+                      _searchController.clear();
                     });
                     getDefaultCaptions();
                     getPrviousData();

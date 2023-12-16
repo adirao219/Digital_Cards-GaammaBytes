@@ -350,10 +350,16 @@ class _CardEntryoneScreen extends State<CardEntryoneScreen> {
                               Row(children: [
                                 CustomTextFormField(
                                     width: 282,
-                                    focusNode: FocusNode(),
+                                    // focusNode: FocusNode(),
                                     controller: _website_Controller,
                                     onTap: () {
+                                      setState(() {
+                                        if(_website_Controller.text.isEmpty)
+                                        {
+                                          
                                       _website_Controller.text = "https://";
+                                        }
+                                      });
                                     },
                                     hintText: "lbl_website".tr,
                                     textInputType: TextInputType.text,
@@ -370,21 +376,21 @@ class _CardEntryoneScreen extends State<CardEntryoneScreen> {
                               ]),
                               CustomTextFormField(
                                   width: 326,
-                                  focusNode: FocusNode(),
+                                  // focusNode: FocusNode(),
                                   controller: _email_id4_Controller,
                                   hintText: "lbl_email_id4".tr,
                                   textInputType: TextInputType.emailAddress,
                                   margin: getMargin(top: 23)),
                               CustomTextFormField(
                                   width: 326,
-                                  focusNode: FocusNode(),
+                                  // focusNode: FocusNode(),
                                   controller: _phone_number_Controller,
                                   hintText: "lbl_phone_number".tr,
                                   textInputType: TextInputType.phone,
                                   margin: getMargin(top: 23)),
                               CustomTextFormField(
                                   width: 326,
-                                  focusNode: FocusNode(),
+                                  // focusNode: FocusNode(),
                                   controller:
                                       _secondary_phone_number_Controller,
                                   textInputType: TextInputType.phone,
@@ -392,14 +398,14 @@ class _CardEntryoneScreen extends State<CardEntryoneScreen> {
                                   margin: getMargin(top: 16)),
                               CustomTextFormField(
                                   width: 326,
-                                  focusNode: FocusNode(),
+                                  // focusNode: FocusNode(),
                                   controller: _whatsapp_Controller,
                                   textInputType: TextInputType.phone,
                                   hintText: "lbl_whatsapp".tr,
                                   margin: getMargin(top: 23)),
                               CustomTextFormField(
                                   width: 326,
-                                  focusNode: FocusNode(),
+                                  // focusNode: FocusNode(),
                                   controller: _secondary_whatsapp_Controller,
                                   textInputType: TextInputType.phone,
                                   hintText: "lbl_secondary_whatsapp".tr,

@@ -13,7 +13,7 @@ void main() {
     DeviceOrientation.portraitUp,
   ]).then((value) {
     EnvConfig.initConfig(
-        environment: (kReleaseMode ? Environment.prod : Environment.dev));
+        environment: (true ? Environment.prod : Environment.dev));
     Logger.init(kReleaseMode ? LogMode.live : LogMode.debug);
 
     Firebase.initializeApp().then((val) {

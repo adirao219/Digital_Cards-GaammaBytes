@@ -192,6 +192,8 @@ class GreetingItemWidget extends StatelessWidget {
     Navigator.of(mainContext).pushNamed(AppRoutes.basicGreetingEntryScreen,
         arguments: {
           "Type": this.modelobj.typeID,
+          "TypeName": this.modelobj.typeIDName,
+          "TemplateName":this.modelobj.templateName,
           "SelectedCardID": this.modelobj.iD
         });
   }

@@ -457,7 +457,7 @@ final Map<String, String> enUs = {
   "lbl_create_map_band":" Create New Map Band",
   "lbl_create_note_band":" Create New Note Band",
   "lbl_enter_heading":"Enter your heading here..",
-  "lbl_enter_note":"Enter your Note content",
+  "lbl_enter_note":"Enter Note content",
   "lbl_band_moved_up": "Band Moved Up!",
   "lbl_band_moved_down": "Band Moved Down!",
   "lbl_caption_html": "  Caption  ",
@@ -496,7 +496,7 @@ final Map<String, String> enUs = {
   "lbl_caption_copy":"Caption copied to clipboard!",
   "lbl_message_copy":"Message copied to clipboard!",
   "lbl_image_download_msg":"Image downloaded successfully. Please check your gallery",
-  "lbl_image_removed":" image removed successfully!",
+  "lbl_image_removed":" Image removed successfully!",
   "lbl_top":"Top",
   "lbl_bottom":"Bottom",
   "lbl_editing_validity_title":"Your editing validity is expired.",
@@ -509,5 +509,7 @@ final Map<String, String> enUs = {
   "lbl_card_hidden_success":"Card hidden successfully!",
   "lbl_card_unhidden_success":"Card unhidden successfully!",
   "lbl_greeting_hidden_success":"Greeting hidden successfully!",
-  "lbl_greeting_unhidden_success":"Greeting unhidden successfully!"
+  "lbl_greeting_unhidden_success":"Greeting unhidden successfully!",
+  //----------
+  "lbl_storage_added_success":"Storage added successfully!"
 };

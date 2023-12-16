@@ -26,6 +26,7 @@ class IconGroupScreen extends StatefulWidget {
 class _IconGroupScreen extends State<IconGroupScreen> {
   TextEditingController _name2_Controller = new TextEditingController();
 
+  var dataPosition=Get.arguments["dataPosition"] as int?;
   var cardType = Get.arguments["cardType"] as int?;
   var selectedCardID = Get.arguments["SelectedCardID"] as int?;
   var cardSubtypeID = Get.arguments["cardSubtypeID"] as int?;
@@ -149,7 +150,7 @@ class _IconGroupScreen extends State<IconGroupScreen> {
         "Link6": link6Value ?? '',
         "Link7": link7Value ?? '',
         "Link8": link8Value ?? '',
-        "DataPosition": "0",
+        "DataPosition": dataPosition??0,
         "CaptionLanguageId":GlobalVariables.currentLanguage
       };
       APIBooleanResponse resp =

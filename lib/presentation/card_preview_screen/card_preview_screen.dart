@@ -451,7 +451,7 @@ class _CardPreviewScreen extends State<CardPreviewScreen> {
             name: filename);
 
         if (result['isSuccess'] == true) {
-          ProgressDialogUtils.hideProgressDialog(context);
+          //ProgressDialogUtils.hideProgressDialog(context);
           Get.snackbar("lbl_success".tr,
               "lbl_image_download_msg".tr,
               backgroundColor: Color.fromARGB(255, 208, 245, 216),

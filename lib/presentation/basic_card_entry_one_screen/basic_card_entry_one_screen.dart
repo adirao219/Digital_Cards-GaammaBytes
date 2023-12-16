@@ -152,7 +152,7 @@ class _BasicCardEntryOneScreen extends State<BasicCardEntryOneScreen> {
           templateID = mainResult?.themeID == null
               ? ""
               : mainResult?.themeID.toString() ?? '';
-              cardTypeName = mainResult?.cardTypeName??'';
+              // cardTypeName = mainResult?.cardTypeName??'';
               cardSubTypeName = mainResult?.cardSubTypeName??'';
           cardSubTypeID = mainResult?.cardSubType;
           templateName = mainResult!.themeName ?? '';
@@ -213,6 +213,7 @@ class _BasicCardEntryOneScreen extends State<BasicCardEntryOneScreen> {
             hexColor = (mainResult?.backgroundColorHex);
             pickerColor = currentColor = fromHex(hexColor ?? '');
           }
+          languageID = (mainResult?.languageID??0).toString();
           editorColorHex = (mainResult?.editorColorHex ?? '').toString();
           _slice_num_Controller.text = (mainResult?.sliceNum ?? 0).toString();
           _margin_top_Controller.text = (mainResult?.marginTop ?? 0).toString();
@@ -1980,7 +1981,7 @@ class _BasicCardEntryOneScreen extends State<BasicCardEntryOneScreen> {
       if (resp.isSuccess ?? false) {
         if (!isToggledToCardColor) {
           Get.snackbar("lbl_success".tr,
-              getImageTypeName(pictureType) + " image removed successfully!",
+              getImageTypeName(pictureType) + " "+("lbl_image_removed".tr),
               backgroundColor: Color.fromARGB(255, 208, 245, 216),
               colorText: Colors.green[900],
               icon: Icon(

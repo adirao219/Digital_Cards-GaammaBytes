@@ -162,7 +162,7 @@ class _BandsScreen extends State<BandsScreen> {
                                 color: ColorConstant.pink900,
                               ),
                               onTap: () {
-                                onTapNote(0);
+                                onTapNote(0,0);
                               }),
                           visible: true),
                       Visibility(
@@ -179,7 +179,7 @@ class _BandsScreen extends State<BandsScreen> {
                                 color: ColorConstant.pink900,
                               ),
                               onTap: () {
-                                onTapMap(0);
+                                onTapMap(0,0);
                               }),
                           visible: (cardType ?? 0) != 1),
                       Visibility(
@@ -196,7 +196,7 @@ class _BandsScreen extends State<BandsScreen> {
                                 color: ColorConstant.pink900,
                               ),
                               onTap: () {
-                                onTapIconGroup(0);
+                                onTapIconGroup(0,0);
                               }),
                           visible: (cardType ?? 0) != 1),
                       Divider(),
@@ -226,7 +226,7 @@ class _BandsScreen extends State<BandsScreen> {
                                               data.bandType ?? 0)),
                                       onTap: () {
                                         editBand(data.cardBandID ?? 0,
-                                            data.bandType ?? 0);
+                                            data.bandType ?? 0, data.dataPosition??0);
                                       }),
                                   visible: (data.bandType) != 10),
                               trailing: Visibility(
@@ -343,13 +343,13 @@ class _BandsScreen extends State<BandsScreen> {
     }
   }
 
-  editBand(int bandId, int bandTypeeID) {
+  editBand(int bandId, int bandTypeeID,int dataposition) {
     if (bandTypeeID == 2) {
-      onTapNote(bandId);
+      onTapNote(bandId,dataposition);
     } else if (bandTypeeID == 3) {
-      onTapMap(bandId);
+      onTapMap(bandId,dataposition);
     } else if (bandTypeeID == 7) {
-      onTapIconGroup(bandId);
+      onTapIconGroup(bandId,dataposition);
     }
   }
 
@@ -476,7 +476,7 @@ class _BandsScreen extends State<BandsScreen> {
     }
   }
 
-  onTapNote(int bandId) {
+  onTapNote(int bandId,int dataposition) {
     Navigator.of(context).pushNamed(AppRoutes.bandNoteScreen, arguments: {
       "cardType": cardType,
       "cardSubtypeID": cardSubtypeID,
@@ -487,13 +487,14 @@ class _BandsScreen extends State<BandsScreen> {
       "SelectedCardID": selectedCardID,
       "isPublishAvailable": isPublishAvailable,
       "BandId": bandId,
-      "cardName": cardName
+      "cardName": cardName,
+      "dataPosition":dataposition
     }).then((value) {
       getBands(context, false);
     });
   }
 
-  onTapMap(int bandId) {
+  onTapMap(int bandId,int dataposition) {
     Navigator.of(context).pushNamed(AppRoutes.bandMapScreen, arguments: {
       "cardType": cardType,
       "cardSubtypeID": cardSubtypeID,
@@ -504,13 +505,14 @@ class _BandsScreen extends State<BandsScreen> {
       "SelectedCardID": selectedCardID,
       "isPublishAvailable": isPublishAvailable,
       "BandId": bandId,
-      "cardName": cardName
+      "cardName": cardName,
+      "dataPosition":dataposition
     }).then((value) {
       getBands(context, false);
     });
   }
 
-  onTapIconGroup(int bandId) {
+  onTapIconGroup(int bandId,int dataposition) {
     Navigator.of(context).pushNamed(AppRoutes.iconGroupScreen, arguments: {
       "cardType": cardType,
       "cardSubtypeID": cardSubtypeID,
@@ -521,7 +523,8 @@ class _BandsScreen extends State<BandsScreen> {
       "SelectedCardID": selectedCardID,
       "isPublishAvailable": isPublishAvailable,
       "BandId": bandId,
-      "cardName": cardName
+      "cardName": cardName,
+      "dataPosition":dataposition
     }).then((value) {
       getBands(context, false);
     });

@@ -30,6 +30,7 @@ class _BandNoteScreen extends State<BandNoteScreen> {
   final HtmlEditorController _htmlcontroller = HtmlEditorController();
   String htmlContent = "";
   var cardType = Get.arguments["cardType"] as int?;
+  var dataPosition=Get.arguments["dataPosition"] as int?;
   var selectedCardID = Get.arguments["SelectedCardID"] as int?;
   var cardSubtypeID = Get.arguments["cardSubtypeID"] as int?;
   var templateId = Get.arguments["templateId"] as String?;
@@ -86,7 +87,7 @@ var existingHtml="";
       if (resp.isSuccess ?? false) {
         setState(() {
           _heading_Controller.text = resp.result!.heading ?? '';
-          existingHtml=resp.result!.cBContent ?? '';
+          htmlContent=existingHtml=resp.result!.cBContent ?? '';
         });
       } else {
         Get.snackbar("lbl_error".tr, resp.errorMessage.toString(),
@@ -118,7 +119,7 @@ var existingHtml="";
         "Link6": "",
         "Link7": "",
         "Link8": "",
-        "DataPosition": "0",
+        "DataPosition": dataPosition??"0",
         "CaptionLanguageId":GlobalVariables.currentLanguage
       };
       APIBooleanResponse resp = await api.createSaveBands(appcontext, requestData: req);
@@ -317,9 +318,14 @@ var existingHtml="";
     return StatefulBuilder(
       builder: (context, setPopState) {
         return AlertDialog(
+          
+  insetPadding: EdgeInsets.zero,
       title: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [Text("lbl_enter_note".tr),IconButton(
+        children: [Text("lbl_enter_note".tr),
+        Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children:[ IconButton(
                 icon: Icon(
                   isToolBarVisible
                       ? Icons.arrow_drop_down
@@ -330,8 +336,18 @@ var existingHtml="";
                   setPopState(() {
                     isToolBarVisible = !isToolBarVisible;
                   });
-                }),]),
-      content: HtmlEditor(
+                }),
+GestureDetector(onTap: (){
+   setPopState(() {
+                    isToolBarVisible = !isToolBarVisible;
+                  });
+},
+child: Text(" "+(!isToolBarVisible?"Show":"Hide")+"\nToolbar",style: TextStyle(fontSize: 10),),),])
+                ]),
+      content:  Container(
+   width: MediaQuery.of(context).size.width*0.90,
+   child:
+      HtmlEditor(
         controller: _htmlcontroller,
         htmlEditorOptions: HtmlEditorOptions(
           
@@ -495,7 +511,7 @@ var existingHtml="";
                 print(value);
               }),
         ],
-      ),
+      )),
       actions: [
         cancelButton,
         continueButton,

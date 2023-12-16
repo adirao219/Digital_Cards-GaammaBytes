@@ -941,7 +941,7 @@ class _LinkScreen extends State<LinkScreen> {
       APIBooleanResponse resp =
           await api.removeImage(context, queryParams: req);
       if (resp.isSuccess ?? false) {
-        Get.snackbar("lbl_success".tr, "Image removed successfully!",
+        Get.snackbar("lbl_success".tr, "lbl_image_removed".tr,
             backgroundColor: Color.fromARGB(255, 208, 245, 216),
             colorText: Colors.green[900],
             icon: Icon(

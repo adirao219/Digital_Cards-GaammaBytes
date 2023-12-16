@@ -34,6 +34,8 @@ class _BandMapScreen extends State<BandMapScreen> {
   MapController _mapController = MapController();
   LatLng? finalLocation;
   bool locationSelected = false;
+
+  var dataPosition = Get.arguments["dataPosition"] as int?;
   var cardType = Get.arguments["cardType"] as int?;
   var selectedCardID = Get.arguments["SelectedCardID"] as int?;
   var cardSubtypeID = Get.arguments["cardSubtypeID"] as int?;
@@ -93,7 +95,7 @@ class _BandMapScreen extends State<BandMapScreen> {
         setState(() {
           _heading_Controller.text = resp.result!.heading ?? '';
 
-          existingHtml = resp.result!.cBContent ?? '';
+            htmlContent=existingHtml = resp.result!.cBContent ?? '';
           finalLocation = LatLng(
               resp.result?.latitude ?? 0.0, resp.result?.longitude ?? 0.0);
           _latitude_Controller.text = resp.result!.latitude!.toString();
@@ -130,7 +132,7 @@ class _BandMapScreen extends State<BandMapScreen> {
         "Link6": "",
         "Link7": "",
         "Link8": "",
-        "DataPosition": "0",
+        "DataPosition": dataPosition ?? 0,
         "CaptionLanguageId": GlobalVariables.currentLanguage
       };
       APIBooleanResponse resp =
@@ -455,24 +457,43 @@ class _BandMapScreen extends State<BandMapScreen> {
       builder: (context) {
         return StatefulBuilder(builder: (context, setPopState) {
           return AlertDialog(
+            insetPadding: EdgeInsets.zero,
             title: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text("lbl_enter_note".tr),
-                  IconButton(
-                      icon: Icon(
-                        isToolBarVisible
-                            ? Icons.arrow_drop_down
-                            : Icons.arrow_drop_up,
-                        size: 35,
-                      ),
-                      onPressed: () {
+                  Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+                    IconButton(
+                        icon: Icon(
+                          isToolBarVisible
+                              ? Icons.arrow_drop_down
+                              : Icons.arrow_drop_up,
+                          size: 35,
+                        ),
+                        onPressed: () {
+                          setPopState(() {
+                            isToolBarVisible = !isToolBarVisible;
+                          });
+                        }),
+                    GestureDetector(
+                      onTap: () {
                         setPopState(() {
                           isToolBarVisible = !isToolBarVisible;
                         });
-                      }),
+                      },
+                      child: Text(
+                        " " +
+                            (!isToolBarVisible ? "Show" : "Hide") +
+                            "\nToolbar",
+                        style: TextStyle(fontSize: 10),
+                      ),
+                    ),
+                  ])
                 ]),
-            content: HtmlEditor(
+            content: Container(
+   width: MediaQuery.of(context).size.width*0.90,
+   child:
+             HtmlEditor(
               controller: _htmlcontroller,
               htmlEditorOptions: HtmlEditorOptions(
                   filePath: "assets/summernote.html",
@@ -636,7 +657,7 @@ class _BandMapScreen extends State<BandMapScreen> {
                       print(value);
                     }),
               ],
-            ),
+            )),
             actions: [
               cancelButton,
               continueButton,

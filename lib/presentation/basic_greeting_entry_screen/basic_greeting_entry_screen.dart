@@ -86,7 +86,7 @@ class _BasicGreetingEntryScreen extends State<BasicGreetingEntryScreen> {
   var greetingType = Get.arguments["Type"] as int?;
   var selectedCardID = Get.arguments["SelectedCardID"] as int?;
   var greetingCardTypeName = Get.arguments["TypeName"] as String?;
-  String templateName = "";
+  String? templateName =  Get.arguments["TemplateName"] as String?;
   String? captionDefault = "";
   String? messageDefault = "";
 
@@ -204,9 +204,9 @@ class _BasicGreetingEntryScreen extends State<BasicGreetingEntryScreen> {
                               CustomButton(
                                   height: 40,
                                   width: 250,
-                                  text: templateName.isEmpty
+                                  text: (templateName??"").isEmpty
                                       ? "lbl_select_template".tr
-                                      : "lbl_template".tr + templateName,
+                                      : "lbl_template".tr + (templateName??""),
                                   margin: getMargin(top: 22),
                                   variant: ButtonVariant.OutlineBlack9003f_1,
                                   shape: ButtonShape.RoundedBorder15,
@@ -1515,7 +1515,7 @@ class _BasicGreetingEntryScreen extends State<BasicGreetingEntryScreen> {
       };
       GetGetCreateGreetingResp resp =
           await api.fetchGetCreateGreeting(context,queryParams: req);
-      ProgressDialogUtils.hideProgressDialog(context);
+      // ProgressDialogUtils.hideProgressDialog(context);
       if (resp.isSuccess ?? false) {
         setState(() {
           captionDefault = resp.result?.greetingDetailsData?.caption;
@@ -1523,12 +1523,12 @@ class _BasicGreetingEntryScreen extends State<BasicGreetingEntryScreen> {
           messageDefault = resp.result?.greetingDetailsData?.message;
 
           senderDefault = resp.result?.greetingDetailsData?.sender;
-          templateName = resp.result?.greetingDetailsData?.templateName;
+          // templateName = resp.result?.greetingDetailsData?.templateName;
           templateID =
               resp.result?.greetingDetailsData?.templateID.toString() ?? '';
 
-          greetingCardTypeName =
-              resp.result?.greetingDetailsData?.typeIDName.toString() ?? '';
+          // greetingCardTypeName =
+          //     resp.result?.greetingDetailsData?.typeIDName.toString() ?? '';
           firstImageFileName =
               (resp.result?.greetingDetailsData?.logoRef ?? '').toString();
           if ((firstImageFileName ?? '').trim().isNotEmpty) {
@@ -1557,12 +1557,15 @@ class _BasicGreetingEntryScreen extends State<BasicGreetingEntryScreen> {
               (resp.result?.greetingDetailsData?.userPicture);
           isBackgroundColor =
               !(resp.result?.greetingDetailsData?.isBackgroundImage ?? false);
-          editorColorHex =
+          editorColorHex =hexColor=
               (resp.result?.greetingDetailsData?.editorColorHex ?? '')
                   .toString();
           if (isBackgroundColor) {
             currentindex = 1;
             pickerColor = currentColor = fromHex(hexColor ?? '');
+          }
+          else{
+            currentindex=0;
           }
           logoExistingId = resp.result?.greetingDetailsData?.logoOldId;
           pictureExistingId = resp.result?.greetingDetailsData?.pictureOldId;

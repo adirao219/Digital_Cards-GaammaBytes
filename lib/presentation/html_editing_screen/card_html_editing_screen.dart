@@ -93,18 +93,33 @@ class _CardHtmlEditorScreenState extends State<CardHtmlEditorScreen> {
           title: Text("lbl_edit_your_html".tr),
           elevation: 0,
           actions: [
-            IconButton(
-                icon: Icon(
-                  isToolBarVisible
-                      ? Icons.arrow_drop_down
-                      : Icons.arrow_drop_up,
-                  size: 35,
-                ),
-                onPressed: () {
-                  setState(() {
-                    isToolBarVisible = !isToolBarVisible;
-                  });
-                }),
+            Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+                   GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          isToolBarVisible = !isToolBarVisible;
+                        });
+                      },
+                      child: Text(
+                        " " +
+                            (!isToolBarVisible ? "Show" : "Hide") +
+                            "\nToolbar",
+                        style: TextStyle(fontSize: 10),
+                      ),
+                    ), IconButton(
+                        icon: Icon(
+                          isToolBarVisible
+                              ? Icons.arrow_drop_down
+                              : Icons.arrow_drop_up,
+                          size: 35,
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            isToolBarVisible = !isToolBarVisible;
+                          });
+                        }),
+                    
+                  ]),
             IconButton(
                 icon: Icon(Icons.done_all),
                 onPressed: () async {

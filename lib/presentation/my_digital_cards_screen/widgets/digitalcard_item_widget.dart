@@ -409,7 +409,7 @@ class DigitalCardItemWidget extends StatelessWidget {
               color: Colors.green[900],
             ));
 
-    Navigator.pop(maincontext);
+    // Navigator.pop(maincontext);
         actionPerformed();
       } else {
         Get.snackbar("lbl_error".tr, resp.errorMessage.toString(),
@@ -522,7 +522,7 @@ class DigitalCardItemWidget extends StatelessWidget {
       };
       GetHideCardResp resp = await api.fetchHideCard(mainContext,queryParams: req);
       if ((resp.isSuccess ?? false)) {
-        Navigator.pop(mainContext);
+        // Navigator.pop(mainContext);
         Get.snackbar("lbl_success".tr, (isHidden ? "lbl_card_unhidden_success".tr : "lbl_card_hidden_success".tr),
             backgroundColor: Color.fromARGB(255, 208, 245, 216),
             colorText: Colors.green[900],
@@ -551,7 +551,7 @@ class DigitalCardItemWidget extends StatelessWidget {
       };
       GetDeleteCardResp resp = await api.fetchDeleteCard(mainContext,queryParams: req);
       if ((resp.isSuccess ?? false)) {
-        Navigator.pop(mainContext);
+        // Navigator.pop(mainContext);
         Get.snackbar("lbl_success".tr, "lbl_card_deleted".tr,
             backgroundColor: Color.fromARGB(255, 208, 245, 216),
             colorText: Colors.green[900],
