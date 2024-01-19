@@ -30,6 +30,8 @@
 	<string>digitalcardsgaammabytes</string>
 	<key>CFBundleDisplayName</key>
 	<string>Gaamma Cards</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Your app requires access to the camera for upload and share images.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
  	<string>We need access to your photo library to upload and share photos.</string>
 	<key>NSMicrophoneUsageDescription</key>
