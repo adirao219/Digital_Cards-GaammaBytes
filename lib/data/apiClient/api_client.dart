@@ -720,6 +720,29 @@ class ApiClient extends GetConnect {
     }
   }
 
+  Future<APIBooleanResponse> deleteAccount(BuildContext appcontext,
+      {Map<String, dynamic> queryParams = const {},
+      Map requestData = const {}}) async {
+    ProgressDialogUtils.showProgressDialog(appcontext);
+    try {
+      await isNetworkConnected();
+      httpClient.timeout = Duration(seconds: 120);
+      Response response = await httpClient.get('$url/API/DeleteActiveUser',
+          query: queryParams);
+      ProgressDialogUtils.hideProgressDialog(appcontext);
+      if (_isSuccessCall(response)) {
+        return APIBooleanResponse.fromJson(response.body);
+      } else {
+        throw response.body != null
+            ? APIBooleanResponse.fromJson(response.body)
+            : 'Something Went Wrong!';
+      }
+    } catch (error, stackTrace) {
+      ProgressDialogUtils.hideProgressDialog(appcontext);
+      Logger.log(error, stackTrace: stackTrace);
+      rethrow;
+    }
+  }
   Future<APIBooleanResponse> removeImage(BuildContext appcontext,
       {Map<String, dynamic> queryParams = const {},
       Map requestData = const {}}) async {

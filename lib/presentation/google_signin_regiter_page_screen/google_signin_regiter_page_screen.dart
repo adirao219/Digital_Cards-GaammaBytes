@@ -1,4 +1,5 @@
 import 'package:digitalcardsgaammabytes/core/app_export.dart';
+import 'package:digitalcardsgaammabytes/presentation/signup_page_screen/signup_page_screen.dart';
 import 'package:digitalcardsgaammabytes/widgets/app_bar/appbar_image.dart';
 import 'package:digitalcardsgaammabytes/widgets/app_bar/appbar_subtitle.dart';
 import 'package:digitalcardsgaammabytes/widgets/app_bar/custom_app_bar.dart';
@@ -26,7 +27,8 @@ class _GoogleSigninRegiterPageScreen
     extends State<GoogleSigninRegiterPageScreen> {
   bool iAgree = false;
 
-  User? googleUser = Get.arguments["userInfo"] as User?;
+  SignInUser? googleUser = Get.arguments["userInfo"] as SignInUser?;
+  bool? isApple = Get.arguments["isApple"] as bool?;
   ApiClient api = new ApiClient();
   int? currentindex;
   bool isPhoneNumber = false;
@@ -38,9 +40,9 @@ class _GoogleSigninRegiterPageScreen
   @override
   void initState() {
     setState(() {
-      _nameController.text = googleUser!.displayName ?? '';
+      _nameController.text = googleUser!.displayname ?? '';
       _emailController.text = googleUser!.email ?? '';
-      _phoneController.text = googleUser!.phoneNumber ?? '';
+      _phoneController.text = googleUser!.phonenumber ?? '';
     });
     super.initState();
   }
@@ -178,14 +180,14 @@ class _GoogleSigninRegiterPageScreen
                                 //     setState(() => _name = text),
                                 keyboardType: TextInputType.emailAddress,
                                 controller: _emailController,
-                                readOnly: true,
+                                 readOnly: (_emailController.text.isNotEmpty),
                                 decoration: InputDecoration(
                                   // labelText: "lbl_enter_email".tr.tr,
                                   labelStyle: AppStyle.txtNunitoSansRegular12
                                       .copyWith(
                                           height: getVerticalSize(1.10),
                                           fontSize: 11),
-                                  enabled: false,
+                                   enabled: (_emailController.text.isEmpty),
                                   enabledBorder: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(15.0),
                                     borderSide: const BorderSide(
@@ -468,12 +470,13 @@ The use of this service is subject to the following terms of use:
 
   registerUser() async {
     try {
+      
       var req = {
         "TypeOfLogin": "1",
         "Email": _emailController.text,
         "PhoneNumber": _phoneController.text,
         "DisplayName": _nameController.text,
-        "Key": googleUser?.providerData[0].uid,
+        "Key": googleUser?.uid,
         "Password": "Abc@123",
         "ConfirmPassword": "Abc@123",
         "CouponCode": _couponCodeController.text
@@ -482,13 +485,15 @@ The use of this service is subject to the following terms of use:
       if (resp.isSuccess ?? false) {
         var res = resp.result;
         var userID = res!.userId;
-        var googleDisplayName = googleUser!.providerData[0].displayName ?? '';
-        var googleUseremail = googleUser!.providerData[0].email ?? '';
-        var googleUserToken = googleUser!.providerData[0].uid;
-        var googleUserName = googleUser!.providerData[0].email ?? '';
+        if(isApple??false)
+        {GlobalVariables.setAppleEmail(_emailController.text);}
+        var googleDisplayName = googleUser!.displayname ?? '';
+        var googleUseremail = googleUser!.email ?? '';
+        var googleUserToken = googleUser!.uid;
+        var googleUserName = googleUser!.email ?? '';
         var googleUserPhoneNumber =
-            googleUser!.providerData[0].phoneNumber ?? '';
-        var googleUserPhotoURL = googleUser!.providerData[0].photoURL ?? '';
+            googleUser!.phonenumber ?? '';
+        var googleUserPhotoURL = googleUser!.photourl ?? '';
 
         GlobalVariables.setUserID(userID ?? '');
         GlobalVariables.setLogin(true);

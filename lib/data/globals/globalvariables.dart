@@ -18,6 +18,8 @@ class GlobalVariables {
   static String tempCaptionContent = "";
   static String tempMessageContent = "";
   static String tempSenderContent = "";
+    static String appleEmail = "";
+  static String appleDisplayName = "";
 
   static init() {
     SharedPreferences.getInstance().then((value) {
@@ -47,8 +49,19 @@ class GlobalVariables {
   static setCurrentLocale(String value) {
     PrefUtils.sharedPreferences?.setString("currentLocale", value);
   }
-static setCurrentLanguageID(String value) {
-  currentLanguage = value;
+
+  static setAppleEmail(String value) {
+    appleEmail=value;
+    PrefUtils.sharedPreferences?.setString("appleEmail", value);
+  }
+
+  static setAppleDisplayName(String value) {
+    appleDisplayName=value;
+    PrefUtils.sharedPreferences?.setString("appleDisplayName", value);
+  }
+
+  static setCurrentLanguageID(String value) {
+    currentLanguage = value;
     PrefUtils.sharedPreferences?.setString("currentLanguageID", value);
   }
 

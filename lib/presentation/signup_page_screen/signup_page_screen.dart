@@ -1,3 +1,4 @@
+
 import 'package:digitalcardsgaammabytes/core/app_export.dart';
 import 'package:digitalcardsgaammabytes/data/apiClient/api_client.dart';
 import 'package:digitalcardsgaammabytes/data/models/filterGreetingTemplate/get_filter_greeting_template_resp.dart';
@@ -14,6 +15,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter/material.dart';
 import 'package:digitalcardsgaammabytes/domain/googleauth/google_auth_helper.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
+import 'dart:io' as io;
 
 import '../../core/service/authenticationservice.dart';
 import '../../data/globals/globalvariables.dart';
@@ -47,12 +50,16 @@ class _SignupPageScreen extends State<SignupPageScreen> {
   String googleUserPhoneNumber = "";
   String googleUserPhotoURL = "";
   bool _passwordVisible = false;
+  bool isAppleDevice = false;
   ApiClient api = new ApiClient();
   @override
   void initState() {
     AuthService.instance.initAuth();
     _phoneController.text = "";
     _passwordController.text = "";
+    if (io.Platform.isIOS) {
+      isAppleDevice = true;
+    }
     super.initState();
   }
 
@@ -92,7 +99,7 @@ class _SignupPageScreen extends State<SignupPageScreen> {
                     ])),
                 styleType: Style.bgStyle_3),
             body: SingleChildScrollView(
-                padding: getPadding(left: 38, top: 61, right: 38),
+                padding: getPadding(left: 38, top: 40, right: 38),
                 child: Column(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     mainAxisAlignment: MainAxisAlignment.start,
@@ -112,8 +119,8 @@ class _SignupPageScreen extends State<SignupPageScreen> {
                                   children: [
                                     CustomImageView(
                                         imagePath: ImageConstant.imgGooglelogo1,
-                                        height: getVerticalSize(25.00),
-                                        width: getHorizontalSize(26.00)),
+                                        height: getVerticalSize(20.00),
+                                        width: getHorizontalSize(20.00)),
                                     Padding(
                                         padding: getPadding(
                                             left: 15,
@@ -127,6 +134,43 @@ class _SignupPageScreen extends State<SignupPageScreen> {
                                             style:
                                                 AppStyle.txtNunitoSansBlack16))
                                   ]))),
+                      const SizedBox(
+                        height: 15,
+                      ),
+                      isAppleDevice
+                          ? GestureDetector(
+                              onTap: signInWithApple,
+                              child: Container(
+                                  alignment: Alignment.center,
+                                  padding: getPadding(
+                                      left: 19, top: 7, right: 19, bottom: 7),
+                                  decoration: AppDecoration.outlineBlack9003f2
+                                      .copyWith(
+                                          borderRadius:
+                                              BorderRadiusStyle.circleBorder20),
+                                  child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Icon(
+                                          Icons.apple,
+                                          color: Colors.white,
+                                          size: 25,
+                                        ),
+                                        Padding(
+                                            padding: getPadding(
+                                                left: 15,
+                                                top: 2,
+                                                right: 1,
+                                                bottom: 1),
+                                            child: Text(
+                                                "msg_continue_with_apple".tr,
+                                                overflow: TextOverflow.ellipsis,
+                                                textAlign: TextAlign.left,
+                                                style: AppStyle
+                                                    .txtNunitoSansBlack16))
+                                      ])))
+                          : Container(),
                       const SizedBox(
                         height: 50,
                       ),
@@ -276,7 +320,7 @@ class _SignupPageScreen extends State<SignupPageScreen> {
                       CustomButton(
                           height: 40,
                           width: 250,
-                          text: ( "lbl_sign_in".tr),
+                          text: ("lbl_sign_in".tr),
                           margin: getMargin(top: 36),
                           fontStyle: ButtonFontStyle.InterSemiBold14,
                           onTap: onTapSignin,
@@ -324,13 +368,12 @@ class _SignupPageScreen extends State<SignupPageScreen> {
 
   googleAuthSignin() async {
     try {
-        ProgressDialogUtils.showProgressDialog(context);
+      ProgressDialogUtils.showProgressDialog(context);
       final authResult = await AuthService.instance.login();
       if (authResult.isAuthSuccess) {
         signInWithGoogleTokens(
             authResult.accessToken ?? '', authResult.idToken ?? '');
       } else {
-        
         ProgressDialogUtils.hideProgressDialog(context);
         Get.snackbar('Failed', "Authorization unsuccessfull",
             backgroundColor: Color.fromARGB(255, 255, 230, 230),
@@ -343,10 +386,44 @@ class _SignupPageScreen extends State<SignupPageScreen> {
       }
     } catch (er) {
       setState(() {
-        
         ProgressDialogUtils.hideProgressDialog(context);
       });
       Get.snackbar("lbl_error".tr, er.toString(),
+          backgroundColor: Color.fromARGB(255, 255, 230, 230),
+          colorText: Colors.red[900],
+          icon: Icon(
+            Icons.error,
+            color: Colors.red[900],
+          ));
+    }
+  }
+
+  signInWithApple() async {
+    try {
+      final credential = await SignInWithApple.getAppleIDCredential(
+        scopes: [
+          AppleIDAuthorizationScopes.email,
+          AppleIDAuthorizationScopes.fullName,
+        ],
+      );
+      SignInUser _user = new SignInUser();
+      if (credential.email != null) {
+        GlobalVariables.setAppleEmail(credential.email ?? '');
+      }
+      if (credential.givenName != null) {
+        GlobalVariables.setAppleDisplayName(credential.givenName.toString() +
+            " " +
+            credential.familyName.toString());
+      }
+      _user.displayname = GlobalVariables.appleDisplayName;
+      _user.email = GlobalVariables.appleEmail;
+      _user.uid = credential.userIdentifier;
+      _user.phonenumber = "";
+      _user.photourl = "";
+
+      await checkSigninRegistered(_user, true);
+    } catch (ex) {
+      Get.snackbar("lbl_error".tr, "Sign-in failed!".toString(),
           backgroundColor: Color.fromARGB(255, 255, 230, 230),
           colorText: Colors.red[900],
           icon: Icon(
@@ -372,7 +449,14 @@ class _SignupPageScreen extends State<SignupPageScreen> {
       User? currentUser = _auth.currentUser;
       assert(_user!.uid == currentUser!.uid);
       // model.state =ViewState.Idle;
-      checkGoogleSigninRegistered(_user);
+      SignInUser _signinuser = new SignInUser();
+      _signinuser.email = _user!.providerData[0].email ?? '';
+      _signinuser.uid = _user.providerData[0].uid;
+      _signinuser.displayname = _user.providerData[0].displayName ?? '';
+      _signinuser.phonenumber = _user.providerData[0].phoneNumber ?? '';
+      _signinuser.photourl = _user.providerData[0].photoURL ?? '';
+
+      checkSigninRegistered(_signinuser, false);
     } catch (ex) {
       Get.snackbar("lbl_error".tr, ex.toString(),
           backgroundColor: Color.fromARGB(255, 255, 230, 230),
@@ -449,7 +533,7 @@ class _SignupPageScreen extends State<SignupPageScreen> {
       "Password": _passwordController.text,
       "RememberMe": false
     };
-    PostLoginResp resp = await api.createLogin(context,requestData: req);
+    PostLoginResp resp = await api.createLogin(context, requestData: req);
     if (resp.isSuccess ?? false) {
       setState(() {
         ProgressDialogUtils.showProgressDialog(context);
@@ -477,7 +561,6 @@ class _SignupPageScreen extends State<SignupPageScreen> {
           AppRoutes.homePageScreen, (Route<dynamic> route) => false);
     } else {
       setState(() {
-        
         ProgressDialogUtils.hideProgressDialog(context);
       });
       Get.snackbar("lbl_error".tr, resp.errorMessage.toString(),
@@ -490,25 +573,25 @@ class _SignupPageScreen extends State<SignupPageScreen> {
     }
   }
 
-  checkGoogleSigninRegistered(User? _user) async {
+  checkSigninRegistered(SignInUser _user, bool isAppleSignIn) async {
     String userID = "";
 
     try {
       var req = {
-        "Email": _user!.providerData[0].email ?? '',
-        "Key": _user.providerData[0].uid,
+        "Email": _user.email,
+        "Key": _user.uid,
       };
 //Call api and Check Already Registerd, if already registed, then excute below
-      PostLoginResp resp = await api.checkGoogleUser(context,queryParams: req);
+      PostLoginResp resp = await api.checkGoogleUser(context, queryParams: req);
       if (resp.isSuccess ?? false) {
         setState(() {
           userID = resp.result['UserId'];
-          googleUserName = _user.providerData[0].displayName ?? '';
-          googleUseremail = _user.providerData[0].email ?? '';
-          googleUserToken = _user.providerData[0].uid ?? '';
-          googleUserName = _user.providerData[0].email ?? '';
-          googleUserPhoneNumber = _user.providerData[0].phoneNumber ?? '';
-          googleUserPhotoURL = _user.providerData[0].photoURL ?? '';
+          googleUserName = _user.displayname ?? '';
+          googleUseremail = _user.email ?? '';
+          googleUserToken = _user.uid ?? '';
+          googleUserName = _user.email ?? '';
+          googleUserPhoneNumber = _user.phonenumber ?? '';
+          googleUserPhotoURL = _user.photourl ?? '';
 
           GlobalVariables.setUserID(userID);
           GlobalVariables.setLogin(true);
@@ -529,15 +612,13 @@ class _SignupPageScreen extends State<SignupPageScreen> {
         });
       } else {
         setState(() {
-          
-        ProgressDialogUtils.hideProgressDialog(context);
+          ProgressDialogUtils.hideProgressDialog(context);
         });
         Navigator.of(context).pushNamed(AppRoutes.googlesigninOneScreen,
-            arguments: {"userInfo": _user});
+            arguments: {"userInfo": _user, "isApple": isAppleSignIn});
       }
     } catch (e) {
       setState(() {
-        
         ProgressDialogUtils.hideProgressDialog(context);
       });
       Get.snackbar("lbl_error".tr, e.toString(),
@@ -553,4 +634,12 @@ class _SignupPageScreen extends State<SignupPageScreen> {
   onTapTxtDonthaveanaccount() {
     Navigator.of(context).pushNamed(AppRoutes.regiterPageScreen);
   }
+}
+
+class SignInUser {
+  String? uid;
+  String? displayname;
+  String? email;
+  String? phonenumber;
+  String? photourl;
 }

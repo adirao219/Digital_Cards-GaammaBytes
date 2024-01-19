@@ -55,7 +55,8 @@ class _HomePageScreen extends State<HomePageScreen> {
 
   getLanguages(BuildContext appcontext) async {
     try {
-      CommonDropdownResp resp = await api.getLanguages(appcontext, queryParams: {});
+      CommonDropdownResp resp =
+          await api.getLanguages(appcontext, queryParams: {});
       if (resp.isSuccess ?? false) {
         setState(() {
           languages = resp.result;
@@ -73,10 +74,37 @@ class _HomePageScreen extends State<HomePageScreen> {
     } catch (e) {}
   }
 
+  deleteAccount(BuildContext appcontext) async {
+    try {
+      var req = {"UserId": GlobalVariables.userID};
+      APIBooleanResponse resp =
+          await api.deleteAccount(appcontext, queryParams: req);
+      if ((resp.isSuccess ?? false) && (resp.result ?? false)) {
+        Get.snackbar("lbl_success".tr, "Account Deleted Successfully!",
+            backgroundColor: Color.fromARGB(255, 208, 245, 216),
+            colorText: Colors.green[900],
+            icon: Icon(
+              Icons.done,
+              color: Colors.green[900],
+            ));
+        onTapLogout();
+      } else {
+        Get.snackbar("lbl_error".tr, resp.errorMessage.toString(),
+            backgroundColor: Color.fromARGB(255, 255, 230, 230),
+            colorText: Colors.red[900],
+            icon: Icon(
+              Icons.error,
+              color: Colors.red[900],
+            ));
+      }
+    } catch (e) {}
+  }
+
   getLanguageCaptionData(BuildContext appcontext, String languageID) async {
     try {
       var req = {"LanguageId": languageID};
-      APIResponse resp = await api.getLanguageCaptionData(appcontext, queryParams: req);
+      APIResponse resp =
+          await api.getLanguageCaptionData(appcontext, queryParams: req);
       if (resp.isSuccess ?? false) {
         setState(() {
           languageCaptionResponse = resp;
@@ -302,7 +330,10 @@ class _HomePageScreen extends State<HomePageScreen> {
 
   Widget appDrawer() {
     return Drawer(
-      child: Container(
+      child:
+          // Column(
+          //   children: [
+          Container(
         decoration: AppDecoration.fillWhiteA700,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -421,29 +452,9 @@ class _HomePageScreen extends State<HomePageScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        // Row(children: [
-                        //   CustomImageView(
-                        //     svgPath: ImageConstant.imgHome,
-                        //     height: getSize(
-                        //       21.00,
-                        //     ),
-                        //     width: getSize(
-                        //       21.00,
-                        //     ),
-                        //   ),
-                        //   SizedBox(
-                        //     width: 10,
-                        //   ),
-                        //   Text(
-                        //     "lbl_gaamma_cards".tr,
-                        //     overflow: TextOverflow.ellipsis,
-                        //     textAlign: TextAlign.left,
-                        //     style: AppStyle.txtNunitoSansSemiBold16,
-                        //   ),
-                        // ]),
                         Padding(
                           padding: getPadding(
-                            top: 35,
+                            top: 0,
                           ),
                           child: Row(children: [
                             CustomImageView(
@@ -668,9 +679,78 @@ class _HomePageScreen extends State<HomePageScreen> {
                 ],
               ),
             ),
+            SizedBox(
+              height: 50,
+            ),
+            Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+              Container(
+                width: 180,
+                // alignment: Alignment.center,
+
+                child: TextButton(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Icon(
+                          Icons.delete,
+                          size: 20,
+                        ),
+                        Text("lbl_delete_account".tr,
+                            style: TextStyle(fontSize: 13)),
+                      ],
+                    ),
+                    style: ButtonStyle(
+                        padding: MaterialStateProperty.all<EdgeInsets>(
+                            EdgeInsets.all(10)),
+                        foregroundColor:
+                            MaterialStateProperty.all<Color>(Colors.red),
+                        shape:
+                            MaterialStateProperty.all<RoundedRectangleBorder>(
+                                RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10.0),
+                                    side: BorderSide(color: Colors.red)))),
+                    onPressed: () {
+                      showAlertDialogDelete(context);
+                    }),
+              )
+            ])
           ],
         ),
       ),
+      // Column(
+      //   children: [
+      //     SizedBox(height: 30,),
+      //     Container(
+      //         alignment: Alignment.bottomRight,
+      //         child: Row(children: [
+      //           CustomImageView(
+      //             svgPath: ImageConstant.imgRefresh,
+      //             height: getSize(
+      //               21.00,
+      //             ),
+      //             width: getSize(
+      //               21.00,
+      //             ),
+      //           ),
+      //           SizedBox(
+      //             width: 10,
+      //           ),
+      //           GestureDetector(
+      //             child: Text(
+      //               "lbl_logout".tr,
+      //               overflow: TextOverflow.ellipsis,
+      //               textAlign: TextAlign.left,
+      //               style: AppStyle.txtNunitoSansSemiBold16,
+      //             ),
+      //             onTap: () {
+      //               showAlertDialog(context);
+      //             },
+      //           )
+      //         ])),
+      //   ],
+      // ),
+      //   ],
+      // ),
     );
   }
 
@@ -712,8 +792,8 @@ class _HomePageScreen extends State<HomePageScreen> {
                   onTap: () {
                     Navigator.pop(context);
                     setState(() async {
-                      
-GlobalVariables.setCurrentLanguageID(element.value ?? "1");
+                      GlobalVariables.setCurrentLanguageID(
+                          element.value ?? "1");
                       if (element.value == "1") {
                         Get.clearTranslations();
 
@@ -774,6 +854,35 @@ GlobalVariables.setCurrentLanguageID(element.value ?? "1");
     AlertDialog alert = AlertDialog(
       title: Text("lbl_logout".tr),
       content: Text("lbl_loguout_confirm".tr),
+      actions: [okButton, cancelButtonn],
+    );
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
+
+  showAlertDialogDelete(BuildContext context) {
+    // set up the button
+    Widget okButton = TextButton(
+      child: Text("lbl_yes".tr),
+      onPressed: () {
+        deleteAccount(context);
+      },
+    );
+    Widget cancelButtonn = TextButton(
+      child: Text("lbl_cancel".tr),
+      onPressed: () {
+        Navigator.pop(context);
+      },
+    );
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text("lbl_delete_account".tr),
+      content: Text("lbl_delete_account_confirm".tr),
       actions: [okButton, cancelButtonn],
     );
     // show the dialog

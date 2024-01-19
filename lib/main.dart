@@ -6,6 +6,7 @@ import 'package:loader_overlay/loader_overlay.dart';
 import 'package:lottie/lottie.dart';
 import 'core/app_export.dart';
 import 'core/environment/env_config.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -37,7 +38,13 @@ class MyApp extends StatelessWidget {
           ),
       // overlayColor: Colors.black,
       overlayOpacity: 1.8,
-        child: GetMaterialApp(
+        child: ScreenUtilInit(
+      designSize: const Size(360, 690),
+      minTextAdapt: true,
+      splitScreenMode: true,
+      // Use builder only if you need to use library outside ScreenUtilInit context
+      builder: (_ , child) {
+        return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       // theme: ThemeData(
 
@@ -47,11 +54,11 @@ class MyApp extends StatelessWidget {
       translations: AppLocalization(),
       locale: Get.deviceLocale, //for setting localization strings
       fallbackLocale: Locale('en', 'US'),
-      title: 'aditya_s_application3',
+      title: 'Gaamma Cards',
       initialBinding: InitialBindings(),
       initialRoute: AppRoutes.initialRoute,
       // routes: AppRoutes.initpages,
       getPages: AppRoutes.pages,
-    ));
+   );} ));
   }
 }

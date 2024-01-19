@@ -22,6 +22,9 @@ class _HomeOnboardingScreen extends State<HomeOnboardingScreen> {
   void initState() {
     GlobalVariables.setBuildContext(context);
     SharedPreferences.getInstance().then((value) {
+      GlobalVariables.appleDisplayName =
+          value.getString("appleDisplayName") ?? '';
+      GlobalVariables.appleEmail = value.getString("appleEmail") ?? '';
       if (value.getBool("isLoggedIn") == true) {
         setState(() {
           isAlreadyLoggedIn =
@@ -33,6 +36,7 @@ class _HomeOnboardingScreen extends State<HomeOnboardingScreen> {
           GlobalVariables.displayName = value.getString("displayName") ?? '';
           GlobalVariables.userName = value.getString("userName") ?? '';
           GlobalVariables.userPhotoUrl = value.getString("userPhotoUrl") ?? '';
+
           try {
             var currenntlanguage = (value.getString("currentLocale") ?? '');
 
